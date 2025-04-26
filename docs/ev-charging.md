@@ -586,83 +586,96 @@ ______________
 1. EV owners may have the option to provide anonymous feedback if they prefer not to disclose their identity.
 2. Charging station operators may proactively reach out to EV owners to address any issues or concerns reported during the charging session, enhancing customer service and satisfaction.
 
-# Sequence (UML) diagram
+# Architecture Diagram
+```mermaid
+graph TD
+    A[EV Owner] -->|UI Interaction| B[UEI System (BAP)]
+    B -->|Beckn Protocol| C[Charging Station Operator (BPP)]
+    B -->|Beckn Protocol| D[Payment System (BPP)]
+    B -->|Beckn Protocol| E[Support System (BPP)]
+    C -->|Direct Interaction| F[Charging Station]
+    A -->|Feedback/Support| E
+```
 
-Mermaid UML : https://mermaidjs.github.io/
+- **Legend**:
+  - **UI Interaction**: EV Owner ↔ UEI System (BAP)
+  - **Beckn Protocol**: BAP ↔ BPP
+  - **Direct Interaction**: Charging Station Operator ↔ Charging Station
 
-**Diagram 1: Discovery and Order Placement**
-```mermaid
-sequenceDiagram
-EVOwner ->> UEISystem: Discover charging sources 
-UEISystem ->> ChargingStationOperator: Query available stations 
-ChargingStationOperator -->> UEISystem: Send available stations 
-UEISystem ->> EVOwner: Display available stations
-EVOwner ->> UEISystem: Place order for charge 
-UEISystem ->> ChargingStationOperator: Initiate charging order
-ChargingStationOperator -->> UEISystem: Acknowledge order 
-UEISystem ->> PaymentSystem: Fetch quote 
-PaymentSystem -->> UEISystem: Send quote 
-UEISystem ->> EVOwner: Display quote 
-EVOwner ->> UEISystem: Accept quote 
-UEISystem ->> ChargingStationOperator: Confirm order
-ChargingStationOperator -->> UEISystem: Confirmation 
-UEISystem -->> EVOwner: Confirmation
-```
-**Diagram 2: Fulfillment and Cancellation**
-```mermaid
-sequenceDiagram
-EVOwner -> UEISystem: Fulfillment of charging order
-ChargingStationOperator -> EVOwner: Status updates
-ChargingStationOperator ->> EVOwner: Order updates 
-EVOwner ->> UEISystem: Cancel charging order 
-UEISystem ->> ChargingStationOperator: Cancel order
-ChargingStationOperator -->> UEISystem: Cancellation confirmation
-UEISystem -->> EVOwner: Cancellation confirmation
-```
-**Diagram 3: Real-time Tracking and Post-charging Interactions**
-```mermaid
-sequenceDiagram
-EVOwner ->> UEISystem: Real-time tracking of power delivery
-ChargingStationOperator ->> EVOwner: Real-time power delivery updates
-EVOwner ->> UEISystem: Post-charging interactions 
-UEISystem ->> ChargingStationOperator: Send rating and grievance
-ChargingStationOperator -->> UEISystem: Acknowledge rating and grievance
-UEISystem ->> SupportSystem: Send support request 
-SupportSystem -->> UEISystem: Acknowledge support request 
-UEISystem -->> EVOwner: Confirmation of rating, grievance, and support request
-```
-**Diagram 4: Final combined sequence diagram**
-```mermaid
-sequenceDiagram
+# Sequence Diagrams with Annotations
 
-EVOwner ->> UEISystem: Discover charging sources 
-UEISystem ->> ChargingStationOperator: Query available stations
-ChargingStationOperator -->> UEISystem: Send available stations 
-UEISystem ->> EVOwner: Display available stations 
-EVOwner ->> UEISystem: Place order for charge 
-UEISystem ->> ChargingStationOperator: Initiate charging order
-ChargingStationOperator -->> UEISystem: Acknowledge order 
-UEISystem ->> PaymentSystem: Fetch quote 
-PaymentSystem -->> UEISystem: Send quote 
-UEISystem ->> EVOwner: Display quote 
-EVOwner ->> UEISystem: Accept quote 
-UEISystem ->> ChargingStationOperator: Confirm order 
-ChargingStationOperator -->> UEISystem: Confirmation 
-UEISystem -->> EVOwner: Confirmation 
-EVOwner ->> UEISystem: Fulfillment of charging order 
-ChargingStationOperator ->> EVOwner: Status updates 
-ChargingStationOperator ->> EVOwner: Order updates 
-EVOwner ->> UEISystem: Cancel charging order 
-UEISystem ->> ChargingStationOperator: Cancel order 
-ChargingStationOperator -->> UEISystem: Cancellation confirmation 
-UEISystem -->> EVOwner: Cancellation confirmation 
-EVOwner ->> UEISystem: Real-time tracking of power delivery
-ChargingStationOperator ->> EVOwner: Real-time power delivery updates 
-EVOwner ->> UEISystem: Post-charging interactions 
-UEISystem ->> ChargingStationOperator: Send rating and grievance
-ChargingStationOperator -->> UEISystem: Acknowledge rating and grievance
-UEISystem ->> SupportSystem: Send support request 
-SupportSystem -->> UEISystem: Acknowledge support request 
-UEISystem -->> EVOwner: Confirmation of rating, grievance, and support request
+## Diagram 1: Discovery and Order Placement
+```mermaid
+sequenceDiagram
+participant EV as EV Owner
+participant UI as UEI System (BAP)
+participant CSO as Charging Station Operator (BPP)
+participant PS as Payment System (BPP)
+
+EV ->> UI: Discover charging sources
+UI ->> CSO: `search` API (BAP ↔ BPP)
+CSO -->> UI: Available stations
+UI ->> EV: Display available stations
+
+EV ->> UI: Place order for charge
+UI ->> CSO: `confirm` API (BAP ↔ BPP)
+CSO -->> UI: Acknowledge order
+
+UI ->> PS: `quote` API (BAP ↔ BPP)
+PS -->> UI: Send quote
+UI ->> EV: Display quote
+EV ->> UI: Accept quote
+UI ->> CSO: `confirm` API (BAP ↔ BPP)
+CSO -->> UI: Confirmation
+UI -->> EV: Confirmation
 ```
+
+## Diagram 2: Fulfillment and Cancellation
+```mermaid
+sequenceDiagram
+participant EV as EV Owner
+participant UI as UEI System (BAP)
+participant CSO as Charging Station Operator (BPP)
+
+EV ->> UI: Fulfillment of charging order
+UI ->> CSO: `status` API (BAP ↔ BPP)
+CSO -->> UI: Status updates
+CSO ->> UI: Order updates
+UI ->> EV: Notify updates
+
+EV ->> UI: Cancel charging order
+UI ->> CSO: `cancel` API (BAP ↔ BPP)
+CSO -->> UI: Cancellation confirmation
+UI -->> EV: Cancellation confirmation
+```
+
+## Diagram 3: Real-Time Tracking and Post-Charging Interactions
+```mermaid
+sequenceDiagram
+participant EV as EV Owner
+participant UI as UEI System (BAP)
+participant CSO as Charging Station Operator (BPP)
+participant SS as Support System (BPP)
+
+EV ->> UI: Real-time tracking of power delivery
+UI ->> CSO: `track` API (BAP ↔ BPP)
+CSO -->> UI: Real-time updates
+UI ->> EV: Notify updates
+
+EV ->> UI: Post-charging interactions
+UI ->> CSO: `feedback` API (BAP ↔ BPP)
+CSO -->> UI: Acknowledge feedback
+UI ->> SS: `support` API (BAP ↔ BPP)
+SS -->> UI: Acknowledge support request
+UI -->> EV: Confirmation of feedback and support request
+```
+
+## Differentiation Between Protocol and Non-Protocol Workflows
+
+- **Protocol APIs (BAP ↔ BPP)**:
+  - Use **blue arrows** to indicate interactions between BAP and BPP layers.
+  - Examples: `search`, `confirm`, `quote`, `status`, `cancel`, `track`, `feedback`, `support`.
+
+- **Non-Protocol Interactions (UI ↔ EV)**:
+  - Use **green arrows** to indicate interactions between the UI and the EV Owner.
 
