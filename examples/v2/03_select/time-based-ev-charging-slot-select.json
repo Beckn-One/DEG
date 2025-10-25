@@ -33,9 +33,9 @@
               "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
             "beckn:items": ["ev-charger-ccs2-001"],
-            "beckn:price": {
-              "currency": "INR",
-              "price": 18.0,
+          "beckn:value": {
+            "currency": "INR",
+            "value": 18.0,
               "applicableQuantity": {
                 "unitText": "Kilowatt Hour",
                 "unitCode": "KWH",

@@ -34,9 +34,9 @@
               "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
             "beckn:items": ["ev-charger-ccs2-001"],
-            "beckn:price": {
+            "beckn:value": {
               "currency": "INR",
-              "price": 18.0,
+              "value": 18.0,
               "applicableQuantity": {
                 "unitText": "Kilowatt Hour",
                 "unitCode": "KWH",
@@ -59,9 +59,9 @@
               "idleFeePolicy": "₹2/min after 10 min post-charge"
             }
           },
-          "beckn:price": {
+          "beckn:value": {
             "currency": "INR",
-            "price": 45.0,
+            "value": 45.0,
             "applicableQuantity": {
               "unitText": "Kilowatt Hour",
               "unitCode": "KWH",
@@ -72,7 +72,7 @@
       ],
       "beckn:orderValue": {
         "currency": "INR",
-        "price": 118.0,
+        "value": 118.0,
         "components": [
           {
             "type": "UNIT",

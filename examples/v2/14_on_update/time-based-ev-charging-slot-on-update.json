@@ -56,9 +56,9 @@
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
-            "beckn:price": {
+            "beckn:value": {
               "currency": "INR",
-              "price": 18.0,
+              "value": 18.0,
               "applicableQuantity": {
                 "unitText": "Kilowatt Hour",
                 "unitCode": "KWH",
@@ -81,9 +81,9 @@
             }
           },
           "beckn:quantity": 5,
-          "beckn:price": {
+          "beckn:value": {
             "currency": "INR",
-            "price": 90.0,
+            "value": 90.0,
             "applicableQuantity": {
               "unitText": "Kilowatt Hour",
               "unitCode": "KWH",
@@ -94,7 +94,7 @@
       ],
       "beckn:orderValue": {
         "currency": "INR",
-        "price": 108.0,
+        "value": 108.0,
         "components": [
           {
             "type": "UNIT",
