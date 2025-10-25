@@ -56,7 +56,7 @@
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
-            "beckn:value": {
+            "beckn:price": {
               "currency": "INR",
               "value": 18.0,
               "applicableQuantity": {
@@ -81,7 +81,7 @@
             }
           },
           "beckn:quantity": 5,
-          "beckn:value": {
+          "beckn:price": {
             "currency": "INR",
             "value": 90.0,
             "applicableQuantity": {
