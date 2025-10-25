@@ -7,3 +7,5 @@
 5. [Implementation Guide](./implementation-guide/README.md)
 6. [Example implementations: EV charging](./example-implementations/README.md)
 7. [Architecture](./architecture/README.md)
+8. [Use Cases](./use-cases/README.md)
+   - [Microgrid Aggregation](./use-cases/microgrid-aggregation.md)
