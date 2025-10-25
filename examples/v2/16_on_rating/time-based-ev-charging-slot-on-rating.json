@@ -1,0 +1,37 @@
+{
+  "context": {
+    "domain": "deg:ev-charging",
+    "action": "on_rating",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
+    "version": "2.0.0",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T12:00:30Z",
+    "ttl": "15S"
+  },
+  "message": {
+    "received": true,
+    "aggregate": {
+      "count": 127,
+      "value": 4.6,
+      "best": 5,
+      "worst": 1
+    },
+    "feedbackForm": {
+      "url": "https://example-bpp.com/feedback/portal",
+      "mime_type": "application/xml",
+      "submission_id": "feedback-123e4567-e89b-12d3-a456-426614174000"
+    }
+  }
+}
