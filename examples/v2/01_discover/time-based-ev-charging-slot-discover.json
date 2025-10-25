@@ -1,0 +1,33 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "discover",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
+    "transaction_id": "f9d1e7f3-5f1a-4d23-9f10-31b72c0b0c01",
+    "bap_id": "bap.example.com",
+    "bap_uri": "https://bap.example.com",
+    "ttl": "PT30S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
+    ]
+  },
+  "message": {
+    "text_search": "EV charger fast charging",
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@['beckn:itemAttributes']['connectorType']=='CCS2' && @['beckn:itemAttributes']['maxPowerKW']>=50 && @['beckn:itemAttributes']['stationStatus']=='Available' && @['beckn:offers'][*]['offerAttributes']['buyerFinderFee']['feeType']=='PERCENTAGE' && @['beckn:availabilityWindow']['schema:startTime']<='12:30:00' && @['beckn:availabilityWindow']['schema:endTime']>='14:30:00')]"
+    },
+    "spatial": [
+      {
+        "op": "s_dwithin",
+        "targets": "$['beckn:availableAt'][*]['geo']",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [77.5946, 12.9716]
+        },
+        "distanceMeters": 5000
+      }
+    ]
+  }
+}
