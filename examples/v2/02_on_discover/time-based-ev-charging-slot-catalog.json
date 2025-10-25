@@ -84,7 +84,7 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "paymentAccepted": ["UPI", "Card", "Wallet"],
+              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet"],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
@@ -204,7 +204,7 @@
               "minPowerKW": 10,
               "socketCount": 1,
               "reservationSupported": true,
-              "paymentAccepted": ["UPI", "Card", "Wallet", "NetBanking"],
+              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet", "schema:BankTransfer"],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
@@ -324,7 +324,7 @@
               "minPowerKW": 3,
               "socketCount": 4,
               "reservationSupported": true,
-              "paymentAccepted": ["UPI", "Card", "Wallet"],
+              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet"],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
