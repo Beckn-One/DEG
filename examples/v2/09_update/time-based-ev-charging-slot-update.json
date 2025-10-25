@@ -166,23 +166,6 @@
         "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:method": {
-          "type": "schema:BankTransfer",
-          "details": [
-            {
-              "name": "bankCode",
-              "value": "HDFC000123"
-            },
-            {
-              "name": "accountNumber",
-              "value": "1131324242424"
-            },
-            {
-              "name": "virtualPaymentAddress",
-              "value": "VPA123456789@paytm"
-            }
-          ]
-        },
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
