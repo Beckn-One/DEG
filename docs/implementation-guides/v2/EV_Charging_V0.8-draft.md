@@ -1,7 +1,5 @@
 # Implementation Guide \- EV Charging \- Version 0.8 (DRAFT)
 
-## Supersedes: [Implementation Guide \- EV Charging \- Version 0.7](https://docs.google.com/document/d/1gw9CNgDWh8y8JZvHcSqGOubx1ehJulIscq8feLniAGM/edit?tab=t.d3zjvuovbmj)
-
 ## Request for Comments
 
 # 1\. Copyright Notice
