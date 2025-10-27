@@ -1,0 +1,52 @@
+{
+  "context": {
+    "domain": "deg:ev-charging",
+    "action": "on_track",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
+    "version": "2.0.0",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "e0a38442-69b7-4698-aa94-a1b6b5d244c2",
+    "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
+    "timestamp": "2025-01-27T17:00:40.065Z",
+    "ttl": "PT10M"
+  },
+  "message": {
+    "order": {
+      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:status": "ACTIVE",
+        "trackingAction": {
+          "@type": "schema:TrackAction",
+          "target": {
+            "@type": "schema:EntryPoint",
+            "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
+          },
+          "deliveryMethod": "RESERVATION",
+          "reservationId": "TRACK-SESSION-9876543210"
+        }
+      }
+    }
+  }
+}
