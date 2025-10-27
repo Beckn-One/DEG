@@ -15,7 +15,7 @@
   "message": {
     "spatial": [
       {
-        "op": "s_within",
+        "op": "s_dwithin",
         "targets": "$['beckn:availableAt'][*]['geo']",
         "geometry": {
           "type": "Point",
