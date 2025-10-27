@@ -13,20 +13,13 @@
     ]
   },
   "message": {
-    "text_search": "EV charger fast charging",
-    "filters": {
-      "type": "jsonpath",
-      "expression": "$[?(@['beckn:itemAttributes']['connectorType']=='CCS2' && @['beckn:itemAttributes']['maxPowerKW']>=50 && @['beckn:itemAttributes']['stationStatus']=='Available' && @['beckn:offers'][*]['offerAttributes']['buyerFinderFee']['feeType']=='PERCENTAGE' && @['beckn:availabilityWindow']['schema:startTime']<='12:30:00' && @['beckn:availabilityWindow']['schema:endTime']>='14:30:00')]"
-    },
+    "filters": "$[?(@['beckn:itemAttributes']['connectorType'] == 'CCS2' && @['beckn:itemAttributes']['maxPowerKW'] >= 50)]",
     "spatial": [
       {
         "op": "s_dwithin",
         "targets": "$['beckn:availableAt'][*]['geo']",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [77.5946, 12.9716]
-        },
-        "distanceMeters": 5000
+        "geometry": { "type": "Point", "coordinates": [77.59, 12.94] },
+        "distanceMeters": 10000
       }
     ]
   }
