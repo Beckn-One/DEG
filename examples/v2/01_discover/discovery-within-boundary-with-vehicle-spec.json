@@ -12,7 +12,7 @@
     ]
  },
 "message": {
-    "filters": "$[?(@['beckn:itemAttributes']['connectorType'] == 'CCS2' && @['beckn:itemAttributes']['maxPowerKW'] >= 60 && @['beckn:itemAttributes']['parkingType'] != 'Basement')]",
+    "filters": "$[?(@['beckn:fulfillment']['deliveryAttributes']['vehicle']['make'] == 'Tata' && @['beckn:fulfillment']['deliveryAttributes']['vehicle']['model'] == 'Nexon-EV' )]",
     "spatial": [
       {
         "op": "s_dwithin",
