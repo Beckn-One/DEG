@@ -156,7 +156,7 @@
           },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
+          "stationStatus": "Available"
         }
       },
       "beckn:payment": {
