@@ -19,6 +19,10 @@
       "beckn:orderStatus": "QUOTE_REQUESTED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": "user-12345",
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 100.0
+      },
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-001",
