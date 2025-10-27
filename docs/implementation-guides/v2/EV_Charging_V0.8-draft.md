@@ -78,6 +78,8 @@ The section defines the reference ecosystem architecture that is used for buildi
 
 ## 10.1. Architecture Diagram
 
+![](https://private-user-images.githubusercontent.com/52468749/506232050-1fbbb44f-f07a-4be4-86e9-87e94105fff2.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjE1OTg1OTYsIm5iZiI6MTc2MTU5ODI5NiwicGF0aCI6Ii81MjQ2ODc0OS81MDYyMzIwNTAtMWZiYmI0NGYtZjA3YS00YmU0LTg2ZTktODdlOTQxMDVmZmYyLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEwMjclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMDI3VDIwNTEzNlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTcwODBkMjBhOTA5MGU5NzgyODM3NmQ3MGZjYWY3ZmVkNTI4NGZiMGJmYWNiZjM0N2IyMDE2ZGNhNDlmMGY5MGYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.ZoIHVsU4ncce--mL6MXZwEycjzSCJvsJUD8pjLPGQyY)
+
 Source: [https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcFyWdoGJtNUjNQ/edit?slide=id.p\#slide=id.p](https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcFyWdoGJtNUjNQ/edit?slide=id.p#slide=id.p)
 
 ## 10.2. Actors
@@ -182,18 +184,18 @@ An example lookup request is shown below
 Example Request
 
 ```json
-
+TBD
 ```
 
 Example Response
 
 ```json
-
+TBD
 ```
 
 ## 12.2 Looking up NPs inside a specific EV charging registry
 
-Click to view this request in Postman. 
+[Click to view this request in Postman - TBD](#)
 
 # 13\. Implementing EV Charging Semantics on Beckn Protocol
 
