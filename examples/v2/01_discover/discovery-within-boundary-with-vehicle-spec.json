@@ -12,7 +12,10 @@
     ]
  },
 "message": {
-    "filters": "$[?(@['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['make'] == 'Tata' && @['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['model'] == 'Nexon-EV' )]",
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['make'] == 'Tata' && @['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['model'] == 'Nexon-EV' )]"
+    },
     "spatial": [
       {
         "op": "s_dwithin",

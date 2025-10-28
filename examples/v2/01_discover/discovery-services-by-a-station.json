@@ -12,6 +12,9 @@
     ]
  },
 "message": {
-    "filters": "$[?(@['beckn:id']=='ITEM-BTM-DC60')]"
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@['beckn:id']=='ITEM-BTM-DC60')]"
+    }
   }
 }

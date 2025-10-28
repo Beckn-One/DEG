@@ -12,6 +12,9 @@
     ]
  },
 "message": {
-    "filters":    "$[?(@['beckn:itemAttributes']['evseId']=='IN*ECO*01*CCS2*A')]"
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@['beckn:itemAttributes']['evseId']=='IN*ECO*01*CCS2*A')]"
+    }
  }
 }
