@@ -25,7 +25,7 @@
     ],
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@['beckn:itemAttributes']['connectorType'] == 'CCS2' && @['beckn:availabilityWindow']['schema:startTime'] <= '12:30:00' && @['beckn:availabilityWindow']['schema:endTime'] >= '14:30:00')]"
+      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:availabilityWindow.schema:startTime <= '12:30:00' && @.beckn:availabilityWindow.schema:endTime >= '14:30:00')]"
     }
   }
 }

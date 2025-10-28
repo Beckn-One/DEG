@@ -14,7 +14,7 @@
   "message": {
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@['beckn:provider']['beckn:id'] == 'PROV-ECOPWR')]"
+      "expression": "$[?(@.beckn:provider.beckn:id == 'PROV-ECOPWR')]"
     }
   }
 }

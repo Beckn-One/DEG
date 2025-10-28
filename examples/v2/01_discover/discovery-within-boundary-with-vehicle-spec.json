@@ -14,7 +14,7 @@
 "message": {
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['make'] == 'Tata' && @['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['model'] == 'Nexon-EV' )]"
+      "expression": "$[?(@.beckn:fulfillment.beckn:deliveryAttributes.vehicle.make == 'Tata' && @.beckn:fulfillment.beckn:deliveryAttributes.vehicle.model == 'Nexon-EV' )]"
     },
     "spatial": [
       {
