@@ -1,6 +1,16 @@
 {
   "context": {
+    "version": "2.0.0",
     "action": "discover",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
@@ -8,7 +18,7 @@
     "timestamp": "2025-10-14T07:31:00Z",
     "ttl": "PT30S",
     "schema_context": [
-"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
     ]
   },
   "message": {
@@ -19,8 +29,14 @@
         "geometry": {
           "type": "LineString",
           "coordinates": [
-            [77.5946, 12.9716],
-            [76.6394, 12.2958]
+            [
+              77.5946,
+              12.9716
+            ],
+            [
+              76.6394,
+              12.2958
+            ]
           ]
         },
         "distanceMeters": 5000

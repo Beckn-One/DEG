@@ -2,12 +2,26 @@
   "context": {
     "version": "2.0.0",
     "action": "on_discover",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
     "timestamp": "2024-01-15T10:30:05Z",
-    "message_id": "a1b2c3d4-e5f6-4789-90ab-cdef12345678",
-    "transaction_id": "f9d1e7f3-5f1a-4d23-9f10-31b72c0b0c01",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
+    "bap_id": "app.example.com",
+    "bap_uri": "https://app.example.com/bap",
     "bpp_id": "bpp.example.com",
     "bpp_uri": "https://bpp.example.com",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
+    ]
   },
   "message": {
     "catalogs": [
@@ -44,7 +58,10 @@
               {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.5946, 12.9716]
+                  "coordinates": [
+                    77.5946,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
@@ -67,7 +84,9 @@
               "beckn:ratingCount": 128
             },
             "beckn:isActive": true,
-            "beckn:networkId": ["bap.net/ev-charging"],
+            "beckn:networkId": [
+              "bap.net/ev-charging"
+            ],
             "beckn:provider": {
               "beckn:id": "ecopower-charging",
               "beckn:descriptor": {
@@ -83,11 +102,18 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet"],
+              "acceptedPaymentMethod": [
+                "schema:UPI",
+                "schema:CreditCard",
+                "schema:Wallet"
+              ],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.5946, 12.9716]
+                  "coordinates": [
+                    77.5946,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
@@ -97,7 +123,11 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -117,10 +147,12 @@
                   "@type": "beckn:Descriptor",
                   "schema:name": "Per-kWh Tariff - CCS2 60kW"
                 },
-                "beckn:items": ["ev-charger-ccs2-001"],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 18.0,
+                "beckn:items": [
+                  "ev-charger-ccs2-001"
+                ],
+                "beckn:price": {
+                  "currency": "INR",
+                  "value": 18.0,
                   "applicableQuantity": {
                     "unitText": "Kilowatt Hour",
                     "unitCode": "KWH",
@@ -132,7 +164,11 @@
                   "schema:startDate": "2024-10-01T00:00:00Z",
                   "schema:endDate": "2025-01-15T23:59:59Z"
                 },
-                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+                "beckn:acceptedPaymentMethod": [
+                  "UPI",
+                  "Card",
+                  "Wallet"
+                ],
                 "beckn:offerAttributes": {
                   "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
                   "@type": "ChargingOffer",
@@ -164,7 +200,10 @@
               {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.5946, 12.9716]
+                  "coordinates": [
+                    77.5946,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
@@ -187,7 +226,9 @@
               "beckn:ratingCount": 128
             },
             "beckn:isActive": true,
-            "beckn:networkId": ["bap.net/ev-charging"],
+            "beckn:networkId": [
+              "bap.net/ev-charging"
+            ],
             "beckn:provider": {
               "beckn:id": "GoGreen-charging",
               "beckn:descriptor": {
@@ -203,11 +244,18 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet"],
+              "acceptedPaymentMethod": [
+                "schema:UPI",
+                "schema:CreditCard",
+                "schema:Wallet"
+              ],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.5946, 12.9716]
+                  "coordinates": [
+                    77.5946,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
@@ -217,7 +265,11 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -237,10 +289,12 @@
                   "@type": "beckn:Descriptor",
                   "schema:name": "Per-kWh Tariff - CCS2 60kW"
                 },
-                "beckn:items": ["ev-charger-ccs2-001"],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 18.5,
+                "beckn:items": [
+                  "ev-charger-ccs2-001"
+                ],
+                "beckn:price": {
+                  "currency": "INR",
+                  "value": 18.5,
                   "applicableQuantity": {
                     "unitText": "Kilowatt Hour",
                     "unitCode": "KWH",
@@ -252,7 +306,10 @@
                   "schema:startDate": "2024-10-01T00:00:00Z",
                   "schema:endDate": "2025-01-15T23:59:59Z"
                 },
-                "beckn:acceptedPaymentMethod": ["UPI", "Card"],
+                "beckn:acceptedPaymentMethod": [
+                  "UPI",
+                  "Card"
+                ],
                 "beckn:offerAttributes": {
                   "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
                   "@type": "ChargingOffer",
