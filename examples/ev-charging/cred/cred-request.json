@@ -1,0 +1,82 @@
+{
+    "context": {
+        "domain": "energy",
+        "action": "cred",
+        "location": {
+            "country": {
+                "code": "IND"
+            }
+        },
+        "city": "std:080",
+        "version": "1.1.0",
+        "bap_id": "example-bap.com",
+        "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v1",
+        "bpp_id": "example-energy-bpp.com",
+        "bpp_uri": "https://api.example-bpp.com/pilot/bpp/",
+        "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+        "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+        "timestamp": "2023-07-16T04:41:16Z"
+    },
+    "message": {
+        "asset": {
+            "type": "Provider",
+            "id": "did:web:leela@pulseenergy.io"
+        },
+        "requested_proofs": [
+            {
+                "descriptor": {
+                    "name": "Proof of green energy",
+                    "code": "POGE",
+                    "short_desc": "Want to verify if the seller is actually selling green energy"
+                },
+                "like": [
+                    {
+                        "name": "Renewable Energy Certificates (RECs)",
+                        "code": "REC"
+                    },
+                    {
+                        "name": "Guarantees of Origin (GOs)",
+                        "code": "GO"
+                    }
+                ]
+            },
+            {
+                "descriptor": {
+                    "name": "Proof of ownership",
+                    "code": "POOS",
+                    "short_desc": "Want to verify if the seller is actually selling green energy"
+                },
+                "like": [
+                    {
+                        "name": "Invoice",
+                        "code": "REC"
+                    }
+                ]
+            },
+            {
+                "descriptor": {
+                    "name": "Proof of identity",
+                    "code": "POID"
+                },
+                "like": [
+                    {
+                        "name": "Aadhaar",
+                        "code": "AAD"
+                    }
+                ]
+            },
+            {
+                "descriptor": {
+                    "name": "Proof of Address",
+                    "code": "POAD"
+                },
+                "like": [
+                    {
+                        "name": "Aadhaar",
+                        "code": "AAD"
+                    }
+                ]
+            }
+        ]
+    }
+ }

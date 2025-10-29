@@ -818,6 +818,56 @@ paths:
                     $ref: '#/components/schemas/Error'
                 required:
                   - message
+  /cred:
+    post:
+      tags:
+        - Beckn Provider Platform (BPP)
+      description: Request for credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                context:
+                  allOf:
+                    - $ref: '#/components/schemas/Context'
+                    - properties:
+                        action:
+                          enum:
+                            - cred
+                      required:
+                        - action
+                message:
+                  $ref: '#/components/schemas/CredentialRequest'
+              required:
+                - context
+                - message
+      responses:
+        '200':
+          description: Acknowledgement of message received after successful validation of schema and signature
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: object
+                    properties:
+                      ack:
+                        allOf:
+                          - $ref: '#/components/schemas/Ack'
+                          - properties:
+                              status:
+                                enum:
+                                  - ACK
+                                  - NACK
+                    required:
+                      - ack
+                  error:
+                    $ref: '#/components/schemas/Error'
+                required:
+                  - message
   /on_search:
     post:
       tags:
@@ -1985,6 +2035,57 @@ paths:
                     $ref: '#/components/schemas/Error'
                 required:
                   - message
+  /on_cred:
+    post:
+      tags:
+        - Beckn Application Platform (BAP)
+      description: Callback for a credential request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                context:
+                  allOf:
+                    - $ref: '#/components/schemas/Context'
+                    - properties:
+                        action:
+                          enum:
+                            - on_cred
+                      required:
+                        - action
+                message:
+                  $ref: '#/components/schemas/CredentialResponse'
+                error:
+                  $ref: '#/components/schemas/Error'
+              required:
+                - context
+      responses:
+        '200':
+          description: Acknowledgement of message received after successful validation of schema and signature
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: object
+                    properties:
+                      ack:
+                        allOf:
+                          - $ref: '#/components/schemas/Ack'
+                          - properties:
+                              status:
+                                enum:
+                                  - ACK
+                                  - NACK
+                    required:
+                      - ack
+                  error:
+                    $ref: '#/components/schemas/Error'
+                required:
+                  - message
 components:
   securitySchemes:
     SubscriberAuth:
@@ -2337,6 +2438,8 @@ components:
         ttl:
           description: The duration in ISO8601 format after timestamp for which this message holds valid
           type: string
+        verified:
+          type: boolean
       required:
           - action
           - domain
@@ -2358,19 +2461,101 @@ components:
           type: string
           description: Country code as per ISO 3166-1 and ISO 3166-2 format
     Credential:
-      description: Describes a credential of an entity - Person or Organization
+      description: 'Describes a credential of an entity - Person, Organization, Item, Payment etc'
       type: object
-      additionalProperties: false
       properties:
         id:
           type: string
         type:
           type: string
-          default: VerifiableCredential
+        description:
+          $ref: '#/components/schemas/Descriptor'
+        docs:
+          description: The Documents associated with the credential.
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        media:
+          description: The Media associated with the credential.
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaFile'
         url:
           description: URL of the credential
           type: string
           format: uri
+        verifiableCredential:
+          $ref: '#/components/schemas/VC'
+    CredentialRequest:
+      description: Describes the schema used to request for a proof from an entity
+      type: object
+      properties:
+        asset:
+          type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: string
+          required:
+            - type
+            - id
+        requested_proofs:
+          type: array
+          items:
+            type: object
+            properties:
+              descriptor:
+                $ref: '#/components/schemas/Descriptor'
+              likes:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Descriptor'
+            required:
+              - descriptor
+        xinput:
+          description: A requester can send a form which can be filled by the sender with relevant details.
+          $ref: '#/components/schemas/XInput'
+      required:
+        - asset
+        - requested_proofs
+    CredentialResponse:
+      description: 'Describes a credential of an entity - Person, Organization, Item, Payment etc'
+      type: object
+      properties:
+        asset:
+          type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: string
+          required:
+            - type
+            - id
+        proofs:
+          type: object
+          properties:
+            requested:
+              type: array
+              items:
+                type: object
+                properties:
+                  descriptor:
+                    $ref: '#/components/schemas/Descriptor'
+                  likes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Descriptor'
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Credential'
+          required:
+            - requested
+      required:
+        - asset
+        - proofs
     Customer:
       description: Describes a customer buying/availing a product or a service
       type: object
@@ -2416,6 +2601,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Image'
+    Document:
+      description: Describes a document which can be sent as a url
+      type: object
+      properties:
+        descriptor:
+          $ref: '#/components/schemas/Descriptor'
+        url:
+          type: string
+          format: uri
+        mime_type:
+          description: 'Describes the contents of the uri field. If the value is text/html, it is recommended for the BAP to render the contents inside a webview. This generally does not render a good user experience on the BAP, hence the payment page developers are recommended to develop their payment pages in a mobile-friendly manner.'
+          type: string
+          enum:
+            - application/pdf
+            - text/plain
+            - image/jpeg
+            - video/mp4
+            - audio/wav
+            - application/zip
     Domain:
       description: "Described the industry sector or sub-sector. The network policy should contain codes for all the industry sectors supported by the network. Domains can be created in varying levels of granularity. The granularity of a domain can be decided by the participants of the network. Too broad domains will result in irrelevant search broadcast calls to BPPs that don't have services supporting the domain. Too narrow domains will result in a large number of registry entries for each BPP. It is recommended that network facilitators actively collaborate with various working groups and network participants to carefully choose domain codes keeping in mind relevance, performance, and opportunity cost. It is recommended that networks choose broad domains like mobility, logistics, healthcare etc, and progressively granularize them as and when the number of network participants for each domain grows large."
       type: object
@@ -3673,6 +3877,96 @@ components:
           enum:
             - ACTIVE
             - INACTIVE
+    VC:
+      description: Describes a Verifiable Credential
+      type: object
+      properties:
+        '@context':
+          type: array
+          items:
+            type: string
+        id:
+          description: 'A unique identifier for the credential (e.g., UUID or URI).'
+          type: string
+        type:
+          description: Types of the credential.
+          type: array
+          items:
+            type: string
+        description:
+          anyOf:
+            - type: string
+            - type: object
+            - type: array
+              items:
+                type: object
+        issuer:
+          anyOf:
+            - type: string
+            - type: object
+        issuanceDate:
+          type: string
+          description: The date when the credential was issued.
+        validFrom:
+          type: string
+          description: 'The expiration date of the credential, if applicable.'
+        validUntil:
+          type: string
+          description: 'The expiration date of the credential, if applicable.'
+        credentialSubject:
+          anyOf:
+            - type: string
+            - type: object
+            - type: array
+              items:
+                type: string
+            - type: array
+              items:
+                type: object
+        credentialSchema:
+          anyOf:
+            - type: object
+            - type: array
+              items:
+                type: object
+        proof:
+          anyOf:
+            - type: object
+            - type: array
+              items:
+                type: object
+        termsOfUse:
+          anyOf:
+            - type: string
+            - type: object
+            - type: array
+              items:
+                type: string
+            - type: array
+              items:
+                type: object
+        credentialStatus:
+          anyOf:
+            - type: string
+            - type: object
+            - type: array
+              items:
+                type: string
+            - type: array
+              items:
+                type: object
+        evidence:
+          anyOf:
+            - type: string
+            - type: object
+            - type: array
+              items:
+                type: string
+            - type: array
+              items:
+                type: object
+        credentialHash:
+          type: string
     Vehicle:
       description: 'Describes a vehicle is a device that is designed or used to transport people or cargo over land, water, air, or through space.<br>This has properties like category, capacity, make, model, size,variant,color,energy_type,registration'
       type: object
