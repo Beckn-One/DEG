@@ -161,13 +161,6 @@ If you are a BPP
 3. Select the search example and hit send  
 4. You should see the EV charging service request in your console
 
-## Connecting to the Beckn One Catalog Discovery Service
-
-Discovery service helps seekers discover providers of products, services, opportunities, or other value using structured criteria. It serves as a key digital infrastructure component in Beckn-enabled networks.
-
-The Discovery service **MUST** comply with the [Beckn gateway](https://github.com/beckn/protocol-specifications/blob/master/docs/BECKN-003-Beckn-Protocol-Communication-Draft-01.md#communication-protocol-for-search-via-beckn-gateway) recommendations to ensure interoperability and adherence to network standards.
-
-Refer to [this](https://github.com/beckn/missions/blob/main/docs/faq.md) FAQ page for any additional queries related to network setup.
 
 # 12\. Network Access
 
@@ -199,14 +192,14 @@ TBD
 
 This section contains recommendations and guidelines on how to implement EV Charging Services on Beckn Protocol enabled networks. To ensure global interoperability between actors of the EV charging network, the semantics of the EV charging industry need to be mapped to the core schema of Beckn Protocol. The below table summarizes key semantic mappings between the EV Charging Domain and Beckn Protocol domain.
 
-## 12.1. Key Assumptions
+## 13.1. Key Assumptions
 
 - **Assumption 1 :** EV charging is treated as a service, not as a physical object.  
 - **Assumption 2:** All CPOs have implemented OCPI interfaces 
 
 Each entity in the charging lifecycle — the service, the commercial terms, and the usage instance — maps to a well-defined semantic concept, enabling platforms to exchange information in a standardized, machine-readable way.
 
-## 12.2 Semantic Model
+## 13.2 Semantic Model
 
 | EV Charging Domain Entity | Charging Example | Semantically maps to |
 | ----- | ----- | :---: |
