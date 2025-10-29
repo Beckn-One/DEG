@@ -138,11 +138,16 @@ This section contains instructions to set up and test the protocol stack for EV 
 
 ### 11.2.1 Installing Beckn ONIX
 
-All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#quick-start) to learn how to set up Beckn ONIX.
+All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#automated-setup-recommended)) to learn how to set up Beckn ONIX.
 
 ### 11.2.2 Configuring Beckn ONIX for EV Charging Transactions
 
-\<Add content here\>
+A detailed Configuration Guide is available [here](https://github.com/Beckn-One/beckn-onix/blob/main/CONFIG.md). A quick read of key concepts from the link is recommended.
+
+Specifically, for EV Charging, please use the following configuration:
+1. Configure dediregistry plugin instead of registry plugin. Read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/dediregistry).
+2. Start with using Simplekeymanager plugin during development, read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/simplekeymanager). For production deployment, you may setup vault.
+3. For routing calls to Catalog Discovery Service, refer to routing configuration [here](https://github.com/Beckn-One/beckn-onix/blob/main/config/local-simple-routing-BAPCaller.yaml).
 
 ### 11.2.3 Performing a test EV charging transaction
 
@@ -164,8 +169,6 @@ If you are a BPP
 ## Connecting to the Beckn One Catalog Discovery Service
 
 Discovery service helps seekers discover providers of products, services, opportunities, or other value using structured criteria. It serves as a key digital infrastructure component in Beckn-enabled networks.
-
-The Discovery service **MUST** comply with the [Beckn gateway](https://github.com/beckn/protocol-specifications/blob/master/docs/BECKN-003-Beckn-Protocol-Communication-Draft-01.md#communication-protocol-for-search-via-beckn-gateway) recommendations to ensure interoperability and adherence to network standards.
 
 Refer to [this](https://github.com/beckn/missions/blob/main/docs/faq.md) FAQ page for any additional queries related to network setup.
 
