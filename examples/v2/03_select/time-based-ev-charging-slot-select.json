@@ -1,15 +1,27 @@
 {
   "context": {
     "version": "2.0.0",
+    "domain": "beckn.one:deg:ev-charging:*",
     "action": "select",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
     "timestamp": "2024-01-15T10:30:00Z",
     "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
-    "transaction_id": "f9d1e7f3-5f1a-4d23-9f10-31b72c0b0c01",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "bap_id": "bap.example.com",
     "bap_uri": "https://bap.example.com",
     "bpp_id": "bpp.example.com",
     "bpp_uri": "https://bpp.example.com",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+        "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
+    ]
   },
   "message": {
     "order": {
