@@ -166,11 +166,6 @@ If you are a BPP
 3. Select the search example and hit send  
 4. You should see the EV charging service request in your console
 
-## Connecting to the Beckn One Catalog Discovery Service
-
-Discovery service helps seekers discover providers of products, services, opportunities, or other value using structured criteria. It serves as a key digital infrastructure component in Beckn-enabled networks.
-
-Refer to [this](https://github.com/beckn/missions/blob/main/docs/faq.md) FAQ page for any additional queries related to network setup.
 
 # 12\. Network Access
 
@@ -202,14 +197,14 @@ TBD
 
 This section contains recommendations and guidelines on how to implement EV Charging Services on Beckn Protocol enabled networks. To ensure global interoperability between actors of the EV charging network, the semantics of the EV charging industry need to be mapped to the core schema of Beckn Protocol. The below table summarizes key semantic mappings between the EV Charging Domain and Beckn Protocol domain.
 
-## 12.1. Key Assumptions
+## 13.1. Key Assumptions
 
 - **Assumption 1 :** EV charging is treated as a service, not as a physical object.  
 - **Assumption 2:** All CPOs have implemented OCPI interfaces 
 
 Each entity in the charging lifecycle — the service, the commercial terms, and the usage instance — maps to a well-defined semantic concept, enabling platforms to exchange information in a standardized, machine-readable way.
 
-## 12.2 Semantic Model
+## 13.2 Semantic Model
 
 | EV Charging Domain Entity | Charging Example | Semantically maps to |
 | ----- | ----- | :---: |
@@ -251,87 +246,6 @@ Service types
 | V2G\_ENABLED | Charger/site supports bidirectional power transfer (V2G), e.g., per ISO 15118-20 implementations. | ([charin.global](https://www.charin.global/media/pages/technology/knowledge-base/04e4f443ae-1731074296/charin_interop_guide_2.0_dc_bpt_iso_15118-20_v1.0_publication.pdf?utm_source=chatgpt.com)) |
 | REMOTE\_START\_STOP | Remote start/stop of sessions exposed via roaming interface (OCPI Commands module). | ([evroaming.org](https://evroaming.org/wp-content/uploads/2024/11/OCPI-2.2.1-d2.pdf?utm_source=chatgpt.com)) |
 
-# **Example Run-time JSONs**
-
-## **Discovery Use Cases**
-
-### Requests
-
-| Description | Example JSON |
-| :---- | :---- |
-| **Discovery of EV charging services within a circular boundary** | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-178cc3b7793f8d60649ccb9575848ca7ef8e86e71ccceabd927b0351fb9eb274) |
-| Discovery of EV charging stations along a route | Click to view example JSON |
-| Discovery of EV Charging stations within a circular boundary using connector specs as filters | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-178cc3b7793f8d60649ccb9575848ca7ef8e86e71ccceabd927b0351fb9eb274) |
-| Discovery of EV Charging stations within circular boundary using vehicle specifications as filters | Click to view example JSON |
-| Discovery of EV charging services offered by a specific CPO | Click to view example JSON |
-| Viewing details of a single charging station (using its Identifier) | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-dd2400602e37c3de07dbb865157882ca5c284fef46028985e9fce33f72e84d8f) |
-| Fetching details of a specific charger (EVSE) after reaching site (using its identifier) | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-dd2400602e37c3de07dbb865157882ca5c284fef46028985e9fce33f72e84d8f) |
-
-### Responses
-
-| Description | Example JSON |
-| :---- | :---- |
-| CPO returns EV Charging Service Catalog Listing | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-0b91c6e07d58b24ee43d7beb0252001bbc96c5b9c4370a09adbc52456ebec494) |
-| CPO returns details of a single charging station | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-c9a353788f66f3e72322ed962bcada1ca4436962ea13d7246e9dfd70551c5fe7) |
-| CPO returns details of a specific charger | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files) |
-
-## **Ordering Use Cases**
-
-### Requests
-
-| Description | Example JSON |
-| :---- | :---- |
-| EV user requests charge worth specific amount in currency | Click to view example JSON |
-| EV user requests to charge for a specific amount in kWh | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-dd2400602e37c3de07dbb865157882ca5c284fef46028985e9fce33f72e84d8f) |
-| EV user requests final quote with payment terms by providing billing details | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-eacdecb7a75a796d9c07c98d649a0d3e89f7166c8408345bec55f7cb30f00913) |
-| EV user confirms reservation of a slot at a particular charging station at a particular time | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-eebde3afdd41398a949f6617afafeed2a414baa6e89a64263f4adbceaf26bbed) |
-| EV user starts a charging session | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-b8c897b57187693f77c47e331377dcca2c9d77dd86d11bd51efc36f01be7c784) |
-
-### Responses
-
-| Description | Example JSON |
-| :---- | :---- |
-| CPO responds with dynamically calculated quote | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-c9a353788f66f3e72322ed962bcada1ca4436962ea13d7246e9dfd70551c5fe7) |
-| CPO responds with final quote with payment terms | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-db36784f0ad7f0144caba2924ea37c5993cacbc39c1efd8a9eab1faa40c6ce14) |
-| CPO responds with confirmed slot | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-5245968ad1ede5beb6c82785cecd511a736d5b8501689b09d1b5f4ca3150dfb8) |
-| CPO responds with confirmed start of charging session | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-f5b79c5c99057cd903cb32efb5a79cbdc156bc548f19587eee846cf82582426d) |
-
-## **Fulfillment Use Cases**
-
-### Requests
-
-| Description | Example JSON |
-| :---- | :---- |
-| EV user starts a charging session | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-b8c897b57187693f77c47e331377dcca2c9d77dd86d11bd51efc36f01be7c784) |
-| EV user stops a charging session | Click to view example JSON |
-| EV User cancels a charging session | Click to view example JSON |
-| EV user cancels a charging slot reservation | [Click to view example JSON](#cancel) |
-| EV User tracks a live charging session in real-time | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-08c4f743a226f1b62308bf7be079483bce04de0e885d83cc5088fc1cc573f037) |
-
-### Responses
-
-| Description | Example JSON |
-| :---- | :---- |
-| CPO starts a charging session | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-f5b79c5c99057cd903cb32efb5a79cbdc156bc548f19587eee846cf82582426d) |
-| CPO stops the charging session | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-4c35711a6baeb8c5d8c4ab8550e143cb78c9ba0c4daedeaff88bb0951509d43b) |
-| CPO cancels a charging session reservation | [Click to view example JSON](#on_cancel) |
-
-## **Post-fulfillment Use Cases**
-
-### Requests
-
-| Description | Example JSON |
-| :---- | :---- |
-| EV user rates charging service experience | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-19a42b6327e5bcccd9af7710f4e9171a74bf31296e55a25a273408f67c812a3a) |
-| EV user contacts support | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-4d29cdc5344365dd153818ba44e91f4b0305713bb0e3d853b71c551aa4f49523) |
-
-### Responses
-
-| Description | Example JSON |
-| :---- | :---- |
-| CPO accepts rating | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-69038c2a4adceb5f7e80e24e0eb3a2f7c323bea0c771b3c7d3b232644b83936a) |
-| CPO accepts rating and requests feedback | Click to view example JSON |
-| CPO returns support information | [Click to view example JSON](https://github.com/Beckn-One/DEG/pull/48/files#diff-040b98bb2c0df457ffbd2b4dc414cf9c8a94eb1860bc96a7395a2a96276228e7) |
 
 # Example Workflows (EV User’s Perspective)
 
@@ -394,7 +308,8 @@ Raghav scans QR code on charger using his BAP user app
     "filters":    "$[?(@['beckn:itemAttributes']['evseId']=='IN*ECO*01*CCS2*A')]"
  }
 }
-```
+``` 
+Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-by-EVSE.json)
 
 #### Successful Response
 
@@ -700,6 +615,8 @@ The app receives the charger’s details (connector, power rating, live status, 
 
 ```
 
+CPO returns details of a specific charger: [Example](https://github.com/Beckn-One/DEG/tree/draft/examples/v2/02_on_discover/specific-evse-catalog.json)
+
 #### Successful Response
 
 ```json
@@ -816,6 +733,8 @@ Raghav selects a service offering from the options he gets. He chooses a 100 INR
 }
 
 ```
+
+EV user requests charge worth specific amount in currency: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/03_select/time-based-ev-charging-slot-select.json)
 
 #### Successful Response
 
@@ -973,6 +892,8 @@ Raghav receives estimated quotations for the selected service.
 }
 
 ```
+
+CPO responds with dynamically calculated quote: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/04_on_select/time-based-ev-charging-slot-on-select.json)
 
 #### 
 
@@ -1174,7 +1095,8 @@ Raghav provides his billing information.
 
 ```
 
-#### 
+
+EV user requests final quote with payment terms by providing billing details: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/05_init/time-based-ev-charging-slot-init.json)
 
 #### Successful response
 
@@ -1403,6 +1325,8 @@ He chooses UPI and authorizes payment (or an authorization hold, as supported)
 
 ```
 
+CPO responds with final quote with payment terms: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/06_on_init/time-based-ev-charging-slot-on-init.json)
+
 #### 
 
 #### Successful response
@@ -1625,6 +1549,8 @@ Raghav confirms the order.
 }
 
 ```
+
+EV user confirms reservation of a slot at a particular charging station at a particular time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/07_confirm/time-based-ev-charging-slot-confirm.json)
 
 #### 
 
@@ -1849,6 +1775,8 @@ The app returns a booking/transaction ID along with the other charging session d
 }
 
 ```
+
+CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/08_on_confirm/time-based-ev-charging-slot-on-confirm.json)
 
 #### 
 
@@ -2076,6 +2004,8 @@ Raghav plugs in and starts the session from the app.
 }
 
 ```
+
+EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/09_update/time-based-ev-charging-slot-update.json)
 
 #### Successful Response
 
@@ -2313,6 +2243,8 @@ Response for the charging session initiation.
 
 ```
 
+CPO responds with confirmed start of charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/10_on_update/time-based-ev-charging-slot-on-update.json)
+
 #### Successful Response
 
 ```json
@@ -2367,6 +2299,8 @@ Raghav requests to track the live status of the charging session. state of charg
 }
 
 ```
+
+EV User tracks a live charging session in real-time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/11_track/time-based-ev-charging-slot-track.json)
 
 #### Successful Response
 
@@ -2444,6 +2378,9 @@ Raghav receives the state of charge(how much charging has been done) of the vehi
 }
 
 ```
+
+EV User receives a live charging session in real-time: [Example]
+(https://github.com/Beckn-One/DEG/blob/draft/examples/v2/12_on_track/time-based-ev-charging-slot-on-track.json)
 
 #### Successful Response
 
@@ -2689,6 +2626,8 @@ Raghav receives a notification if there is any error during the charging session
 }
 
 ```
+
+EV user reveives a notification in case of any error occuring during charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/13_on_status/time-based-ev-charging-slot-on-status.json)
 
 #### Successful Response
 
@@ -2944,6 +2883,8 @@ At \~60 minutes, the session stops (or notifies him to unplug). He receives a di
 
 ```
 
+EV user receives the session details upon chargign session end: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/14_on_update/time-based-ev-charging-slot-on-update.json)
+
 #### Successful Response
 
 ```json
@@ -3002,6 +2943,8 @@ Raghav provides rating for the charging session.
 }
 
 ```
+
+EV user rates charging service experience: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/15_rating/time-based-ev-charging-slot-rating.json)
 
 #### Successful Response
 
@@ -3065,6 +3008,8 @@ Raghav receives an achievement after providing a rating.
 
 ```
 
+CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/16_on_rating/time-based-ev-charging-slot-on-rating.json)
+
 #### Successful Response
 
 ```json
@@ -3085,6 +3030,8 @@ POST
 Raghav reaches out for support.
 
 #### Request
+
+EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/17_support/time-based-ev-charging-slot-support.json)
 
 ```json
 {
@@ -3174,6 +3121,8 @@ Raghav receives a response to his support request.
 }
 
 ```
+
+CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/18_on_support/time-based-ev-charging-slot-on-support.json)
 
 #### Successful Response
 
@@ -3312,6 +3261,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 
 ```
 
+Discovery of EV charging services within a circular boundary: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-a-circular-boundary.json)
+
 #### Discovery of EV charging stations along a route
 
 ```json
@@ -3348,6 +3299,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 
 ```
 
+Discovery of EV charging stations along a route: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-along-route.json)
+
 #### Discovery within circle \+ connector specs as filters
 
 ```json
@@ -3372,6 +3325,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 }
 
 ```
+
+Discovery of EV Charging stations within a circular boundary using connector specs as filters: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-boundary-with-connection-spec.json)
 
 #### Discovery within circle \+ vehicle specifications as filters
 
@@ -3400,6 +3355,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 
 ```
 
+Discovery of EV Charging stations within circular boundary using vehicle specifications as filters: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-boundary-with-vehicle-spec.json)
+
 #### Discovery of services offered by a specific CPO
 
 ```json
@@ -3414,6 +3371,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 
 ```
 
+Discovery of EV charging services offered by a specific CPO: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-services-by-a-cpo.json)
+
 #### Viewing details of a single charging station (by its Item Identifier)
 
 ```json
@@ -3427,6 +3386,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 }
 ```
 
+Viewing details of a single charging station (using its Identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-services-by-a-station.json)
+
 #### Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
 
 ```json
@@ -3439,6 +3400,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
  }
 }
 ```
+
+Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-by-EVSE.json)
 
 #### Discovering chargers in a specific circular area, a specific connector type and availability time range
 
@@ -3467,6 +3430,8 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 }
 
 ```
+
+Discovering chargers in a specific circular area, a specific connector type and availability time range: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-a-timerange.json)
 
 1. **filters**  
    1. **String:** A boolean predicate over items (JSONPath/JMESPath-style) to enforce strict constraints.  
@@ -3899,6 +3864,8 @@ Adam receives a comprehensive catalog of available charging stations from multip
 
 ```
 
+CPO returns EV Charging Service Catalog Listing: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/02_on_discover/time-based-ev-charging-slot-catalog.json)
+
 Used together, these bring **true semantic meaning** to the payload, allowing any system to interpret the data consistently based on shared schema definitions.
 
 Note: This is just an example catalog. CPOs are encouraged to innovate on various catalog offerings that involve charging services \+ add\_ons, green charging, etc. More such examples will be added to this document in future releases.
@@ -4103,6 +4070,8 @@ Adam selects a charging session slot.
 
 ```
 
+EV user requests charge worth specific amount in currency: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/03_select/time-based-ev-charging-slot-select.json)
+
 1. **beckn:orderItems:**  
    1. Defines what the buyer has chosen to purchase or book — in this case, the EV charging service.  
    2. Each entry captures the specific charger (pe-charging-01) and quantity requested (5 kWh), representing the intended energy consumption for that session.  
@@ -4268,6 +4237,8 @@ Adam receives an estimated quotation for the selected slot.
 }
 
 ```
+
+CPO responds with dynamically calculated quote: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/04_on_select/time-based-ev-charging-slot-on-select.json)
 
 1. **beckn:orderItemAttributes:**  
    1. Returned by the BPP to confirm item-specific technical and commercial details.  
@@ -4555,6 +4526,8 @@ Adam provides his billing details.
 
 ```
 
+EV user requests final quote with payment terms by providing billing details: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/05_init/time-based-ev-charging-slot-init.json)
+
 1. **beckn:orderItemAttributes:**  
    Echoes back the confirmed item specifications from the provider, ensuring both BAP and BPP have an agreed reference for pricing, connector type, and charger characteristics at the time of selection.  
 2. **beckn:fulfillment:**  
@@ -4793,6 +4766,8 @@ Adam receives the terms of the order(payment, cancellation, overcharge etc) and 
 
 ```
 
+CPO responds with final quote with payment terms: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/06_on_init/time-based-ev-charging-slot-on-init.json)
+
 1. **beckn:payment:**  
     Represents the finalized payment details returned by the BPP after the init stage — this confirms how the user can complete payment before order confirmation.  
 2. **beckn:status:**  
@@ -4866,6 +4841,7 @@ Adam receives a payment confirmation from BPP.
   }
 }
 ```
+
 
 In case the BAP is not receiving on\_status from the BPP, it may also allow the user to declare they have completed payment and confirm the order using a user input at the BAP.
 
@@ -5090,6 +5066,8 @@ Adam accepts the terms of the order and confirms the order.
 }
 
 ```
+
+EV user confirms reservation of a slot at a particular charging station at a particular time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/07_confirm/time-based-ev-charging-slot-confirm.json)
 
 1. **beckn:payment:**  
     Captures the *final* payment record returned after successful transaction confirmation — this confirms the completion of the payment flow.  
@@ -5331,6 +5309,8 @@ Adam receives a reservation ID and QR code, plus a navigation link to the chargi
  }
 }
 ```
+
+CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/08_on_confirm/time-based-ev-charging-slot-on-confirm.json)
 
 **ev:fulfillmentstate:**  
  Represents the *real-time operational state* of the charging session.
@@ -5579,6 +5559,8 @@ The backend matches it to her **reservation ID**, verifies her **OTP authorizati
 }
 
 ```
+
+EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/09_update/time-based-ev-charging-slot-update.json)
 
 **beckn:[fulfillment.ev](http://fulfillment.ev):fulfillmentstate:** Communicates the *real-time operational status* of the charging session.
 
@@ -5830,6 +5812,8 @@ Adam receives an acknowledgement on charging initialisation.
 
 ```
 
+CPO starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/10_on_update/time-based-ev-charging-slot-on-update.json)
+
 **Ev:fulfillmentstate:** Communicates the *real-time charging session state* as sent back by the BPP.
 
 1. **ev:name:** "Charging Active" — confirms that the EV charging session has officially started at the station.  
@@ -5890,6 +5874,8 @@ Adam initiates a request to track the charging progress of the active charging s
 
 ```
 
+EV User tracks a live charging session in real-time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/11_track/time-based-ev-charging-slot-track.json)
+
 **beckn:orderAttributes:**  
 Holds parameters that instruct how the tracking process should operate during an ongoing session.
 
@@ -5917,7 +5903,7 @@ Adam receives the current charging progress.
 
 #### Request
 
-```javascript
+```json
 
 {
  "context": {
@@ -5972,6 +5958,8 @@ Adam receives the current charging progress.
  }
 }
 ```
+
+EV User receives live charging session details in real-time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/12_on_track/time-based-ev-charging-slot-on-track.json)
 
 **ev:charging\_periods:**  
 Represents the *current charging interval* and real-time measurements captured during that period.
@@ -6280,6 +6268,8 @@ Adam receives notification when there is any error during an ongoing charging se
 
 ```
 
+EV user reveives details in case of any error during a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/13_on_status/time-based-ev-charging-slot-on-status.json)
+
 #### Successful Response
 
 ```json
@@ -6541,6 +6531,8 @@ Adam receives an update when the charging session ends. This might reflect payme
 
 ```
 
+EV user receives final order details after the charging session ends: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/14_on_update/time-based-ev-charging-slot-on-update.json)
+
 1. **ev:fulfillmentstate:**  
    "Charging Completed" / code "CHARGING-COMPLETED" indicates that the charging session has ended successfully and all energy delivery is complete.  
 2. **beckn:totals:**  
@@ -6599,6 +6591,8 @@ Adam cancels a scheduled charging session.
 
 ```
 
+EV user cancels a charging slot reservation: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/19_cancel/cancel-a-reserved-slot.json)
+
 #### Successful Response
 
 ```json
@@ -6630,16 +6624,14 @@ Adam receives order cancellation confirmation.  The advance payment will be adju
     "order": {
       "beckn:fulfillment": {
         ....
-        "ev:fulfillmentstate": {
-          "@type": "ev:FulfillmentState",
-          "ev:name": "Charging Session Cancellation",
-          "ev:code": "CHARGING_SESSION_CANCELLED"
-        }
+        "beckn:status": "CANCELLED"
       },
     }
   }
 }
 ```
+
+CPO cancels a charging session reservation: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/20_on_cancel/cpo-cancels-reservation.json)
 
 #### Successful Response
 
@@ -6699,6 +6691,8 @@ Adam rates the order.
 }
 
 ```
+
+EV user rates charging service experience: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/15_rating/time-based-ev-charging-slot-rating.json)
 
 #### Successful Response
 
@@ -6763,6 +6757,8 @@ Adam receives an acknowledgement.
 
 ```
 
+CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/16_on_rating/time-based-ev-charging-slot-on-rating.json)
+
 #### Successful Response
 
 ```json
@@ -6815,6 +6811,8 @@ Adma reaches out for support.
 }
 
 ```
+
+EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/17_support/time-based-ev-charging-slot-support.json)
 
 #### Successful Response
 
@@ -6874,6 +6872,8 @@ Raghav receives a response to his support request.
 }
 
 ```
+
+CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/18_on_support/time-based-ev-charging-slot-on-support.json)
 
 #### Successful Response
 
