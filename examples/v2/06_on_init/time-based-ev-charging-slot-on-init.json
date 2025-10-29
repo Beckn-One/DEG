@@ -1,6 +1,7 @@
 {
   "context": {
-    "domain": "deg:ev-charging",
+    "version": "2.0.0",
+    "domain": "beckn.one:deg:ev-charging:*",
     "action": "on_init",
     "location": {
       "country": {
@@ -10,15 +11,17 @@
         "code": "std:080"
       }
     },
-    "version": "2.0.0",
     "bap_id": "example-bap.com",
     "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
-    "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
-    "ttl": "15S"
+    "ttl": "15S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
+    ]
   },
   "message": {
     "order": {

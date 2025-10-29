@@ -2,7 +2,7 @@
   "context": {
     "version": "2.0.0",
     "domain": "beckn.one:deg:ev-charging:*",
-    "action": "on_update",
+    "action": "on_cancel",
     "location": {
       "country": {
         "code": "IND"
@@ -16,8 +16,8 @@
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
-    "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
-    "timestamp": "2025-01-27T10:15:30Z",
+    "message_id": "4a736341-8897-4e5a-9873-53533691f42d",
+    "timestamp": "2025-01-27T10:05:00Z",
     "ttl": "15S",
     "schema_context": [
       "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
@@ -28,7 +28,7 @@
       "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderStatus": "CONFIRMED",
       "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
@@ -135,14 +135,13 @@
         "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
-        "beckn:status": "ACTIVE",
+        "beckn:status": "CANCELLED",
         "beckn:deliveryAttributes": {
           "@type": "ChargingSession",
           "sessionId": "session-001",
-          "sessionStatus": "ACTIVE",
           "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
+          "startTime": "2025-01-27T10:00:00Z",
+          "endTime": "2025-01-27T11:30:00Z",
           "customer": {
             "name": "Ravi Kumar",
             "phone": "+91-9887766554"
@@ -160,20 +159,7 @@
           },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Charging",
-          "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 45.2,
-            "energyDeliveredKWH": 0.0,
-            "estimatedTimeToComplete": "PT1H30M",
-            "chargingProgress": 0.0
-          },
-          "instructions": [
-            "Please ensure your vehicle is properly connected to the charging station",
-            "Do not disconnect the charging cable during the session",
-            "In case of emergency, press the emergency stop button on the station"
-          ]
+          "stationStatus": "Available"
         }
       },
       "beckn:payment": {
