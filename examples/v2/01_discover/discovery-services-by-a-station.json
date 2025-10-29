@@ -20,8 +20,11 @@
     "schema_context": [
       "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
     ]
-  },
-  "message": {
-    "filters": "$[?(@['beckn:id']=='ITEM-BTM-DC60')]"
+ },
+"message": {
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:id=='ITEM-BTM-DC60')]"
+    }
   }
 }

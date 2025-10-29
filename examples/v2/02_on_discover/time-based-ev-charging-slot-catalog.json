@@ -70,11 +70,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "06:00:00",
-              "schema:endTime": "22:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "22:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -190,11 +192,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "00:00:00",
-              "schema:endTime": "23:59:59"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "00:00:00",
+                "schema:endTime": "23:59:59"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -310,11 +314,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "08:00:00",
-              "schema:endTime": "20:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "08:00:00",
+                "schema:endTime": "20:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",

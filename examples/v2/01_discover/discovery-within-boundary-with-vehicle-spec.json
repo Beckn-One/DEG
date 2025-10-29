@@ -20,9 +20,12 @@
     "schema_context": [
       "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
     ]
-  },
-  "message": {
-    "filters": "$[?(@['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['make'] == 'Tata' && @['beckn:fulfillment']['beckn:deliveryAttributes']['vehicle']['model'] == 'Nexon-EV' )]",
+ },
+"message": {
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:fulfillment.beckn:deliveryAttributes.vehicle.make == 'Tata' && @.beckn:fulfillment.beckn:deliveryAttributes.vehicle.model == 'Nexon-EV' )]"
+    },
     "spatial": [
       {
         "op": "s_dwithin",

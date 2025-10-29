@@ -22,7 +22,10 @@
     ]
   },
   "message": {
-    "filters": "$[?(@['beckn:itemAttributes']['connectorType'] == 'CCS2' && @['beckn:itemAttributes']['maxPowerKW'] >= 50)]",
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:itemAttributes.maxPowerKW >= 50)]"
+    },
     "spatial": [
       {
         "op": "s_dwithin",

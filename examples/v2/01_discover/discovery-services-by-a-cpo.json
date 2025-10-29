@@ -22,6 +22,9 @@
     ]
   },
   "message": {
-    "filters": "$[?(@['beckn:provider']['beckn:id'] == 'PROV-ECOPWR')]"
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:provider.beckn:id == 'ecopower-charging')]"
+    }
   }
 }
