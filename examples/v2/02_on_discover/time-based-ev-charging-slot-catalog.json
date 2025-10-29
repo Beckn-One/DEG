@@ -18,10 +18,7 @@
     "bap_uri": "https://app.example.com/bap",
     "bpp_id": "bpp.example.com",
     "bpp_uri": "https://bpp.example.com",
-    "ttl": "PT30S",
-        "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
-    ]
+    "ttl": "PT30S"
   },
   "message": {
     "catalogs": [
