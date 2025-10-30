@@ -16,7 +16,7 @@
 
 [Caching Strategy](#caching-strategy)
 
-[Recommendations:](#recommendations:)
+[Recommendations:](#recommendations)
 
 [Adapter Responsibilities](#adapter-responsibilities)
 
@@ -26,200 +26,200 @@
 
 [Recommended Architectures](#recommended-architecture)
 
-[Architecture 1: EV Charger as Beckn Item (Resource)](#ev-charger-as-beckn-item-\(resource\))
+[Architecture 1: EV Charger as Beckn Item (Resource)](#ev-charger-as-beckn-item-resource)
 
-[Architecture 2: Energy as Beckn Item, EV Charger as "Vehicle"](#heading=h.ip1nceh7wbgt)
+[Architecture 2: Energy as Beckn Item, EV Charger as "Vehicle"](#heading=hipnceh7wbgt)
 
 [Schema Mapping](#schema-mapping)
 
-[1\. Catalog Discovery](#1.-catalog-discovery)
+[1\. Catalog Discovery](#1-catalog-discovery)
 
-[2\. Price Negotiation / Agreement](#2.-price-negotiation-/-agreement)
+[2\. Price Negotiation / Agreement](#2-price-negotiation--agreement)
 
-[3\. Terms Agreement  (Billing, Fulfillment, Payment)](#3.-terms-agreement-\(billing,-fulfillment,-payment\))
+[3\. Terms Agreement  (Billing, Fulfillment, Payment)](#3-terms-agreement-billing-fulfillment-payment)
 
-[4\. Order Confirmation](#4.-order-confirmation)
+[4\. Order Confirmation](#4-order-confirmation)
 
-[5\. Order Update / Charging Start](#5.-order-update-/-charging-start)
+[5\. Order Update / Charging Start](#5-order-update--charging-start)
 
-[6\. Track (Real-time Charging Tracking)](#6.-track-\(real-time-charging-tracking\))
+[6\. Track (Real-time Charging Tracking)](#6-track-real-time-charging-tracking)
 
-[7\. Order Update / Charging Stop & Final CDR](#7.-order-update-/-charging-stop-&-final-cdr)
+[7\. Order Update / Charging Stop & Final CDR](#7-order-update--charging-stop--final-cdr)
 
-[8\. Order Cancellation](#8.-order-cancellation)
+[8\. Order Cancellation](#8-order-cancellation)
 
-[9\. Status / on\_status \- Informational Updates](#9.-status-/-on_status---informational-updates)
+[9\. Status / on\_status \- Informational Updates](#9-status--on_status---informational-updates)
 
-[10\. Rating & Support](#10.-rating-&-support)
+[10\. Rating & Support](#10-rating--support)
 
 [Example Implementation](#example-implementation)
 
-[1\. Discovery](#1.-discovery)
+[1\. Discovery](#1-discovery)
 
-[1.1 search Request (BAP → BPP)](#1.1-search-request-\(bap-→-bpp\))
+[1.1 search Request (BAP → BPP)](#11-search-request-bap--bpp)
 
-[1.2. OCPI Adapter Processing (inside BPP)](#1.2.-ocpi-adapter-processing-\(inside-bpp\))
+[1.2. OCPI Adapter Processing (inside BPP)](#12-ocpi-adapter-processing-inside-bpp)
 
-[1.3. on\_search Response (BPP → BAP)](#1.3.-on_search-response-\(bpp-→-bap\))
+[1.3. on\_search Response (BPP → BAP)](#13-on_search-response-bpp--bap)
 
-[1.4 Adapter Recommendations for search/on\_search](#1.4-adapter-recommendations-for-search/on_search)
+[1.4 Adapter Recommendations for search/on\_search](#14-adapter-recommendations-for-searchon_search)
 
-[2\. Select / on\_select Workflow](#2.-select-/-on_select-workflow)
+[2\. Select / on\_select Workflow](#2-select--on_select-workflow)
 
-[2.1. select Request (BAP → BPP)](#2.1.-select-request-\(bap-→-bpp\))
+[2.1. select Request (BAP → BPP)](#21-select-request-bap--bpp)
 
-[2.2. OCPI Adapter Processing (inside BPP)](#2.2.-ocpi-adapter-processing-\(inside-bpp\))
+[2.2. OCPI Adapter Processing (inside BPP)](#22-ocpi-adapter-processing-inside-bpp)
 
-[2.3. on\_select Response (BPP → BAP)](#2.3.-on_select-response-\(bpp-→-bap\))
+[2.3. on\_select Response (BPP → BAP)](#23-on_select-response-bpp--bap)
 
-[2.4 Adapter Recommendations for select/on\_select](#2.4-adapter-recommendations-for-select/on_select)
+[2.4 Adapter Recommendations for select/on\_select](#24-adapter-recommendations-for-selecton_select)
 
-[3\. Init / On\_init Workflow](#3.-init-/-on_init-workflow)
+[3\. Init / On\_init Workflow](#3-init--on_init-workflow)
 
-[3.1. init Request (BAP → BPP)](#3.1.-init-request-\(bap-→-bpp\))
+[3.1. init Request (BAP → BPP)](#31-init-request-bap--bpp)
 
 [{](#{)
 
-[3.2. OCPI Adapter Processing (inside BPP)](#3.2.-ocpi-adapter-processing-\(inside-bpp\))
+[3.2. OCPI Adapter Processing (inside BPP)](#32-ocpi-adapter-processing-inside-bpp)
 
-[3.3. on\_init Response (BPP → BAP)](#3.3.-on_init-response-\(bpp-→-bap\))
+[3.3. on\_init Response (BPP → BAP)](#33-on_init-response-bpp--bap)
 
-[3.4. Adapter Recommendations for init/on\_init](#3.4.-adapter-recommendations-for-init/on_init)
+[3.4. Adapter Recommendations for init/on\_init](#34-adapter-recommendations-for-inititon_init)
 
-[4\. Confirm / on\_confirm Workflow](#4.-confirm-/-on_confirm-workflow)
+[4\. Confirm / on\_confirm Workflow](#4-confirm--on_confirm-workflow)
 
-[4.1. confirm Request (BAP → BPP)](#4.1.-confirm-request-\(bap-→-bpp\))
+[4.1. confirm Request (BAP → BPP)](#41-confirm-request-bap--bpp)
 
-[4.2. OCPI Adapter Processing (inside BPP)](#4.2.-ocpi-adapter-processing-\(inside-bpp\))
+[4.2. OCPI Adapter Processing (inside BPP)](#42-ocpi-adapter-processing-inside-bpp)
 
-[4.3. on\_confirm Response (BPP → BAP)](#4.3.-on_confirm-response-\(bpp-→-bap\))
+[4.3. on\_confirm Response (BPP → BAP)](#43-on_confirm-response-bpp--bap)
 
-[4.4. Adapter Recommendations for confirm/on\_confirm](#4.4.-adapter-recommendations-for-confirm/on_confirm)
+[4.4. Adapter Recommendations for confirm/on\_confirm](#44-adapter-recommendations-for-confirmon_confirm)
 
-[5\. Update / On\_update flows (Charging Start)](#5.-update-/-on_update-flows-\(charging-start\))
+[5\. Update / On\_update flows (Charging Start)](#5-update--on_update-flows-charging-start)
 
-[5.1. update Request (BAP → BPP)](#5.1.-update-request-\(bap-→-bpp\))
+[5.1. update Request (BAP → BPP)](#51-update-request-bap--bpp)
 
-[5.2. OCPI Adapter Processing (inside BPP)](#5.2.-ocpi-adapter-processing-\(inside-bpp\))
+[5.2. OCPI Adapter Processing (inside BPP)](#52-ocpi-adapter-processing-inside-bpp)
 
-[5.3. on\_update Response (BPP → BAP)](#5.3.-on_update-response-\(bpp-→-bap\))
+[5.3. on\_update Response (BPP → BAP)](#53-on_update-response-bpp--bap)
 
-[5.4. Adapter Recommendations for update/on\_update](#5.4.-adapter-recommendations-for-update/on_update)
+[5.4. Adapter Recommendations for update/on\_update](#54-adapter-recommendations-for-updateon_update)
 
-[6\. Track / on\_track Flows (Charging session)](#6.-track-/-on_track-flows-\(charging-session\))
+[6\. Track / on\_track Flows (Charging session)](#6-track--on_track-flows-charging-session)
 
-[6.1. track Request (BAP → BPP)](#6.1.-track-request-\(bap-→-bpp\))
+[6.1. track Request (BAP → BPP)](#61-track-request-bap--bpp)
 
-[6.2. OCPI Adapter Processing (inside the BPP)](#6.2.-ocpi-adapter-processing-\(inside-the-bpp\))
+[6.2. OCPI Adapter Processing (inside the BPP)](#62-ocpi-adapter-processing-inside-the-bpp)
 
-[6.3. on\_track Response (BPP → BAP)](#6.3.-on_track-response-\(bpp-→-bap\))
+[6.3. on\_track Response (BPP → BAP)](#63-on_track-response-bpp--bap)
 
-[6.4. Adapter Recommendations for track/on\_track](#6.4.-adapter-recommendations-for-track/on_track)
+[6.4. Adapter Recommendations for track/on\_track](#64-adapter-recommendations-for-trackon_track)
 
-[7\. Update / On\_update Flows (End of charging session)](#7.-update-/-on_update-flows-\(end-of-charging-session\))
+[7\. Update / On\_update Flows (End of charging session)](#7-update--on_update-flows-end-of-charging-session)
 
-[7.1. update Request (BAP → BPP)](#7.1.-update-request-\(bap-→-bpp\))
+[7.1. update Request (BAP → BPP)](#71-update-request-bap--bpp)
 
-[7.2. OCPI Adapter Processing (inside BPP)](#7.2.-ocpi-adapter-processing-\(inside-bpp\))
+[7.2. OCPI Adapter Processing (inside BPP)](#72-ocpi-adapter-processing-inside-bpp)
 
-[7.3. on\_update Response (BPP → BAP)](#7.3.-on_update-response-\(bpp-→-bap\))
+[7.3. on\_update Response (BPP → BAP)](#73-on_update-response-bpp--bap)
 
-[7.4 Adapter Recommendations for Stopping & Finalizing Payment](#7.4-adapter-recommendations-for-stopping-&-finalizing-payment)
+[7.4 Adapter Recommendations for Stopping & Finalizing Payment](#74-adapter-recommendations-for-stopping--finalizing-payment)
 
-[8\. Asynchronous on\_update \- When charging terms change on an active order](#8.-asynchronous-on_update---when-charging-terms-change-on-an-active-order)
+[8\. Asynchronous on\_update \- When charging terms change on an active order](#8-asynchronous-on_update---when-charging-terms-change-on-an-active-order)
 
-[8.1. Triggering Events](#8.1.-triggering-events)
+[8.1. Triggering Events](#81-triggering-events)
 
-[8.2. Fulfillment State Schema](#8.2.-fulfillment-state-schema)
+[8.2. Fulfillment State Schema](#82-fulfillment-state-schema)
 
-[8.3. Example: Time-of-Day Tariff Change Mid-Session](#8.3.-example:-time-of-day-tariff-change-mid-session)
+[8.3. Example: Time-of-Day Tariff Change Mid-Session](#83-example-time-of-day-tariff-change-mid-session)
 
-[8.4. Adapter Recommendations](#8.4.-adapter-recommendations)
+[8.4. Adapter Recommendations](#84-adapter-recommendations)
 
-[9\. Status / on\_status flows (Informational updates)](#9.-status-/-on_status-flows-\(informational-updates\))
+[9\. Status / on\_status flows (Informational updates)](#9-status--on_status-flows-informational-updates)
 
-[9.1. status Request (BAP → BPP)](#9.1.-status-request-\(bap-→-bpp\))
+[9.1. status Request (BAP → BPP)](#91-status-request-bap--bpp)
 
-[9.2 Adapter Processing](#9.2-adapter-processing)
+[9.2 Adapter Processing](#92-adapter-processing)
 
-[9.3. on\_status Response (BPP → BAP)](#9.3.-on_status-response-\(bpp-→-bap\))
+[9.3. on\_status Response (BPP → BAP)](#93-on_status-response-bpp--bap)
 
-[9.4 Unsolicited on\_status Calls from BPP](#9.4-unsolicited-on_status-calls-from-bpp)
+[9.4 Unsolicited on\_status Calls from BPP](#94-unsolicited-on_status-calls-from-bpp)
 
-[9.5 Triggering Status Codes (Informational Only)](#9.5-triggering-status-codes-\(informational-only\))
+[9.5 Triggering Status Codes (Informational Only)](#95-triggering-status-codes-informational-only)
 
-[9.6. Example: Station-Side Pause (SUSPENDED\_EVSE)](#9.6.-example:-station-side-pause-\(suspended_evse\))
+[9.6. Example: Station-Side Pause (SUSPENDED\_EVSE)](#96-example-station-side-pause-suspended_evse)
 
-[9.7 Recommendations for Unsolicited on\_status](#9.7-recommendations-for-unsolicited-on_status)
+[9.7 Recommendations for Unsolicited on\_status](#97-recommendations-for-unsolicited-on_status)
 
-[10\. Cancel / on\_cancel flows](#10.-cancel-/-on_cancel-flows)
+[10\. Cancel / on\_cancel flows](#10-cancel--on_cancel-flows)
 
-[10.1. cancel Request (BAP → BPP)](#10.1.-cancel-request-\(bap-→-bpp\))
+[10.1. cancel Request (BAP → BPP)](#101-cancel-request-bap--bpp)
 
-[10.2 Adapter Processing](#10.2-adapter-processing)
+[10.2 Adapter Processing](#102-adapter-processing)
 
-[10.3. on\_cancel Response (BPP → BAP)](#10.3.-on_cancel-response-\(bpp-→-bap\))
+[10.3. on\_cancel Response (BPP → BAP)](#103-on_cancel-response-bpp--bap)
 
-[10.4 Unsolicited on\_cancel Calls from BPP](#10.4-unsolicited-on_cancel-calls-from-bpp)
+[10.4 Unsolicited on\_cancel Calls from BPP](#104-unsolicited-on_cancel-calls-from-bpp)
 
 [Triggering Scenarios](#triggering-scenarios)
 
-[Example: Charger Hardware Failure](#example:-charger-hardware-failure)
+[Example: Charger Hardware Failure](#example-charger-hardware-failure)
 
-[10.5 Adapter Recommendations](#10.5-adapter-recommendations)
+[10.5 Adapter Recommendations](#105-adapter-recommendations)
 
-[11\. Rating / on\_rating flows](#11.-rating-/-on_rating-flows)
+[11\. Rating / on\_rating flows](#11-rating--on_rating-flows)
 
-[11.1. rating Request (BAP → BPP)](#11.1.-rating-request-\(bap-→-bpp\))
+[11.1. rating Request (BAP → BPP)](#111-rating-request-bap--bpp)
 
-[11.2 Adapter Processing](#11.2-adapter-processing)
+[11.2 Adapter Processing](#112-adapter-processing)
 
-[11.3. on\_rating Response (BPP → BAP)](#11.3.-on_rating-response-\(bpp-→-bap\))
+[11.3. on\_rating Response (BPP → BAP)](#113-on_rating-response-bpp--bap)
 
-[11.4. Unsolicited on\_rating Calls from BPP](#11.4.-unsolicited-on_rating-calls-from-bpp)
+[11.4. Unsolicited on\_rating Calls from BPP](#114-unsolicited-on_rating-calls-from-bpp)
 
-[11.5 Adapter Recommendations](#11.5-adapter-recommendations)
+[11.5 Adapter Recommendations](#115-adapter-recommendations)
 
-[12\. Support / on\_support flows](#12.-support-/-on_support-flows)
+[12\. Support / on\_support flows](#12-support--on_support-flows)
 
-[12.1. support Request (BAP → BPP)](#12.1.-support-request-\(bap-→-bpp\))
+[12.1. support Request (BAP → BPP)](#121-support-request-bap--bpp)
 
 [Adapter Processing](#adapter-processing)
 
-[12.2. on\_support Response (BPP → BAP)](#12.2.-on_support-response-\(bpp-→-bap\))
+[12.2. on\_support Response (BPP → BAP)](#122-on_support-response-bpp--bap)
 
-[12.3. Unsolicited on\_support Calls from BPP](#12.3.-unsolicited-on_support-calls-from-bpp)
+[12.3. Unsolicited on\_support Calls from BPP](#123-unsolicited-on_support-calls-from-bpp)
 
 [Triggering Scenarios](#triggering-scenarios-1)
 
-[Example: Proactive Support Notification](#example:-proactive-support-notification)
+[Example: Proactive Support Notification](#example-proactive-support-notification)
 
-[12.4 Adapter Recommendations for support/on\_support](#12.4-adapter-recommendations-for-support/on_support)
+[12.4 Adapter Recommendations for support/on\_support](#124-adapter-recommendations-for-supporton_support)
 
 [Conclusion](#conclusion)
 
 # 
 
-# **Authors**  {#authors}
+# **Authors**
 
 | Name | Title / Affiliation |
 | :---- | :---- |
 | Ravi Prakash | Head, Architecture and Technology Ecosystem; Volunteer at Beckn Open Collective |
 
-# **Reviewers**  {#reviewers}
+# **Reviewers**
 
 | Name | Title / Affiliation |
 | :---- | :---- |
 | Pramod Varma | Chief Architect, Beckn Labs; Volunteer at Beckn Open Collective |
 | Sujith Nair | CEO, Beckn Labs; Volunteer at Beckn Open Collective |
 
-# **Overview** {#overview}
+# **Overview**
 
 This RFC specifies a detailed schema mapping between the Beckn Protocol and OCPI (Open Charge Point Interface). It describes how a Beckn Provider Platform (BPP) can implement an adapter layer to translate Beckn protocol calls into OCPI requests and responses, enabling seamless interoperability between Beckn-enabled Digital Energy Grids (DEG) and OCPI-compliant EV charging infrastructure.
 
 Note: The specifications in this document are compatible with Beckn Protocol Version 1.0
 
-# **Why Beckn ↔ OCPI Mapping Benefits the EV Charging Ecosystem** {#why-beckn-↔-ocpi-mapping-benefits-the-ev-charging-ecosystem}
+# **Why Beckn ↔ OCPI Mapping Benefits the EV Charging Ecosystem**
 
 Integrating Beckn’s open marketplace protocol with the OCPI standard yields substantial advantages for all participants:
 
@@ -261,7 +261,7 @@ Integrating Beckn’s open marketplace protocol with the OCPI standard yields su
 
 By bridging Beckn’s flexible, stateless marketplace with OCPI’s rich, charging-specific APIs, the ecosystem gains the best of both worlds: **rapid integration**, **scalable operations**, and a **seamless experience** for EV drivers, platform operators, and charging point owners alike.
 
-# **Terminology** {#terminology}
+# **Terminology**
 
 | Term | Definition |
 | :---- | :---- |
@@ -278,35 +278,35 @@ By bridging Beckn’s flexible, stateless marketplace with OCPI’s rich, chargi
 | **Payment Terms** | The Beckn `payments` array detailing settlement terms: who collects payment (`collected_by`), payment URL or parameters, timing (`type`), and status. |
 | **Unsolicited Callbacks** | Beckn messages (`on_status`, `on_update`, `on_cancel`, `on_rating`, `on_support`) pushed by the BPP without a prior request, to inform the BAP of state changes, contractual updates, cancellations, feedback invitations, or support engagement. |
 
-# **Adapter Implementation Recommendation** {#adapter-implementation-recommendation}
+# **Adapter Implementation Recommendation**
 
-## Caching Strategy {#caching-strategy}
+## Caching Strategy
 
 The adapter does **not require synchronous OCPI calls** for every Beckn request.
 
-## Recommendations: {#recommendations:}
+## Recommendations:
 
 1. Cache static data (`locations`, `tariffs`) periodically (every 10-15 mins).  
 2. Real-time data (`EVSE status`, `sessions`) can be polled at frequent intervals (e.g., every 30 seconds to 1 minute).
 
-## Adapter Responsibilities {#adapter-responsibilities}
+## Adapter Responsibilities
 
 1. Periodically poll OCPI endpoints (`locations`, `tariffs`) to populate cache.  
 2. On Beckn `search` call, fetch data directly from cache.  
 3. On Beckn `init` or `confirm` calls, translate immediately to OCPI's `/tokens`.  
 4. Map Beckn `status` and `billing` calls to OCPI’s `/sessions` and `/cdrs`.
 
-## Error Handling {#error-handling}
+## Error Handling
 
 Implement robust logging and retries when OCPI APIs are temporarily unavailable.
 
-## Authorization {#authorization}
+## Authorization
 
 Manage token-based authorization transparently between Beckn & OCPI, ensuring user consent.
 
-# **Recommended Architecture** {#recommended-architecture}
+# **Recommended Architecture**
 
-## **EV Charger** as Beckn Item (Resource) {#ev-charger-as-beckn-item-(resource)}
+## **EV Charger** as Beckn Item (Resource)
 
 In this approach, the EV charger is the primary Beckn catalog `item`.
 
@@ -337,11 +337,11 @@ In this approach, the EV charger is the primary Beckn catalog `item`.
 
 # **Implementation Guide : Architecture 1**
 
-# Schema Mapping {#schema-mapping}
+# Schema Mapping
 
 Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs/fields. This ensures that each Beckn message field can be populated from—or translated into—the corresponding OCPI data.
 
-## 1\. Catalog Discovery {#1.-catalog-discovery}
+## 1\. Catalog Discovery
 
 | Beckn Field | OCPI Source | Notes |
 | :---- | :---- | :---- |
@@ -361,7 +361,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `providers[].fulfillments[].stops[].location.gps` | `location.coordinates` | Same as catalog |
 | `providers[].fulfillments[].stops[].time.range` | `location.evse.hours` or `00:00:00–23:59:59` | OCPI Opening Hours |
 
-## 2\. Price Negotiation / Agreement {#2.-price-negotiation-/-agreement}
+## 2\. Price Negotiation / Agreement
 
 | Beckn Field | OCPI Source | Notes |
 | :---- | :---- | :---- |
@@ -376,7 +376,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `quote.breakup[].price.value` | Component cost (energy or fees) | Aggregates match total price |
 | `quote.ttl` | Duration (e.g. `"PT15M"`) | Validity of this quote |
 
-## 3\. Terms Agreement  (Billing, Fulfillment, Payment) {#3.-terms-agreement-(billing,-fulfillment,-payment)}
+## 3\. Terms Agreement  (Billing, Fulfillment, Payment)
 
 | Beckn Field | OCPI Source | Notes |
 | :---- | :---- | :---- |
@@ -391,7 +391,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `payments[].status` | `"NOT-PAID"` | BPP sets initial status |
 | `payments[].time.timestamp` | Timestamp before `confirm` | BPP‐generated |
 
-## 4\. Order Confirmation {#4.-order-confirmation}
+## 4\. Order Confirmation
 
 | Beckn Field | OCPI API | Notes |
 | :---- | :---- | :---- |
@@ -402,7 +402,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `fulfillments[].state.updated_at` | TC generated timestamp |  |
 | `fulfillments[].state.updated_by` | BPP ID |  |
 
-## 5\. Order Update / Charging Start {#5.-order-update-/-charging-start}
+## 5\. Order Update / Charging Start
 
 | Beckn Field | OCPI API | Notes |
 | :---- | :---- | :---- |
@@ -411,7 +411,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `on_update.fulfillments[].state.descriptor.code` | `"ACTIVE"` (SessionStatus.ACTIVE) | Charging in progress |
 | `on_update.fulfillments[].state.*` | Timestamp & BPP ID |  |
 
-## 6\. Track (Real-time Charging Tracking) {#6.-track-(real-time-charging-tracking)}
+## 6\. Track (Real-time Charging Tracking)
 
 | Beckn Field | OCPI API | Notes |
 | :---- | :---- | :---- |
@@ -421,7 +421,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `on_track.tracking.url` | BPP tracking URL |  |
 | `on_track.tracking.status` | `"active"` / `"inactive"` | Map SessionStatus.ACTIVE→active; else inactive |
 
-## 7\. Order Update / Charging Stop & Final CDR {#7.-order-update-/-charging-stop-&-final-cdr}
+## 7\. Order Update / Charging Stop & Final CDR
 
 | Beckn Field | OCPI API | Notes |
 | :---- | :---- | :---- |
@@ -432,7 +432,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `on_update.payments[].type` | `"POST-FULFILLMENT"` |  |
 | `on_update.payments[].time.timestamp` | CDR fetch timestamp |  |
 
-## 8\. Order Cancellation {#8.-order-cancellation}
+## 8\. Order Cancellation
 
 | Beckn Field | OCPI API | Notes |
 | :---- | :---- | :---- |
@@ -442,7 +442,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | `on_cancel.cancellation` | `{ reason_id, descriptor, updated_at, updated_by }` |  |
 | OCPI `STOP_SESSION` \+ `GET /cdrs/…` | If partial usage, calculate refund/fee |  |
 
-## 9\. Status / on\_status \- Informational Updates {#9.-status-/-on_status---informational-updates}
+## 9\. Status / on\_status \- Informational Updates
 
 | Beckn Field | OCPI API | Notes |
 | :---- | :---- | :---- |
@@ -450,7 +450,7 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 | OCPI `GET /sessions/{session_id}` | Fetch current session status |  |
 | `on_status.fulfillments[].state` | `{ descriptor:{code,name}, updated_at, updated_by }` | For `RESERVATION`, `PENDING`, `ACTIVE`, `SUSPENDED_*`, `FINISHING` |
 
-## 10\. Rating & Support {#10.-rating-&-support}
+## 10\. Rating & Support
 
 | Beckn Field | OCPI / Internal | Notes |
 | :---- | :---- | :---- |
@@ -461,15 +461,15 @@ Below is a detailed mapping between **Beckn** protocol objects and **OCPI** APIs
 
 # 
 
-# Example Implementation {#example-implementation}
+# Example Implementation
 
 Use the below link to view the sequence diagram for a typical EV charging workflow using **Architecture 1**
 
 [https://www.mermaidchart.com/app/projects/f64e3e47-bd99-40a4-ad82-10e78efe3196/diagrams/858c8256-3392-4b3d-a752-63b3e14ab35f/version/v0.1/edit](https://www.mermaidchart.com/app/projects/f64e3e47-bd99-40a4-ad82-10e78efe3196/diagrams/858c8256-3392-4b3d-a752-63b3e14ab35f/version/v0.1/edit) 
 
-## **1\. Discovery** {#1.-discovery}
+## **1\. Discovery**
 
-### 1.1 `search` Request (BAP → BPP) {#1.1-search-request-(bap-→-bpp)}
+### 1.1 `search` Request (BAP → BPP)
 
 ```json
 {
@@ -512,13 +512,13 @@ Use the below link to view the sequence diagram for a typical EV charging workfl
 }
 ```
 
-### 1.2. OCPI Adapter Processing (inside BPP) {#1.2.-ocpi-adapter-processing-(inside-bpp)}
+### 1.2. OCPI Adapter Processing (inside BPP)
 
 1. **Cache Freshness Check**  
      
    * If cached data \> 10 min old, fetch fresh OCPI data:
 
-```
+```http
 GET /ocpi/2.2/locations?country_code=IN&party_id=BCN
 GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 ```
@@ -581,7 +581,7 @@ GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 
 4. **Compose Beckn `on_search`**
 
-### 1.3. `on_search` Response (BPP → BAP) {#1.3.-on_search-response-(bpp-→-bap)}
+### 1.3. `on_search` Response (BPP → BAP)
 
 ```json
 {
@@ -750,7 +750,7 @@ GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 }
 ```
 
-### 1.4 Adapter Recommendations for `search`/`on_search` {#1.4-adapter-recommendations-for-search/on_search}
+### 1.4 Adapter Recommendations for `search`/`on_search`
 
 1. **Stateless Handling**  
      
@@ -792,9 +792,9 @@ GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 
 With this, your BPP adapter will efficiently bridge Beckn’s `search`/`on_search` with OCPI’s discovery APIs—fully stateless, standards-compliant, and performant.
 
-## **2\. Select / on\_select Workflow** {#2.-select-/-on_select-workflow}
+## **2\. Select / on\_select Workflow**
 
-### 2.1. `select` Request (BAP → BPP) {#2.1.-select-request-(bap-→-bpp)}
+### 2.1. `select` Request (BAP → BPP)
 
 ```json
 {
@@ -827,7 +827,7 @@ With this, your BPP adapter will efficiently bridge Beckn’s `search`/`on_searc
 }
 ```
 
-### 2.2. OCPI Adapter Processing (inside BPP) {#2.2.-ocpi-adapter-processing-(inside-bpp)}
+### 2.2. OCPI Adapter Processing (inside BPP)
 
 1. **Fetch latest tariff**
 
@@ -851,7 +851,7 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
    * **Total quoted price**: ₹100.00  
    * **Quote TTL**: 15 minutes (`"PT15M"`)
 
-### 2.3. `on_select` Response (BPP → BAP) {#2.3.-on_select-response-(bpp-→-bap)}
+### 2.3. `on_select` Response (BPP → BAP)
 
 ```json
 {
@@ -910,7 +910,7 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
 }
 ```
 
-### 2.4 Adapter Recommendations for `select`/`on_select` {#2.4-adapter-recommendations-for-select/on_select}
+### 2.4 Adapter Recommendations for `select`/`on_select`
 
 1. **Stateless Echo**  
      
@@ -948,9 +948,9 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
      
    * Instrument OCPI interactions (latency, success/fail) for SLA compliance.
 
-## **3\. Init / On\_init Workflow** {#3.-init-/-on_init-workflow}
+## **3\. Init / On\_init Workflow**
 
-### 3.1. `init` Request (BAP → BPP) {#3.1.-init-request-(bap-→-bpp)}
+### 3.1. `init` Request (BAP → BPP)
 
 ```json
 {
@@ -1034,7 +1034,7 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
 }
 ```
 
-### 3.2. OCPI Adapter Processing (inside BPP) {#3.2.-ocpi-adapter-processing-(inside-bpp)}
+### 3.2. OCPI Adapter Processing (inside BPP)
 
 Between receiving the **`init`** request and sending **`on_init`**, the BPP adapter must perform the following OCPI operations and internal computations:
 
@@ -1107,7 +1107,7 @@ total_quote = energy_cost + service_fee
 
 This processing block ensures the BPP’s `on_init` response is both **stateless** (echoing the original init fields) and **OCPI-validated** (using live tariff and availability data).
 
-### 3.3. `on_init` Response (BPP → BAP) {#3.3.-on_init-response-(bpp-→-bap)}
+### 3.3. `on_init` Response (BPP → BAP)
 
 ```json
 {
@@ -1210,7 +1210,7 @@ This processing block ensures the BPP’s `on_init` response is both **stateless
 }
 ```
 
-### 3.4. Adapter Recommendations for `init`/`on_init` {#3.4.-adapter-recommendations-for-init/on_init}
+### 3.4. Adapter Recommendations for `init`/`on_init`
 
 1. **Stateless Echo**  
      
@@ -1261,9 +1261,9 @@ This processing block ensures the BPP’s `on_init` response is both **stateless
      
    * Log OCPI interactions (requests, responses, latencies, errors) for audit and SLA monitoring.
 
-## **4\. Confirm / on\_confirm Workflow** {#4.-confirm-/-on_confirm-workflow}
+## **4\. Confirm / on\_confirm Workflow**
 
-### 4.1. `confirm` Request (BAP → BPP) {#4.1.-confirm-request-(bap-→-bpp)}
+### 4.1. `confirm` Request (BAP → BPP)
 
 ```json
 {
@@ -1370,7 +1370,7 @@ This processing block ensures the BPP’s `on_init` response is both **stateless
 }
 ```
 
-### 4.2. OCPI Adapter Processing (inside BPP) {#4.2.-ocpi-adapter-processing-(inside-bpp)}
+### 4.2. OCPI Adapter Processing (inside BPP)
 
 1. **Authorize Token via OCPI**
 
@@ -1413,7 +1413,7 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
    * Save order with all echoed fields, plus `"auth_token": "AUTH-GCN-20250730-001"`.  
    * Set `fulfillments[0].state = "PENDING"` (OCPI SessionStatus.PENDING).
 
-### 4.3. `on_confirm` Response (BPP → BAP) {#4.3.-on_confirm-response-(bpp-→-bap)}
+### 4.3. `on_confirm` Response (BPP → BAP)
 
 ```json
 {
@@ -1517,7 +1517,7 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
 }
 ```
 
-### 4.4. Adapter Recommendations for `confirm`/`on_confirm` {#4.4.-adapter-recommendations-for-confirm/on_confirm}
+### 4.4. Adapter Recommendations for `confirm`/`on_confirm`
 
 1. **Stateless Echo**  
      
@@ -1555,9 +1555,9 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
      
    * Log the OCPI `/authorize` and `/locations` calls for traceability and SLA monitoring.
 
-## **5\. Update / On\_update flows (Charging Start)** {#5.-update-/-on_update-flows-(charging-start)}
+## **5\. Update / On\_update flows (Charging Start)**
 
-### 5.1. `update` Request (BAP → BPP) {#5.1.-update-request-(bap-→-bpp)}
+### 5.1. `update` Request (BAP → BPP)
 
 ```json
 {
@@ -1582,7 +1582,7 @@ GET https://api.cpo1.com/ocpi/2.2/locations/LOC-DELHI-001
 }
 ```
 
-### 5.2. OCPI Adapter Processing (inside BPP) {#5.2.-ocpi-adapter-processing-(inside-bpp)}
+### 5.2. OCPI Adapter Processing (inside BPP)
 
 1. **Start Charging Session**
 
@@ -1616,7 +1616,7 @@ Content-Type: application/json
    * Store `"session_id": "SESSION-9876543210"` in order record.  
    * Set `fulfillments[0].state = "ACTIVE"` (OCPI’s SessionStatus.ACTIVE).
 
-### 5.3. `on_update` Response (BPP → BAP) {#5.3.-on_update-response-(bpp-→-bap)}
+### 5.3. `on_update` Response (BPP → BAP)
 
 ```json
 {
@@ -1661,7 +1661,7 @@ Content-Type: application/json
 }
 ```
 
-### 5.4. Adapter Recommendations for `update`/`on_update` {#5.4.-adapter-recommendations-for-update/on_update}
+### 5.4. Adapter Recommendations for `update`/`on_update`
 
 1. **Stateless Echo**  
      
@@ -1698,9 +1698,9 @@ Content-Type: application/json
      
    * Log the OCPI command request/response and measure latency to ensure SLA compliance.
 
-## 6\. Track / on\_track Flows (Charging session) {#6.-track-/-on_track-flows-(charging-session)}
+## 6\. Track / on\_track Flows (Charging session)
 
-### 6.1. `track` Request (BAP → BPP) {#6.1.-track-request-(bap-→-bpp)}
+### 6.1. `track` Request (BAP → BPP)
 
 ```json
 POST /track
@@ -1725,7 +1725,7 @@ Content-Type: application/json
 }
 ```
 
-### 6.2. OCPI Adapter Processing (inside the BPP) {#6.2.-ocpi-adapter-processing-(inside-the-bpp)}
+### 6.2. OCPI Adapter Processing (inside the BPP)
 
 1. **Lookup Session**  
      
@@ -1752,7 +1752,7 @@ Authorization: Token {cpo_api_token}
    * **tracking.url** ← `"https://track.bluechargenet-aggregator.io/session/" + session_id`  
    * **tracking.status** ← `"active"` if OCPI `status == "ACTIVE"`, otherwise `"inactive"`
 
-### 6.3. `on_track` Response (BPP → BAP) {#6.3.-on_track-response-(bpp-→-bap)}
+### 6.3. `on_track` Response (BPP → BAP)
 
 ```json
 POST /on_track
@@ -1781,7 +1781,7 @@ Content-Type: application/json
 }
 ```
 
-### 6.4. Adapter Recommendations for `track`/`on_track` {#6.4.-adapter-recommendations-for-track/on_track}
+### 6.4. Adapter Recommendations for `track`/`on_track`
 
 1. **Stateless Operation**  
      
@@ -1823,9 +1823,9 @@ Content-Type: application/json
      
    * Log tracking requests and OCPI interactions for SLA and debugging.
 
-## **7\. Update / On\_update Flows (End of charging session)** {#7.-update-/-on_update-flows-(end-of-charging-session)}
+## **7\. Update / On\_update Flows (End of charging session)**
 
-### 7.1. `update` Request (BAP → BPP) {#7.1.-update-request-(bap-→-bpp)}
+### 7.1. `update` Request (BAP → BPP)
 
 ```json
 POST /update
@@ -1853,7 +1853,7 @@ Content-Type: application/json
 }
 ```
 
-### 7.2. OCPI Adapter Processing (inside BPP) {#7.2.-ocpi-adapter-processing-(inside-bpp)}
+### 7.2. OCPI Adapter Processing (inside BPP)
 
 1. **Stop Charging Session**
 
@@ -1921,7 +1921,7 @@ Authorization: Token {cpo_api_token}
      * `status` → `"NOT-PAID"`  
      * `time.timestamp` → `"2025-07-30T16:00:01Z"`
 
-### 7.3. `on_update` Response (BPP → BAP) {#7.3.-on_update-response-(bpp-→-bap)}
+### 7.3. `on_update` Response (BPP → BAP)
 
 ```json
 POST /on_update
@@ -1986,7 +1986,7 @@ Content-Type: application/json
 }
 ```
 
-### 7.4 Adapter Recommendations for Stopping & Finalizing Payment {#7.4-adapter-recommendations-for-stopping-&-finalizing-payment}
+### 7.4 Adapter Recommendations for Stopping & Finalizing Payment
 
 1. **Stateless Echo**  
      
@@ -2035,11 +2035,11 @@ Content-Type: application/json
      
    * Log all OCPI STOP\_SESSION and CDR calls along with latencies and statuses for SLA compliance.
 
-## **8\. Asynchronous on\_update \- When charging terms change on an active order** {#8.-asynchronous-on_update---when-charging-terms-change-on-an-active-order}
+## **8\. Asynchronous on\_update \- When charging terms change on an active order**
 
 When the BPP detects a change that **alters the agreed-upon payment terms** (but does **not** cancel the order), it must send an unsolicited `on_update` with the new `quote` and `payments`. These updates occur **without** a BAP-initiated action.
 
-### 8.1. Triggering Events {#8.1.-triggering-events}
+### 8.1. Triggering Events
 
 The BPP should push an unsolicited `on_update` **only** when one of these events occurs **and** the payment terms change:
 
@@ -2054,7 +2054,7 @@ The BPP should push an unsolicited `on_update` **only** when one of these events
 
 Intermediate state changes (e.g. `PENDING`, `ACTIVE`, `SUSPENDED_*`, `FINISHING`) that **do not** affect payment go via `on_status`, **not** `on_update`.
 
-### 8.2. Fulfillment State Schema {#8.2.-fulfillment-state-schema}
+### 8.2. Fulfillment State Schema
 
 ```
 state:
@@ -2070,7 +2070,7 @@ state:
 
 ### 
 
-### 8.3. Example: Time-of-Day Tariff Change Mid-Session {#8.3.-example:-time-of-day-tariff-change-mid-session}
+### 8.3. Example: Time-of-Day Tariff Change Mid-Session
 
 At **16:00**, peak rates kick in; the remaining 2 kWh is now ₹25/kWh instead of ₹18/kWh.
 
@@ -2167,7 +2167,7 @@ Content-Type: application/json
 }
 ```
 
-### 8.4. Adapter Recommendations {#8.4.-adapter-recommendations}
+### 8.4. Adapter Recommendations
 
 1. **Detect Only Term-Altering Events**  
      
@@ -2211,9 +2211,9 @@ Content-Type: application/json
 
 ## 
 
-## **9\. Status / on\_status flows (Informational updates)** {#9.-status-/-on_status-flows-(informational-updates)}
+## **9\. Status / on\_status flows (Informational updates)**
 
-### 9.1. `status` Request (BAP → BPP) {#9.1.-status-request-(bap-→-bpp)}
+### 9.1. `status` Request (BAP → BPP)
 
 ```json
 POST /status
@@ -2238,7 +2238,7 @@ Content-Type: application/json
 }
 ```
 
-### 9.2 Adapter Processing {#9.2-adapter-processing}
+### 9.2 Adapter Processing
 
 1. **Lookup Order & Session**  
      
@@ -2257,7 +2257,7 @@ Authorization: Token {cpo_api_token}
      
    * Build the `state` object per Fulfillment State schema.
 
-### 9.3. `on_status` Response (BPP → BAP) {#9.3.-on_status-response-(bpp-→-bap)}
+### 9.3. `on_status` Response (BPP → BAP)
 
 ```json
 POST /on_status
@@ -2373,11 +2373,11 @@ Content-Type: application/json
 }
 ```
 
-### 9.4 Unsolicited `on_status` Calls from BPP {#9.4-unsolicited-on_status-calls-from-bpp}
+### 9.4 Unsolicited `on_status` Calls from BPP
 
 The BPP should also **push** `on_status` whenever **informational** OCPI session statuses change, **without** a prior `status` request. These updates keep the BAP in sync with charger state but do **not** affect payment terms.
 
-### 9.5 Triggering Status Codes (Informational Only) {#9.5-triggering-status-codes-(informational-only)}
+### 9.5 Triggering Status Codes (Informational Only)
 
 * `RESERVATION`  
 * `PENDING`  
@@ -2388,7 +2388,7 @@ The BPP should also **push** `on_status` whenever **informational** OCPI session
 
 **Note:** Do **not** send unsolicited `on_status` for `COMPLETED` or `INVALID`—those are handled by `on_update` (or `on_cancel` for invalid sessions).
 
-### 9.6. Example: Station-Side Pause (`SUSPENDED_EVSE`) {#9.6.-example:-station-side-pause-(suspended_evse)}
+### 9.6. Example: Station-Side Pause (`SUSPENDED_EVSE`)
 
 ```json
 POST /on_status
@@ -2502,7 +2502,7 @@ Content-Type: application/json
 }
 ```
 
-### 9.7 Recommendations for Unsolicited `on_status` {#9.7-recommendations-for-unsolicited-on_status}
+### 9.7 Recommendations for Unsolicited `on_status`
 
 1. **Detect Informational Statuses**  
      
@@ -2534,9 +2534,9 @@ Content-Type: application/json
 
 ## 
 
-## 10\. Cancel / on\_cancel flows {#10.-cancel-/-on_cancel-flows}
+## 10\. Cancel / on\_cancel flows
 
-### 10.1. `cancel` Request (BAP → BPP) {#10.1.-cancel-request-(bap-→-bpp)}
+### 10.1. `cancel` Request (BAP → BPP)
 
 ```json
 POST /cancel
@@ -2566,7 +2566,7 @@ Content-Type: application/json
 }
 ```
 
-### 10.2 Adapter Processing {#10.2-adapter-processing}
+### 10.2 Adapter Processing
 
 1. **Lookup Order & Session**  
      
@@ -2606,7 +2606,7 @@ GET /ocpi/2.2/cdrs/SESSION-9876543210
    * `order.cancellation` → `{ reason_id, descriptor, time, updated_by }`  
    * `payments` → adjust `params.amount` and `status` per refund logic.
 
-### 10.3. `on_cancel` Response (BPP → BAP) {#10.3.-on_cancel-response-(bpp-→-bap)}
+### 10.3. `on_cancel` Response (BPP → BAP)
 
 ```json
 POST /on_cancel
@@ -2691,11 +2691,11 @@ Content-Type: application/json
 }
 ```
 
-### 10.4 Unsolicited `on_cancel` Calls from BPP {#10.4-unsolicited-on_cancel-calls-from-bpp}
+### 10.4 Unsolicited `on_cancel` Calls from BPP
 
 The BPP should **push** an unsolicited `on_cancel` when the order must be cancelled **by the provider** due to external events:
 
-### Triggering Scenarios {#triggering-scenarios}
+### Triggering Scenarios
 
 * **Charger Hardware Failure** Station reports EVSE offline or faulty → no session possible.  
 * **Connector Incompatibility** Vehicle cannot connect to the charger standard → session invalid.  
@@ -2704,7 +2704,7 @@ The BPP should **push** an unsolicited `on_cancel` when the order must be cancel
 * **Station Closure / Maintenance** CPO closes a station unexpectedly or for emergency work.  
 * **Regulatory / Grid Emergency Shutdown** Grid operator forces charging halt.
 
-### Example: Charger Hardware Failure {#example:-charger-hardware-failure}
+### Example: Charger Hardware Failure
 
 ```json
 POST /on_cancel
@@ -2788,7 +2788,7 @@ Content-Type: application/json
 }
 ```
 
-### 10.5 Adapter Recommendations {#10.5-adapter-recommendations}
+### 10.5 Adapter Recommendations
 
 1. **Detect Cancellation Conditions**  
      
@@ -2824,9 +2824,9 @@ Content-Type: application/json
      
    * Record all unsolicited cancellations and their triggers for audit and compliance.
 
-## **11\. Rating / on\_rating flows** {#11.-rating-/-on_rating-flows}
+## **11\. Rating / on\_rating flows**
 
-### 11.1. `rating` Request (BAP → BPP) {#11.1.-rating-request-(bap-→-bpp)}
+### 11.1. `rating` Request (BAP → BPP)
 
 ```
 POST /rating
@@ -2862,7 +2862,7 @@ Content-Type: application/json
 }
 ```
 
-### 11.2 Adapter Processing {#11.2-adapter-processing}
+### 11.2 Adapter Processing
 
 1. **Persist Ratings**  
      
@@ -2874,7 +2874,7 @@ Content-Type: application/json
      
    * If additional qualitative input is required, prepare an **XInput** object (per BECKN-007) to solicit it; otherwise, omit or return an empty XInput.
 
-### 11.3. `on_rating` Response (BPP → BAP) {#11.3.-on_rating-response-(bpp-→-bap)}
+### 11.3. `on_rating` Response (BPP → BAP)
 
 ```
 POST /on_rating
@@ -2912,7 +2912,7 @@ Content-Type: application/json
 "feedback_form": {}
 ```
 
-### 11.4. Unsolicited `on_rating` Calls from BPP {#11.4.-unsolicited-on_rating-calls-from-bpp}
+### 11.4. Unsolicited `on_rating` Calls from BPP
 
 The BPP may proactively invite richer feedback once the order is `COMPLETED`, by pushing an unsolicited `on_rating` with an XInput form:
 
@@ -2946,7 +2946,7 @@ Content-Type: application/json
 }
 ```
 
-### 11.5 Adapter Recommendations {#11.5-adapter-recommendations}
+### 11.5 Adapter Recommendations
 
 1. **Stateless Echo**  
      
@@ -2995,9 +2995,9 @@ feedback_form:
      
    * Track submission rates, form loads, and completion rates for continuous improvement.
 
-## **12\. Support / on\_support flows** {#12.-support-/-on_support-flows}
+## **12\. Support / on\_support flows**
 
-### 12.1. `support` Request (BAP → BPP) {#12.1.-support-request-(bap-→-bpp)}
+### 12.1. `support` Request (BAP → BPP)
 
 ```
 POST /support
@@ -3025,7 +3025,7 @@ Content-Type: application/json
 }
 ```
 
-### Adapter Processing {#adapter-processing}
+### Adapter Processing
 
 1. **Ticket Creation**  
      
@@ -3039,7 +3039,7 @@ Content-Type: application/json
    * Assign a `ref_id` for the ticket.  
    * Determine support contact channels: phone, email, and self-service URL.
 
-### 12.2. `on_support` Response (BPP → BAP) {#12.2.-on_support-response-(bpp-→-bap)}
+### 12.2. `on_support` Response (BPP → BAP)
 
 ```
 POST /on_support
@@ -3074,18 +3074,18 @@ Content-Type: application/json
 * **`email`**: Support inbox for follow-up  
 * **`url`**: Web portal to view ticket status and chat
 
-### 12.3. Unsolicited `on_support` Calls from BPP {#12.3.-unsolicited-on_support-calls-from-bpp}
+### 12.3. Unsolicited `on_support` Calls from BPP
 
 The BPP may **proactively** notify the BAP that support is engaged when certain **critical events** occur (without a prior `/support` call):
 
-### Triggering Scenarios {#triggering-scenarios-1}
+### Triggering Scenarios
 
 * **Charger Hardware Failure**  
 * **Billing Dispute Raised**  
 * **Session Invalidated**  
 * **Emergency Station Shutdown**
 
-### Example: Proactive Support Notification {#example:-proactive-support-notification}
+### Example: Proactive Support Notification
 
 ```
 POST /on_support
@@ -3115,7 +3115,7 @@ Content-Type: application/json
 }
 ```
 
-### 12.4 Adapter Recommendations for `support`/`on_support` {#12.4-adapter-recommendations-for-support/on_support}
+### 12.4 Adapter Recommendations for `support`/`on_support`
 
 1. **Stateless Echo**  
      
@@ -3151,7 +3151,7 @@ Content-Type: application/json
      
    * Track support requests and notifications to meet SLA and response-time targets.
 
-# **Conclusion** {#conclusion}
+# **Conclusion**
 
 This RFC has detailed a comprehensive, Beckn-first integration strategy for EV charging, mapping each Beckn protocol step (`search` → `on_search`, `select` → `on_select`, `init` → `on_init`, `confirm` → `on_confirm`, `update`/`track`/`cancel`/`rating`/`support` and their callbacks) to the corresponding OCPI APIs. Key takeaways include:
 
