@@ -2636,6 +2636,223 @@ EV user reveives a notification in case of any error occuring during charging se
 }
 ```
 
+### **Update(stop-charging)**
+
+### **Method**
+
+POST 
+
+### **Use Case**
+
+Raghav initiates a stop chargig request when his requirement is met.
+Note: In practive it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
+
+#### Request
+
+```json
+{
+  "context": {
+    "domain": "deg:ev-charging",
+    "action": "update",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
+    "version": "2.0.0",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T10:15:00Z",
+    "ttl": "15S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
+        "@type": "beckn:Party",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:name": "Ravi Kumar",
+        "beckn:organization": {
+          "descriptor": {
+            "name": "GreenCharge Pvt Ltd"
+          }
+        },
+        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
+        "beckn:email": "ravi.kumar@greencharge.com",
+        "beckn:phone": "+918765432100",
+        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            },
+            "beckn:offerAttributes": {
+              "@type": "ChargingOffer",
+              "offerType": "CHARGING_SESSION",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          "beckn:quantity": 5,
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 100.0,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 72.73,
+            "currency": "INR",
+            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 14.55,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -10.92,
+            "currency": "INR",
+            "description": "Offer discount (20%)"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:status": "ACTIVE",
+        "beckn:deliveryAttributes": {
+          "@type": "ChargingSession",
+          "sessionId": "session-001",
+          "sessionStatus": "END",
+          "sessionType": "CHARGING",
+          "startTime": "2025-01-27T10:00:00Z",
+          "endTime": "2025-01-27T11:30:00Z",
+          "customer": {
+            "name": "Ravi Kumar",
+            "phone": "+91-9887766554"
+          },
+          "vehicle": {
+            "make": "Tata",
+            "model": "Nexon EV"
+          },
+          "location": {
+            "gps": "28.345345,77.389754",
+            "address": "Connaught Place, New Delhi",
+            "descriptor": {
+              "name": "BlueCharge Connaught Place Station"
+            }
+          },
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "stationStatus": "Available",
+          "authorizationMode": "OTP",
+          "authorizationToken": "7484"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 100.0
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-01-27T10:05:00Z",
+        "beckn:acceptedPaymentMethods": [
+          "schema:BankTransfer",
+          "schema:UPI",
+          "schema:Wallet"
+        ],
+        "beckn:beneficiary": "BPP"
+      },
+      "beckn:orderAttributes": {
+        "@type": "ChargingSession",
+        "sessionPreferences": {
+          "preferredStartTime": "2025-01-27T10:00:00Z",
+          "preferredEndTime": "2025-01-27T11:30:00Z",
+          "notificationPreferences": {
+            "email": true,
+            "sms": true,
+            "push": false
+          }
+        },
+        "authorizationMode": "OTP",
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+      }
+    }
+  }
+}
+
+```
+
 ### **Async on\_update(stop-charging)**
 
 ### **Method**
@@ -2644,7 +2861,7 @@ POST
 
 ### **Use Case**
 
-At \~60 minutes, the session stops (or notifies him to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
+At \~60 minutes(or upon the EV user request), the session stops (or notifies hthe EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
 
 #### Request
 
@@ -6277,7 +6494,224 @@ EV user reveives details in case of any error during a charging session: [Exampl
 }
 ```
 
-### **Asynchronous on\_update (stop charging)**
+### **Update(stop-charging)**
+
+### **Method**
+
+POST 
+
+### **Use Case**
+
+Raghav initiates a stop chargig request when his requirement is met.
+Note: In practive it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
+
+#### Request
+
+```json
+{
+  "context": {
+    "domain": "deg:ev-charging",
+    "action": "update",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
+    "version": "2.0.0",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T10:15:00Z",
+    "ttl": "15S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
+        "@type": "beckn:Party",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:name": "Ravi Kumar",
+        "beckn:organization": {
+          "descriptor": {
+            "name": "GreenCharge Pvt Ltd"
+          }
+        },
+        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
+        "beckn:email": "ravi.kumar@greencharge.com",
+        "beckn:phone": "+918765432100",
+        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            },
+            "beckn:offerAttributes": {
+              "@type": "ChargingOffer",
+              "offerType": "CHARGING_SESSION",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          "beckn:quantity": 5,
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 100.0,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 72.73,
+            "currency": "INR",
+            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 14.55,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -10.92,
+            "currency": "INR",
+            "description": "Offer discount (20%)"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:status": "ACTIVE",
+        "beckn:deliveryAttributes": {
+          "@type": "ChargingSession",
+          "sessionId": "session-001",
+          "sessionStatus": "END",
+          "sessionType": "CHARGING",
+          "startTime": "2025-01-27T10:00:00Z",
+          "endTime": "2025-01-27T11:30:00Z",
+          "customer": {
+            "name": "Ravi Kumar",
+            "phone": "+91-9887766554"
+          },
+          "vehicle": {
+            "make": "Tata",
+            "model": "Nexon EV"
+          },
+          "location": {
+            "gps": "28.345345,77.389754",
+            "address": "Connaught Place, New Delhi",
+            "descriptor": {
+              "name": "BlueCharge Connaught Place Station"
+            }
+          },
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "stationStatus": "Available",
+          "authorizationMode": "OTP",
+          "authorizationToken": "7484"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 100.0
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-01-27T10:05:00Z",
+        "beckn:acceptedPaymentMethods": [
+          "schema:BankTransfer",
+          "schema:UPI",
+          "schema:Wallet"
+        ],
+        "beckn:beneficiary": "BPP"
+      },
+      "beckn:orderAttributes": {
+        "@type": "ChargingSession",
+        "sessionPreferences": {
+          "preferredStartTime": "2025-01-27T10:00:00Z",
+          "preferredEndTime": "2025-01-27T11:30:00Z",
+          "notificationPreferences": {
+            "email": true,
+            "sms": true,
+            "push": false
+          }
+        },
+        "authorizationMode": "OTP",
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+      }
+    }
+  }
+}
+
+```
+
+### **Synchronous/Asynchronous on\_update (stop charging)**
 
 ### **Method**
 
