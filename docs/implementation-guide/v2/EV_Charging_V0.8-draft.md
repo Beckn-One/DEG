@@ -540,7 +540,7 @@ Important points of consideration:
 
 ### **API Calls and Schema**
 
-Note: The API calls and schema for walk-in charging are identical to the advance reservation use case (Use Case 2\) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
+Note: The API calls and schema for walk-in charging are identical to the [advance reservation use case](#use-case-3) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
 
 #### **discover**
 
@@ -555,7 +555,7 @@ Raghav scans QR code on charger using his BAP user app
 ##### Request
 
 <details>
-<summary>Example request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -583,7 +583,7 @@ Fetching details of a specific charger (EVSE) after reaching site (using its ide
 ##### Successful Response
 
 <details>
-<summary>Example response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json{
     "ack_status": "ACK",
@@ -612,7 +612,7 @@ The app receives the charger’s details (connector, power rating, live status, 
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -896,7 +896,7 @@ CPO returns details of a specific charger: [Example](https://github.com/Beckn-On
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -919,7 +919,7 @@ Raghav selects a service offering from the options he gets. He chooses a 100 INR
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1023,7 +1023,7 @@ EV user requests charge worth specific amount in currency: [Example](https://git
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1046,7 +1046,7 @@ Raghav receives estimated quotations for the selected service.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1190,7 +1190,7 @@ CPO responds with dynamically calculated quote: [Example](https://github.com/Bec
 ##### Successful response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1213,7 +1213,7 @@ Raghav provides his billing information.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1398,7 +1398,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 ##### Successful response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1423,7 +1423,7 @@ He chooses UPI and authorizes payment (or an authorization hold, as supported)
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1636,7 +1636,7 @@ CPO responds with final quote with payment terms: [Example](https://github.com/B
 ##### Successful response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1659,7 +1659,7 @@ Raghav confirms the order.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1867,7 +1867,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 ##### Successful response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -1890,7 +1890,7 @@ The app returns a booking/transaction ID along with the other charging session d
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2099,7 +2099,7 @@ CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blo
 ##### Successful response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2122,7 +2122,7 @@ Raghav plugs in and starts the session from the app.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2334,7 +2334,7 @@ EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/bl
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2357,7 +2357,7 @@ Response for the charging session initiation.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2580,7 +2580,7 @@ CPO responds with confirmed start of charging session: [Example](https://github.
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2603,7 +2603,7 @@ Raghav requests to track the live status of the charging session. state of charg
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2645,7 +2645,7 @@ EV User tracks a live charging session in real-time: [Example](https://github.co
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2668,7 +2668,7 @@ Raghav receives the state of charge(how much charging has been done) of the vehi
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2733,7 +2733,7 @@ EV User receives a live charging session in real-time: [Example]
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2756,7 +2756,7 @@ Raghav receives a notification if there is any error during the charging session
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -2988,7 +2988,7 @@ EV user reveives a notification in case of any error occuring during charging se
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3011,7 +3011,7 @@ At \~60 minutes, the session stops (or notifies him to unplug). He receives a di
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3252,7 +3252,7 @@ EV user receives the session details upon chargign session end: [Example](https:
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3275,7 +3275,7 @@ Raghav provides rating for the charging session.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3321,7 +3321,7 @@ EV user rates charging service experience: [Example](https://github.com/Beckn-On
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3344,7 +3344,7 @@ Raghav receives an achievement after providing a rating.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3393,7 +3393,7 @@ CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/exampl
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3418,7 +3418,7 @@ Raghav reaches out for support.
 EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/17_support/time-based-ev-charging-slot-support.json)
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3455,7 +3455,7 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3478,7 +3478,7 @@ Raghav receives a response to his support request.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3523,7 +3523,7 @@ CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3631,7 +3631,7 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 ##### Discovery of EV charging services within a circular boundary
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -3670,7 +3670,7 @@ Discovery of EV charging services within a circular boundary: [Example](https://
 ##### Discovery of EV charging stations along a route
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3712,7 +3712,7 @@ Discovery of EV charging stations along a route: [Example](https://github.com/Be
 ##### Discovery within circle \+ connector specs as filters
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3743,7 +3743,7 @@ Discovery of EV Charging stations within a circular boundary using connector spe
 ##### Discovery within circle \+ vehicle specifications as filters
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3776,7 +3776,7 @@ Discovery of EV Charging stations within circular boundary using vehicle specifi
 ##### Discovery of services offered by a specific CPO
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3796,7 +3796,7 @@ Discovery of EV charging services offered by a specific CPO: [Example](https://g
 ##### Viewing details of a single charging station (by its Item Identifier)
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3815,7 +3815,7 @@ Viewing details of a single charging station (using its Identifier): [Example](h
 ##### Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3834,7 +3834,7 @@ Fetching details of a specific charger (EVSE) after reaching site (using its ide
 ##### Discovering chargers in a specific circular area, a specific connector type and availability time range
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3875,7 +3875,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -3903,7 +3903,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -4337,7 +4337,7 @@ This section outlines the catalogs array, returned in on\_discover, containing p
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -4420,7 +4420,7 @@ Adam selects a charging session slot.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -4529,7 +4529,7 @@ EV user requests charge worth specific amount in currency: [Example](https://git
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -4552,7 +4552,7 @@ Adam receives an estimated quotation for the selected slot.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -4711,7 +4711,7 @@ Recommendations for BPP:
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -4806,7 +4806,7 @@ Adam provides his billing details.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -5003,7 +5003,7 @@ Recommendations for BAP:
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -5026,7 +5026,7 @@ Adam receives the terms of the order(payment, cancellation, overcharge etc) and 
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -5256,7 +5256,7 @@ If authorization is required for confirming the order, the BPP will share it ins
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -5281,7 +5281,7 @@ Adam receives a payment confirmation from BPP.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -5322,7 +5322,7 @@ In case the BAP is not receiving on\_status from the BPP, it may also allow the 
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -5345,7 +5345,7 @@ Adam accepts the terms of the order and confirms the order.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -5572,7 +5572,7 @@ Recommendations for BAP:
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -5595,7 +5595,7 @@ Adam receives a reservation ID and QR code, plus a navigation link to the chargi
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -5814,7 +5814,7 @@ Recommendations for BPP:
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -5849,7 +5849,7 @@ The backend matches it to her **reservation ID**, verifies her **OTP authorizati
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -6073,7 +6073,7 @@ EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/bl
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -6096,7 +6096,7 @@ Adam receives an acknowledgement on charging initialisation.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -6324,7 +6324,7 @@ CPO starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/d
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -6347,7 +6347,7 @@ Adam initiates a request to track the charging progress of the active charging s
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -6394,7 +6394,7 @@ Holds parameters that instruct how the tracking process should operate during an
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -6417,7 +6417,7 @@ Adam receives the current charging progress.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -6567,7 +6567,7 @@ Adam receives notification when there is any error during an ongoing charging se
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -6793,7 +6793,7 @@ EV user reveives details in case of any error during a charging session: [Exampl
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -6816,7 +6816,7 @@ Adam receives an update when the charging session ends. This might reflect payme
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -7071,7 +7071,7 @@ EV user receives final order details after the charging session ends: [Example](
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7100,7 +7100,7 @@ Adam cancels a scheduled charging session.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7130,7 +7130,7 @@ EV user cancels a charging slot reservation: [Example](https://github.com/Beckn-
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7153,7 +7153,7 @@ Adam receives order cancellation confirmation.  The advance payment will be adju
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7177,7 +7177,7 @@ CPO cancels a charging session reservation: [Example](https://github.com/Beckn-O
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7200,7 +7200,7 @@ Adam rates the order.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -7245,7 +7245,7 @@ EV user rates charging service experience: [Example](https://github.com/Beckn-On
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7268,7 +7268,7 @@ Adam receives an acknowledgement.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -7317,7 +7317,7 @@ CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/exampl
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7340,7 +7340,7 @@ Adma reaches out for support.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -7380,7 +7380,7 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
@@ -7403,7 +7403,7 @@ Raghav receives a response to his support request.
 ##### Request
 
 <details>
-<summary>Example Request json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 
@@ -7449,7 +7449,7 @@ CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob
 ##### Successful Response
 
 <details>
-<summary>Example Response json</summary>
+<summary><span style="color:green">Expand to see json</span></summary>
 
 ```json
 {
