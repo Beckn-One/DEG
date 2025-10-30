@@ -2,6 +2,7 @@
 
 <details>
   <summary>Table of Contents</summary>
+  
 - [Implementation Guide - EV Charging - Version 0.8 (DRAFT)](#implementation-guide---ev-charging---version-08-draft)
   - [Request for Comments](#request-for-comments)
   - [1. Copyright Notice](#1-copyright-notice)
