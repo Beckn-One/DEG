@@ -2,7 +2,8 @@
 
 <details>
   <summary>Table of Contents</summary>
-  
+created using [this](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension.
+
 - [Implementation Guide - EV Charging - Version 0.8 (DRAFT)](#implementation-guide---ev-charging---version-08-draft)
   - [Request for Comments](#request-for-comments)
   - [1. Copyright Notice](#1-copyright-notice)
@@ -61,7 +62,6 @@
         - [**Method**](#method-3)
         - [**Use Case**](#use-case-3)
         - [Request](#request-3)
-        - [](#)
         - [Successful response](#successful-response-3)
       - [**init**](#init)
         - [**Method**](#method-4)
@@ -72,19 +72,16 @@
         - [**Method**](#method-5)
         - [**Use Case**](#use-case-5)
         - [Request](#request-5)
-        - [](#-1)
         - [Successful response](#successful-response-5)
       - [**confirm**](#confirm)
         - [**Method**](#method-6)
         - [**Use Case**](#use-case-6)
         - [Request](#request-6)
-        - [](#-2)
         - [Successful response](#successful-response-6)
       - [**on\_confirm**](#on_confirm)
         - [**Method**](#method-7)
         - [**Use Case**](#use-case-7)
         - [Request](#request-7)
-        - [](#-3)
         - [Successful response](#successful-response-7)
       - [**Update(start-charging)**](#updatestart-charging)
         - [**Method**](#method-8)
@@ -440,17 +437,21 @@ To look up EV charging networks, any client can call the /lookup endpoint of the
 
 An example lookup request is shown below
 
-Example Request
+<details>
+<summary>Example Request</summary>
 
 ```json
 TBD
 ```
+</details>
 
-Example Response
+<details>
+<summary>Example Response</summary>
 
 ```json
 TBD
 ```
+</details>
 
 ### 12.2 Looking up NPs inside a specific EV charging registry
 
@@ -553,6 +554,9 @@ Raghav scans QR code on charger using his BAP user app
 
 ##### Request
 
+<details>
+<summary>Example request json</summary>
+
 ```json
 {
  "context": {
@@ -572,16 +576,21 @@ Raghav scans QR code on charger using his BAP user app
  }
 }
 ``` 
+</details>
+
 Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-by-EVSE.json)
 
 ##### Successful Response
 
-```json
-{
+<details>
+<summary>Example response json</summary>
+
+```json{
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:31:05Z"
 }
 ```
+</details>
 
 Note: Users can discover the charging station through off-network channels (such as physical signage, word-of-mouth, or third-party apps not integrated with Beckn) and arrive directly at the location to initiate charging. In this scenario:
 
@@ -601,6 +610,9 @@ POST
 The app receives the charger’s details (connector, power rating, live status, tariff, any active time-bound offer).
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -877,10 +889,14 @@ The app receives the charger’s details (connector, power rating, live status, 
 }
 
 ```
+</details>
 
 CPO returns details of a specific charger: [Example](https://github.com/Beckn-One/DEG/tree/draft/examples/v2/02_on_discover/specific-evse-catalog.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -888,6 +904,7 @@ CPO returns details of a specific charger: [Example](https://github.com/Beckn-On
     "timestamp": "2025-10-14T07:32:05Z"
 }
 ```
+</details>
 
 #### **select**
 
@@ -899,7 +916,10 @@ POST
 
 Raghav selects a service offering from the options he gets. He chooses a 100 INR top-up.
 
-##### Request 
+##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -996,10 +1016,14 @@ Raghav selects a service offering from the options he gets. He chooses a 100 INR
 }
 
 ```
+</details>
 
 EV user requests charge worth specific amount in currency: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/03_select/time-based-ev-charging-slot-select.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -1007,6 +1031,7 @@ EV user requests charge worth specific amount in currency: [Example](https://git
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_select**
 
@@ -1019,6 +1044,9 @@ POST
 Raghav receives estimated quotations for the selected service.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -1155,12 +1183,14 @@ Raghav receives estimated quotations for the selected service.
 }
 
 ```
+</details>
 
 CPO responds with dynamically calculated quote: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/04_on_select/time-based-ev-charging-slot-on-select.json)
 
-##### 
-
 ##### Successful response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -1168,6 +1198,7 @@ CPO responds with dynamically calculated quote: [Example](https://github.com/Bec
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **init**
 
@@ -1180,6 +1211,9 @@ POST
 Raghav provides his billing information.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -1357,11 +1391,14 @@ Raghav provides his billing information.
 }
 
 ```
-
+</details>
 
 EV user requests final quote with payment terms by providing billing details: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/05_init/time-based-ev-charging-slot-init.json)
 
 ##### Successful response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -1369,6 +1406,7 @@ EV user requests final quote with payment terms by providing billing details: [E
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_init**
 
@@ -1383,6 +1421,9 @@ Raghav receives the charging session terms(rate, idle fee window, cancellation r
 He chooses UPI and authorizes payment (or an authorization hold, as supported)
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -1587,12 +1628,15 @@ He chooses UPI and authorizes payment (or an authorization hold, as supported)
 }
 
 ```
+</details>
 
 CPO responds with final quote with payment terms: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/06_on_init/time-based-ev-charging-slot-on-init.json)
 
-##### 
 
 ##### Successful response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -1600,6 +1644,7 @@ CPO responds with final quote with payment terms: [Example](https://github.com/B
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **confirm**
 
@@ -1612,6 +1657,9 @@ POST
 Raghav confirms the order.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -1812,12 +1860,14 @@ Raghav confirms the order.
 }
 
 ```
+</details>
 
 EV user confirms reservation of a slot at a particular charging station at a particular time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/07_confirm/time-based-ev-charging-slot-confirm.json)
 
-##### 
-
 ##### Successful response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -1825,6 +1875,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_confirm**
 
@@ -1837,6 +1888,9 @@ POST
 The app returns a booking/transaction ID along with the other charging session details.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -2038,12 +2092,14 @@ The app returns a booking/transaction ID along with the other charging session d
 }
 
 ```
+</details>
 
 CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/08_on_confirm/time-based-ev-charging-slot-on-confirm.json)
 
-##### 
-
 ##### Successful response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -2051,6 +2107,7 @@ CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blo
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Update(start-charging)**
 
@@ -2063,6 +2120,9 @@ POST
 Raghav plugs in and starts the session from the app.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -2267,10 +2327,14 @@ Raghav plugs in and starts the session from the app.
 }
 
 ```
+</details>
 
 EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/09_update/time-based-ev-charging-slot-update.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -2278,6 +2342,7 @@ EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/bl
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_update(start-charging)**
 
@@ -2290,6 +2355,9 @@ POST
 Response for the charging session initiation.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -2505,10 +2573,14 @@ Response for the charging session initiation.
 }
 
 ```
+</details>
 
 CPO responds with confirmed start of charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/10_on_update/time-based-ev-charging-slot-on-update.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -2516,6 +2588,7 @@ CPO responds with confirmed start of charging session: [Example](https://github.
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **track(charging-session progress)**
 
@@ -2528,6 +2601,9 @@ POST
 Raghav requests to track the live status of the charging session. state of charge(how much charging has been done).
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -2562,10 +2638,14 @@ Raghav requests to track the live status of the charging session. state of charg
 }
 
 ```
+</details>
 
 EV User tracks a live charging session in real-time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/11_track/time-based-ev-charging-slot-track.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -2573,6 +2653,7 @@ EV User tracks a live charging session in real-time: [Example](https://github.co
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_track**
 
@@ -2585,6 +2666,9 @@ POST
 Raghav receives the state of charge(how much charging has been done) of the vehicle.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -2641,11 +2725,15 @@ Raghav receives the state of charge(how much charging has been done) of the vehi
 }
 
 ```
+</details>
 
 EV User receives a live charging session in real-time: [Example]
 (https://github.com/Beckn-One/DEG/blob/draft/examples/v2/12_on_track/time-based-ev-charging-slot-on-track.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -2653,6 +2741,7 @@ EV User receives a live charging session in real-time: [Example]
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Async on\_status**
 
@@ -2665,6 +2754,9 @@ POST
 Raghav receives a notification if there is any error during the charging session.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -2889,10 +2981,14 @@ Raghav receives a notification if there is any error during the charging session
 }
 
 ```
+</details>
 
 EV user reveives a notification in case of any error occuring during charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/13_on_status/time-based-ev-charging-slot-on-status.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -2900,6 +2996,7 @@ EV user reveives a notification in case of any error occuring during charging se
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Async on\_update(stop-charging)**
 
@@ -2912,6 +3009,9 @@ POST
 At \~60 minutes, the session stops (or notifies him to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3145,10 +3245,14 @@ At \~60 minutes, the session stops (or notifies him to unplug). He receives a di
 }
 
 ```
+</details>
 
 EV user receives the session details upon chargign session end: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/14_on_update/time-based-ev-charging-slot-on-update.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -3156,6 +3260,7 @@ EV user receives the session details upon chargign session end: [Example](https:
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **rating**
 
@@ -3168,6 +3273,9 @@ POST
 Raghav provides rating for the charging session.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3206,10 +3314,14 @@ Raghav provides rating for the charging session.
 }
 
 ```
+</details>
 
 EV user rates charging service experience: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/15_rating/time-based-ev-charging-slot-rating.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -3217,6 +3329,7 @@ EV user rates charging service experience: [Example](https://github.com/Beckn-On
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_rating**
 
@@ -3229,6 +3342,9 @@ POST
 Raghav receives an achievement after providing a rating.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3270,10 +3386,14 @@ Raghav receives an achievement after providing a rating.
 }
 
 ```
+</details>
 
 CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/16_on_rating/time-based-ev-charging-slot-on-rating.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -3281,6 +3401,7 @@ CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/exampl
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **support**
 
@@ -3295,6 +3416,9 @@ Raghav reaches out for support.
 ##### Request
 
 EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/17_support/time-based-ev-charging-slot-support.json)
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3326,8 +3450,12 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
 }
 
 ```
+</details>
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -3335,6 +3463,7 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_support**
 
@@ -3347,6 +3476,9 @@ POST
 Raghav receives a response to his support request.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3384,10 +3516,14 @@ Raghav receives a response to his support request.
 }
 
 ```
+</details>
 
 CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/18_on_support/time-based-ev-charging-slot-on-support.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -3395,6 +3531,7 @@ CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 ### Use case 2- Reservation of an EV charging time slot.
 
@@ -3493,6 +3630,9 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 
 ##### Discovery of EV charging services within a circular boundary
 
+<details>
+<summary>Example Request json</summary>
+
 ```json
 
 {
@@ -3523,10 +3663,14 @@ Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). H
 }
 
 ```
+</details>
 
 Discovery of EV charging services within a circular boundary: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-a-circular-boundary.json)
 
 ##### Discovery of EV charging stations along a route
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3561,10 +3705,14 @@ Discovery of EV charging services within a circular boundary: [Example](https://
 }
 
 ```
+</details>
 
 Discovery of EV charging stations along a route: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-along-route.json)
 
 ##### Discovery within circle \+ connector specs as filters
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3588,10 +3736,14 @@ Discovery of EV charging stations along a route: [Example](https://github.com/Be
 }
 
 ```
+</details>
 
 Discovery of EV Charging stations within a circular boundary using connector specs as filters: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-boundary-with-connection-spec.json)
 
 ##### Discovery within circle \+ vehicle specifications as filters
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3617,10 +3769,14 @@ Discovery of EV Charging stations within a circular boundary using connector spe
 }
 
 ```
+</details>
 
 Discovery of EV Charging stations within circular boundary using vehicle specifications as filters: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-boundary-with-vehicle-spec.json)
 
 ##### Discovery of services offered by a specific CPO
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3633,10 +3789,14 @@ Discovery of EV Charging stations within circular boundary using vehicle specifi
 }
 
 ```
+</details>
 
 Discovery of EV charging services offered by a specific CPO: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-services-by-a-cpo.json)
 
 ##### Viewing details of a single charging station (by its Item Identifier)
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3648,10 +3808,14 @@ Discovery of EV charging services offered by a specific CPO: [Example](https://g
   }
 }
 ```
+</details>
 
 Viewing details of a single charging station (using its Identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-services-by-a-station.json)
 
 ##### Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3663,10 +3827,14 @@ Viewing details of a single charging station (using its Identifier): [Example](h
  }
 }
 ```
+</details>
 
 Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-by-EVSE.json)
 
 ##### Discovering chargers in a specific circular area, a specific connector type and availability time range
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -3693,6 +3861,7 @@ Fetching details of a specific charger (EVSE) after reaching site (using its ide
 }
 
 ```
+</details>
 
 Discovering chargers in a specific circular area, a specific connector type and availability time range: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-a-timerange.json)
 
@@ -3705,12 +3874,16 @@ Discovering chargers in a specific circular area, a specific connector type and 
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **On\_discover**
 
@@ -3728,6 +3901,9 @@ Adam receives a comprehensive catalog of available charging stations from multip
 4. Connector types, power ratings, and availability status
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -4126,7 +4302,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
 }
 
 ```
-
+</details>
 CPO returns EV Charging Service Catalog Listing: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/02_on_discover/time-based-ev-charging-slot-catalog.json)
 
 Used together, these bring **true semantic meaning** to the payload, allowing any system to interpret the data consistently based on shared schema definitions.
@@ -4160,12 +4336,16 @@ This section outlines the catalogs array, returned in on\_discover, containing p
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### Offers as part of the Catalog
 
@@ -4238,6 +4418,9 @@ POST
 Adam selects a charging session slot. 
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -4332,7 +4515,7 @@ Adam selects a charging session slot.
 }
 
 ```
-
+</details>
 EV user requests charge worth specific amount in currency: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/03_select/time-based-ev-charging-slot-select.json)
 
 1. **beckn:orderItems:**  
@@ -4345,12 +4528,16 @@ EV user requests charge worth specific amount in currency: [Example](https://git
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_select** 
 
@@ -4363,6 +4550,9 @@ POST
 Adam receives an estimated quotation for the selected slot. 
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -4500,7 +4690,7 @@ Adam receives an estimated quotation for the selected slot.
 }
 
 ```
-
+</details>
 CPO responds with dynamically calculated quote: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/04_on_select/time-based-ev-charging-slot-on-select.json)
 
 1. **beckn:orderItemAttributes:**  
@@ -4520,12 +4710,16 @@ Recommendations for BPP:
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### Surge Pricing
 
@@ -4610,6 +4804,9 @@ POST
 Adam provides his billing details.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -4788,7 +4985,7 @@ Adam provides his billing details.
 }
 
 ```
-
+</details>
 EV user requests final quote with payment terms by providing billing details: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/05_init/time-based-ev-charging-slot-init.json)
 
 1. **beckn:orderItemAttributes:**  
@@ -4805,12 +5002,16 @@ Recommendations for BAP:
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_init**
 
@@ -4823,6 +5024,9 @@ POST
 Adam receives the terms of the order(payment, cancellation, overcharge etc) and available payment methods.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -5028,7 +5232,7 @@ Adam receives the terms of the order(payment, cancellation, overcharge etc) and 
 }
 
 ```
-
+</details>
 CPO responds with final quote with payment terms: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/06_on_init/time-based-ev-charging-slot-on-init.json)
 
 1. **beckn:payment:**  
@@ -5051,12 +5255,16 @@ If authorization is required for confirming the order, the BPP will share it ins
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 In cases where BPP is collecting payment directly using a payment link and the payment terms dictate that the payment needs to be completed PRE-ORDER, once the payment completion event happens at the BPP’s payment gateway, the BPP may send an unsolicited on\_status call to the BAP with payment.status changed to PAID. Once the BAP receives the same they can trigger the confirm API with payment.status as PAID.
 
@@ -5071,6 +5279,9 @@ POST
 Adam receives a payment confirmation from BPP.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -5104,11 +5315,14 @@ Adam receives a payment confirmation from BPP.
   }
 }
 ```
-
+</details>
 
 In case the BAP is not receiving on\_status from the BPP, it may also allow the user to declare they have completed payment and confirm the order using a user input at the BAP.
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -5116,6 +5330,7 @@ In case the BAP is not receiving on\_status from the BPP, it may also allow the 
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **confirm**
 
@@ -5128,6 +5343,9 @@ POST
 Adam accepts the terms of the order and confirms the order.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -5329,7 +5547,7 @@ Adam accepts the terms of the order and confirms the order.
 }
 
 ```
-
+</details>
 EV user confirms reservation of a slot at a particular charging station at a particular time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/07_confirm/time-based-ev-charging-slot-confirm.json)
 
 1. **beckn:payment:**  
@@ -5353,12 +5571,16 @@ Recommendations for BAP:
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_confirm**
 
@@ -5371,6 +5593,9 @@ POST
 Adam receives a reservation ID and QR code, plus a navigation link to the charging site.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -5572,7 +5797,7 @@ Adam receives a reservation ID and QR code, plus a navigation link to the chargi
  }
 }
 ```
-
+</details>
 CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/08_on_confirm/time-based-ev-charging-slot-on-confirm.json)
 
 **ev:fulfillmentstate:**  
@@ -5588,12 +5813,16 @@ Recommendations for BPP:
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **update (start charging)**
 
@@ -5618,6 +5847,9 @@ On arrival, Adam scans the charger’s **QR code**.
 The backend matches it to her **reservation ID**, verifies her **OTP authorization**, and starts charging..
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -5822,7 +6054,7 @@ The backend matches it to her **reservation ID**, verifies her **OTP authorizati
 }
 
 ```
-
+</details>
 EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/09_update/time-based-ev-charging-slot-update.json)
 
 **beckn:[fulfillment.ev](http://fulfillment.ev):fulfillmentstate:** Communicates the *real-time operational status* of the charging session.
@@ -5840,12 +6072,16 @@ EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/bl
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_update (start charging)**
 
@@ -5858,6 +6094,9 @@ POST
 Adam receives an acknowledgement on charging initialisation.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -6074,7 +6313,7 @@ Adam receives an acknowledgement on charging initialisation.
 }
 
 ```
-
+</details>
 CPO starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/10_on_update/time-based-ev-charging-slot-on-update.json)
 
 **Ev:fulfillmentstate:** Communicates the *real-time charging session state* as sent back by the BPP.
@@ -6084,12 +6323,16 @@ CPO starts a charging session: [Example](https://github.com/Beckn-One/DEG/blob/d
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **track**
 
@@ -6102,6 +6345,9 @@ POST
 Adam initiates a request to track the charging progress of the active charging session.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -6136,7 +6382,7 @@ Adam initiates a request to track the charging progress of the active charging s
 }
 
 ```
-
+</details>
 EV User tracks a live charging session in real-time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/11_track/time-based-ev-charging-slot-track.json)
 
 **beckn:orderAttributes:**  
@@ -6147,12 +6393,16 @@ Holds parameters that instruct how the tracking process should operate during an
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_track**
 
@@ -6165,6 +6415,9 @@ POST
 Adam receives the current charging progress.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -6221,7 +6474,7 @@ Adam receives the current charging progress.
  }
 }
 ```
-
+</details>
 EV User receives live charging session details in real-time: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/12_on_track/time-based-ev-charging-slot-on-track.json)
 
 **ev:charging\_periods:**  
@@ -6251,6 +6504,7 @@ Timestamp showing when these readings were last recorded or pushed — helps syn
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Asynchronous on\_status (temporary connection interruption)**
 
@@ -6311,6 +6565,9 @@ POST
 Adam receives notification when there is any error during an ongoing charging session.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -6530,10 +6787,13 @@ Adam receives notification when there is any error during an ongoing charging se
 }
 
 ```
-
+</details>
 EV user reveives details in case of any error during a charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/13_on_status/time-based-ev-charging-slot-on-status.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -6541,6 +6801,7 @@ EV user reveives details in case of any error during a charging session: [Exampl
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Asynchronous on\_update (stop charging)**
 
@@ -6553,6 +6814,9 @@ POST
 Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -6793,7 +7057,7 @@ Adam receives an update when the charging session ends. This might reflect payme
 }
 
 ```
-
+</details>
 EV user receives final order details after the charging session ends: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/14_on_update/time-based-ev-charging-slot-on-update.json)
 
 1. **ev:fulfillmentstate:**  
@@ -6806,12 +7070,16 @@ EV user receives final order details after the charging session ends: [Example](
 
 ##### Successful Response
 
+<details>
+<summary>Example Response json</summary>
+
 ```json
 {
     "ack_status": "ACK",
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Cancel** {#cancel}
 
@@ -6830,6 +7098,9 @@ POST
 Adam cancels a scheduled charging session.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -6853,10 +7124,13 @@ Adam cancels a scheduled charging session.
 }
 
 ```
-
+</details>
 EV user cancels a charging slot reservation: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/19_cancel/cancel-a-reserved-slot.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -6864,6 +7138,7 @@ EV user cancels a charging slot reservation: [Example](https://github.com/Beckn-
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **On\_cancel** {#on_cancel}
 
@@ -6876,6 +7151,9 @@ POST
 Adam receives order cancellation confirmation.  The advance payment will be adjusted as per network/CPO rule.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 {
@@ -6893,10 +7171,13 @@ Adam receives order cancellation confirmation.  The advance payment will be adju
   }
 }
 ```
-
+</details>
 CPO cancels a charging session reservation: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/20_on_cancel/cpo-cancels-reservation.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -6904,6 +7185,7 @@ CPO cancels a charging session reservation: [Example](https://github.com/Beckn-O
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **Rating**
 
@@ -6916,6 +7198,9 @@ POST
 Adam rates the order.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -6954,10 +7239,13 @@ Adam rates the order.
 }
 
 ```
-
+</details>
 EV user rates charging service experience: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/15_rating/time-based-ev-charging-slot-rating.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -6965,6 +7253,7 @@ EV user rates charging service experience: [Example](https://github.com/Beckn-On
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_rating**
 
@@ -6977,6 +7266,9 @@ POST
 Adam receives an acknowledgement.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -7019,10 +7311,13 @@ Adam receives an acknowledgement.
 }
 
 ```
-
+</details>
 CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/16_on_rating/time-based-ev-charging-slot-on-rating.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -7030,6 +7325,7 @@ CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/exampl
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **support**
 
@@ -7042,6 +7338,9 @@ POST
 Adma reaches out for support.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -7074,10 +7373,14 @@ Adma reaches out for support.
 }
 
 ```
+</details>
 
 EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/17_support/time-based-ev-charging-slot-support.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -7085,6 +7388,7 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 #### **on\_support**
 
@@ -7097,6 +7401,9 @@ POST
 Raghav receives a response to his support request.
 
 ##### Request
+
+<details>
+<summary>Example Request json</summary>
 
 ```json
 
@@ -7135,10 +7442,14 @@ Raghav receives a response to his support request.
 }
 
 ```
+</details>
 
 CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/18_on_support/time-based-ev-charging-slot-on-support.json)
 
 ##### Successful Response
+
+<details>
+<summary>Example Response json</summary>
 
 ```json
 {
@@ -7146,6 +7457,7 @@ CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob
     "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+</details>
 
 ### **Integrating with your software**
 
