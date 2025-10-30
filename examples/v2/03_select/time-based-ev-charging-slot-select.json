@@ -22,7 +22,7 @@
   },
   "message": {
     "order": {
-      "@context": "https://becknprotocol.io/schemas/core/v1/Order/schema-context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "QUOTE_REQUESTED",
@@ -38,7 +38,7 @@
           "beckn:orderedItem": "ev-charger-ccs2-001",
           "beckn:quantity": 2.5,
           "beckn:acceptedOffer": {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-60kw-kwh",
             "beckn:descriptor": {
@@ -74,7 +74,7 @@
         }
       ],
       "beckn:fulfillment": {
-        "@context": "https://becknprotocol.io/schemas/core/v1/Fulfillment/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-charging-001",
         "beckn:mode": "RESERVATION",

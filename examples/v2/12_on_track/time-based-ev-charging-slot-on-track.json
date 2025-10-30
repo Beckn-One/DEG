@@ -22,7 +22,7 @@
   },
   "message": {
     "order": {
-      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-bpp-789012",
       "beckn:orderStatus": "ACTIVE",
@@ -33,7 +33,7 @@
         }
       ],
       "beckn:fulfillment": {
-        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
         "beckn:status": "ACTIVE",

@@ -23,7 +23,7 @@
   "message": {
     "catalogs": [
       {
-        "@context": "https://becknprotocol.io/schemas/core/v1/Catalog/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
@@ -38,7 +38,7 @@
         },
         "beckn:items": [
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Item/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -121,46 +121,10 @@
               "connectorFormat": "CABLE",
               "chargingSpeed": "FAST",
               "stationStatus": "Available"
-            },
-            "beckn:offers": [
-              {
-                "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
-                "@type": "beckn:Offer",
-                "beckn:id": "offer-ccs2-60kw-kwh",
-                "beckn:descriptor": {
-                  "@type": "beckn:Descriptor",
-                  "schema:name": "Per-kWh Tariff - CCS2 60kW"
-                },
-                "beckn:items": ["ev-charger-ccs2-001"],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 18.0,
-                  "applicableQuantity": {
-                    "unitText": "Kilowatt Hour",
-                    "unitCode": "KWH",
-                    "unitQuantity": 1
-                  }
-                },
-                "beckn:validity": {
-                  "@type": "beckn:TimePeriod",
-                  "schema:startDate": "2024-10-01T00:00:00Z",
-                  "schema:endDate": "2025-01-15T23:59:59Z"
-                },
-                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
-                "beckn:offerAttributes": {
-                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
-                  "@type": "ChargingOffer",
-                  "buyerFinderFee": {
-                    "feeType": "PERCENTAGE",
-                    "feeValue": 2.5
-                  },
-                  "idleFeePolicy": "₹2/min after 10 min post-charge"
-                }
-              }
-            ]
+            }
           },
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Item/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-002",
             "beckn:descriptor": {
@@ -243,46 +207,10 @@
               "connectorFormat": "CABLE",
               "chargingSpeed": "ULTRAFAST",
               "stationStatus": "Available"
-            },
-            "beckn:offers": [
-              {
-                "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
-                "@type": "beckn:Offer",
-                "beckn:id": "offer-ccs2-120kw-kwh",
-                "beckn:descriptor": {
-                  "@type": "beckn:Descriptor",
-                  "schema:name": "Per-kWh Tariff - CCS2 120kW"
-                },
-                "beckn:items": ["ev-charger-ccs2-002"],
-                "beckn:price": {
-                  "currency": "INR",
-                  "value": 22.0,
-                  "applicableQuantity": {
-                    "unitText": "Kilowatt Hour",
-                    "unitCode": "KWH",
-                    "unitQuantity": 1
-                  }
-                },
-                "beckn:validity": {
-                  "@type": "beckn:TimePeriod",
-                  "schema:startDate": "2024-10-01T00:00:00Z",
-                  "schema:endDate": "2025-01-15T23:59:59Z"
-                },
-                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet", "NetBanking"],
-                "beckn:offerAttributes": {
-                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
-                  "@type": "ChargingOffer",
-                  "buyerFinderFee": {
-                    "feeType": "PERCENTAGE",
-                    "feeValue": 2.0
-                  },
-                  "idleFeePolicy": "₹3/min after 15 min post-charge"
-                }
-              }
-            ]
+            }
           },
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Item/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-type2-001",
             "beckn:descriptor": {
@@ -365,43 +293,110 @@
               "connectorFormat": "SOCKET",
               "chargingSpeed": "NORMAL",
               "stationStatus": "Available"
+            }
+          }
+        ],
+        "beckn:offers": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ccs2-60kw-kwh",
+            "beckn:descriptor": { 
+              "@type": "beckn:Descriptor", 
+              "schema:name": "Per-kWh Tariff - CCS2 60kW" 
             },
-            "beckn:offers": [
-              {
-                "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
-                "@type": "beckn:Offer",
-                "beckn:id": "offer-type2-22kw-kwh",
-                "beckn:descriptor": {
-                  "@type": "beckn:Descriptor",
-                  "schema:name": "Per-kWh Tariff - Type 2 22kW"
-                },
-                "beckn:items": ["ev-charger-type2-001"],
-                "beckn:price": {
-                  "currency": "INR",
-                  "value": 15.0,
-                  "applicableQuantity": {
-                    "unitText": "Kilowatt Hour",
-                    "unitCode": "KWH",
-                    "unitQuantity": 1
-                  }
-                },
-                "beckn:validity": {
-                  "@type": "beckn:TimePeriod",
-                  "schema:startDate": "2024-10-01T00:00:00Z",
-                  "schema:endDate": "2025-01-15T23:59:59Z"
-                },
-                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
-                "beckn:offerAttributes": {
-                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
-                  "@type": "ChargingOffer",
-                  "buyerFinderFee": {
-                    "feeType": "PERCENTAGE",
-                    "feeValue": 1.5
-                  },
-                  "idleFeePolicy": "₹1/min after 30 min post-charge"
-                }
+            "beckn:items": ["ev-charger-ccs2-001"],
+            "beckn:price": { 
+              "currency": "INR", 
+              "value": 18.0, 
+              "applicableQuantity": { 
+                "unitText": "Kilowatt Hour", 
+                "unitCode": "KWH", 
+                "unitQuantity": 1 
+              } 
+            },
+            "beckn:validity": { 
+              "@type": "beckn:TimePeriod", 
+              "schema:startDate": "2025-10-01T00:00:00Z", "schema:endDate": "2026-03-31T23:59:59Z" 
+            },
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:offerAttributes": { 
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld", 
+              "@type": "ChargingOffer", 
+              "buyerFinderFee": { 
+                "feeType": "PERCENTAGE", 
+                "feeValue": 2.5 
+              }, 
+              "idleFeePolicy": "₹2/min after 10 min post-charge" 
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ccs2-120kw-kwh",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Per-kWh Tariff - CCS2 120kW"
+            },
+            "beckn:items": ["ev-charger-ccs2-002"],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 22.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
               }
-            ]
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-10-15T00:00:00Z",
+              "schema:endDate": "2026-04-15T23:59:59Z"
+            },
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet", "NetBanking"],
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@type": "ChargingOffer",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "idleFeePolicy": "₹3/min after 15 min post-charge"
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-type2-22kw-kwh",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Per-kWh Tariff - Type 2 22kW"
+            },
+            "beckn:items": ["ev-charger-type2-001"],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 15.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-10-20T00:00:00Z",
+              "schema:endDate": "2026-04-20T23:59:59Z"
+            },
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@type": "ChargingOffer",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 1.5
+              },
+              "idleFeePolicy": "₹1/min after 30 min post-charge"
+            }
           }
         ]
       }
