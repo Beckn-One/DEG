@@ -23,7 +23,7 @@
   "message": {
     "catalogs": [
       {
-        "@context": "https://becknprotocol.io/schemas/core/v1/Catalog/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
@@ -38,7 +38,7 @@
         },
         "beckn:items": [
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Item/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -124,7 +124,7 @@
             }
           },
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Item/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-002",
             "beckn:descriptor": {
@@ -210,7 +210,7 @@
             }
           },
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Item/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-type2-001",
             "beckn:descriptor": {
@@ -298,7 +298,7 @@
         ],
         "beckn:offers": [
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-60kw-kwh",
             "beckn:descriptor": { 
@@ -331,7 +331,7 @@
             }
           },
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-120kw-kwh",
             "beckn:descriptor": {
@@ -365,7 +365,7 @@
             }
           },
           {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-type2-22kw-kwh",
             "beckn:descriptor": {

@@ -22,15 +22,15 @@
   },
   "message": {
     "order": {
-      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-123456",
       "beckn:orderStatus": "PENDING",
       "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
-        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
-        "@type": "beckn:Party",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
         "beckn:name": "Ravi Kumar",
@@ -49,7 +49,7 @@
           "beckn:lineId": "line-001",
           "beckn:orderedItem": "pe-charging-01",
           "beckn:acceptedOffer": {
-            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
@@ -129,7 +129,7 @@
         ]
       },
       "beckn:fulfillment": {
-        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
         "beckn:status": "PENDING",
