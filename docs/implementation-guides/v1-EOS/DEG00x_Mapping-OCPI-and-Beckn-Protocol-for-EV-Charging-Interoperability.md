@@ -529,7 +529,7 @@ GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 
 ```json
 {    
-  "X-Request-ID": "1234567890"    "X-Correlation-ID": "9876543210",    "Authorization": "Token ZGM2MDE3\<redacted\>"
+  "X-Request-ID": "1234567890"    "X-Correlation-ID": "9876543210",    "Authorization": "Token ZGM2MDE3"
 }
 ```
 
@@ -732,7 +732,7 @@ GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 
 ```json
 {
-"X-Request-ID": "8046203538"    "X-Correlation-ID": "4036910083",    "Authorization": "Token ZGM2MDE3\<redacted\>"
+"X-Request-ID": "8046203538"    "X-Correlation-ID": "4036910083",    "Authorization": "Token ZGM2MDE3"
 }
 ```
 
