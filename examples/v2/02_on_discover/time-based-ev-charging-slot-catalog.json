@@ -18,10 +18,7 @@
     "bap_uri": "https://app.example.com/bap",
     "bpp_id": "bpp.example.com",
     "bpp_uri": "https://bpp.example.com",
-    "ttl": "PT30S",
-        "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
-    ]
+    "ttl": "PT30S"
   },
   "message": {
     "catalogs": [
@@ -70,11 +67,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "06:00:00",
-              "schema:endTime": "22:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "22:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -190,11 +189,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "00:00:00",
-              "schema:endTime": "23:59:59"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "00:00:00",
+                "schema:endTime": "23:59:59"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -310,11 +311,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "08:00:00",
-              "schema:endTime": "20:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "08:00:00",
+                "schema:endTime": "20:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",

@@ -16,10 +16,7 @@
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "bap.example.com",
     "bap_uri": "https://bap.example.com",
-    "ttl": "PT30S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
-    ]
+    "ttl": "PT30S"
   },
   "message": {
     "spatial": [
@@ -34,7 +31,7 @@
     ],
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@['beckn:itemAttributes']['connectorType'] == 'CCS2' && @['beckn:availabilityWindow']['schema:startTime'] <= '12:30:00' && @['beckn:availabilityWindow']['schema:endTime'] >= '14:30:00')]"
+      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:availabilityWindow.schema:startTime <= '12:30:00' && @.beckn:availabilityWindow.schema:endTime >= '14:30:00')]"
     }
   }
 }

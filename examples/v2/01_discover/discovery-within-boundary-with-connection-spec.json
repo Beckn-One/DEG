@@ -16,13 +16,13 @@
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "bap.example.com",
     "bap_uri": "https://bap.example.com",
-    "ttl": "PT30S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
-    ]
+    "ttl": "PT30S"
   },
   "message": {
-    "filters": "$[?(@['beckn:itemAttributes']['connectorType'] == 'CCS2' && @['beckn:itemAttributes']['maxPowerKW'] >= 50)]",
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:itemAttributes.maxPowerKW >= 50)]"
+    },
     "spatial": [
       {
         "op": "s_dwithin",
