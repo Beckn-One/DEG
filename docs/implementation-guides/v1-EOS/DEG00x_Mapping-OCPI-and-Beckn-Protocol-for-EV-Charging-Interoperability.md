@@ -527,43 +527,294 @@ GET /ocpi/2.2/tariffs?country_code=IN&party_id=BCN
 
 `Request Headers:` 
 
-| {    "X-Request-ID": "1234567890"    "X-Correlation-ID": "9876543210",    "Authorization": "Token ZGM2MDE3\<redacted\>"} |
-| :---- |
+```json
+{    
+  "X-Request-ID": "1234567890"    "X-Correlation-ID": "9876543210",    "Authorization": "Token ZGM2MDE3\<redacted\>"
+}
+```
 
 `Request Payload`  
 `None`
 
 `Response Headers:`
 
-| {  "date": "Thu, 14 Aug 2025 09:34:00 GMT",  "content-type": "application/json",  "vary": "Accept-Encoding",  "link": "",  "x-total-count": "2",  "x-limit": "20",  "x-request-id": "1234567890",  "x-correlation-id": "9876543210",  "ocpi-to-party-id": "INS",  "ocpi-to-country-code": "IN",  "ocpi-from-party-id": "THP",  "ocpi-from-country-code": "IN"} |
-| :---- |
+```json
+{
+  "date": "Thu, 14 Aug 2025 09:34:00 GMT",
+  "content-type": "application/json",
+  "vary": "Accept-Encoding",
+  "link": "",
+  "x-total-count": "2",
+  "x-limit": "20",
+  "x-request-id": "1234567890",
+  "x-correlation-id": "9876543210",
+  "ocpi-to-party-id": "INS",
+  "ocpi-to-country-code": "IN",
+  "ocpi-from-party-id": "THP",
+  "ocpi-from-country-code": "IN"
+}
+```
 
 `Response Payload:`
 
-| {    "data": \[        {            "name": "Thunder Test CS",            "coordinates": {                "latitude": "28.5503906",                "longitude": "77.2584309"            },            "city": "Delhi",            "state": "Delhi",            "country\_code": "IN",            "party\_id": "THP",            "id": "HrKNUxJ9Ara6AL6PaUlF",            "publish": true,            "address": "Test",            "country": "IND",            "time\_zone": "Asia/Kolkata",            "last\_updated": "2025-08-01T11:27:05.768Z",            "evses": \[                {                    "physical\_reference": "Test QR Code \- T",                    "uid": "v5bXyAlSr8G6lvUAN1A\_1",                    "evse\_id": "v5bXyAlSr8G6lvUAN1A\_1",                    "status": "UNKNOWN",                    "connectors": \[                        {                            "id": "1",                            "standard": "IEC\_62196\_T2",                            "format": "CABLE",                            "power\_type": "AC\_3\_PHASE",                            "max\_voltage": 100,                            "max\_amperage": 150,                            "max\_electric\_power": 15000,                            "tariff\_ids": \[                                "dz2SXdIDJDfNjsPfw"                            \],                            "last\_updated": "2024-12-09T08:43:21.791Z"                        }                    \],                    "last\_updated": "2024-12-09T08:43:21.791Z"                },                {                    "physical\_reference": "Test QR Code \- T",                    "uid": "v5bXyAlSr8G6lvUAN1A\_2",                    "evse\_id": "v5bXyAlSr8G6lvUAN1A\_2",                    "status": "UNKNOWN",                    "connectors": \[                        {                            "id": "1",                            "standard": "IEC\_62196\_T2",                            "format": "CABLE",                            "power\_type": "AC\_3\_PHASE",                            "max\_voltage": 415,                            "max\_amperage": 32,                            "max\_electric\_power": 20000,                            "tariff\_ids": \[                                "dz2SXdIDJDfNjsPfw"                            \],                            "last\_updated": "2024-12-09T08:43:21.792Z"                        }                    \],                    "last\_updated": "2024-12-09T08:43:21.792Z"                },                {                    "physical\_reference": "Testing",                    "uid": "af7c3MVQklXwBshPj8\_2",                    "evse\_id": "af7c3MVQklXwBshPj8\_2",                    "status": "UNKNOWN",                    "connectors": \[                        {                            "id": "1",                            "standard": "IEC\_60309\_2\_three\_16",                            "format": "SOCKET",                            "power\_type": "AC\_1\_PHASE",                            "max\_voltage": 230,                            "max\_amperage": 15,                            "max\_electric\_power": 3300,                            "tariff\_ids": \[                                "ajcx2DQt07uERmEqprnQ"                            \],                            "last\_updated": "2025-07-30T14:35:12.040Z"                        }                    \],                    "last\_updated": "2025-07-30T14:35:12.040Z"                },                {                    "physical\_reference": "Testing",                    "uid": "af7c3MVQklXwBshPj8\_1",                    "evse\_id": "af7c3MVQklXwBshPj8\_1",                    "status": "UNKNOWN",                    "connectors": \[                        {                            "id": "1",                            "standard": "DOMESTIC\_D",                            "format": "SOCKET",                            "power\_type": "AC\_1\_PHASE",                            "max\_voltage": 230,                            "max\_amperage": 15,                            "max\_electric\_power": 3300,                            "tariff\_ids": \[                                "ajcx2DQt07uERmEqprnQ"                            \],                            "last\_updated": "2025-07-17T10:54:21.512Z"                        }                    \],                    "last\_updated": "2025-07-17T10:54:21.512Z"                },                {                    "physical\_reference": "Thunder+ Test CP",                    "uid": "tLAj42jrr0dYtDqdqTDK\_1",                    "evse\_id": "tLAj42jrr0dYtDqdqTDK\_1",                    "status": "AVAILABLE",                    "connectors": \[                        {                            "id": "1",                            "standard": "IEC\_62196\_T2",                            "format": "SOCKET",                            "power\_type": "AC\_3\_PHASE",                            "max\_voltage": 415,                            "max\_amperage": 16,                            "max\_electric\_power": 10000,                            "tariff\_ids": \[                                "ajcx2DQt07uERmEqprnQ"                            \],                            "last\_updated": "2025-08-01T11:25:10.732Z"                        }                    \],                    "last\_updated": "2025-08-01T11:25:10.732Z"                },                {                    "physical\_reference": "Thunder+ Test CP",                    "uid": "tLAj42jrr0dYtDqdqTDK\_2",                    "evse\_id": "tLAj42jrr0dYtDqdqTDK\_2",                    "status": "AVAILABLE",                    "connectors": \[                        {                            "id": "1",                            "standard": "DOMESTIC\_D",                            "format": "SOCKET",                            "power\_type": "AC\_1\_PHASE",                            "max\_voltage": 230,                            "max\_amperage": 15,                            "max\_electric\_power": 3300,                            "tariff\_ids": \[                                "ajcx2DQt07uERmEqprnQ"                            \],                            "last\_updated": "2025-08-01T11:27:26.168Z"                        }                    \],                    "last\_updated": "2025-08-01T11:27:26.168Z"                }            \],            "opening\_times": {                "twentyfourseven": true            },            "operator": {                "name": "Thunder Plus",                "website": "https://www.thunderplus.io/"            }        }    \],    "status\_code": 1000,    "status\_message": "Success",    "timestamp": "2025-08-14T09:58:05.069Z"} |
-| :---- |
+```json
+{
+  "data": [
+    {
+      "name": "Thunder Test CS",
+      "coordinates": {
+        "latitude": "28.5503906",
+        "longitude": "77.2584309"
+      },
+      "city": "Delhi",
+      "state": "Delhi",
+      "country_code": "IN",
+      "party_id": "THP",
+      "id": "HrKNUxJ9Ara6AL6PaUlF",
+      "publish": true,
+      "address": "Test",
+      "country": "IND",
+      "time_zone": "Asia/Kolkata",
+      "last_updated": "2025-08-01T11:27:05.768Z",
+      "evses": [
+        {
+          "physical_reference": "Test QR Code - T",
+          "uid": "v5bXyAlSr8G6lvUAN1A_1",
+          "evse_id": "v5bXyAlSr8G6lvUAN1A_1",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 100,
+              "max_amperage": 150,
+              "max_electric_power": 15000,
+              "tariff_ids": [
+                "dz2SXdIDJDfNjsPfw"
+              ],
+              "last_updated": "2024-12-09T08:43:21.791Z"
+            }
+          ],
+          "last_updated": "2024-12-09T08:43:21.791Z"
+        },
+        {
+          "physical_reference": "Test QR Code - T",
+          "uid": "v5bXyAlSr8G6lvUAN1A_2",
+          "evse_id": "v5bXyAlSr8G6lvUAN1A_2",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "CABLE",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 415,
+              "max_amperage": 32,
+              "max_electric_power": 20000,
+              "tariff_ids": [
+                "dz2SXdIDJDfNjsPfw"
+              ],
+              "last_updated": "2024-12-09T08:43:21.792Z"
+            }
+          ],
+          "last_updated": "2024-12-09T08:43:21.792Z"
+        },
+        {
+          "physical_reference": "Testing",
+          "uid": "af7c3MVQklXwBshPj8_2",
+          "evse_id": "af7c3MVQklXwBshPj8_2",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_60309_2_three_16",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 15,
+              "max_electric_power": 3300,
+              "tariff_ids": [
+                "ajcx2DQt07uERmEqprnQ"
+              ],
+              "last_updated": "2025-07-30T14:35:12.040Z"
+            }
+          ],
+          "last_updated": "2025-07-30T14:35:12.040Z"
+        },
+        {
+          "physical_reference": "Testing",
+          "uid": "af7c3MVQklXwBshPj8_1",
+          "evse_id": "af7c3MVQklXwBshPj8_1",
+          "status": "UNKNOWN",
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "DOMESTIC_D",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 15,
+              "max_electric_power": 3300,
+              "tariff_ids": [
+                "ajcx2DQt07uERmEqprnQ"
+              ],
+              "last_updated": "2025-07-17T10:54:21.512Z"
+            }
+          ],
+          "last_updated": "2025-07-17T10:54:21.512Z"
+        },
+        {
+          "physical_reference": "Thunder+ Test CP",
+          "uid": "tLAj42jrr0dYtDqdqTDK_1",
+          "evse_id": "tLAj42jrr0dYtDqdqTDK_1",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "IEC_62196_T2",
+              "format": "SOCKET",
+              "power_type": "AC_3_PHASE",
+              "max_voltage": 415,
+              "max_amperage": 16,
+              "max_electric_power": 10000,
+              "tariff_ids": [
+                "ajcx2DQt07uERmEqprnQ"
+              ],
+              "last_updated": "2025-08-01T11:25:10.732Z"
+            }
+          ],
+          "last_updated": "2025-08-01T11:25:10.732Z"
+        },
+        {
+          "physical_reference": "Thunder+ Test CP",
+          "uid": "tLAj42jrr0dYtDqdqTDK_2",
+          "evse_id": "tLAj42jrr0dYtDqdqTDK_2",
+          "status": "AVAILABLE",
+          "connectors": [
+            {
+              "id": "1",
+              "standard": "DOMESTIC_D",
+              "format": "SOCKET",
+              "power_type": "AC_1_PHASE",
+              "max_voltage": 230,
+              "max_amperage": 15,
+              "max_electric_power": 3300,
+              "tariff_ids": [
+                "ajcx2DQt07uERmEqprnQ"
+              ],
+              "last_updated": "2025-08-01T11:27:26.168Z"
+            }
+          ],
+          "last_updated": "2025-08-01T11:27:26.168Z"
+        }
+      ],
+      "opening_times": {
+        "twentyfourseven": true
+      },
+      "operator": {
+        "name": "Thunder Plus",
+        "website": "https://www.thunderplus.io/"
+      }
+    }
+  ],
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2025-08-14T09:58:05.069Z"
+}
+
+```
 
 `GET /ocpi/2.2/tariffs?offset=0&limit=20`
 
 `Request Headers:` 
 
-| {    "X-Request-ID": "8046203538"    "X-Correlation-ID": "4036910083",    "Authorization": "Token ZGM2MDE3\<redacted\>"}  |
-| :---- |
+```json
+{
+"X-Request-ID": "8046203538"    "X-Correlation-ID": "4036910083",    "Authorization": "Token ZGM2MDE3\<redacted\>"
+}
+```
 
 `Request Payload`  
 `None`
 
 `Response Headers:`
 
-| {  "date": "Thu, 14 Aug 2025 09:34:00 GMT",  "content-type": "application/json",  "vary": "Accept-Encoding",  "link": "",  "x-total-count": "2",  "x-limit": "20",  "x-request-id": "8046203538",  "x-correlation-id": "4036910083",  "ocpi-to-party-id": "INS",  "ocpi-to-country-code": "IN",  "ocpi-from-party-id": "THP",  "ocpi-from-country-code": "IN"} |
-| :---- |
+```json
+{
+  "date": "Thu, 14 Aug 2025 09:34:00 GMT",
+  "content-type": "application/json",
+  "vary": "Accept-Encoding",
+  "link": "",
+  "x-total-count": "2",
+  "x-limit": "20",
+  "x-request-id": "8046203538",
+  "x-correlation-id": "4036910083",
+  "ocpi-to-party-id": "INS",
+  "ocpi-to-country-code": "IN",
+  "ocpi-from-party-id": "THP",
+  "ocpi-from-country-code": "IN"
+}
+
+```
 
 `Response Body:`
 
-| {    "data": \[        {            "country\_code": "IN",            "party\_id": "THP",            "id": "dz2SXdIDJDfNjsPfw",            "currency": "INR",            "elements": \[                {                    "price\_components": \[                        {                            "type": "ENERGY",                            "price": 12,                            "step\_size": 1,                            "vat": 5                        }                    \]                }            \],            "last\_updated": "2024-12-10T06:53:43.315Z",            "start\_date\_time": "2024-05-20T03:30:43.825Z",            "end\_date\_time": "2024-05-20T06:30:43.825Z"        },        {            "country\_code": "IN",            "party\_id": "THP",            "id": "ajcx2DQt07uERmEqprnQ",            "currency": "INR",            "elements": \[                {                    "price\_components": \[                        {                            "type": "ENERGY",                            "price": 20,                            "step\_size": 1,                            "vat": 18                        }                    \]                }            \],            "last\_updated": "2024-12-09T08:43:21.913Z",            "start\_date\_time": "2024-01-17T07:25:05.990Z",            "end\_date\_time": "2024-01-17T07:25:05.990Z"        }    \],    "status\_code": 1000,    "status\_message": "Success",    "timestamp": "2025-08-14T09:34:00.363Z"} |
-| :---- |
+```json
+{
+  "data": [
+    {
+      "country_code": "IN",
+      "party_id": "THP",
+      "id": "dz2SXdIDJDfNjsPfw",
+      "currency": "INR",
+      "elements": [
+        {
+          "price_components": [
+            {
+              "type": "ENERGY",
+              "price": 12,
+              "step_size": 1,
+              "vat": 5
+            }
+          ]
+        }
+      ],
+      "last_updated": "2024-12-10T06:53:43.315Z",
+      "start_date_time": "2024-05-20T03:30:43.825Z",
+      "end_date_time": "2024-05-20T06:30:43.825Z"
+    },
+    {
+      "country_code": "IN",
+      "party_id": "THP",
+      "id": "ajcx2DQt07uERmEqprnQ",
+      "currency": "INR",
+      "elements": [
+        {
+          "price_components": [
+            {
+              "type": "ENERGY",
+              "price": 20,
+              "step_size": 1,
+              "vat": 18
+            }
+          ]
+        }
+      ],
+      "last_updated": "2024-12-09T08:43:21.913Z",
+      "start_date_time": "2024-01-17T07:25:05.990Z",
+      "end_date_time": "2024-01-17T07:25:05.990Z"
+    }
+  ],
+  "status_code": 1000,
+  "status_message": "Success",
+  "timestamp": "2025-08-14T09:34:00.363Z"
+}
 
-2. **Geospatial Filtering**  
+```
+
+1. **Geospatial Filtering**  
      
    * From cached OCPI locations, select those within 5 km of 28.6304,77.2177 (Haversine).
 
