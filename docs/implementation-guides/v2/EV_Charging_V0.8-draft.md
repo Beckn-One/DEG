@@ -18,12 +18,12 @@
     - [9.2. Actors](#92-actors)
   - [10. Creating an Open Network for EV Charging](#10-creating-an-open-network-for-ev-charging)
     - [10.1 Setting up a Registry](#101-setting-up-a-registry)
-      - [10.1.1 For Network Participants](#1011-for-network-participants)
+      - [10.1.1 For a Network Participant](#1011-for-a-network-participant)
         - [10.1.1.1 Step 1 :  Claiming a Namespace](#10111-step-1---claiming-a-namespace)
         - [10.1.1.2 Step 2 :  Setting up a Registry](#10112-step-2---setting-up-a-registry)
         - [10.1.1.3 Step 3 :  Publishing subscriber details](#10113-step-3---publishing-subscriber-details)
       - [10.1.1.4 Step 4 :  Share details of the registry created with the Beckn One team](#10114-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
-      - [10.1.2 For NFOs](#1012-for-nfos)
+      - [10.1.2 For a Network facilitator organization](#1012-for-a-network-facilitator-organization)
         - [10.1.2.1 Step 1 :  Claiming a Namespace](#10121-step-1---claiming-a-namespace)
         - [10.1.2.2 Step 2 :  Setting up a Registry](#10122-step-2---setting-up-a-registry)
         - [10.1.2.3 Step 3 :  Publishing subscriber details](#10123-step-3---publishing-subscriber-details)
@@ -54,10 +54,7 @@
         - [**on\_track**](#on_track)
         - [**Async on\_status**](#async-on_status)
         - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging)
-    - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging-1)
-    - [**Method**](#method)
-    - [**Use Case**](#use-case)
-      - [Request](#request)
+        - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging-1)
         - [**rating**](#rating)
         - [**on\_rating**](#on_rating)
         - [**support**](#support)
@@ -66,9 +63,9 @@
         - [Context:](#context)
         - [1. Discovery](#1-discovery)
           - [**1.1 Adam discovers nearby charging services**](#11-adam-discovers-nearby-charging-services)
-      - [**2. Order (Reservation)**](#2-order-reservation)
-      - [**3. Fulfilment (Session Start \& Tracking)**](#3-fulfilment-session-start--tracking)
-      - [**4. Post-Fulfilment**](#4-post-fulfilment)
+        - [2. Order (Reservation)](#2-order-reservation)
+        - [3. Fulfilment (Session Start \& Tracking)](#3-fulfilment-session-start--tracking)
+        - [4. Post-Fulfilment](#4-post-fulfilment)
       - [**API Calls and Schema**](#api-calls-and-schema-1)
         - [**discover**](#discover-1)
           - [Discovery of EV charging services within a circular boundary](#discovery-of-ev-charging-services-within-a-circular-boundary)
@@ -83,7 +80,7 @@
           - [Offers as part of the Catalog](#offers-as-part-of-the-catalog)
         - [**Select**](#select-1)
         - [**on\_select**](#on_select-1)
-        - [Surge Pricing](#surge-pricing)
+          - [Surge Pricing](#surge-pricing)
         - [**init**](#init-1)
         - [**on\_init**](#on_init-1)
         - [**on\_status payment**](#on_status-payment)
@@ -93,14 +90,10 @@
         - [**on\_update (start charging)**](#on_update-start-charging)
         - [**track**](#track)
         - [**on\_track**](#on_track-1)
-      - [Successful Response](#successful-response)
         - [**Asynchronous on\_status (temporary connection interruption)**](#asynchronous-on_status-temporary-connection-interruption)
           - [**Under and Overcharge Scenarios**](#under-and-overcharge-scenarios)
         - [**Asynchronous on\_update (stop charging)**](#asynchronous-on_update-stop-charging)
-    - [**Synchronous/Asynchronous on\_update (stop charging)**](#synchronousasynchronous-on_update-stop-charging)
-    - [**Method**](#method-1)
-    - [**Use Case**](#use-case-1)
-      - [Request](#request-1)
+        - [Synchronous/Asynchronous on\_update (stop charging)](#synchronousasynchronous-on_update-stop-charging)
         - [**Cancel**](#cancel)
         - [**on\_cancel**](#on_cancel)
         - [**Rating**](#rating-1)
@@ -215,7 +208,7 @@ The NP Registry serves as the root of addressability and trust for all network p
 
 You can publish your registries at [DeDi.global](https://publish.dedi.global/).
 
-#### 10.1.1 For Network Participants
+#### 10.1.1 For a Network Participant
 
 ##### 10.1.1.1 Step 1 :  Claiming a Namespace
 
@@ -236,7 +229,7 @@ In the registry that is created, NPs **MUST** publish their subscription details
 
 Once the registry is created and details are published, the namespace and the registry name of the newly created registry should be shared with the beckn one team.
 
-#### 10.1.2 For NFOs
+#### 10.1.2 For a Network facilitator organization
 
 ##### 10.1.2.1 Step 1 :  Claiming a Namespace
 
@@ -2973,17 +2966,11 @@ EV user reveives a notification in case of any error occuring during charging se
 
 EV user stops the charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/09_update/ev-charging-session-end-update.json)
 
-### **Async on\_update(stop-charging)**
+##### **Async on\_update(stop-charging)**
 
-### **Method**
-
-POST 
-
-### **Use Case**
-
-At \~60 minutes(or upon the EV user request), the session stops (or notifies hthe EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
-
-#### Request
+- Method: POST 
+- Use Case: At \~60 minutes(or upon the EV user request), the session stops (or notifies hthe EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
+- Request:
 
 ```json
 {
@@ -3461,7 +3448,7 @@ The app queries multiple charging providers and returns options showing:
 
 She compares them and selects **“EcoPower Highway Hub – Mandya Food Court”**.
 
-#### **2\. Order (Reservation)**
+##### 2\. Order (Reservation)
 
 Adam taps **Reserve Slot → 12:45–13:15 PM**.
 
@@ -3479,7 +3466,7 @@ They confirm.
 
 The provider returns a **reservation ID and QR code**, plus a **navigation link** to the site.
 
-#### **3\. Fulfilment (Session Start & Tracking)**
+##### 3\. Fulfilment (Session Start & Tracking)
 
 On arrival, Adam scans the charger’s **QR code**.
 
@@ -3496,7 +3483,7 @@ He enjoys lunch while the system manages the session.
 
 If she arrives a few minutes late, the charger holds the slot until the **grace period** expires.
 
-#### **4\. Post-Fulfilment**
+##### 4\. Post-Fulfilment
 
 Charging auto-stops at her **target energy level (80 %)** or when she manually ends the session.
 
@@ -4674,7 +4661,7 @@ Recommendations for BPP:
 ```
 </details>
 
-##### Surge Pricing
+###### Surge Pricing
 
 A surge price is an additional fee applied on top of the base charging tariff under specific conditions-such as time of use or location.  
 User Journey:  
@@ -6365,7 +6352,7 @@ Summarizes session cost at the current stage.
 **ev:last\_updated:**  
 Timestamp showing when these readings were last recorded or pushed — helps synchronize live dashboards or notifications on the BAP side.
 
-#### Successful Response
+- Successful Response:
 
 ```json
 {
@@ -6876,20 +6863,18 @@ API Implementation: The above under and overcharge scenarios are supported throu
 }
 
 ```
+</details>
 
 EV user ends the charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/09_update/ev-charging-session-end-update.json)
 
-### **Synchronous/Asynchronous on\_update (stop charging)**
+##### Synchronous/Asynchronous on\_update (stop charging)
 
-### **Method**
+- Method: POST 
+- Use Case: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
+- Request:
 
-POST 
-
-### **Use Case**
-
-Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
-
-#### Request
+<details>
+<summary>Example json :rocket:</summary>
 
 ```json
 
@@ -7118,6 +7103,7 @@ Adam receives an update when the charging session ends. This might reflect payme
 
 ```
 </details>
+
 - Successful Response: EV user cancels a charging slot reservation: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/19_cancel/cancel-a-reserved-slot.json)
 
 <details>
