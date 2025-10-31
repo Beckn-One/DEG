@@ -206,9 +206,9 @@ Each entity in the charging lifecycle — the service, the commercial terms, and
 
 | EV Charging Domain Entity | Charging Example | Semantically maps to |
 | ----- | ----- | :---: |
-| Charging Service Listing | “DC Fast-Charging (60 kW CCS2)” | Item  |
-| Charging service | “₹18 per kWh”, “₹150 per hour”, “₹999 monthly pass”, “Off-peak discount 2 AM–5 AM” | Offer |
-| Charging Session | A specific booking or usage instance created when the user plugs in or reserves a slot | Order |
+| Charging Service Listing | “DC Fast-Charging (60 kW CCS2)” | [Item](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingService/v1/attributes.yaml)  |
+| Charging service | “₹18 per kWh”, “₹150 per hour”, “₹999 monthly pass”, “Off-peak discount 2 AM–5 AM” | [Offer](https://github.com/beckn/protocol-specifications-new/blob/schema-reorg/schema/EvChargingOffer/v1/attributes.yaml) |
+| Charging Session | A specific booking or usage instance created when the user plugs in or reserves a slot | [Order](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingSession/v1/attributes.yaml) |
 
 ## Example Category Codes
 
