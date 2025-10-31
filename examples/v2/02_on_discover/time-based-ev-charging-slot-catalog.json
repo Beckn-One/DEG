@@ -56,7 +56,10 @@
               {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.5946, 12.9716]
+                  "coordinates": [
+                    77.5946,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
@@ -81,7 +84,9 @@
               "beckn:ratingCount": 128
             },
             "beckn:isActive": true,
-            "beckn:networkId": ["bap.net/ev-charging"],
+            "beckn:networkId": [
+              "bap.net/ev-charging"
+            ],
             "beckn:provider": {
               "beckn:id": "ecopower-charging",
               "beckn:descriptor": {
@@ -97,11 +102,18 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet"],
+              "acceptedPaymentMethod": [
+                "schema:UPI",
+                "schema:CreditCard",
+                "schema:Wallet"
+              ],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.5946, 12.9716]
+                  "coordinates": [
+                    77.5946,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
@@ -111,7 +123,11 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -142,7 +158,10 @@
               {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.6104, 12.9153]
+                  "coordinates": [
+                    77.6104,
+                    12.9153
+                  ]
                 },
                 "address": {
                   "streetAddress": "GreenCharge Koramangala, 80 Ft Rd",
@@ -167,7 +186,9 @@
               "beckn:ratingCount": 89
             },
             "beckn:isActive": true,
-            "beckn:networkId": ["bap.net/ev-charging"],
+            "beckn:networkId": [
+              "bap.net/ev-charging"
+            ],
             "beckn:provider": {
               "beckn:id": "greencharge-koramangala",
               "beckn:descriptor": {
@@ -183,11 +204,19 @@
               "minPowerKW": 10,
               "socketCount": 1,
               "reservationSupported": true,
-              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet", "schema:BankTransfer"],
+              "acceptedPaymentMethod": [
+                "schema:UPI",
+                "schema:CreditCard",
+                "schema:Wallet",
+                "schema:BankTransfer"
+              ],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.6104, 12.9153]
+                  "coordinates": [
+                    77.6104,
+                    12.9153
+                  ]
                 },
                 "address": {
                   "streetAddress": "GreenCharge Koramangala, 80 Ft Rd",
@@ -197,7 +226,12 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi", "Parking"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi",
+                "Parking"
+              ],
               "ocppId": "IN-GC-KOR-01",
               "evseId": "IN*GC*KOR*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -228,7 +262,10 @@
               {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.6254, 12.9716]
+                  "coordinates": [
+                    77.6254,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "PowerGrid Indiranagar, 100 Ft Rd",
@@ -253,7 +290,9 @@
               "beckn:ratingCount": 156
             },
             "beckn:isActive": true,
-            "beckn:networkId": ["bap.net/ev-charging"],
+            "beckn:networkId": [
+              "bap.net/ev-charging"
+            ],
             "beckn:provider": {
               "beckn:id": "powergrid-indiranagar",
               "beckn:descriptor": {
@@ -269,11 +308,18 @@
               "minPowerKW": 3,
               "socketCount": 4,
               "reservationSupported": true,
-              "acceptedPaymentMethod": ["schema:UPI", "schema:CreditCard", "schema:Wallet"],
+              "acceptedPaymentMethod": [
+                "schema:UPI",
+                "schema:CreditCard",
+                "schema:Wallet"
+              ],
               "serviceLocation": {
                 "geo": {
                   "type": "Point",
-                  "coordinates": [77.6254, 12.9716]
+                  "coordinates": [
+                    77.6254,
+                    12.9716
+                  ]
                 },
                 "address": {
                   "streetAddress": "PowerGrid Indiranagar, 100 Ft Rd",
@@ -283,7 +329,11 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restroom", "Wi-Fi", "Parking"],
+              "amenityFeature": [
+                "Restroom",
+                "Wi-Fi",
+                "Parking"
+              ],
               "ocppId": "IN-PG-IND-01",
               "evseId": "IN*PG*IND*01*TYPE2*A",
               "roamingNetwork": "GreenRoam",
@@ -301,33 +351,40 @@
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-60kw-kwh",
-            "beckn:descriptor": { 
-              "@type": "beckn:Descriptor", 
-              "schema:name": "Per-kWh Tariff - CCS2 60kW" 
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
-            "beckn:items": ["ev-charger-ccs2-001"],
-            "beckn:price": { 
-              "currency": "INR", 
-              "value": 18.0, 
-              "applicableQuantity": { 
-                "unitText": "Kilowatt Hour", 
-                "unitCode": "KWH", 
-                "unitQuantity": 1 
-              } 
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
             },
-            "beckn:validity": { 
-              "@type": "beckn:TimePeriod", 
-              "schema:startDate": "2025-10-01T00:00:00Z", "schema:endDate": "2026-03-31T23:59:59Z" 
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-10-01T00:00:00Z",
+              "schema:endDate": "2026-03-31T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
-            "beckn:offerAttributes": { 
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld", 
-              "@type": "ChargingOffer", 
-              "buyerFinderFee": { 
-                "feeType": "PERCENTAGE", 
-                "feeValue": 2.5 
-              }, 
-              "idleFeePolicy": "₹2/min after 10 min post-charge" 
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet"
+            ],
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
+              "@type": "ChargingOffer",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.5
+              },
+              "idleFeePolicy": "₹2/min after 10 min post-charge"
             }
           },
           {
@@ -338,7 +395,9 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Per-kWh Tariff - CCS2 120kW"
             },
-            "beckn:items": ["ev-charger-ccs2-002"],
+            "beckn:items": [
+              "ev-charger-ccs2-002"
+            ],
             "beckn:price": {
               "currency": "INR",
               "value": 22.0,
@@ -353,9 +412,14 @@
               "schema:startDate": "2025-10-15T00:00:00Z",
               "schema:endDate": "2026-04-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet", "NetBanking"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet",
+              "NetBanking"
+            ],
             "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
@@ -372,7 +436,9 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Per-kWh Tariff - Type 2 22kW"
             },
-            "beckn:items": ["ev-charger-type2-001"],
+            "beckn:items": [
+              "ev-charger-type2-001"
+            ],
             "beckn:price": {
               "currency": "INR",
               "value": 15.0,
@@ -387,9 +453,13 @@
               "schema:startDate": "2025-10-20T00:00:00Z",
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",

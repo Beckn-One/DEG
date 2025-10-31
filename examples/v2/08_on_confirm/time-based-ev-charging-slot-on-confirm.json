@@ -71,6 +71,7 @@
               "schema:endDate": "2025-04-27T23:59:59Z"
             },
             "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
@@ -134,6 +135,7 @@
         "beckn:id": "fulfillment-001",
         "beckn:status": "CONFIRMED",
         "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
           "sessionId": "session-001",
           "sessionType": "CHARGING",
@@ -179,6 +181,7 @@
         "beckn:beneficiary": "BPP"
       },
       "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
         "@type": "ChargingSession",
         "sessionPreferences": {
           "preferredStartTime": "2025-01-27T10:00:00Z",
