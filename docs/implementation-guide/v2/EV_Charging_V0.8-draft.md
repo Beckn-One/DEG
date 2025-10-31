@@ -522,7 +522,7 @@ Note: Users can discover the charging station through off-network channels (such
               }
             },
             "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
               "@type": "ChargingService",
               "connectorType": "CCS2",
               "maxPowerKW": 60,
@@ -580,7 +580,7 @@ Note: Users can discover the charging station through off-network channels (such
                 },
                 "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
                 "beckn:offerAttributes": {
-                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
                   "@type": "ChargingOffer",
                   "buyerFinderFee": {
                     "feeType": "PERCENTAGE",
@@ -642,7 +642,7 @@ Note: Users can discover the charging station through off-network channels (such
               }
             },
             "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
               "@type": "ChargingService",
               "connectorType": "CCS2",
               "maxPowerKW": 60,
@@ -700,7 +700,7 @@ Note: Users can discover the charging station through off-network channels (such
                 },
                 "beckn:acceptedPaymentMethod": ["UPI", "Card"],
                 "beckn:offerAttributes": {
-                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+                  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
                   "@type": "ChargingOffer",
                   "buyerFinderFee": {
                     "feeType": "PERCENTAGE",
@@ -798,7 +798,7 @@ CPO returns details of a specific charger: [Example](../../../examples/v2/02_on_
             },
             "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
@@ -815,7 +815,7 @@ CPO returns details of a specific charger: [Example](../../../examples/v2/02_on_
         "beckn:id": "fulfillment-charging-001",
         "beckn:mode": "RESERVATION",
         "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
           "@type": "ChargingSession",
           "sessionStatus": "PENDING",
           "authorizationMode": "APP_QR",
@@ -826,7 +826,7 @@ CPO returns details of a specific charger: [Example](../../../examples/v2/02_on_
         }
       },
       "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "ChargingSession",
         "buyerFinderFee": {
           "feeType": "PERCENTAGE",
@@ -916,7 +916,7 @@ EV user requests charge worth specific amount in currency: [Example](https://git
             },
             "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
@@ -979,7 +979,7 @@ EV user requests charge worth specific amount in currency: [Example](https://git
         "beckn:mode": "RESERVATION",
         "beckn:status": "QUOTED",
         "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
           "@type": "ChargingSession",
           "sessionStatus": "PENDING",
           "authorizationMode": "APP_QR",
@@ -3355,7 +3355,7 @@ Consumers can search for EV charging stations with specific criteria including l
    "bap_uri": "https://bap.example.com",
    "ttl": "PT30S",
    "schema_context": [
-     "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
+     "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld"
    ]
  },
 "message": {
@@ -3688,7 +3688,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
              }
            },
            "beckn:itemAttributes": {
-             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
              "@type": "ChargingService",
              "connectorType": "CCS2",
              "maxPowerKW": 60,
@@ -3746,7 +3746,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
                },
                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
                "beckn:offerAttributes": {
-                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
                  "@type": "ChargingOffer",
                  "buyerFinderFee": {
                    "feeType": "PERCENTAGE",
@@ -3808,7 +3808,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
              }
            },
            "beckn:itemAttributes": {
-             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
              "@type": "ChargingService",
              "connectorType": "CCS2",
              "maxPowerKW": 120,
@@ -3866,7 +3866,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
                },
                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet", "NetBanking"],
                "beckn:offerAttributes": {
-                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
                  "@type": "ChargingOffer",
                  "buyerFinderFee": {
                    "feeType": "PERCENTAGE",
@@ -3928,7 +3928,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
              }
            },
            "beckn:itemAttributes": {
-             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
              "@type": "ChargingService",
              "connectorType": "Type2",
              "maxPowerKW": 22,
@@ -3986,7 +3986,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
                },
                "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
                "beckn:offerAttributes": {
-                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
                  "@type": "ChargingOffer",
                  "buyerFinderFee": {
                    "feeType": "PERCENTAGE",
@@ -4178,7 +4178,7 @@ Offer schema in the catalog:
            },
            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
            "beckn:offerAttributes": {
-             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
              "@type": "ChargingOffer",
              "buyerFinderFee": {
                "feeType": "PERCENTAGE",
@@ -4195,7 +4195,7 @@ Offer schema in the catalog:
        "beckn:id": "fulfillment-charging-001",
        "beckn:mode": "RESERVATION",
        "beckn:deliveryAttributes": {
-         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
          "@type": "ChargingSession",
          "sessionStatus": "PENDING",
          "authorizationMode": "APP_QR",
@@ -4206,7 +4206,7 @@ Offer schema in the catalog:
        }
      },
      "beckn:orderAttributes": {
-       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
        "@type": "ChargingSession",
        "buyerFinderFee": {
          "feeType": "PERCENTAGE",
@@ -4310,7 +4310,7 @@ Recommendations for BPP:
            },
            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
            "beckn:offerAttributes": {
-             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
              "@type": "ChargingOffer",
              "buyerFinderFee": {
                "feeType": "PERCENTAGE",
@@ -4373,7 +4373,7 @@ Recommendations for BPP:
        "beckn:mode": "RESERVATION",
        "beckn:status": "QUOTED",
        "beckn:deliveryAttributes": {
-         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
          "@type": "ChargingSession",
          "sessionStatus": "PENDING",
          "authorizationMode": "APP_QR",
