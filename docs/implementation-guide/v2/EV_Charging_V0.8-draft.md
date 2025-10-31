@@ -41,25 +41,25 @@
   - [Example Workflows (EV User’s Perspective)](#example-workflows-ev-users-perspective)
     - [Example 1 - Walk-In to a charging station without reservation.](#example-1---walk-in-to-a-charging-station-without-reservation)
       - [Consumer User Journey](#consumer-user-journey)
-    - [**API Calls and Schema**](#api-calls-and-schema)
-      - [**discover**](#discover)
-      - [**on\_discover**](#on_discover)
-      - [**select**](#select)
-      - [**on\_select**](#on_select)
-      - [**init**](#init)
-      - [**on\_init**](#on_init)
-      - [**confirm**](#confirm)
-      - [**on\_confirm**](#on_confirm)
-      - [**Update(start-charging)**](#updatestart-charging)
-      - [**on\_update(start-charging)**](#on_updatestart-charging)
-      - [**track(charging-session progress)**](#trackcharging-session-progress)
-      - [**on\_track**](#on_track)
-      - [**Async on\_status**](#async-on_status)
-      - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging)
-      - [**rating**](#rating)
-      - [**on\_rating**](#on_rating)
-      - [**support**](#support)
-      - [**on\_support**](#on_support)
+      - [**API Calls and Schema**](#api-calls-and-schema)
+        - [**discover**](#discover)
+        - [**on\_discover**](#on_discover)
+        - [**select**](#select)
+        - [**on\_select**](#on_select)
+        - [**init**](#init)
+        - [**on\_init**](#on_init)
+        - [**confirm**](#confirm)
+        - [**on\_confirm**](#on_confirm)
+        - [**update(start-charging)**](#updatestart-charging)
+        - [**on\_update(start-charging)**](#on_updatestart-charging)
+        - [**track(charging-session progress)**](#trackcharging-session-progress)
+        - [**on\_track**](#on_track)
+        - [**Async on\_status**](#async-on_status)
+        - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging)
+        - [**rating**](#rating)
+        - [**on\_rating**](#on_rating)
+        - [**support**](#support)
+        - [**on\_support**](#on_support)
     - [Use case 2- Reservation of an EV charging time slot.](#use-case-2--reservation-of-an-ev-charging-time-slot)
         - [Context:](#context)
         - [1. Discovery](#1-discovery)
@@ -67,41 +67,39 @@
       - [**2. Order (Reservation)**](#2-order-reservation)
       - [**3. Fulfilment (Session Start \& Tracking)**](#3-fulfilment-session-start--tracking)
       - [**4. Post-Fulfilment**](#4-post-fulfilment)
-    - [**API Calls and Schema**](#api-calls-and-schema-1)
-      - [**Discover**](#discover-1)
-        - [Discovery of EV charging services within a circular boundary](#discovery-of-ev-charging-services-within-a-circular-boundary)
-        - [Discovery of EV charging stations along a route](#discovery-of-ev-charging-stations-along-a-route)
-        - [Discovery within circle + connector specs as filters](#discovery-within-circle--connector-specs-as-filters)
-        - [Discovery within circle + vehicle specifications as filters](#discovery-within-circle--vehicle-specifications-as-filters)
-        - [Discovery of services offered by a specific CPO](#discovery-of-services-offered-by-a-specific-cpo)
-        - [Viewing details of a single charging station (by its Item Identifier)](#viewing-details-of-a-single-charging-station-by-its-item-identifier)
-        - [Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)](#fetching-details-of-a-specific-charger-evse-on-site-by-its-evse-identifier)
-        - [Discovering chargers in a specific circular area, a specific connector type and availability time range](#discovering-chargers-in-a-specific-circular-area-a-specific-connector-type-and-availability-time-range)
-      - [**On\_discover**](#on_discover-1)
-      - [Offers as part of the Catalog](#offers-as-part-of-the-catalog)
-      - [**Select**](#select-1)
-      - [**on\_select**](#on_select-1)
-      - [Surge Pricing](#surge-pricing)
-      - [**init**](#init-1)
-      - [**on\_init**](#on_init-1)
-      - [**on\_status payment**](#on_status-payment)
-      - [**confirm**](#confirm-1)
-      - [**on\_confirm**](#on_confirm-1)
-      - [**update (start charging)**](#update-start-charging)
-      - [**on\_update (start charging)**](#on_update-start-charging)
-      - [**track**](#track)
-      - [**on\_track**](#on_track-1)
-      - [**Asynchronous on\_status (temporary connection interruption)**](#asynchronous-on_status-temporary-connection-interruption)
-        - [**Under and Overcharge Scenarios**](#under-and-overcharge-scenarios)
-          - [**A) Undercharge (Power Cut Mid-Session)**](#a-undercharge-power-cut-mid-session)
-          - [**B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#b-overcharge-charger-offline-to-cms-keeps-dispensing)
-      - [**Asynchronous on\_update (stop charging)**](#asynchronous-on_update-stop-charging)
-      - [**Cancel**](#cancel)
-      - [**On\_cancel**](#on_cancel)
-      - [**Rating**](#rating-1)
-      - [**on\_rating**](#on_rating-1)
-      - [**support**](#support-1)
-      - [**on\_support**](#on_support-1)
+      - [**API Calls and Schema**](#api-calls-and-schema-1)
+        - [**discover**](#discover-1)
+          - [Discovery of EV charging services within a circular boundary](#discovery-of-ev-charging-services-within-a-circular-boundary)
+          - [Discovery of EV charging stations along a route](#discovery-of-ev-charging-stations-along-a-route)
+          - [Discovery within circle + connector specs as filters](#discovery-within-circle--connector-specs-as-filters)
+          - [Discovery within circle + vehicle specifications as filters](#discovery-within-circle--vehicle-specifications-as-filters)
+          - [Discovery of services offered by a specific CPO](#discovery-of-services-offered-by-a-specific-cpo)
+          - [Viewing details of a single charging station (by its Item Identifier)](#viewing-details-of-a-single-charging-station-by-its-item-identifier)
+          - [Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)](#fetching-details-of-a-specific-charger-evse-on-site-by-its-evse-identifier)
+          - [Discovering chargers in a specific circular area, a specific connector type and availability time range](#discovering-chargers-in-a-specific-circular-area-a-specific-connector-type-and-availability-time-range)
+        - [**on\_discover**](#on_discover-1)
+          - [Offers as part of the Catalog](#offers-as-part-of-the-catalog)
+        - [**Select**](#select-1)
+        - [**on\_select**](#on_select-1)
+        - [Surge Pricing](#surge-pricing)
+        - [**init**](#init-1)
+        - [**on\_init**](#on_init-1)
+        - [**on\_status payment**](#on_status-payment)
+        - [**confirm**](#confirm-1)
+        - [**on\_confirm**](#on_confirm-1)
+        - [**update (start charging)**](#update-start-charging)
+        - [**on\_update (start charging)**](#on_update-start-charging)
+        - [**track**](#track)
+        - [**on\_track**](#on_track-1)
+        - [**Asynchronous on\_status (temporary connection interruption)**](#asynchronous-on_status-temporary-connection-interruption)
+          - [**Under and Overcharge Scenarios**](#under-and-overcharge-scenarios)
+        - [**Asynchronous on\_update (stop charging)**](#asynchronous-on_update-stop-charging)
+        - [**Cancel**](#cancel)
+        - [**on\_cancel**](#on_cancel)
+        - [**Rating**](#rating-1)
+        - [**on\_rating**](#on_rating-1)
+        - [**support**](#support-1)
+        - [**on\_support**](#on_support-1)
     - [**Integrating with your software**](#integrating-with-your-software)
       - [**Integrating the BAP**](#integrating-the-bap)
       - [**Integrating the BPP**](#integrating-the-bpp)
@@ -384,11 +382,11 @@ Important points of consideration:
 5. Same API endpoints: Uses identical Beckn protocol calls but with compressed timeframes  
 6. Immediate fulfillment: The charging session can start immediately after confirmation, rather than waiting for a scheduled time
 
-### **API Calls and Schema**
+#### **API Calls and Schema**
 
 Note: The API calls and schema for walk-in charging are identical to the [advance reservation use case](#use-case-2--reservation-of-an-ev-charging-time-slot) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
 
-#### **discover**
+##### **discover**
 
 - Method: POST
 - Use Cases: Raghav scans QR code on charger using his BAP user app
@@ -436,7 +434,7 @@ Note: Users can discover the charging station through off-network channels (such
 * The charging station must be able to handle direct selection requests without prior search/discovery  
 * This represents a more streamlined flow for walk-in customers who have already identified their preferred charging location
 
-#### **on\_discover**
+##### **on\_discover**
 
 - Method: POST
 - Use Cases: The app receives the charger’s details (connector, power rating, live status, tariff, any active time-bound offer).
@@ -736,7 +734,7 @@ CPO returns details of a specific charger: [Example](https://github.com/Beckn-On
 ```
 </details>
 
-#### **select**
+##### **select**
 
 - Method: POST
 - Use Cases: Raghav selects a service offering from the options he gets. He chooses a 100 INR top-up.
@@ -856,7 +854,7 @@ EV user requests charge worth specific amount in currency: [Example](https://git
 ```
 </details>
 
-#### **on\_select**
+##### **on\_select**
 
 - Method: POST
 - Use Cases: Raghav receives estimated quotations for the selected service.
@@ -1016,7 +1014,7 @@ CPO responds with dynamically calculated quote: [Example](https://github.com/Bec
 ```
 </details>
 
-#### **init**
+##### **init**
 
 - Method: POST
 - Use Cases: Raghav provides his billing information.
@@ -1217,7 +1215,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 ```
 </details>
 
-#### **on\_init**
+##### **on\_init**
 
 - Method: POST
 - Use Cases: Raghav receives the charging session terms(rate, idle fee window, cancellation rules, payment terms etc). 
@@ -1447,7 +1445,7 @@ CPO responds with final quote with payment terms: [Example](https://github.com/B
 ```
 </details>
 
-#### **confirm**
+##### **confirm**
 
 - Method: POST
 - Use Cases: Raghav confirms the order.
@@ -1671,7 +1669,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 ```
 </details>
 
-#### **on\_confirm**
+##### **on\_confirm**
 
 - Method: POST
 - Use Cases: The app returns a booking/transaction ID along with the other charging session details.
@@ -1896,7 +1894,7 @@ CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blo
 ```
 </details>
 
-#### **Update(start-charging)**
+##### **update(start-charging)**
 
 - Method: POST
 - Use Cases: Raghav plugs in and starts the session from the app.
@@ -2124,7 +2122,7 @@ EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/bl
 ```
 </details>
 
-#### **on\_update(start-charging)**
+##### **on\_update(start-charging)**
 
 - Method: POST
 - Use Cases: Response for the charging session initiation.
@@ -2363,7 +2361,7 @@ CPO responds with confirmed start of charging session: [Example](https://github.
 ```
 </details>
 
-#### **track(charging-session progress)**
+##### **track(charging-session progress)**
 
 - Method: POST
 - Use Cases: Raghav requests to track the live status of the charging session. state of charge(how much charging has been done).
@@ -2421,7 +2419,7 @@ EV User tracks a live charging session in real-time: [Example](https://github.co
 ```
 </details>
 
-#### **on\_track**
+##### **on\_track**
 
 - Method: POST
 - Use Cases: Raghav receives the state of charge(how much charging has been done) of the vehicle.
@@ -2502,7 +2500,7 @@ EV User receives a live charging session in real-time: [Example]
 ```
 </details>
 
-#### **Async on\_status**
+##### **Async on\_status**
 
 - Method: POST
 - Use Cases: Raghav receives a notification if there is any error during the charging session.
@@ -2750,7 +2748,7 @@ EV user reveives a notification in case of any error occuring during charging se
 ```
 </details>
 
-#### **Async on\_update(stop-charging)**
+##### **Async on\_update(stop-charging)**
 
 - Method: POST
 - Use Cases: At \~60 minutes, the session stops (or notifies him to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
@@ -3007,7 +3005,7 @@ EV user receives the session details upon chargign session end: [Example](https:
 ```
 </details>
 
-#### **rating**
+##### **rating**
 
 - Method: POST
 - Use Cases: Raghav provides rating for the charging session.
@@ -3069,7 +3067,7 @@ EV user rates charging service experience: [Example](https://github.com/Beckn-On
 ```
 </details>
 
-#### **on\_rating**
+##### **on\_rating**
 
 - Method: POST
 - Use Cases: Raghav receives an achievement after providing a rating.
@@ -3134,7 +3132,7 @@ CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/exampl
 ```
 </details>
 
-#### **support**
+##### **support**
 
 - Method: POST
 - Use Cases: Raghav reaches out for support.
@@ -3189,7 +3187,7 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
 ```
 </details>
 
-#### **on\_support**
+##### **on\_support**
 
 - Method: POST
 - Use Cases: Raghav receives a response to his support request.
@@ -3329,9 +3327,9 @@ The system issues a **digital invoice**, updates her **wallet balance**, and pro
 
 Satisfied, Adam resumes his trip—arriving in Mysuru with time to spare.
 
-### **API Calls and Schema**
+#### **API Calls and Schema**
 
-#### **Discover**
+##### **discover**
 
 Consumers can search for EV charging stations with specific criteria including location, connector type, time window, finder fee etc.
 
@@ -3339,7 +3337,7 @@ Consumers can search for EV charging stations with specific criteria including l
 - Use Cases: Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). He filters for chargers within 5 km of his location.
 - Request: 
 
-##### Discovery of EV charging services within a circular boundary
+###### Discovery of EV charging services within a circular boundary
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3378,7 +3376,7 @@ Consumers can search for EV charging stations with specific criteria including l
 
 Discovery of EV charging services within a circular boundary: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-a-circular-boundary.json)
 
-##### Discovery of EV charging stations along a route
+###### Discovery of EV charging stations along a route
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3420,7 +3418,7 @@ Discovery of EV charging services within a circular boundary: [Example](https://
 
 Discovery of EV charging stations along a route: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-along-route.json)
 
-##### Discovery within circle \+ connector specs as filters
+###### Discovery within circle \+ connector specs as filters
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3451,7 +3449,7 @@ Discovery of EV charging stations along a route: [Example](https://github.com/Be
 
 Discovery of EV Charging stations within a circular boundary using connector specs as filters: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-boundary-with-connection-spec.json)
 
-##### Discovery within circle \+ vehicle specifications as filters
+###### Discovery within circle \+ vehicle specifications as filters
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3484,7 +3482,7 @@ Discovery of EV Charging stations within a circular boundary using connector spe
 
 Discovery of EV Charging stations within circular boundary using vehicle specifications as filters: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-within-boundary-with-vehicle-spec.json)
 
-##### Discovery of services offered by a specific CPO
+###### Discovery of services offered by a specific CPO
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3504,7 +3502,7 @@ Discovery of EV Charging stations within circular boundary using vehicle specifi
 
 Discovery of EV charging services offered by a specific CPO: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-services-by-a-cpo.json)
 
-##### Viewing details of a single charging station (by its Item Identifier)
+###### Viewing details of a single charging station (by its Item Identifier)
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3523,7 +3521,7 @@ Discovery of EV charging services offered by a specific CPO: [Example](https://g
 
 Viewing details of a single charging station (using its Identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-services-by-a-station.json)
 
-##### Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
+###### Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3542,7 +3540,7 @@ Viewing details of a single charging station (using its Identifier): [Example](h
 
 Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-by-EVSE.json)
 
-##### Discovering chargers in a specific circular area, a specific connector type and availability time range
+###### Discovering chargers in a specific circular area, a specific connector type and availability time range
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3595,7 +3593,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 ```
 </details>
 
-#### **On\_discover**
+##### **on\_discover**
 
 - Method: POST
 - Use Cases: Adam receives a comprehensive catalog of available charging stations from multiple CPOs with detailed specifications, pricing, and location information.
@@ -4050,7 +4048,7 @@ This section outlines the catalogs array, returned in on\_discover, containing p
 ```
 </details>
 
-#### Offers as part of the Catalog
+###### Offers as part of the Catalog
 
 While browsing the charging app for a session, Srilekha notices a banner:  
 “Limited Time Offer: ₹20 off when you charge above 5 kWh – Valid till Sunday\!”  
@@ -4110,7 +4108,7 @@ Offer schema in the catalog:
 3. The @type associates this object with the **class definition** beckn:Offer, enabling consistent validation across systems.  
 4. Nested entities (like beckn:Descriptor and beckn:Price) maintain **linked relationships**, preserving meaning across the semantic graph.
 
-#### **Select**
+##### **Select**
 
 - Method: POST
 - Use Cases: Adam selects a charging session slot. 
@@ -4235,7 +4233,7 @@ Offer schema in the catalog:
 ```
 </details>
 
-#### **on\_select** 
+##### **on\_select** 
 
 - Method: POST
 - Use Cases: Adam receives an estimated quotation for the selected slot. 
@@ -4409,7 +4407,7 @@ Recommendations for BPP:
 ```
 </details>
 
-#### Surge Pricing
+##### Surge Pricing
 
 A surge price is an additional fee applied on top of the base charging tariff under specific conditions-such as time of use or location.  
 User Journey:  
@@ -4460,7 +4458,7 @@ Quote Information:
   * price.currency: Currency of the individual charge in the breakup  
   * Breakup includes base charges, additional fees, surge pricing, and promotional discounts from applied offers
 
-#### **init**
+##### **init**
 
 Loyalty Program and Authorization Process:
 
@@ -4694,7 +4692,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### **on\_init**
+##### **on\_init**
 
 - Method: POST
 - Use Cases: Adam receives the terms of the order(payment, cancellation, overcharge etc) and available payment methods.
@@ -4940,7 +4938,7 @@ If authorization is required for confirming the order, the BPP will share it ins
 ```
 </details>
 
-#### **on\_status payment**
+##### **on\_status payment**
 
 - Method: POST
 - Use Cases: Adam receives a payment confirmation from BPP.
@@ -4996,7 +4994,7 @@ If authorization is required for confirming the order, the BPP will share it ins
 ```
 </details>
 
-#### **confirm**
+##### **confirm**
 
 - Method: POST
 - Use Cases: Adam accepts the terms of the order and confirms the order.
@@ -5239,7 +5237,7 @@ If authorization is required for confirming the order, the BPP will share it ins
 ```
 </details>
 
-#### **on\_confirm**
+##### **on\_confirm**
 
 - Method: POST
 - Use Cases: Adam receives a reservation ID and QR code, plus a navigation link to the charging site.
@@ -5475,7 +5473,7 @@ If authorization is required for confirming the order, the BPP will share it ins
 ```
 </details>
 
-#### **update (start charging)**
+##### **update (start charging)**
 
 Physical Charging Process:
 
@@ -5723,7 +5721,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **on\_update (start charging)**
+##### **on\_update (start charging)**
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement on charging initialisation.
@@ -5967,7 +5965,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **track**
+##### **track**
 
 - Method: POST
 - Use Cases: Adam initiates a request to track the charging progress of the active charging session.
@@ -6012,7 +6010,6 @@ Once these physical steps are completed, the charging session can be initiated t
      "beckn:id": "order-bpp-789012"
    }
  }
-}
 
 ```
 </details>
@@ -6030,7 +6027,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **on\_track**
+##### **on\_track**
 
 - Method: POST
 - Use Cases: Adam receives the current charging progress.
@@ -6127,16 +6124,16 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **Asynchronous on\_status (temporary connection interruption)**
+##### **Asynchronous on\_status (temporary connection interruption)**
 
 1. This is used in case of a connection interruption during a charging session.  
 2. Applicable only in case of temporary connection interruptions, BPPs expect to recover from these connection interruptions in the short term.  
 3. BPP notifies the BAP about this interruption using an unsolicited on\_status callback.  
 4. NOTE: if the issue remains unresolved and BPP expects it to be a long term issue, BPP must send an unsolicited on\_update to the BAP with relevant details.
 
-##### **Under and Overcharge Scenarios**
+###### **Under and Overcharge Scenarios**
 
-###### **A) Undercharge (Power Cut Mid-Session)**
+####### **A)Undercharge (Power Cut Mid-Session)**
 
 Scenario: The user reserves a 12:45–13:30 slot and prepays ₹500 in the app to the BPP platform. Charging starts on time; the app shows ETA and live ₹/kWh. At 13:05 a power cut stops the charger. The charger loses connectivity and can’t push meter data. The app immediately shows: “Session interrupted—only actual energy will be billed. You may unplug or wait for power to resume.”
 
@@ -6150,7 +6147,7 @@ Handling & experience:
 
 Contract/UI terms to bake in: “Power/interruption protection: you are charged only for energy delivered; any excess prepayment is automatically refunded on sync.” Show an estimated refund immediately, and a final confirmation after sync.
 
-###### **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**
+####### **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**
 
 Scenario: The user reserves a slot with ₹500 budget. Charging begins; mid-session the charger loses connectivity to its CMS (e.g., basement, patchy network). Hardware keeps dispensing; when connectivity returns, the log shows ₹520 worth of energy delivered.
 
@@ -6416,7 +6413,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### **Asynchronous on\_update (stop charging)**
+##### **Asynchronous on\_update (stop charging)**
 
 - Method: POST
 - Use Cases: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
@@ -6686,7 +6683,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### **Cancel**
+##### **Cancel**
 
 It’s like when a client calls to cancel an appointment — maybe something came up, or their plans have changed. When they request to cancel, it’s about freeing up that slot and keeping things organized.
 
@@ -6737,7 +6734,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **On\_cancel**
+##### **on\_cancel**
 
 - Method: POST
 - Use Cases: Adam receives order cancellation confirmation.  The advance payment will be adjusted as per network/CPO rule.
@@ -6777,7 +6774,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **Rating**
+##### **Rating**
 
 - Method: POST
 - Use Cases: Adam rates the order.
@@ -6838,7 +6835,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **on\_rating**
+##### **on\_rating**
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement.
@@ -6903,7 +6900,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **support**
+##### **support**
 
 - Method: POST
 - Use Cases: Adma reaches out for support.
@@ -6958,7 +6955,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **on\_support**
+##### **on\_support**
 
 - Method: POST
 - Use Cases: Raghav receives a response to his support request.
