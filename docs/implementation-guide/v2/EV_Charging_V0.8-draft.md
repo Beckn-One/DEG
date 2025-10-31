@@ -1,8 +1,7 @@
 # Implementation Guide \- EV Charging \- Version 0.8 (DRAFT)
 
 <details>
-  <summary>**Table of Contents**</summary>
-created using https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+  <summary>Table of Contents :rocket:</summary>
 
 - [Implementation Guide - EV Charging - Version 0.8 (DRAFT)](#implementation-guide---ev-charging---version-08-draft)
   - [Request for Comments](#request-for-comments)
@@ -108,6 +107,8 @@ created using https://marketplace.visualstudio.com/items?itemName=yzhang.markdow
       - [**Integrating the BPP**](#integrating-the-bpp)
   - [FAQs](#faqs)
   - [References](#references)
+
+created using https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
 </details>
 
 ## Request for Comments
