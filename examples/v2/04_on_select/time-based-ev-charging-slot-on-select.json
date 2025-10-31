@@ -18,14 +18,11 @@
     "bap_uri": "https://bap.example.com",
     "bpp_id": "bpp.example.com",
     "bpp_uri": "https://bpp.example.com",
-    "ttl": "PT30S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
-    ]
+    "ttl": "PT30S"
   },
   "message": {
     "order": {
-      "@context": "https://becknprotocol.io/schemas/core/v1/Order/schema-context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "QUOTE_RECEIVED",
@@ -38,7 +35,7 @@
           "beckn:orderedItem": "ev-charger-ccs2-001",
           "beckn:quantity": 2.5,
           "beckn:acceptedOffer": {
-            "@context": "https://becknprotocol.io/schemas/core/v1/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-60kw-kwh",
             "beckn:descriptor": {
@@ -84,13 +81,25 @@
       ],
       "beckn:orderValue": {
         "currency": "INR",
-        "value": 100.0,
+        "value": 128.64,
         "components": [
           {
             "type": "UNIT",
-            "value": 72.73,
+            "value": 100.0,
             "currency": "INR",
-            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+            "description": "Base charging session cost (100 INR)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
           },
           {
             "type": "FEE",
@@ -103,23 +112,11 @@
             "value": 13.64,
             "currency": "INR",
             "description": "Overcharge estimation"
-          },
-          {
-            "type": "SURCHARGE",
-            "value": 14.55,
-            "currency": "INR",
-            "description": "Surge price (20%)"
-          },
-          {
-            "type": "DISCOUNT",
-            "value": -10.92,
-            "currency": "INR",
-            "description": "Offer discount (20%)"
           }
         ]
       },
       "beckn:fulfillment": {
-        "@context": "https://becknprotocol.io/schemas/core/v1/Fulfillment/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-charging-001",
         "beckn:mode": "RESERVATION",

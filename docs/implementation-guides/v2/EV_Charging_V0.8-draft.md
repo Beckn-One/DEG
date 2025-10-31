@@ -22,9 +22,7 @@ Built on Beckn’s commerce capabilities and aligned with OCPI for technical int
 
 This document provides an implementation guidance for deploying EV charging services using the Beckn Protocol ecosystem. It specifically addresses how consumer applications can provide unified access to charging infrastructure across multiple Charge Point Operators while maintaining technical compatibility with existing OCPI-based systems.
 
-# 5\. Purpose of this document
-
-# 6\. Scope
+# 5\. Scope
 
 This document covers:
 
@@ -41,7 +39,7 @@ This document does NOT cover:
 * Regulatory compliance beyond technical implementation (varies by jurisdiction)  
 * Smart grid integration and load management systems
 
-# 7\. Intended Audience
+# 6\. Intended Audience
 
 * Consumer Application Developers (BAPs): Building EV driver-facing charging applications with unified cross-network access  
 * e-Mobility Service Providers (eMSPs/BPPs): Implementing charging service aggregation platforms across multiple CPO networks  
@@ -51,16 +49,16 @@ This document does NOT cover:
 * Business Stakeholders: Understanding technical capabilities and implementation requirements for EV charging marketplace strategies  
 * Standards Organizations: Evaluating interoperability approaches for future EV charging standards development
 
-# 8\. Conventions and Terminology
+# 7\. Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described [here](https://github.com/beckn/protocol-specifications/blob/draft/docs/BECKN-010-Keyword-Definitions-for-Technical-Specifications.md).
 
-# 9\. Terminology
+# 8\. Terminology
 
 | Acronym | Full Form/Description | Description |
 | ----- | ----- | ----- |
-| BAP | Beckn Application Platform | Consumer-facing application that initiates transactions. Onboards EV users and eMSPs. |
-| BPP | Beckn Provider Platform | Service provider platform that responds to BAP requests. Onboards CPOs.  |
+| BAP | Beckn Application Platform | Consumer-facing application that initiates transactions. Mapped to EV users and eMSPs. |
+| BPP | Beckn Provider Platform | Service provider platform that responds to BAP requests. Mapped to CPOs.  |
 | NFO | Network Facilitator Organization | Organization responsible for the adoption and growth of the network. Usually the custodian of the network’s registry. |
 | CDS | Catalog Discovery Service | Enables discovery of charging services from BPPs in the network. |
 | eMSP | e-Mobility Service Provider | Service provider that aggregates multiple CPOs. Generally onboarded by BAPs.  |
@@ -68,19 +66,22 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | EVSE | Electric Vehicle Supply Equipment | Individual charging station unit. Owned and operated by CPOs |
 | OCPI | Open Charge Point Interface | Protocol for communication between eMSPs and CPOs. |
 
-Note: This document does not detail the mapping between Beckn Protocol and OCPI. Please refer to [this](https://docs.google.com/document/d/13gtF2GHoWnjahqwzCRsOojjPLzhlOhWx_04m72VAdM4/edit?tab=t.0) document for the same.
+> Note:
+> This document does not detail the mapping between Beckn Protocol and OCPI. Please refer to [this](https://github.com/Beckn-One/DEG/blob/draft/docs/implementation-guides/v1-EOS/DEG00x_Mapping-OCPI-and-Beckn-Protocol-for-EV-Charging-Interoperability.md) document for the same.
+> BPPs are NOT aggregators. Any CPO that has implemented a Beckn Protocol endpoint is a BPP. 
+> For all sense and purposes, CPOs are essentially BPPs and eMSPs are essentially BAPs.
 
-# 10\. Reference Architecture
+# 9\. Reference Architecture
 
 The section defines the reference ecosystem architecture that is used for building this implementation guide. 
 
-## 10.1. Architecture Diagram
+## 9.1. Architecture Diagram
 
-![](https://private-user-images.githubusercontent.com/52468749/506232050-1fbbb44f-f07a-4be4-86e9-87e94105fff2.png?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NjE1OTg1OTYsIm5iZiI6MTc2MTU5ODI5NiwicGF0aCI6Ii81MjQ2ODc0OS81MDYyMzIwNTAtMWZiYmI0NGYtZjA3YS00YmU0LTg2ZTktODdlOTQxMDVmZmYyLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTEwMjclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUxMDI3VDIwNTEzNlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTcwODBkMjBhOTA5MGU5NzgyODM3NmQ3MGZjYWY3ZmVkNTI4NGZiMGJmYWNiZjM0N2IyMDE2ZGNhNDlmMGY5MGYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.ZoIHVsU4ncce--mL6MXZwEycjzSCJvsJUD8pjLPGQyY)
+![](./images/beckn-one-deg-arch.png)
 
 Source: [https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcFyWdoGJtNUjNQ/edit?slide=id.p\#slide=id.p](https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcFyWdoGJtNUjNQ/edit?slide=id.p#slide=id.p)
 
-## 10.2. Actors
+## 9.2. Actors
 
 1. Beckn One Global Root Registry  
 2. Beckn One Catalog Discovery Service  
@@ -88,11 +89,11 @@ Source: [https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcF
 4. Beckn Provider Platforms  
 5. EV Charging Registry
 
-# 11\. Creating an Open Network for EV Charging
+# 10\. Creating an Open Network for EV Charging
 
 To create an open network for EV charging requires all the EV charging BAPs, BPPs, to be able to discover each other and become part of a common club. This club is manifested in the form of a Registry maintained by an NFO. 
 
-## 11.1 Setting up a Registry
+## 10.1 Setting up a Registry
 
 The NP Registry serves as the root of addressability and trust for all network participants. It maintains comprehensive details such as the participant’s globally unique identifier (ID), network address (Beckn API URL), public key, operational domains, and assigned role (e.g., BAP, BPP, CDS). In addition to managing participant registration, authentication, authorization, and permission control, the Registry oversees participant verification, activation, and overall lifecycle management, ensuring that only validated and authorized entities can operate within the network.
 
@@ -100,39 +101,39 @@ The NP Registry serves as the root of addressability and trust for all network p
 
 The Beckn One registry uses [**Decentralized Directory** protocol](https://github.com/LF-Decentralized-Trust-labs/DeDi) for publishing and looking up details of network participants.
 
-### 11.1.1 For NPs
+### 10.1.1 For NPs
 
-#### 11.1.1.1 Step 1 :  Claiming a Namespace
+#### 10.1.1.1 Step 1 :  Claiming a Namespace
 
 To get started, any platform that has implemented Beckn Protocol MUST create a globally unique namespace for themselves.   
 All NPs (BAPs, BPPs, CDS’es) **MUST** register as a user on dedi.global and claim a unique namespace against their FQDN to become globally addressable. As part of the claiming process, the user must prove ownership of that namespace by verifying the ownership of that domain.
 
-#### 11.1.1.2 Step 2 :  Setting up a Registry
+#### 10.1.1.2 Step 2 :  Setting up a Registry
 
 Once the namespace is claimed, each NP **MUST** create a Beckn NP registry in the namespace to list their subscriber details. While creating the registry, the user **MUST** configure it with the [subscriber schema](https://gist.githubusercontent.com/nirmalnr/a6e5b17522169ecea4f3ccdd831af7e4/raw/b7cf8a47e6531ef22744b43e6305b8d8cc106e7b/beckn-subscriber-no-refs.schema.json). 
 
-#### 11.1.1.3 Step 3 :  Publishing subscriber details
+#### 10.1.1.3 Step 3 :  Publishing subscriber details
 
 In the registry that is created, NPs **MUST** publish their subscription details including their ID, network endpoints, public keys, operational domains and assigned roles (BAP, BPP) as records.
 
 *Detailed steps to create namespaces and registries in dedi.global can be found [here](https://github.com/dedi-global/docs/blob/0976607aabc6641d330a3d41a3bd89ab8790ea09/user-guides/namespace%20and%20registry%20creation.md).*
 
-#### 11.1.1.4 Step 4 :  Share details of the registry created with the Beckn One team
+#### 10.1.1.4 Step 4 :  Share details of the registry created with the Beckn One team
 
 Once the registry is created and details are published, the namespace and the registry name of the newly created registry should be shared with the beckn one team.
 
-### 11.1.2 For NFOs
+### 10.1.2 For NFOs
 
-#### 11.1.2.1 Step 1 :  Claiming a Namespace
+#### 10.1.2.1 Step 1 :  Claiming a Namespace
 
 An NFO **MAY** register as a user on dedi.global and claim a unique namespace against their FQDN. As part of the claiming process, the user must prove ownership of that namespace by verifying the ownership of that domain.  
 *Note: A calibrated roll out of this infrastructure is planned and hence before it is open to the general public NFOs are advised to share their own domain and the domains of their NPs to the Beckn One team so that they can be whitelisted which will allow the NPs to verify the same using TXT records in their DNS.*
 
-#### 11.1.2.2 Step 2 :  Setting up a Registry
+#### 10.1.2.2 Step 2 :  Setting up a Registry
 
 Network facilitators **MAY** create registries under their own namespace using the [subscriber reference schema](https://gist.githubusercontent.com/nirmalnr/a6e5b17522169ecea4f3ccdd831af7e4/raw/b7cf8a47e6531ef22744b43e6305b8d8cc106e7b/beckn-subscriber-reference.schema.json) to point to either whole registries or records created by the NPs in their own namespaces. 
 
-#### 11.1.2.3 Step 3 :  Publishing subscriber details
+#### 10.1.2.3 Step 3 :  Publishing subscriber details
 
 In the registry that is created, NFOs **MAY** publish records which act as pointers to either whole registries or records created by the NPs records. The URL field in the record would be the lookup URL for a registry or a record as per DeDi protocol.
 
@@ -162,23 +163,28 @@ Here `energy-bap` is the name of the record created by the NP in this registry. 
 
 *Detailed steps to create namespaces and registries in dedi.global can be found [here](https://github.com/dedi-global/docs/blob/0976607aabc6641d330a3d41a3bd89ab8790ea09/user-guides/namespace%20and%20registry%20creation.md).*
 
-#### 11.1.2.4 Step 4 :  Share details of the registry created with the Beckn One team
+#### 10.1.2.4 Step 4 :  Share details of the registry created with the Beckn One team
 
 Once the registry is created and details are published, the namespace and the registry name of the newly created registry should be shared with the beckn one team.
 
-## 11.2 Setting up the Protocol Endpoints
+## 10.2 Setting up the Protocol Endpoints
 
 This section contains instructions to set up and test the protocol stack for EV charging transactions. 
 
-### 11.2.1 Installing Beckn ONIX
+### 10.2.1 Installing Beckn ONIX
 
-All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#quick-start) to learn how to set up Beckn ONIX.
+All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#automated-setup-recommended)) to learn how to set up Beckn ONIX.
 
-### 11.2.2 Configuring Beckn ONIX for EV Charging Transactions
+### 10.2.2 Configuring Beckn ONIX for EV Charging Transactions
 
-\<Add content here\>
+A detailed Configuration Guide is available [here](https://github.com/Beckn-One/beckn-onix/blob/main/CONFIG.md). A quick read of key concepts from the link is recommended.
 
-### 11.2.3 Performing a test EV charging transaction
+Specifically, for EV Charging, please use the following configuration:
+1. Configure dediregistry plugin instead of registry plugin. Read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/dediregistry).
+2. Start with using Simplekeymanager plugin during development, read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/simplekeymanager). For production deployment, you may setup vault.
+3. For routing calls to Catalog Discovery Service, refer to routing configuration [here](https://github.com/Beckn-One/beckn-onix/blob/main/config/local-simple-routing-BAPCaller.yaml).
+
+### 10.2.3 Performing a test EV charging transaction
 
 Step 1 : Download the postman collection
 
@@ -196,9 +202,9 @@ If you are a BPP
 4. You should see the EV charging service request in your console
 
 
-# 12\. Network Access
+# 11\. Network Access
 
-## 12.1 Discovering EV charging networks via Global Root
+## 11.1 Discovering EV charging networks via Global Root
 
 EV charging networks can be discovered and accessed by looking up the global root registry of Beckn One. 
 
@@ -218,22 +224,22 @@ Example Response
 TBD
 ```
 
-## 12.2 Looking up NPs inside a specific EV charging registry
+## 11.2 Looking up NPs inside a specific EV charging registry
 
 [Click to view this request in Postman - TBD](#)
 
-# 13\. Implementing EV Charging Semantics on Beckn Protocol
+# 12\. Implementing EV Charging Semantics on Beckn Protocol
 
 This section contains recommendations and guidelines on how to implement EV Charging Services on Beckn Protocol enabled networks. To ensure global interoperability between actors of the EV charging network, the semantics of the EV charging industry need to be mapped to the core schema of Beckn Protocol. The below table summarizes key semantic mappings between the EV Charging Domain and Beckn Protocol domain.
 
-## 13.1. Key Assumptions
+## 12.1. Key Assumptions
 
 - **Assumption 1 :** EV charging is treated as a service, not as a physical object.  
 - **Assumption 2:** All CPOs have implemented OCPI interfaces 
 
 Each entity in the charging lifecycle — the service, the commercial terms, and the usage instance — maps to a well-defined semantic concept, enabling platforms to exchange information in a standardized, machine-readable way.
 
-## 13.2 Semantic Model
+## 12.2 Semantic Model
 
 | EV Charging Domain Entity | Charging Example | Semantically maps to |
 | ----- | ----- | :---: |
@@ -2667,6 +2673,223 @@ EV user reveives a notification in case of any error occuring during charging se
 }
 ```
 
+### **Update(stop-charging)**
+
+### **Method**
+
+POST 
+
+### **Use Case**
+
+Raghav initiates a stop chargig request when his requirement is met.
+Note: In practive it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
+
+#### Request
+
+```json
+{
+  "context": {
+    "domain": "deg:ev-charging",
+    "action": "update",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
+    "version": "2.0.0",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T10:15:00Z",
+    "ttl": "15S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
+        "@type": "beckn:Party",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:name": "Ravi Kumar",
+        "beckn:organization": {
+          "descriptor": {
+            "name": "GreenCharge Pvt Ltd"
+          }
+        },
+        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
+        "beckn:email": "ravi.kumar@greencharge.com",
+        "beckn:phone": "+918765432100",
+        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            },
+            "beckn:offerAttributes": {
+              "@type": "ChargingOffer",
+              "offerType": "CHARGING_SESSION",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          "beckn:quantity": 5,
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 100.0,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 72.73,
+            "currency": "INR",
+            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 14.55,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -10.92,
+            "currency": "INR",
+            "description": "Offer discount (20%)"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:status": "ACTIVE",
+        "beckn:deliveryAttributes": {
+          "@type": "ChargingSession",
+          "sessionId": "session-001",
+          "sessionStatus": "END",
+          "sessionType": "CHARGING",
+          "startTime": "2025-01-27T10:00:00Z",
+          "endTime": "2025-01-27T11:30:00Z",
+          "customer": {
+            "name": "Ravi Kumar",
+            "phone": "+91-9887766554"
+          },
+          "vehicle": {
+            "make": "Tata",
+            "model": "Nexon EV"
+          },
+          "location": {
+            "gps": "28.345345,77.389754",
+            "address": "Connaught Place, New Delhi",
+            "descriptor": {
+              "name": "BlueCharge Connaught Place Station"
+            }
+          },
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "stationStatus": "Available",
+          "authorizationMode": "OTP",
+          "authorizationToken": "7484"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 100.0
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-01-27T10:05:00Z",
+        "beckn:acceptedPaymentMethods": [
+          "schema:BankTransfer",
+          "schema:UPI",
+          "schema:Wallet"
+        ],
+        "beckn:beneficiary": "BPP"
+      },
+      "beckn:orderAttributes": {
+        "@type": "ChargingSession",
+        "sessionPreferences": {
+          "preferredStartTime": "2025-01-27T10:00:00Z",
+          "preferredEndTime": "2025-01-27T11:30:00Z",
+          "notificationPreferences": {
+            "email": true,
+            "sms": true,
+            "push": false
+          }
+        },
+        "authorizationMode": "OTP",
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+      }
+    }
+  }
+}
+
+```
+
 ### **Async on\_update(stop-charging)**
 
 ### **Method**
@@ -2675,7 +2898,7 @@ POST
 
 ### **Use Case**
 
-At \~60 minutes, the session stops (or notifies him to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
+At \~60 minutes(or upon the EV user request), the session stops (or notifies hthe EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
 
 #### Request
 
@@ -6308,7 +6531,224 @@ EV user reveives details in case of any error during a charging session: [Exampl
 }
 ```
 
-### **Asynchronous on\_update (stop charging)**
+### **Update(stop-charging)**
+
+### **Method**
+
+POST 
+
+### **Use Case**
+
+Raghav initiates a stop chargig request when his requirement is met.
+Note: In practive it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
+
+#### Request
+
+```json
+{
+  "context": {
+    "domain": "deg:ev-charging",
+    "action": "update",
+    "location": {
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "std:080"
+      }
+    },
+    "version": "2.0.0",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T10:15:00Z",
+    "ttl": "15S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
+        "@type": "beckn:Party",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:name": "Ravi Kumar",
+        "beckn:organization": {
+          "descriptor": {
+            "name": "GreenCharge Pvt Ltd"
+          }
+        },
+        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
+        "beckn:email": "ravi.kumar@greencharge.com",
+        "beckn:phone": "+918765432100",
+        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            },
+            "beckn:offerAttributes": {
+              "@type": "ChargingOffer",
+              "offerType": "CHARGING_SESSION",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          "beckn:quantity": 5,
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 100.0,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 72.73,
+            "currency": "INR",
+            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 14.55,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -10.92,
+            "currency": "INR",
+            "description": "Offer discount (20%)"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:status": "ACTIVE",
+        "beckn:deliveryAttributes": {
+          "@type": "ChargingSession",
+          "sessionId": "session-001",
+          "sessionStatus": "END",
+          "sessionType": "CHARGING",
+          "startTime": "2025-01-27T10:00:00Z",
+          "endTime": "2025-01-27T11:30:00Z",
+          "customer": {
+            "name": "Ravi Kumar",
+            "phone": "+91-9887766554"
+          },
+          "vehicle": {
+            "make": "Tata",
+            "model": "Nexon EV"
+          },
+          "location": {
+            "gps": "28.345345,77.389754",
+            "address": "Connaught Place, New Delhi",
+            "descriptor": {
+              "name": "BlueCharge Connaught Place Station"
+            }
+          },
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "stationStatus": "Available",
+          "authorizationMode": "OTP",
+          "authorizationToken": "7484"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 100.0
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-01-27T10:05:00Z",
+        "beckn:acceptedPaymentMethods": [
+          "schema:BankTransfer",
+          "schema:UPI",
+          "schema:Wallet"
+        ],
+        "beckn:beneficiary": "BPP"
+      },
+      "beckn:orderAttributes": {
+        "@type": "ChargingSession",
+        "sessionPreferences": {
+          "preferredStartTime": "2025-01-27T10:00:00Z",
+          "preferredEndTime": "2025-01-27T11:30:00Z",
+          "notificationPreferences": {
+            "email": true,
+            "sms": true,
+            "push": false
+          }
+        },
+        "authorizationMode": "OTP",
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+      }
+    }
+  }
+}
+
+```
+
+### **Synchronous/Asynchronous on\_update (stop charging)**
 
 ### **Method**
 

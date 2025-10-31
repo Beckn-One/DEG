@@ -18,10 +18,7 @@
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
         "message_id": "4a736341-8897-4e5a-9873-53533691f42d",
         "timestamp": "2025-01-27T12:15:30Z",
-        "ttl": "15S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
-    ]
+        "ttl": "PT30S"
     },
     "message": {
         "order": [

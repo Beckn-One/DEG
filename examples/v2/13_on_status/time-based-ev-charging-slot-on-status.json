@@ -18,22 +18,19 @@
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T13:07:02Z",
-    "ttl": "15S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
-    ]
+    "ttl": "PT30S"
   },
   "message": {
     "order": {
-      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-bpp-789012",
       "beckn:orderStatus": "ACTIVE",
       "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
-        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
-        "@type": "beckn:Party",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
         "beckn:name": "Ravi Kumar",
@@ -52,7 +49,7 @@
           "beckn:lineId": "line-001",
           "beckn:orderedItem": "pe-charging-01",
           "beckn:acceptedOffer": {
-            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
@@ -97,13 +94,25 @@
       ],
       "beckn:orderValue": {
         "currency": "INR",
-        "value": 100.0,
+        "value": 128.64,
         "components": [
           {
             "type": "UNIT",
-            "value": 72.73,
+            "value": 100.0,
             "currency": "INR",
-            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+            "description": "Base charging session cost (100 INR)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
           },
           {
             "type": "FEE",
@@ -116,23 +125,11 @@
             "value": 13.64,
             "currency": "INR",
             "description": "Overcharge estimation"
-          },
-          {
-            "type": "SURCHARGE",
-            "value": 14.55,
-            "currency": "INR",
-            "description": "Surge price (20%)"
-          },
-          {
-            "type": "DISCOUNT",
-            "value": -10.92,
-            "currency": "INR",
-            "description": "Offer discount (20%)"
           }
         ]
       },
       "beckn:fulfillment": {
-        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
         "beckn:status": "INTERRUPTED",
@@ -186,7 +183,7 @@
         }
       },
       "beckn:payment": {
-        "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
         "beckn:status": "PAID",

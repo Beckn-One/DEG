@@ -2,7 +2,7 @@
   "context": {
     "version": "2.0.0",
     "domain": "beckn.one:deg:ev-charging:*",
-    "action": "on_init",
+    "action": "update",
     "location": {
       "country": {
         "code": "IND"
@@ -16,21 +16,24 @@
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
-    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
-    "timestamp": "2025-01-27T10:00:00Z",
-    "ttl": "PT30S"
+    "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
+    "timestamp": "2025-01-27T10:15:00Z",
+    "ttl": "15S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
+    ]
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://becknprotocol.io/schemas/core/v2/Order/schema-context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-123456",
-      "beckn:orderStatus": "PENDING",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
       "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
+        "@context": "https://becknprotocol.io/schemas/core/v2/Party/schema-context.jsonld",
+        "@type": "beckn:Party",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
         "beckn:name": "Ravi Kumar",
@@ -49,7 +52,7 @@
           "beckn:lineId": "line-001",
           "beckn:orderedItem": "pe-charging-01",
           "beckn:acceptedOffer": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://becknprotocol.io/schemas/core/v2/Offer/schema-context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
@@ -94,25 +97,13 @@
       ],
       "beckn:orderValue": {
         "currency": "INR",
-        "value": 128.64,
+        "value": 100.0,
         "components": [
           {
             "type": "UNIT",
-            "value": 100.0,
+            "value": 72.73,
             "currency": "INR",
-            "description": "Base charging session cost (100 INR)"
-          },
-          {
-            "type": "SURCHARGE",
-            "value": 20.0,
-            "currency": "INR",
-            "description": "Surge price (20%)"
-          },
-          {
-            "type": "DISCOUNT",
-            "value": -15.0,
-            "currency": "INR",
-            "description": "Offer discount (15%)"
+            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
           },
           {
             "type": "FEE",
@@ -125,17 +116,30 @@
             "value": 13.64,
             "currency": "INR",
             "description": "Overcharge estimation"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 14.55,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -10.92,
+            "currency": "INR",
+            "description": "Offer discount (20%)"
           }
         ]
       },
       "beckn:fulfillment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://becknprotocol.io/schemas/core/v2/Fulfillment/schema-context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
-        "beckn:status": "PENDING",
+        "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@type": "ChargingSession",
           "sessionId": "session-001",
+          "sessionStatus": "END",
           "sessionType": "CHARGING",
           "startTime": "2025-01-27T10:00:00Z",
           "endTime": "2025-01-27T11:30:00Z",
@@ -157,25 +161,22 @@
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "stationStatus": "Available",
-          "instructions": {
-            "short_desc": "OTP will be shared to the user's registered number to confirm order"
-          },
-          "authorization": {
-            "type": "OTP"
-          }
+          "authorizationMode": "OTP",
+          "authorizationToken": "7484"
         }
       },
       "beckn:payment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://becknprotocol.io/schemas/core/v2/Payment/schema-context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PENDING",
+        "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 100.0
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:acceptedPaymentMethods": [
           "schema:BankTransfer",
           "schema:UPI",
@@ -193,7 +194,9 @@
             "sms": true,
             "push": false
           }
-        }
+        },
+        "authorizationMode": "OTP",
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }

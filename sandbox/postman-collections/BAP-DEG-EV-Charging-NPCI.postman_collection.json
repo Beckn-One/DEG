@@ -474,6 +474,7 @@
 			"script": {
 				"type": "text/javascript",
 				"packages": {},
+				"requests": {},
 				"exec": [
 					""
 				]
@@ -484,6 +485,7 @@
 			"script": {
 				"type": "text/javascript",
 				"packages": {},
+				"requests": {},
 				"exec": [
 					""
 				]
@@ -493,40 +495,39 @@
 	"variable": [
 		{
 			"key": "domain",
-			"value": ""
+			"value": "beckn.one:deg:ev-charging:*"
 		},
 		{
 			"key": "version",
-			"value": ""
+			"value": "2.0.0"
 		},
 		{
 			"key": "bap_id",
-			"value": ""
+			"value": "bap.example.com"
 		},
 		{
 			"key": "bap_uri",
-			"value": ""
+			"value": "https://bap.example.com"
 		},
 		{
 			"key": "bpp_id",
-			"value": ""
+			"value": "bpp.example.com"
 		},
 		{
 			"key": "bpp_uri",
-			"value": ""
+			"value": "https://bpp.example.com"
 		},
 		{
 			"key": "bap_adapter_url",
-			"value": ""
+			"value": "xyz"
 		},
 		{
 			"key": "transaction_id",
-			"value": ""
+			"value": "726a589c-dd79-44d6-9181-e6dfb4f74019"
 		},
 		{
 			"key": "bpp_adapter_url",
-			"value": "",
-			"type": "default"
+			"value": "zyx"
 		}
 	]
 }
