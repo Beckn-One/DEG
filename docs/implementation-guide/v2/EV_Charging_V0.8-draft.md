@@ -1,8 +1,8 @@
 # Implementation Guide \- EV Charging \- Version 0.8 (DRAFT)
 
 <details>
-  <summary>Table of Contents</summary>
-created using [this](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension.
+  <summary>**Table of Contents**</summary>
+created using https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
 
 - [Implementation Guide - EV Charging - Version 0.8 (DRAFT)](#implementation-guide---ev-charging---version-08-draft)
   - [Request for Comments](#request-for-comments)
@@ -385,7 +385,7 @@ Important points of consideration:
 
 ### **API Calls and Schema**
 
-Note: The API calls and schema for walk-in charging are identical to the [advance reservation use case](#use-case-3) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
+Note: The API calls and schema for walk-in charging are identical to the [advance reservation use case](#use-case-2--reservation-of-an-ev-charging-time-slot) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
 
 #### **discover**
 
