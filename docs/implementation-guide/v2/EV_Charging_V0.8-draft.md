@@ -97,8 +97,8 @@ created using [this](https://marketplace.visualstudio.com/items?itemName=yzhang.
           - [**A) Undercharge (Power Cut Mid-Session)**](#a-undercharge-power-cut-mid-session)
           - [**B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#b-overcharge-charger-offline-to-cms-keeps-dispensing)
       - [**Asynchronous on\_update (stop charging)**](#asynchronous-on_update-stop-charging)
-      - [**Cancel** {#cancel}](#cancel-cancel)
-      - [**On\_cancel** {#on\_cancel}](#on_cancel-on_cancel)
+      - [**Cancel**](#cancel)
+      - [**On\_cancel**](#on_cancel)
       - [**Rating**](#rating-1)
       - [**on\_rating**](#on_rating-1)
       - [**support**](#support-1)
@@ -6685,7 +6685,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### **Cancel** {#cancel}
+#### **Cancel**
 
 It’s like when a client calls to cancel an appointment — maybe something came up, or their plans have changed. When they request to cancel, it’s about freeing up that slot and keeping things organized.
 
@@ -6736,7 +6736,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **On\_cancel** {#on_cancel}
+#### **On\_cancel**
 
 - Method: POST
 - Use Cases: Adam receives order cancellation confirmation.  The advance payment will be adjusted as per network/CPO rule.
