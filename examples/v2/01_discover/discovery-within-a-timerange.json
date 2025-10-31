@@ -3,20 +3,15 @@
     "version": "2.0.0",
     "action": "discover",
     "domain": "beckn.one:deg:ev-charging:*",
-    "location": {
-      "country": {
-        "code": "IND"
-      },
-      "city": {
-        "code": "std:080"
-      }
-    },
-    "timestamp": "2024-01-15T10:30:00Z",
+    "bap_id": "app.example.com",
+    "bap_uri": "https://app.example.com/bap",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
-    "bap_id": "bap.example.com",
-    "bap_uri": "https://bap.example.com",
-    "ttl": "PT30S"
+    "timestamp": "2025-10-14T07:31:00Z",
+    "ttl": "PT30S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
+    ]
   },
   "message": {
     "spatial": [
@@ -25,7 +20,10 @@
         "targets": "$['beckn:availableAt'][*]['geo']",
         "geometry": {
           "type": "Point",
-          "coordinates": [77.59, 12.94]
+          "coordinates": [
+            77.59,
+            12.94
+          ]
         }
       }
     ],
