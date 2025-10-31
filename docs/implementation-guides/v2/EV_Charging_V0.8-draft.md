@@ -77,9 +77,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 
 ## 9.1. Architecture Diagram
 
-![](./images/beckn-one-deg-arch.png)
-
-Source: [https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcFyWdoGJtNUjNQ/edit?slide=id.p\#slide=id.p](https://docs.google.com/presentation/d/1zpJEJ5Fz7Ql3MQOmvcUwonwoB7cfEcFyWdoGJtNUjNQ/edit?slide=id.p#slide=id.p)
+![](./assets/beckn-one-deg-arch.png)
 
 ## 9.2. Actors
 
@@ -99,7 +97,7 @@ The NP Registry serves as the root of addressability and trust for all network p
 
 ![](./assets/registry-arch.png)
 
-The Beckn One registry uses [**Decentralized Directory** protocol](https://github.com/LF-Decentralized-Trust-labs/DeDi) for publishing and looking up details of network participants.
+You can publish your registries at [DeDi.global](https://publish.dedi.global/).
 
 ### 10.1.1 For NPs
 
@@ -186,60 +184,34 @@ Specifically, for EV Charging, please use the following configuration:
 
 ### 10.2.3 Performing a test EV charging transaction
 
-Step 1 : Download the postman collection
+Step 1 : Download the postman collection, from here.
+
+Step 2 : Run API calls
 
 If you are a BAP
 
-1. Configure the environment variable API URL to the newly installed Beckn ONIX client-facing URL  
-2. Select the search example and hit send  
+1. Configure the collection/environment variables to the newly installed Beckn ONIX adapter URL and other variables in the collection.
+2. Select the discover example and hit send
 3. You should see the EV charging service catalog response
 
 If you are a BPP
 
-1. Configure your application URL into Beckn ONIX to receive catalog inputs. Log the request in your console.   
-2. In the default postman collection, update the context.url with your API URL in the context header  
-3. Select the search example and hit send  
-4. You should see the EV charging service request in your console
+1. Configure the collection/environment variables to the newly installed Beckn ONIX adapter URL and other variables in the collection.
+2. Select the on_status example and hit send
+3. You should see the response in your console
 
-
-# 11\. Network Access
-
-## 11.1 Discovering EV charging networks via Global Root
-
-EV charging networks can be discovered and accessed by looking up the global root registry of Beckn One. 
-
-To look up EV charging networks, any client can call the /lookup endpoint of the Beckn One registry service
-
-An example lookup request is shown below
-
-Example Request
-
-```json
-TBD
-```
-
-Example Response
-
-```json
-TBD
-```
-
-## 11.2 Looking up NPs inside a specific EV charging registry
-
-[Click to view this request in Postman - TBD](#)
-
-# 12\. Implementing EV Charging Semantics on Beckn Protocol
+# 11\. Implementing EV Charging Semantics on Beckn Protocol
 
 This section contains recommendations and guidelines on how to implement EV Charging Services on Beckn Protocol enabled networks. To ensure global interoperability between actors of the EV charging network, the semantics of the EV charging industry need to be mapped to the core schema of Beckn Protocol. The below table summarizes key semantic mappings between the EV Charging Domain and Beckn Protocol domain.
 
-## 12.1. Key Assumptions
+## 11.1. Key Assumptions
 
 - **Assumption 1 :** EV charging is treated as a service, not as a physical object.  
 - **Assumption 2:** All CPOs have implemented OCPI interfaces 
 
 Each entity in the charging lifecycle — the service, the commercial terms, and the usage instance — maps to a well-defined semantic concept, enabling platforms to exchange information in a standardized, machine-readable way.
 
-## 12.2 Semantic Model
+## 11.2 Semantic Model
 
 | EV Charging Domain Entity | Charging Example | Semantically maps to |
 | ----- | ----- | :---: |
