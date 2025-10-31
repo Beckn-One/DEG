@@ -225,33 +225,33 @@ The following section contains example category codes that can be
 
 Charger types
 
-| Code | What it means | Source |
-| ----- | ----- | ----- |
-| AC\_SLOW | AC charge points in the “slow” band (≈ 3–7 kW). | ([Zapmap](https://www.zap-map.com/ev-stats/how-many-charging-points?utm_source=chatgpt.com)) |
-| AC\_FAST | AC “fast” public charging (≈ 7–22 kW; UK fast band 8–49 kW covers AC up to \~22 kW). | ([Zapmap](https://www.zap-map.com/ev-stats/how-many-charging-points?utm_source=chatgpt.com)) |
-| DC\_FAST | DC “rapid/fast” typically \~50–149 kW. | ([Zapmap](https://www.zap-map.com/ev-stats/how-many-charging-points?utm_source=chatgpt.com)) |
-| DC\_ULTRA | DC “ultra-rapid/ultra-fast”, ≥ 150 kW (also aligns with AFIR focus on ≥ 150 kW corridors). | ([Zapmap](https://www.zap-map.com/ev-stats/how-many-charging-points?utm_source=chatgpt.com)) |
+| Code      | What it means                                                                              |
+|-----------|--------------------------------------------------------------------------------------------|
+| AC\_SLOW  | AC charge points in the “slow” band (≈ 3–7 kW).                                            |
+| AC\_FAST  | AC “fast” public charging (≈ 7–22 kW; UK fast band 8–49 kW covers AC up to \~22 kW).       |
+| DC\_FAST  | DC “rapid/fast” typically \~50–149 kW.                                                     |
+| DC\_ULTRA | DC “ultra-rapid/ultra-fast”, ≥ 150 kW (also aligns with AFIR focus on ≥ 150 kW corridors). |
 
 Connector types
 
-| Code | What it means | Source |
-| ----- | ----- | ----- |
-| TYPE1 | Type 1 (SAE J1772) AC connector (North America/JP usage). | ([Wikipedia](https://en.wikipedia.org/wiki/Combined_Charging_System?utm_source=chatgpt.com)) |
-| TYPE2 | Type 2 (IEC 62196-2) AC connector; EU standard. | ([Wikipedia](https://en.wikipedia.org/wiki/Type_2_connector?utm_source=chatgpt.com)) |
-| CCS2 | Combined Charging System “Combo 2” (IEC 62196 based) enabling high-power DC on Type 2\. | ([Wikipedia](https://en.wikipedia.org/wiki/Combined_Charging_System?utm_source=chatgpt.com)) |
-| CHADEMO | CHAdeMO DC fast-charging standard. | ([chademo.com](https://www.chademo.com/about-us/what-is-chademo?utm_source=chatgpt.com)) |
-| GB\_T | China’s GB/T charging standard (AC & DC). | ([Wikipedia](https://en.wikipedia.org/wiki/GB/T_charging_standard?utm_source=chatgpt.com)) |
+| Code    | What it means                                                                           |
+|---------|-----------------------------------------------------------------------------------------|
+| TYPE1   | Type 1 (SAE J1772) AC connector (North America/JP usage).                               |
+| TYPE2   | Type 2 (IEC 62196-2) AC connector; EU standard.                                         |
+| CCS2    | Combined Charging System “Combo 2” (IEC 62196 based) enabling high-power DC on Type 2\. |
+| CHADEMO | CHAdeMO DC fast-charging standard.                                                      |
+| GB\_T   | China’s GB/T charging standard (AC & DC).                                               |
 
 Service types
 
-| Code | What it means | Source |
-| ----- | ----- | ----- |
-| GREEN\_ENERGY\_CERTIFIED | Flag that the site/session is supplied by verified green energy per catalog metadata (e.g., OCPI EnergyMix.is\_green\_energy). | ([evroaming.org](https://evroaming.org/wp-content/uploads/2024/11/OCPI-2.2.1-d2.pdf?utm_source=chatgpt.com)) |
-| GO\_EU | Energy backed by EU Guarantees of Origin (GOs). | ([aib-net.org](https://www.aib-net.org/certification/certificates-supported/renewable-energy-guarantees-origin?utm_source=chatgpt.com)) |
-| REGO\_UK | Energy backed by the UK Renewable Energy Guarantees of Origin (REGO) scheme. | ([Ofgem](https://www.ofgem.gov.uk/guidance/renewable-energy-guarantees-origin-guidance-generators-agents-and-suppliers?utm_source=chatgpt.com)) |
-| I\_REC | Energy backed by I-REC certificates (international EACs). | ([I-TRACK](https://www.trackingstandard.org/product-code/electricity/?utm_source=chatgpt.com)) |
-| V2G\_ENABLED | Charger/site supports bidirectional power transfer (V2G), e.g., per ISO 15118-20 implementations. | ([charin.global](https://www.charin.global/media/pages/technology/knowledge-base/04e4f443ae-1731074296/charin_interop_guide_2.0_dc_bpt_iso_15118-20_v1.0_publication.pdf?utm_source=chatgpt.com)) |
-| REMOTE\_START\_STOP | Remote start/stop of sessions exposed via roaming interface (OCPI Commands module). | ([evroaming.org](https://evroaming.org/wp-content/uploads/2024/11/OCPI-2.2.1-d2.pdf?utm_source=chatgpt.com)) |
+| Code                     | What it means                                                                                                                  |
+|--------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| GREEN\_ENERGY\_CERTIFIED | Flag that the site/session is supplied by verified green energy per catalog metadata (e.g., OCPI EnergyMix.is\_green\_energy). |
+| GO\_EU                   | Energy backed by EU Guarantees of Origin (GOs).                                                                                |
+| REGO\_UK                 | Energy backed by the UK Renewable Energy Guarantees of Origin (REGO) scheme.                                                   |
+| I\_REC                   | Energy backed by I-REC certificates (international EACs).                                                                      |
+| V2G\_ENABLED             | Charger/site supports bidirectional power transfer (V2G), e.g., per ISO 15118-20 implementations.                              |
+| REMOTE\_START\_STOP      | Remote start/stop of sessions exposed via roaming interface (OCPI Commands module).                                            |
 
 
 # Example Workflows (EV User’s Perspective)
