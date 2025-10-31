@@ -390,7 +390,7 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 
 - Method: POST
 - Use Cases: Raghav scans QR code on charger using his BAP user app
-- Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/01_discover/discovery-by-EVSE.json)
+- Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](../../../examples/v2/01_discover/discovery-by-EVSE.json)
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -720,7 +720,7 @@ Note: Users can discover the charging station through off-network channels (such
 ```
 </details>
 
-CPO returns details of a specific charger: [Example](https://github.com/Beckn-One/DEG/tree/draft/examples/v2/02_on_discover/specific-evse-catalog.json)
+CPO returns details of a specific charger: [Example](../../../examples/v2/02_on_discover/specific-evse-catalog.json)
 - Successful Response: 
 
 <details>
