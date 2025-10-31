@@ -1,20 +1,10 @@
 {
   "context": {
     "version": "2.0.0",
-    "domain": "beckn.one:deg:ev-charging:*",
     "action": "confirm",
-    "location": {
-      "country": {
-        "code": "IND"
-      },
-      "city": {
-        "code": "std:080"
-      }
-    },
+    "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -168,7 +158,7 @@
         "beckn:status": "PENDING",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",

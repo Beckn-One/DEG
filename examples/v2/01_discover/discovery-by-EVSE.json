@@ -16,7 +16,7 @@
   "message": {
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.beckn:itemAttributes.evseId == 'IN*PG*IND*01*TYPE2*A')]"
+      "expression": "$[?(@.beckn:itemAttributes.evseId == 'IN*ECO*BTM*01*CCS2*A')]"
     }
   }
 }
