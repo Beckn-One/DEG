@@ -4,124 +4,124 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
 <details>
   <summary>Table of Contents :rocket:</summary>
 
-- [Request for Comments](#request-for-comments)
-- [1. Copyright Notice](#1-copyright-notice)
-- [2. Status of This Memo](#2-status-of-this-memo)
-- [3. Abstract](#3-abstract)
-- [4. Introduction](#4-introduction)
-- [5. Scope](#5-scope)
-- [6. Intended Audience](#6-intended-audience)
-- [7. Conventions and Terminology](#7-conventions-and-terminology)
-- [8. Terminology](#8-terminology)
-- [9. Reference Architecture](#9-reference-architecture)
-  - [9.1. Architecture Diagram](#91-architecture-diagram)
-  - [9.2. Actors](#92-actors)
-- [10. Creating an Open Network for EV Charging](#10-creating-an-open-network-for-ev-charging)
-  - [10.1 Setting up a Registry](#101-setting-up-a-registry)
-    - [10.1.1 For a Network Participant](#1011-for-a-network-participant)
-      - [10.1.1.1 Step 1 :  Claiming a Namespace](#10111-step-1---claiming-a-namespace)
-      - [10.1.1.2 Step 2 :  Setting up a Registry](#10112-step-2---setting-up-a-registry)
-      - [10.1.1.3 Step 3 :  Publishing subscriber details](#10113-step-3---publishing-subscriber-details)
-    - [10.1.1.4 Step 4 :  Share details of the registry created with the Beckn One team](#10114-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
-    - [10.1.2 For a Network facilitator organization](#1012-for-a-network-facilitator-organization)
-      - [10.1.2.1 Step 1 :  Claiming a Namespace](#10121-step-1---claiming-a-namespace)
-      - [10.1.2.2 Step 2 :  Setting up a Registry](#10122-step-2---setting-up-a-registry)
-      - [10.1.2.3 Step 3 :  Publishing subscriber details](#10123-step-3---publishing-subscriber-details)
-      - [10.1.2.4 Step 4 :  Share details of the registry created with the Beckn One team](#10124-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
-  - [10.2 Setting up the Protocol Endpoints](#102-setting-up-the-protocol-endpoints)
-    - [10.2.1 Installing Beckn ONIX](#1021-installing-beckn-onix)
-    - [10.2.2 Configuring Beckn ONIX for EV Charging Transactions](#1022-configuring-beckn-onix-for-ev-charging-transactions)
-    - [10.2.3 Performing a test EV charging transaction](#1023-performing-a-test-ev-charging-transaction)
-- [11. Implementing EV Charging Semantics on Beckn Protocol](#11-implementing-ev-charging-semantics-on-beckn-protocol)
-  - [11.1. Key Assumptions](#111-key-assumptions)
-  - [11.2 Semantic Model](#112-semantic-model)
-  - [Example Category Codes](#example-category-codes)
-- [Example Workflows (EV User’s Perspective)](#example-workflows-ev-users-perspective)
-  - [Example 1 - Walk-In to a charging station without reservation.](#example-1---walk-in-to-a-charging-station-without-reservation)
-    - [Consumer User Journey](#consumer-user-journey)
-    - [**API Calls and Schema**](#api-calls-and-schema)
-      - [**discover**](#discover)
-      - [**on\_discover**](#on_discover)
-      - [**select**](#select)
-      - [**on\_select**](#on_select)
-      - [**init**](#init)
-      - [**on\_init**](#on_init)
-      - [**confirm**](#confirm)
-      - [**on\_confirm**](#on_confirm)
-      - [**update(start-charging)**](#updatestart-charging)
-      - [**on\_update(start-charging)**](#on_updatestart-charging)
-      - [**track(charging-session progress)**](#trackcharging-session-progress)
-      - [**on\_track**](#on_track)
-      - [**Async on\_status**](#async-on_status)
-      - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging)
-      - [**Async on\_update(stop-charging)**](#async-on_updatestop-charging-1)
-      - [**rating**](#rating)
-      - [**on\_rating**](#on_rating)
-      - [**support**](#support)
-      - [**on\_support**](#on_support)
-  - [Use case 2- Reservation of an EV charging time slot.](#use-case-2--reservation-of-an-ev-charging-time-slot)
-      - [Context:](#context)
-      - [1. Discovery](#1-discovery)
-        - [**1.1 Adam discovers nearby charging services**](#11-adam-discovers-nearby-charging-services)
-      - [2. Order (Reservation)](#2-order-reservation)
-      - [3. Fulfilment (Session Start \& Tracking)](#3-fulfilment-session-start--tracking)
-      - [4. Post-Fulfilment](#4-post-fulfilment)
-    - [**API Calls and Schema**](#api-calls-and-schema-1)
-      - [**discover**](#discover-1)
-        - [Discovery of EV charging services within a circular boundary](#discovery-of-ev-charging-services-within-a-circular-boundary)
-        - [Discovery of EV charging stations along a route](#discovery-of-ev-charging-stations-along-a-route)
-        - [Discovery within circle + connector specs as filters](#discovery-within-circle--connector-specs-as-filters)
-        - [Discovery within circle + vehicle specifications as filters](#discovery-within-circle--vehicle-specifications-as-filters)
-        - [Discovery of services offered by a specific CPO](#discovery-of-services-offered-by-a-specific-cpo)
-        - [Viewing details of a single charging station (by its Item Identifier)](#viewing-details-of-a-single-charging-station-by-its-item-identifier)
-        - [Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)](#fetching-details-of-a-specific-charger-evse-on-site-by-its-evse-identifier)
-        - [Discovering chargers in a specific circular area, a specific connector type and availability time range](#discovering-chargers-in-a-specific-circular-area-a-specific-connector-type-and-availability-time-range)
-      - [**on\_discover**](#on_discover-1)
-        - [Offers as part of the Catalog](#offers-as-part-of-the-catalog)
-      - [**Select**](#select-1)
-      - [**on\_select**](#on_select-1)
-        - [Surge Pricing](#surge-pricing)
-      - [**init**](#init-1)
-      - [**on\_init**](#on_init-1)
-      - [**on\_status payment**](#on_status-payment)
-      - [**confirm**](#confirm-1)
-      - [**on\_confirm**](#on_confirm-1)
-      - [**update (start charging)**](#update-start-charging)
-      - [**on\_update (start charging)**](#on_update-start-charging)
-      - [**track**](#track)
-      - [**on\_track**](#on_track-1)
-      - [**Asynchronous on\_status (temporary connection interruption)**](#asynchronous-on_status-temporary-connection-interruption)
-        - [**Under and Overcharge Scenarios**](#under-and-overcharge-scenarios)
-          - [**A)Undercharge (Power Cut Mid-Session)**](#aundercharge-power-cut-mid-session)
-          - [**B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#b-overcharge-charger-offline-to-cms-keeps-dispensing)
-      - [**Asynchronous on\_update (stop charging)**](#asynchronous-on_update-stop-charging)
-      - [Synchronous/Asynchronous on\_update (stop charging)](#synchronousasynchronous-on_update-stop-charging)
-      - [**Cancel**](#cancel)
-      - [**on\_cancel**](#on_cancel)
-      - [**Rating**](#rating-1)
-      - [**on\_rating**](#on_rating-1)
-      - [**support**](#support-1)
-      - [**on\_support**](#on_support-1)
-    - [**Integrating with your software**](#integrating-with-your-software)
-      - [**Integrating the BAP**](#integrating-the-bap)
-      - [**Integrating the BPP**](#integrating-the-bpp)
-  - [FAQs](#faqs)
-  - [References](#references)
+- [1. Request for Comments](#1-request-for-comments)
+- [2. Copyright Notice](#2-copyright-notice)
+- [3. Status of This Memo](#3-status-of-this-memo)
+- [4. Abstract](#4-abstract)
+- [5. Introduction](#5-introduction)
+- [6. Scope](#6-scope)
+- [7. Intended Audience](#7-intended-audience)
+- [8. Conventions and Terminology](#8-conventions-and-terminology)
+- [9. Terminology](#9-terminology)
+- [10. Reference Architecture](#10-reference-architecture)
+  - [10.1. Architecture Diagram](#101-architecture-diagram)
+  - [10.2. Actors](#102-actors)
+- [11. Creating an Open Network for EV Charging](#11-creating-an-open-network-for-ev-charging)
+  - [11.1. Setting up a Registry](#111-setting-up-a-registry)
+    - [11.1.1. For a Network Participant](#1111-for-a-network-participant)
+      - [11.1.1.1. Step 1 :  Claiming a Namespace](#11111-step-1---claiming-a-namespace)
+      - [11.1.1.2. Step 2 :  Setting up a Registry](#11112-step-2---setting-up-a-registry)
+      - [11.1.1.3. Step 3 :  Publishing subscriber details](#11113-step-3---publishing-subscriber-details)
+    - [11.1.2. Step 4 :  Share details of the registry created with the Beckn One team](#1112-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
+    - [11.1.3. For a Network facilitator organization](#1113-for-a-network-facilitator-organization)
+      - [11.1.3.1. Step 1 :  Claiming a Namespace](#11131-step-1---claiming-a-namespace)
+      - [11.1.3.2. Step 2 :  Setting up a Registry](#11132-step-2---setting-up-a-registry)
+      - [11.1.3.3. Step 3 :  Publishing subscriber details](#11133-step-3---publishing-subscriber-details)
+      - [11.1.3.4. Step 4 :  Share details of the registry created with the Beckn One team](#11134-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
+  - [11.2. Setting up the Protocol Endpoints](#112-setting-up-the-protocol-endpoints)
+    - [11.2.1. Installing Beckn ONIX](#1121-installing-beckn-onix)
+    - [11.2.2. Configuring Beckn ONIX for EV Charging Transactions](#1122-configuring-beckn-onix-for-ev-charging-transactions)
+    - [11.2.3. 10.2.3 Performing a test EV charging transaction](#1123-1023-performing-a-test-ev-charging-transaction)
+- [12. Implementing EV Charging Semantics on Beckn Protocol](#12-implementing-ev-charging-semantics-on-beckn-protocol)
+  - [12.1. Key Assumptions](#121-key-assumptions)
+  - [12.2. Semantic Model](#122-semantic-model)
+  - [12.3. Example Category Codes](#123-example-category-codes)
+- [13. Example Workflows (EV User’s Perspective)](#13-example-workflows-ev-users-perspective)
+  - [13.1. Example 1 - Walk-In to a charging station without reservation.](#131-example-1---walk-in-to-a-charging-station-without-reservation)
+    - [13.1.1. Consumer User Journey](#1311-consumer-user-journey)
+    - [13.1.2. **API Calls and Schema**](#1312-api-calls-and-schema)
+      - [13.1.2.1. **discover**](#13121-discover)
+      - [13.1.2.2. **on\_discover**](#13122-on_discover)
+      - [13.1.2.3. **select**](#13123-select)
+      - [13.1.2.4. **on\_select**](#13124-on_select)
+      - [13.1.2.5. **init**](#13125-init)
+      - [13.1.2.6. **on\_init**](#13126-on_init)
+      - [13.1.2.7. **confirm**](#13127-confirm)
+      - [13.1.2.8. **on\_confirm**](#13128-on_confirm)
+      - [13.1.2.9. **update(start-charging)**](#13129-updatestart-charging)
+      - [13.1.2.10. **on\_update(start-charging)**](#131210-on_updatestart-charging)
+      - [13.1.2.11. **track(charging-session progress)**](#131211-trackcharging-session-progress)
+      - [13.1.2.12. **on\_track**](#131212-on_track)
+      - [13.1.2.13. **Async on\_status**](#131213-async-on_status)
+      - [13.1.2.14. **Async on\_update(stop-charging)**](#131214-async-on_updatestop-charging)
+      - [13.1.2.15. **Async on\_update(stop-charging)**](#131215-async-on_updatestop-charging)
+      - [13.1.2.16. **rating**](#131216-rating)
+      - [13.1.2.17. **on\_rating**](#131217-on_rating)
+      - [13.1.2.18. **support**](#131218-support)
+      - [13.1.2.19. **on\_support**](#131219-on_support)
+  - [13.2. Use case 2- Reservation of an EV charging time slot.](#132-use-case-2--reservation-of-an-ev-charging-time-slot)
+      - [13.2.0.1. Context:](#13201-context)
+      - [13.2.0.2. 1. Discovery](#13202-1-discovery)
+        - [13.2.0.2.1. **1.1 Adam discovers nearby charging services**](#132021-11-adam-discovers-nearby-charging-services)
+      - [13.2.0.3. 2. Order (Reservation)](#13203-2-order-reservation)
+      - [13.2.0.4. 3. Fulfilment (Session Start \& Tracking)](#13204-3-fulfilment-session-start--tracking)
+      - [13.2.0.5. 4. Post-Fulfilment](#13205-4-post-fulfilment)
+    - [13.2.1. **API Calls and Schema**](#1321-api-calls-and-schema)
+      - [13.2.1.1. **discover**](#13211-discover)
+        - [13.2.1.1.1. Discovery of EV charging services within a circular boundary](#132111-discovery-of-ev-charging-services-within-a-circular-boundary)
+        - [13.2.1.1.2. Discovery of EV charging stations along a route](#132112-discovery-of-ev-charging-stations-along-a-route)
+        - [13.2.1.1.3. Discovery within circle + connector specs as filters](#132113-discovery-within-circle--connector-specs-as-filters)
+        - [13.2.1.1.4. Discovery within circle + vehicle specifications as filters](#132114-discovery-within-circle--vehicle-specifications-as-filters)
+        - [13.2.1.1.5. Discovery of services offered by a specific CPO](#132115-discovery-of-services-offered-by-a-specific-cpo)
+        - [13.2.1.1.6. Viewing details of a single charging station (by its Item Identifier)](#132116-viewing-details-of-a-single-charging-station-by-its-item-identifier)
+        - [13.2.1.1.7. Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)](#132117-fetching-details-of-a-specific-charger-evse-on-site-by-its-evse-identifier)
+        - [13.2.1.1.8. Discovering chargers in a specific circular area, a specific connector type and availability time range](#132118-discovering-chargers-in-a-specific-circular-area-a-specific-connector-type-and-availability-time-range)
+      - [13.2.1.2. **on\_discover**](#13212-on_discover)
+        - [13.2.1.2.1. Offers as part of the Catalog](#132121-offers-as-part-of-the-catalog)
+      - [13.2.1.3. **Select**](#13213-select)
+      - [13.2.1.4. **on\_select**](#13214-on_select)
+        - [13.2.1.4.1. Surge Pricing](#132141-surge-pricing)
+      - [13.2.1.5. **init**](#13215-init)
+      - [13.2.1.6. **on\_init**](#13216-on_init)
+      - [13.2.1.7. **on\_status payment**](#13217-on_status-payment)
+      - [13.2.1.8. **confirm**](#13218-confirm)
+      - [13.2.1.9. **on\_confirm**](#13219-on_confirm)
+      - [13.2.1.10. **update (start charging)**](#132110-update-start-charging)
+      - [13.2.1.11. **on\_update (start charging)**](#132111-on_update-start-charging)
+      - [13.2.1.12. **track**](#132112-track)
+      - [13.2.1.13. **on\_track**](#132113-on_track)
+      - [13.2.1.14. **Asynchronous on\_status (temporary connection interruption)**](#132114-asynchronous-on_status-temporary-connection-interruption)
+        - [13.2.1.14.1. **Under and Overcharge Scenarios**](#1321141-under-and-overcharge-scenarios)
+          - [13.2.1.14.1.1. **A)Undercharge (Power Cut Mid-Session)**](#13211411-aundercharge-power-cut-mid-session)
+          - [13.2.1.14.1.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#13211412-b-overcharge-charger-offline-to-cms-keeps-dispensing)
+      - [13.2.1.15. **Asynchronous on\_update (stop charging)**](#132115-asynchronous-on_update-stop-charging)
+      - [13.2.1.16. Synchronous/Asynchronous on\_update (stop charging)](#132116-synchronousasynchronous-on_update-stop-charging)
+      - [13.2.1.17. **Cancel**](#132117-cancel)
+      - [13.2.1.18. **on\_cancel**](#132118-on_cancel)
+      - [13.2.1.19. **Rating**](#132119-rating)
+      - [13.2.1.20. **on\_rating**](#132120-on_rating)
+      - [13.2.1.21. `action: support`](#132121-action-support)
+      - [13.2.1.22. **on\_support**](#132122-on_support)
+    - [13.2.2. **Integrating with your software**](#1322-integrating-with-your-software)
+      - [13.2.2.1. **Integrating the BAP**](#13221-integrating-the-bap)
+      - [13.2.2.2. **Integrating the BPP**](#13222-integrating-the-bpp)
+  - [13.3. FAQs](#133-faqs)
+  - [13.4. References](#134-references)
 
 created using https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
 </details>
 
-# Request for Comments
+# 1. Request for Comments
 
-# 1\. Copyright Notice
+# 2. Copyright Notice
 
 **License: [CC-BY-NC-SA 4.0](https://becknprotocol.io/license/) becknprotocol.io**
 
-# 2\. Status of This Memo
+# 3. Status of This Memo
 
 **This is a draft RFC for implementing EV charging use cases using the Beckn Protocol. It provides implementation guidance for anyone to build interoperable EV charging applications that integrate with each other on a decentralized network while maintaining compatibility with OCPI standards for CPO communication.**
 
-# 3\. Abstract
+# 4. Abstract
 
 This document proposes a practical way to make EV charging services easier to find and use by applying the Beckn Protocol’s distributed commerce model. Instead of juggling multiple apps and accounts for different charging networks, EV users on any Beckn protocol-enabled consumer platform (a.k.a BAPs) – can discover and book charging services from Beckn protocol-enabled provider platforms (a.k.a BPPs) that have onboarded one or more Charge Point Operators (CPOs).
 
@@ -129,11 +129,11 @@ EV users can discover, compare options, view transparent pricing, and reserve a 
 
 Built on Beckn’s commerce capabilities and aligned with OCPI for technical interoperability, the implementation lets e-Mobility Service Providers (eMSPs) aggregate services from multiple CPOs while delivering a consistent, app-agnostic experience to consumers. 
 
-# 4\. Introduction
+# 5. Introduction
 
 This document provides an implementation guidance for deploying EV charging services using the Beckn Protocol ecosystem. It specifically addresses how consumer applications can provide unified access to charging infrastructure across multiple Charge Point Operators while maintaining technical compatibility with existing OCPI-based systems.
 
-# 5\. Scope
+# 6. Scope
 
 This document covers:
 
@@ -150,7 +150,7 @@ This document does NOT cover:
 * Regulatory compliance beyond technical implementation (varies by jurisdiction)  
 * Smart grid integration and load management systems
 
-# 6\. Intended Audience
+# 7. Intended Audience
 
 * Consumer Application Developers (BAPs): Building EV driver-facing charging applications with unified cross-network access  
 * e-Mobility Service Providers (eMSPs/BPPs): Implementing charging service aggregation platforms across multiple CPO networks  
@@ -160,11 +160,11 @@ This document does NOT cover:
 * Business Stakeholders: Understanding technical capabilities and implementation requirements for EV charging marketplace strategies  
 * Standards Organizations: Evaluating interoperability approaches for future EV charging standards development
 
-# 7\. Conventions and Terminology
+# 8. Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described [here](https://github.com/beckn/protocol-specifications/blob/draft/docs/BECKN-010-Keyword-Definitions-for-Technical-Specifications.md).
 
-# 8\. Terminology
+# 9. Terminology
 
 | Acronym | Full Form/Description | Description |
 | ----- | ----- | ----- |
@@ -182,15 +182,15 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 > BPPs are NOT aggregators. Any CPO that has implemented a Beckn Protocol endpoint is a BPP. 
 > For all sense and purposes, CPOs are essentially BPPs and eMSPs are essentially BAPs.
 
-# 9\. Reference Architecture
+# 10. Reference Architecture
 
 The section defines the reference ecosystem architecture that is used for building this implementation guide. 
 
-## 9.1. Architecture Diagram
+## 10.1. Architecture Diagram
 
 ![](./assets/beckn-one-deg-arch.png)
 
-## 9.2. Actors
+## 10.2. Actors
 
 1. Beckn One Global Root Registry  
 2. Beckn One Catalog Discovery Service  
@@ -198,11 +198,11 @@ The section defines the reference ecosystem architecture that is used for buildi
 4. Beckn Provider Platforms  
 5. EV Charging Registry
 
-# 10\. Creating an Open Network for EV Charging
+# 11. Creating an Open Network for EV Charging
 
 To create an open network for EV charging requires all the EV charging BAPs, BPPs, to be able to discover each other and become part of a common club. This club is manifested in the form of a Registry maintained by an NFO. 
 
-## 10.1 Setting up a Registry
+## 11.1. Setting up a Registry
 
 The NP Registry serves as the root of addressability and trust for all network participants. It maintains comprehensive details such as the participant’s globally unique identifier (ID), network address (Beckn API URL), public key, operational domains, and assigned role (e.g., BAP, BPP, CDS). In addition to managing participant registration, authentication, authorization, and permission control, the Registry oversees participant verification, activation, and overall lifecycle management, ensuring that only validated and authorized entities can operate within the network.
 
@@ -210,39 +210,39 @@ The NP Registry serves as the root of addressability and trust for all network p
 
 You can publish your registries at [DeDi.global](https://publish.dedi.global/).
 
-### 10.1.1 For a Network Participant
+### 11.1.1. For a Network Participant
 
-#### 10.1.1.1 Step 1 :  Claiming a Namespace
+#### 11.1.1.1. Step 1 :  Claiming a Namespace
 
 To get started, any platform that has implemented Beckn Protocol MUST create a globally unique namespace for themselves.   
 All NPs (BAPs, BPPs, CDS’es) **MUST** register as a user on dedi.global and claim a unique namespace against their FQDN to become globally addressable. As part of the claiming process, the user must prove ownership of that namespace by verifying the ownership of that domain.
 
-#### 10.1.1.2 Step 2 :  Setting up a Registry
+#### 11.1.1.2. Step 2 :  Setting up a Registry
 
 Once the namespace is claimed, each NP **MUST** create a Beckn NP registry in the namespace to list their subscriber details. While creating the registry, the user **MUST** configure it with the [subscriber schema](https://gist.githubusercontent.com/nirmalnr/a6e5b17522169ecea4f3ccdd831af7e4/raw/7744f2542034db9675901b61b41c8228ea239074/beckn-subscriber-no-refs.schema.json). 
 
-#### 10.1.1.3 Step 3 :  Publishing subscriber details
+#### 11.1.1.3. Step 3 :  Publishing subscriber details
 
 In the registry that is created, NPs **MUST** publish their subscription details including their ID, network endpoints, public keys, operational domains and assigned roles (BAP, BPP) as records.
 
 *Detailed steps to create namespaces and registries in dedi.global can be found [here](https://github.com/dedi-global/docs/blob/0976607aabc6641d330a3d41a3bd89ab8790ea09/user-guides/namespace%20and%20registry%20creation.md).*
 
-### 10.1.1.4 Step 4 :  Share details of the registry created with the Beckn One team
+### 11.1.2. Step 4 :  Share details of the registry created with the Beckn One team
 
 Once the registry is created and details are published, the namespace and the registry name of the newly created registry should be shared with the beckn one team.
 
-### 10.1.2 For a Network facilitator organization
+### 11.1.3. For a Network facilitator organization
 
-#### 10.1.2.1 Step 1 :  Claiming a Namespace
+#### 11.1.3.1. Step 1 :  Claiming a Namespace
 
 An NFO **MAY** register as a user on dedi.global and claim a unique namespace against their FQDN. As part of the claiming process, the user must prove ownership of that namespace by verifying the ownership of that domain.  
 *Note: A calibrated roll out of this infrastructure is planned and hence before it is open to the general public NFOs are advised to share their own domain and the domains of their NPs to the Beckn One team so that they can be whitelisted which will allow the NPs to verify the same using TXT records in their DNS.*
 
-#### 10.1.2.2 Step 2 :  Setting up a Registry
+#### 11.1.3.2. Step 2 :  Setting up a Registry
 
 Network facilitators **MAY** create registries under their own namespace using the [subscriber reference schema](https://gist.githubusercontent.com/nirmalnr/a6e5b17522169ecea4f3ccdd831af7e4/raw/b7cf8a47e6531ef22744b43e6305b8d8cc106e7b/beckn-subscriber-reference.schema.json) to point to either whole registries or records created by the NPs in their own namespaces. 
 
-#### 10.1.2.3 Step 3 :  Publishing subscriber details
+#### 11.1.3.3. Step 3 :  Publishing subscriber details
 
 In the registry that is created, NFOs **MAY** publish records which act as pointers to either whole registries or records created by the NPs records. The URL field in the record would be the lookup URL for a registry or a record as per DeDi protocol.
 
@@ -272,19 +272,19 @@ Here `energy-bap` is the name of the record created by the NP in this registry. 
 
 *Detailed steps to create namespaces and registries in dedi.global can be found [here](https://github.com/dedi-global/docs/blob/0976607aabc6641d330a3d41a3bd89ab8790ea09/user-guides/namespace%20and%20registry%20creation.md).*
 
-#### 10.1.2.4 Step 4 :  Share details of the registry created with the Beckn One team
+#### 11.1.3.4. Step 4 :  Share details of the registry created with the Beckn One team
 
 Once the registry is created and details are published, the namespace and the registry name of the newly created registry should be shared with the beckn one team.
 
-## 10.2 Setting up the Protocol Endpoints
+## 11.2. Setting up the Protocol Endpoints
 
 This section contains instructions to set up and test the protocol stack for EV charging transactions. 
 
-### 10.2.1 Installing Beckn ONIX
+### 11.2.1. Installing Beckn ONIX
 
 All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#automated-setup-recommended)) to learn how to set up Beckn ONIX.
 
-### 10.2.2 Configuring Beckn ONIX for EV Charging Transactions
+### 11.2.2. Configuring Beckn ONIX for EV Charging Transactions
 
 A detailed Configuration Guide is available [here](https://github.com/Beckn-One/beckn-onix/blob/main/CONFIG.md). A quick read of key concepts from the link is recommended.
 
@@ -293,7 +293,7 @@ Specifically, for EV Charging, please use the following configuration:
 2. Start with using Simplekeymanager plugin during development, read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/simplekeymanager). For production deployment, you may setup vault.
 3. For routing calls to Catalog Discovery Service, refer to routing configuration [here](https://github.com/Beckn-One/beckn-onix/blob/main/config/local-simple-routing-BAPCaller.yaml).
 
-### 10.2.3 Performing a test EV charging transaction
+### 11.2.3. 10.2.3 Performing a test EV charging transaction
 
 Step 1 : Download the postman collection, from here.
 
@@ -311,18 +311,18 @@ If you are a BPP
 2. Select the on_status example and hit send
 3. You should see the response in your console
 
-# 11\. Implementing EV Charging Semantics on Beckn Protocol
+# 12. Implementing EV Charging Semantics on Beckn Protocol
 
 This section contains recommendations and guidelines on how to implement EV Charging Services on Beckn Protocol enabled networks. To ensure global interoperability between actors of the EV charging network, the semantics of the EV charging industry need to be mapped to the core schema of Beckn Protocol. The below table summarizes key semantic mappings between the EV Charging Domain and Beckn Protocol domain.
 
-## 11.1. Key Assumptions
+## 12.1. Key Assumptions
 
 - **Assumption 1 :** EV charging is treated as a service, not as a physical object.  
 - **Assumption 2:** All CPOs have implemented OCPI interfaces 
 
 Each entity in the charging lifecycle — the service, the commercial terms, and the usage instance — maps to a well-defined semantic concept, enabling platforms to exchange information in a standardized, machine-readable way.
 
-## 11.2 Semantic Model
+## 12.2. Semantic Model
 
 | EV Charging Domain Entity | Charging Example | Semantically maps to |
 | ----- | ----- | :---: |
@@ -330,7 +330,7 @@ Each entity in the charging lifecycle — the service, the commercial terms, and
 | Charging service | “₹18 per kWh”, “₹150 per hour”, “₹999 monthly pass”, “Off-peak discount 2 AM–5 AM” | [Offer](https://github.com/beckn/protocol-specifications-new/blob/schema-reorg/schema/EvChargingOffer/v1/attributes.yaml) |
 | Charging Session | A specific booking or usage instance created when the user plugs in or reserves a slot | [Order](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingSession/v1/attributes.yaml) |
 
-## Example Category Codes
+## 12.3. Example Category Codes
 
 The following section contains example category codes that can be 
 
@@ -365,13 +365,13 @@ Service types
 | REMOTE\_START\_STOP      | Remote start/stop of sessions exposed via roaming interface (OCPI Commands module).                                            |
 
 
-# Example Workflows (EV User’s Perspective)
+# 13. Example Workflows (EV User’s Perspective)
 
-## Example 1 \- Walk-In to a charging station without reservation.
+## 13.1. Example 1 \- Walk-In to a charging station without reservation.
 
 This section covers a walk-in case where users discover the charger using third-party apps, word of mouth, or Beckn API, and then drive to the location, plug in their EV and charge their vehicle. 
 
-### Consumer User Journey
+### 13.1.1. Consumer User Journey
 
 A 34-year-old sales manager who drives an EV to client meetings. He’s time-bound, cost-conscious, and prefers simple, scan-and-go experiences. Raghav arrives at a large dine-in restaurant for a one-hour client meeting. He notices a charging bay in the parking lot and decides to top up while he’s inside.
 
@@ -392,11 +392,11 @@ Important points of consideration:
 5. Same API endpoints: Uses identical Beckn protocol calls but with compressed timeframes  
 6. Immediate fulfillment: The charging session can start immediately after confirmation, rather than waiting for a scheduled time
 
-### **API Calls and Schema**
+### 13.1.2. **API Calls and Schema**
 
 Note: The API calls and schema for walk-in charging are identical to the [advance reservation use case](#use-case-2--reservation-of-an-ev-charging-time-slot) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
 
-#### **discover**
+#### 13.1.2.1. **discover**
 
 - Method: POST
 - Use Cases: Raghav scans QR code on charger using his BAP user app
@@ -449,7 +449,7 @@ Note: Users can discover the charging station through off-network channels (such
 * The charging station must be able to handle direct selection requests without prior search/discovery  
 * This represents a more streamlined flow for walk-in customers who have already identified their preferred charging location
 
-#### **on\_discover**
+#### 13.1.2.2. **on\_discover**
 
 - Method: POST
 - Use Cases: The app receives the charger’s details (connector, power rating, live status, tariff, any active time-bound offer).
@@ -780,7 +780,7 @@ CPO returns details of a specific charger: [Example](../../../examples/v2/02_on_
 ```
 </details>
 
-#### **select**
+#### 13.1.2.3. **select**
 
 - Method: POST
 - Use Cases: Raghav selects a service offering from the options he gets. He chooses a 100 INR top-up.
@@ -906,7 +906,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
 ```
 </details>
 
-#### **on\_select**
+#### 13.1.2.4. **on\_select**
 
 - Method: POST
 - Use Cases: Raghav receives estimated quotations for the selected service.
@@ -1071,7 +1071,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/v2/0
 ```
 </details>
 
-#### **init**
+#### 13.1.2.5. **init**
 
 - Method: POST
 - Use Cases: Raghav provides his billing information.
@@ -1265,7 +1265,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 ```
 </details>
 
-#### **on\_init**
+#### 13.1.2.6. **on\_init**
 
 - Method: POST
 - Use Cases: Raghav receives the charging session terms(rate, idle fee window, cancellation rules, payment terms etc). 
@@ -1488,7 +1488,7 @@ CPO responds with final quote with payment terms: [Example](../../../examples/v2
 ```
 </details>
 
-#### **confirm**
+#### 13.1.2.7. **confirm**
 
 - Method: POST
 - Use Cases: Raghav confirms the order.
@@ -1705,7 +1705,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 ```
 </details>
 
-#### **on\_confirm**
+#### 13.1.2.8. **on\_confirm**
 
 - Method: POST
 - Use Cases: The app returns a booking/transaction ID along with the other charging session details.
@@ -1923,7 +1923,7 @@ CPO responds with confirmed slot: [Example](../../../examples/v2/08_on_confirm/t
 ```
 </details>
 
-#### **update(start-charging)**
+#### 13.1.2.9. **update(start-charging)**
 
 - Method: POST
 - Use Cases: Raghav plugs in and starts the session from the app.
@@ -2143,7 +2143,7 @@ EV user starts a charging session: [Example](../../../examples/v2/09_update/ev-c
 ```
 </details>
 
-#### **on\_update(start-charging)**
+#### 13.1.2.10. **on\_update(start-charging)**
 
 - Method: POST
 - Use Cases: Response for the charging session initiation.
@@ -2375,7 +2375,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 ```
 </details>
 
-#### **track(charging-session progress)**
+#### 13.1.2.11. **track(charging-session progress)**
 
 - Method: POST
 - Use Cases: Raghav requests to track the live status of the charging session. state of charge(how much charging has been done).
@@ -2423,7 +2423,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 ```
 </details>
 
-#### **on\_track**
+#### 13.1.2.12. **on\_track**
 
 - Method: POST
 - Use Cases: Raghav receives the state of charge(how much charging has been done) of the vehicle.
@@ -2519,7 +2519,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
 ```
 </details>
 
-#### **Async on\_status**
+#### 13.1.2.13. **Async on\_status**
 
 - Method: POST
 - Use Cases: Raghav receives a notification if there is any error during the charging session.
@@ -2760,7 +2760,7 @@ EV user reveives a notification in case of any error occuring during charging se
 ```
 </details>
 
-#### **Async on\_update(stop-charging)**
+#### 13.1.2.14. **Async on\_update(stop-charging)**
 
 - Method: POST
 - Use Cases: At \~60 minutes, the session stops (or notifies him to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
@@ -2968,7 +2968,7 @@ EV user reveives a notification in case of any error occuring during charging se
 
 EV user stops the charging session: [Example](../../../examples/v2/09_update/ev-charging-session-end-update.json)
 
-#### **Async on\_update(stop-charging)**
+#### 13.1.2.15. **Async on\_update(stop-charging)**
 
 - Method: POST 
 - Use Case: At \~60 minutes(or upon the EV user request), the session stops (or notifies hthe EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
@@ -3215,7 +3215,7 @@ EV user receives the session details upon chargign session end: [Example](../../
 ```
 </details>
 
-#### **rating**
+#### 13.1.2.16. **rating**
 
 - Method: POST
 - Use Cases: Raghav provides rating for the charging session.
@@ -3267,7 +3267,7 @@ EV user rates charging service experience: [Example](../../../examples/v2/15_rat
 ```
 </details>
 
-#### **on\_rating**
+#### 13.1.2.17. **on\_rating**
 
 - Method: POST
 - Use Cases: Raghav receives an achievement after providing a rating.
@@ -3322,7 +3322,7 @@ CPO accepts rating: [Example](../../../examples/v2/16_on_rating/time-based-ev-ch
 ```
 </details>
 
-#### **support**
+#### 13.1.2.18. **support**
 
 - Method: POST
 - Use Cases: Raghav reaches out for support.
@@ -3367,7 +3367,7 @@ EV user contacts support: [Example](../../../examples/v2/17_support/time-based-e
 ```
 </details>
 
-#### **on\_support**
+#### 13.1.2.19. **on\_support**
 
 - Method: POST
 - Use Cases: Raghav receives a response to his support request.
@@ -3418,19 +3418,19 @@ CPO returns support information: [Example](../../../examples/v2/18_on_support/ti
 ```
 </details>
 
-## Use case 2- Reservation of an EV charging time slot.
+## 13.2. Use case 2- Reservation of an EV charging time slot.
 
 This section covers advance reservation of a charging slot where users discover and book a charger before driving to the location.
 
-#### Context:
+#### 13.2.0.1. Context:
 
 Adam is driving his electric vehicle along the highway when he notices that his battery level is getting low. Using an EV Charging BAP, Adam discovers nearby charging stations that are compatible with his vehicle. The BAP retrieves available slots and charger specifications from the available provider’s BPPs. Adam selects a preferred charger and books a slot through beckn APIs to avoid waiting on arrival.
 
 ![][image1]
 
-#### 1\. Discovery
+#### 13.2.0.2. 1\. Discovery
 
-##### **1.1 Adam discovers nearby charging services**
+##### 13.2.0.2.1. **1.1 Adam discovers nearby charging services**
 
 About **30 minutes before lunch**, Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network).
 
@@ -3450,7 +3450,7 @@ The app queries multiple charging providers and returns options showing:
 
 She compares them and selects **“EcoPower Highway Hub – Mandya Food Court”**.
 
-#### 2\. Order (Reservation)
+#### 13.2.0.3. 2\. Order (Reservation)
 
 Adam taps **Reserve Slot → 12:45–13:15 PM**.
 
@@ -3468,7 +3468,7 @@ They confirm.
 
 The provider returns a **reservation ID and QR code**, plus a **navigation link** to the site.
 
-#### 3\. Fulfilment (Session Start & Tracking)
+#### 13.2.0.4. 3\. Fulfilment (Session Start & Tracking)
 
 On arrival, Adam scans the charger’s **QR code**.
 
@@ -3485,7 +3485,7 @@ He enjoys lunch while the system manages the session.
 
 If she arrives a few minutes late, the charger holds the slot until the **grace period** expires.
 
-#### 4\. Post-Fulfilment
+#### 13.2.0.5. 4\. Post-Fulfilment
 
 Charging auto-stops at her **target energy level (80 %)** or when she manually ends the session.
 
@@ -3497,9 +3497,9 @@ The system issues a **digital invoice**, updates her **wallet balance**, and pro
 
 Satisfied, Adam resumes his trip—arriving in Mysuru with time to spare.
 
-### **API Calls and Schema**
+### 13.2.1. **API Calls and Schema**
 
-#### **discover**
+#### 13.2.1.1. **discover**
 
 Consumers can search for EV charging stations with specific criteria including location, connector type, time window, finder fee etc.
 
@@ -3507,7 +3507,7 @@ Consumers can search for EV charging stations with specific criteria including l
 - Use Cases: Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network). He filters for chargers within 5 km of his location.
 - Request: 
 
-##### Discovery of EV charging services within a circular boundary
+##### 13.2.1.1.1. Discovery of EV charging services within a circular boundary
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3545,7 +3545,7 @@ Consumers can search for EV charging stations with specific criteria including l
 
 Discovery of EV charging services within a circular boundary: [Example](../../../examples/v2/01_discover/discovery-within-a-circular-boundary.json)
 
-##### Discovery of EV charging stations along a route
+##### 13.2.1.1.2. Discovery of EV charging stations along a route
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3588,7 +3588,7 @@ Discovery of EV charging services within a circular boundary: [Example](../../..
 
 Discovery of EV charging stations along a route: [Example](../../../examples/v2/01_discover/discovery-along-route.json)
 
-##### Discovery within circle \+ connector specs as filters
+##### 13.2.1.1.3. Discovery within circle \+ connector specs as filters
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3619,7 +3619,7 @@ Discovery of EV charging stations along a route: [Example](../../../examples/v2/
 
 Discovery of EV Charging stations within a circular boundary using connector specs as filters: [Example](../../../examples/v2/01_discover/discovery-within-boundary-with-connection-spec.json)
 
-##### Discovery within circle \+ vehicle specifications as filters
+##### 13.2.1.1.4. Discovery within circle \+ vehicle specifications as filters
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3651,7 +3651,7 @@ Discovery of EV Charging stations within a circular boundary using connector spe
 
 Discovery of EV Charging stations within circular boundary using vehicle specifications as filters: [Example](../../../examples/v2/01_discover/discovery-within-boundary-with-vehicle-spec.json)
 
-##### Discovery of services offered by a specific CPO
+##### 13.2.1.1.5. Discovery of services offered by a specific CPO
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3671,7 +3671,7 @@ Discovery of EV Charging stations within circular boundary using vehicle specifi
 
 Discovery of EV charging services offered by a specific CPO: [Example](../../../examples/v2/01_discover/discovery-services-by-a-cpo.json)
 
-##### Viewing details of a single charging station (by its Item Identifier)
+##### 13.2.1.1.6. Viewing details of a single charging station (by its Item Identifier)
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3690,7 +3690,7 @@ Discovery of EV charging services offered by a specific CPO: [Example](../../../
 
 Viewing details of a single charging station (using its Identifier): [Example](../../../examples/v2/01_discover/discovery-services-by-a-station.json)
 
-##### Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
+##### 13.2.1.1.7. Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3709,7 +3709,7 @@ Viewing details of a single charging station (using its Identifier): [Example](.
 
 Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](../../../examples/v2/01_discover/discovery-by-EVSE.json)
 
-##### Discovering chargers in a specific circular area, a specific connector type and availability time range
+##### 13.2.1.1.8. Discovering chargers in a specific circular area, a specific connector type and availability time range
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -3762,7 +3762,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 ```
 </details>
 
-#### **on\_discover**
+#### 13.2.1.2. **on\_discover**
 
 - Method: POST
 - Use Cases: Adam receives a comprehensive catalog of available charging stations from multiple CPOs with detailed specifications, pricing, and location information.
@@ -4290,7 +4290,7 @@ This section outlines the catalogs array, returned in on\_discover, containing p
 ```
 </details>
 
-##### Offers as part of the Catalog
+##### 13.2.1.2.1. Offers as part of the Catalog
 
 While browsing the charging app for a session, Srilekha notices a banner:  
 “Limited Time Offer: ₹20 off when you charge above 5 kWh – Valid till Sunday\!”  
@@ -4350,7 +4350,7 @@ Offer schema in the catalog:
 3. The @type associates this object with the **class definition** beckn:Offer, enabling consistent validation across systems.  
 4. Nested entities (like beckn:Descriptor and beckn:Price) maintain **linked relationships**, preserving meaning across the semantic graph.
 
-#### **Select**
+#### 13.2.1.3. **Select**
 
 - Method: POST
 - Use Cases: Adam selects a charging session slot. 
@@ -4484,7 +4484,7 @@ Offer schema in the catalog:
 ```
 </details>
 
-#### **on\_select** 
+#### 13.2.1.4. **on\_select** 
 
 - Method: POST
 - Use Cases: Adam receives an estimated quotation for the selected slot. 
@@ -4664,7 +4664,7 @@ Recommendations for BPP:
 ```
 </details>
 
-##### Surge Pricing
+##### 13.2.1.4.1. Surge Pricing
 
 A surge price is an additional fee applied on top of the base charging tariff under specific conditions-such as time of use or location.  
 User Journey:  
@@ -4715,7 +4715,7 @@ Quote Information:
   * price.currency: Currency of the individual charge in the breakup  
   * Breakup includes base charges, additional fees, surge pricing, and promotional discounts from applied offers
 
-#### **init**
+#### 13.2.1.5. **init**
 
 Loyalty Program and Authorization Process:
 
@@ -4942,7 +4942,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### **on\_init**
+#### 13.2.1.6. **on\_init**
 
 - Method: POST
 - Use Cases: Adam receives the terms of the order(payment, cancellation, overcharge etc) and available payment methods.
@@ -5184,7 +5184,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### **on\_status payment**
+#### 13.2.1.7. **on\_status payment**
 
 - Method: POST
 - Use Cases: Adam receives a payment confirmation from BPP.
@@ -5240,7 +5240,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### **confirm**
+#### 13.2.1.8. **confirm**
 
 - Method: POST
 - Use Cases: Adam accepts the terms of the order and confirms the order.
@@ -5475,7 +5475,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### **on\_confirm**
+#### 13.2.1.9. **on\_confirm**
 
 - Method: POST
 - Use Cases: Adam receives a reservation ID and QR code, plus a navigation link to the charging site.
@@ -5704,7 +5704,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### **update (start charging)**
+#### 13.2.1.10. **update (start charging)**
 
 Physical Charging Process:
 
@@ -5945,7 +5945,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **on\_update (start charging)**
+#### 13.2.1.11. **on\_update (start charging)**
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement on charging initialisation.
@@ -6181,7 +6181,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **track**
+#### 13.2.1.12. **track**
 
 - Method: POST
 - Use Cases: Adam initiates a request to track the charging progress of the active charging session.
@@ -6234,7 +6234,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### **on\_track**
+#### 13.2.1.13. **on\_track**
 
 - Method: POST
 - Use Cases: Adam receives the current charging progress.
@@ -6365,16 +6365,16 @@ Timestamp showing when these readings were last recorded or pushed — helps syn
 ```
 </details>
 
-#### **Asynchronous on\_status (temporary connection interruption)**
+#### 13.2.1.14. **Asynchronous on\_status (temporary connection interruption)**
 
 1. This is used in case of a connection interruption during a charging session.  
 2. Applicable only in case of temporary connection interruptions, BPPs expect to recover from these connection interruptions in the short term.  
 3. BPP notifies the BAP about this interruption using an unsolicited on\_status callback.  
 4. NOTE: if the issue remains unresolved and BPP expects it to be a long term issue, BPP must send an unsolicited on\_update to the BAP with relevant details.
 
-##### **Under and Overcharge Scenarios**
+##### 13.2.1.14.1. **Under and Overcharge Scenarios**
 
-###### **A)Undercharge (Power Cut Mid-Session)**
+###### 13.2.1.14.1.1. **A)Undercharge (Power Cut Mid-Session)**
 
 Scenario: The user reserves a 12:45–13:30 slot and prepays ₹500 in the app to the BPP platform. Charging starts on time; the app shows ETA and live ₹/kWh. At 13:05 a power cut stops the charger. The charger loses connectivity and can’t push meter data. The app immediately shows: “Session interrupted—only actual energy will be billed. You may unplug or wait for power to resume.”
 
@@ -6388,7 +6388,7 @@ Handling & experience:
 
 Contract/UI terms to bake in: “Power/interruption protection: you are charged only for energy delivered; any excess prepayment is automatically refunded on sync.” Show an estimated refund immediately, and a final confirmation after sync.
 
-###### **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**
+###### 13.2.1.14.1.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**
 
 Scenario: The user reserves a slot with ₹500 budget. Charging begins; mid-session the charger loses connectivity to its CMS (e.g., basement, patchy network). Hardware keeps dispensing; when connectivity returns, the log shows ₹520 worth of energy delivered.
 
@@ -6652,7 +6652,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### **Asynchronous on\_update (stop charging)**
+#### 13.2.1.15. **Asynchronous on\_update (stop charging)**
 
 - Method: POST
 - Use Cases: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
@@ -6870,7 +6870,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 
 EV user ends the charging session: [Example](../../../examples/v2/09_update/ev-charging-session-end-update.json)
 
-#### Synchronous/Asynchronous on\_update (stop charging)
+#### 13.2.1.16. Synchronous/Asynchronous on\_update (stop charging)
 
 - Method: POST 
 - Use Case: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
@@ -7120,7 +7120,7 @@ EV user ends the charging session: [Example](../../../examples/v2/09_update/ev-c
 ```
 </details>
 
-#### **Cancel**
+#### 13.2.1.17. **Cancel**
 
 It’s like when a client calls to cancel an appointment — maybe something came up, or their plans have changed. When they request to cancel, it’s about freeing up that slot and keeping things organized.
 
@@ -7172,7 +7172,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **on\_cancel**
+#### 13.2.1.18. **on\_cancel**
 
 - Method: POST
 - Use Cases: Adam receives order cancellation confirmation.  The advance payment will be adjusted as per network/CPO rule.
@@ -7212,7 +7212,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **Rating**
+#### 13.2.1.19. **Rating**
 
 - Method: POST
 - Use Cases: Adam rates the order.
@@ -7263,7 +7263,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **on\_rating**
+#### 13.2.1.20. **on\_rating**
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement.
@@ -7317,7 +7317,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **support**
+#### 13.2.1.21. `action: support`
 
 - Method: POST
 - Use Cases: Adma reaches out for support.
@@ -7361,7 +7361,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### **on\_support**
+#### 13.2.1.22. **on\_support**
 
 - Method: POST
 - Use Cases: Raghav receives a response to his support request.
@@ -7411,13 +7411,13 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-### **Integrating with your software**
+### 13.2.2. **Integrating with your software**
 
 This section gives a general walkthrough of how you would integrate your software with the Beckn network (say the sandbox environment). Refer to the starter kit for details on how to register with the sandbox and get credentials.
 
 Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at [Beckn-ONIX repository](https://github.com/beckn/beckn-onix). The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.
 
-#### **Integrating the BAP**
+#### 13.2.2.1. **Integrating the BAP**
 
 If you are writing the seeker platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -7433,7 +7433,7 @@ If you are writing the seeker platform software, the following are the steps you
    * the remaining components are provided by the sandbox environment  
 8. Once the application is working on the Sandbox, refer to the Starter kit for instructions to take it to pre-production and production.
 
-#### **Integrating the BPP**
+#### 13.2.2.2. **Integrating the BPP**
 
 If you are writing the provider platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -7449,9 +7449,9 @@ If you are writing the provider platform software, the following are the steps y
    * Use the postman collection to test your Provider Platform  
 7. Once the application is working on the Sandbox, refer to the Starter kit for instructions to take it to pre-production and production.
 
-## FAQs
+## 13.3. FAQs
 
-## References
+## 13.4. References
 
 * [Postman collection for UEI EV Charging](https://github.com/beckn/missions/blob/main/UEI/postman/ev-charging_uei_postman_collection.json)  
 * [Layer2 config for UEI EV Charging](https://github.com/beckn/missions/blob/main/UEI/layer2/EV-charging/3.1/energy_EV_1.1.0_openapi_3.1.yaml)  
