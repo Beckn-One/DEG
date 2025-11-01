@@ -40,34 +40,34 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
   - [13.1. Example 1 - Walk-In to a charging station without reservation.](#131-example-1---walk-in-to-a-charging-station-without-reservation)
     - [13.1.1. Consumer User Journey](#1311-consumer-user-journey)
     - [13.1.2. **API Calls and Schema**](#1312-api-calls-and-schema)
-      - [13.1.2.1. **discover**](#13121-discover)
-      - [13.1.2.2. **on\_discover**](#13122-on_discover)
-      - [13.1.2.3. **select**](#13123-select)
-      - [13.1.2.4. **on\_select**](#13124-on_select)
-      - [13.1.2.5. **init**](#13125-init)
-      - [13.1.2.6. **on\_init**](#13126-on_init)
-      - [13.1.2.7. **confirm**](#13127-confirm)
-      - [13.1.2.8. **on\_confirm**](#13128-on_confirm)
-      - [13.1.2.9. **update(start-charging)**](#13129-updatestart-charging)
-      - [13.1.2.10. **on\_update(start-charging)**](#131210-on_updatestart-charging)
-      - [13.1.2.11. **track(charging-session progress)**](#131211-trackcharging-session-progress)
-      - [13.1.2.12. **on\_track**](#131212-on_track)
-      - [13.1.2.13. **Async on\_status**](#131213-async-on_status)
-      - [13.1.2.14. **Async on\_update(stop-charging)**](#131214-async-on_updatestop-charging)
-      - [13.1.2.15. **Async on\_update(stop-charging)**](#131215-async-on_updatestop-charging)
-      - [13.1.2.16. **rating**](#131216-rating)
-      - [13.1.2.17. **on\_rating**](#131217-on_rating)
-      - [13.1.2.18. **support**](#131218-support)
-      - [13.1.2.19. **on\_support**](#131219-on_support)
+      - [13.1.2.1. `action: discover`](#13121-action-discover)
+      - [13.1.2.2. `action: on_discover`](#13122-action-on_discover)
+      - [13.1.2.3. `action: select`](#13123-action-select)
+      - [13.1.2.4. `action: on_select`](#13124-action-on_select)
+      - [13.1.2.5. `action: init`](#13125-action-init)
+      - [13.1.2.6. `action: on_init`](#13126-action-on_init)
+      - [13.1.2.7. `action: confirm`](#13127-action-confirm)
+      - [13.1.2.8. `action: on_confirm`](#13128-action-on_confirm)
+      - [13.1.2.9. `action: update` (start charging)](#13129-action-update-start-charging)
+      - [13.1.2.10. `action: on_update` (start charging)](#131210-action-on_update-start-charging)
+      - [13.1.2.11. `action: track` (charging-session progress)](#131211-action-track-charging-session-progress)
+      - [13.1.2.12. `action: on_track`](#131212-action-on_track)
+      - [13.1.2.13. async `action: on_status`](#131213-async-action-on_status)
+      - [13.1.2.14. `action: on_update` (stop-charging)](#131214-action-on_update-stop-charging)
+      - [13.1.2.15. async `action: on_update` (stop-charging)](#131215-async-action-on_update-stop-charging)
+      - [13.1.2.16. `action: rating`](#131216-action-rating)
+      - [13.1.2.17. `action: on_rating`](#131217-action-on_rating)
+      - [13.1.2.18. `action: support`](#131218-action-support)
+      - [13.1.2.19. `action: on_support`](#131219-action-on_support)
   - [13.2. Use case 2- Reservation of an EV charging time slot.](#132-use-case-2--reservation-of-an-ev-charging-time-slot)
       - [13.2.0.1. Context:](#13201-context)
-      - [13.2.0.2. 1. Discovery](#13202-1-discovery)
-        - [13.2.0.2.1. **1.1 Adam discovers nearby charging services**](#132021-11-adam-discovers-nearby-charging-services)
-      - [13.2.0.3. 2. Order (Reservation)](#13203-2-order-reservation)
-      - [13.2.0.4. 3. Fulfilment (Session Start \& Tracking)](#13204-3-fulfilment-session-start--tracking)
-      - [13.2.0.5. 4. Post-Fulfilment](#13205-4-post-fulfilment)
+      - [13.2.0.2. Discovery](#13202-discovery)
+        - [13.2.0.2.1. Adam discovers nearby charging services](#132021-adam-discovers-nearby-charging-services)
+      - [13.2.0.3. Order (Reservation)](#13203-order-reservation)
+      - [13.2.0.4. Fulfilment (Session Start \& Tracking)](#13204-fulfilment-session-start--tracking)
+      - [13.2.0.5. Post-Fulfilment](#13205-post-fulfilment)
     - [13.2.1. **API Calls and Schema**](#1321-api-calls-and-schema)
-      - [13.2.1.1. **discover**](#13211-discover)
+      - [13.2.1.1. `action: discover`](#13211-action-discover)
         - [13.2.1.1.1. Discovery of EV charging services within a circular boundary](#132111-discovery-of-ev-charging-services-within-a-circular-boundary)
         - [13.2.1.1.2. Discovery of EV charging stations along a route](#132112-discovery-of-ev-charging-stations-along-a-route)
         - [13.2.1.1.3. Discovery within circle + connector specs as filters](#132113-discovery-within-circle--connector-specs-as-filters)
@@ -76,39 +76,38 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
         - [13.2.1.1.6. Viewing details of a single charging station (by its Item Identifier)](#132116-viewing-details-of-a-single-charging-station-by-its-item-identifier)
         - [13.2.1.1.7. Fetching details of a specific charger (EVSE) on-site (by its EVSE identifier)](#132117-fetching-details-of-a-specific-charger-evse-on-site-by-its-evse-identifier)
         - [13.2.1.1.8. Discovering chargers in a specific circular area, a specific connector type and availability time range](#132118-discovering-chargers-in-a-specific-circular-area-a-specific-connector-type-and-availability-time-range)
-      - [13.2.1.2. **on\_discover**](#13212-on_discover)
+      - [13.2.1.2. `action: on_discover`](#13212-action-on_discover)
         - [13.2.1.2.1. Offers as part of the Catalog](#132121-offers-as-part-of-the-catalog)
-      - [13.2.1.3. **Select**](#13213-select)
-      - [13.2.1.4. **on\_select**](#13214-on_select)
+      - [13.2.1.3. `action: select`](#13213-action-select)
+      - [13.2.1.4. `action: on_select`](#13214-action-on_select)
         - [13.2.1.4.1. Surge Pricing](#132141-surge-pricing)
-      - [13.2.1.5. **init**](#13215-init)
-      - [13.2.1.6. **on\_init**](#13216-on_init)
-      - [13.2.1.7. **on\_status payment**](#13217-on_status-payment)
-      - [13.2.1.8. **confirm**](#13218-confirm)
-      - [13.2.1.9. **on\_confirm**](#13219-on_confirm)
-      - [13.2.1.10. **update (start charging)**](#132110-update-start-charging)
-      - [13.2.1.11. **on\_update (start charging)**](#132111-on_update-start-charging)
-      - [13.2.1.12. **track**](#132112-track)
-      - [13.2.1.13. **on\_track**](#132113-on_track)
-      - [13.2.1.14. **Asynchronous on\_status (temporary connection interruption)**](#132114-asynchronous-on_status-temporary-connection-interruption)
-        - [13.2.1.14.1. **Under and Overcharge Scenarios**](#1321141-under-and-overcharge-scenarios)
-          - [13.2.1.14.1.1. **A)Undercharge (Power Cut Mid-Session)**](#13211411-aundercharge-power-cut-mid-session)
-          - [13.2.1.14.1.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#13211412-b-overcharge-charger-offline-to-cms-keeps-dispensing)
-      - [13.2.1.15. **Asynchronous on\_update (stop charging)**](#132115-asynchronous-on_update-stop-charging)
+      - [13.2.1.5. `action: init`](#13215-action-init)
+      - [13.2.1.6. `action: on_init`](#13216-action-on_init)
+      - [13.2.1.7. `action: on_status` (payment)](#13217-action-on_status-payment)
+      - [13.2.1.8. `action: confirm`](#13218-action-confirm)
+      - [13.2.1.9. `action: on_confirm`](#13219-action-on_confirm)
+      - [13.2.1.10. `action: update` (start charging)](#132110-action-update-start-charging)
+      - [13.2.1.11. `action: on_update` (start charging)](#132111-action-on_update-start-charging)
+      - [13.2.1.12. `action: track`](#132112-action-track)
+      - [13.2.1.13. `action: on_track`](#132113-action-on_track)
+      - [13.2.1.14. asynchronous `action: on_status` (temporary connection interruption)](#132114-asynchronous-action-on_status-temporary-connection-interruption)
+          - [13.2.1.14.0.1. **A)Undercharge (Power Cut Mid-Session)**](#13211401-aundercharge-power-cut-mid-session)
+          - [13.2.1.14.0.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#13211402-b-overcharge-charger-offline-to-cms-keeps-dispensing)
+      - [13.2.1.15. Asynchronous `action: on_update` (stop charging)](#132115-asynchronous-action-on_update-stop-charging)
       - [13.2.1.16. Synchronous/Asynchronous on\_update (stop charging)](#132116-synchronousasynchronous-on_update-stop-charging)
-      - [13.2.1.17. **Cancel**](#132117-cancel)
-      - [13.2.1.18. **on\_cancel**](#132118-on_cancel)
-      - [13.2.1.19. **Rating**](#132119-rating)
-      - [13.2.1.20. **on\_rating**](#132120-on_rating)
+      - [13.2.1.17. `atcion: cancel`](#132117-atcion-cancel)
+      - [13.2.1.18. `action: on_cancel`](#132118-action-on_cancel)
+      - [13.2.1.19. `action: rating`](#132119-action-rating)
+      - [13.2.1.20. `action: on_rating`](#132120-action-on_rating)
       - [13.2.1.21. `action: support`](#132121-action-support)
-      - [13.2.1.22. **on\_support**](#132122-on_support)
+      - [13.2.1.22. `action: on_support`](#132122-action-on_support)
     - [13.2.2. **Integrating with your software**](#1322-integrating-with-your-software)
       - [13.2.2.1. **Integrating the BAP**](#13221-integrating-the-bap)
       - [13.2.2.2. **Integrating the BPP**](#13222-integrating-the-bpp)
   - [13.3. FAQs](#133-faqs)
   - [13.4. References](#134-references)
 
-created using https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 </details>
 
 # 1. Request for Comments
@@ -396,7 +395,7 @@ Important points of consideration:
 
 Note: The API calls and schema for walk-in charging are identical to the [advance reservation use case](#use-case-2--reservation-of-an-ev-charging-time-slot) with minor differences in timing and availability. Where sections reference Use Case 2, the same API structure, field definitions, and examples apply unless specifically noted otherwise.
 
-#### 13.1.2.1. **discover**
+#### 13.1.2.1. `action: discover`
 
 - Method: POST
 - Use Cases: Raghav scans QR code on charger using his BAP user app
@@ -449,7 +448,7 @@ Note: Users can discover the charging station through off-network channels (such
 * The charging station must be able to handle direct selection requests without prior search/discovery  
 * This represents a more streamlined flow for walk-in customers who have already identified their preferred charging location
 
-#### 13.1.2.2. **on\_discover**
+#### 13.1.2.2. `action: on_discover`
 
 - Method: POST
 - Use Cases: The app receives the charger’s details (connector, power rating, live status, tariff, any active time-bound offer).
@@ -780,7 +779,7 @@ CPO returns details of a specific charger: [Example](../../../examples/v2/02_on_
 ```
 </details>
 
-#### 13.1.2.3. **select**
+#### 13.1.2.3. `action: select`
 
 - Method: POST
 - Use Cases: Raghav selects a service offering from the options he gets. He chooses a 100 INR top-up.
@@ -906,7 +905,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
 ```
 </details>
 
-#### 13.1.2.4. **on\_select**
+#### 13.1.2.4. `action: on_select`
 
 - Method: POST
 - Use Cases: Raghav receives estimated quotations for the selected service.
@@ -1071,7 +1070,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/v2/0
 ```
 </details>
 
-#### 13.1.2.5. **init**
+#### 13.1.2.5. `action: init`
 
 - Method: POST
 - Use Cases: Raghav provides his billing information.
@@ -1265,7 +1264,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 ```
 </details>
 
-#### 13.1.2.6. **on\_init**
+#### 13.1.2.6. `action: on_init`
 
 - Method: POST
 - Use Cases: Raghav receives the charging session terms(rate, idle fee window, cancellation rules, payment terms etc). 
@@ -1488,7 +1487,7 @@ CPO responds with final quote with payment terms: [Example](../../../examples/v2
 ```
 </details>
 
-#### 13.1.2.7. **confirm**
+#### 13.1.2.7. `action: confirm`
 
 - Method: POST
 - Use Cases: Raghav confirms the order.
@@ -1705,7 +1704,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 ```
 </details>
 
-#### 13.1.2.8. **on\_confirm**
+#### 13.1.2.8. `action: on_confirm`
 
 - Method: POST
 - Use Cases: The app returns a booking/transaction ID along with the other charging session details.
@@ -1923,7 +1922,7 @@ CPO responds with confirmed slot: [Example](../../../examples/v2/08_on_confirm/t
 ```
 </details>
 
-#### 13.1.2.9. **update(start-charging)**
+#### 13.1.2.9. `action: update` (start charging)
 
 - Method: POST
 - Use Cases: Raghav plugs in and starts the session from the app.
@@ -2143,7 +2142,7 @@ EV user starts a charging session: [Example](../../../examples/v2/09_update/ev-c
 ```
 </details>
 
-#### 13.1.2.10. **on\_update(start-charging)**
+#### 13.1.2.10. `action: on_update` (start charging)
 
 - Method: POST
 - Use Cases: Response for the charging session initiation.
@@ -2375,7 +2374,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 ```
 </details>
 
-#### 13.1.2.11. **track(charging-session progress)**
+#### 13.1.2.11. `action: track` (charging-session progress)
 
 - Method: POST
 - Use Cases: Raghav requests to track the live status of the charging session. state of charge(how much charging has been done).
@@ -2423,7 +2422,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 ```
 </details>
 
-#### 13.1.2.12. **on\_track**
+#### 13.1.2.12. `action: on_track`
 
 - Method: POST
 - Use Cases: Raghav receives the state of charge(how much charging has been done) of the vehicle.
@@ -2519,7 +2518,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
 ```
 </details>
 
-#### 13.1.2.13. **Async on\_status**
+#### 13.1.2.13. async `action: on_status`
 
 - Method: POST
 - Use Cases: Raghav receives a notification if there is any error during the charging session.
@@ -2760,10 +2759,10 @@ EV user reveives a notification in case of any error occuring during charging se
 ```
 </details>
 
-#### 13.1.2.14. **Async on\_update(stop-charging)**
+#### 13.1.2.14. `action: on_update` (stop-charging)
 
 - Method: POST
-- Use Cases: At \~60 minutes, the session stops (or notifies him to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
+- Use Cases: Raghav initiates a stop chargig request when his requirement is met. Note: In practive it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
 - Request: 
 
 <details>
@@ -2968,10 +2967,10 @@ EV user reveives a notification in case of any error occuring during charging se
 
 EV user stops the charging session: [Example](../../../examples/v2/09_update/ev-charging-session-end-update.json)
 
-#### 13.1.2.15. **Async on\_update(stop-charging)**
+#### 13.1.2.15. async `action: on_update` (stop-charging)
 
 - Method: POST 
-- Use Case: At \~60 minutes(or upon the EV user request), the session stops (or notifies hthe EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
+- Use Case: At \~60 minutes(or upon the EV user request), the session stops (or notifies the EV user to unplug). He receives a digital invoice and session summary in-app. If anything went wrong (e.g., session interrupted, SOC reaches 100%, etc.), the app reconciles to bill only for energy delivered and issues any adjustment or refund automatically.
 - Request:
 
 ```json
@@ -3215,7 +3214,7 @@ EV user receives the session details upon chargign session end: [Example](../../
 ```
 </details>
 
-#### 13.1.2.16. **rating**
+#### 13.1.2.16. `action: rating`
 
 - Method: POST
 - Use Cases: Raghav provides rating for the charging session.
@@ -3267,7 +3266,7 @@ EV user rates charging service experience: [Example](../../../examples/v2/15_rat
 ```
 </details>
 
-#### 13.1.2.17. **on\_rating**
+#### 13.1.2.17. `action: on_rating`
 
 - Method: POST
 - Use Cases: Raghav receives an achievement after providing a rating.
@@ -3322,7 +3321,7 @@ CPO accepts rating: [Example](../../../examples/v2/16_on_rating/time-based-ev-ch
 ```
 </details>
 
-#### 13.1.2.18. **support**
+#### 13.1.2.18. `action: support`
 
 - Method: POST
 - Use Cases: Raghav reaches out for support.
@@ -3367,7 +3366,7 @@ EV user contacts support: [Example](../../../examples/v2/17_support/time-based-e
 ```
 </details>
 
-#### 13.1.2.19. **on\_support**
+#### 13.1.2.19. `action: on_support`
 
 - Method: POST
 - Use Cases: Raghav receives a response to his support request.
@@ -3428,9 +3427,9 @@ Adam is driving his electric vehicle along the highway when he notices that his 
 
 ![][image1]
 
-#### 13.2.0.2. 1\. Discovery
+#### 13.2.0.2. Discovery
 
-##### 13.2.0.2.1. **1.1 Adam discovers nearby charging services**
+##### 13.2.0.2.1. Adam discovers nearby charging services
 
 About **30 minutes before lunch**, Adam opens his EV Charging BAP (powered by a Beckn-enabled discovery network).
 
@@ -3450,7 +3449,7 @@ The app queries multiple charging providers and returns options showing:
 
 She compares them and selects **“EcoPower Highway Hub – Mandya Food Court”**.
 
-#### 13.2.0.3. 2\. Order (Reservation)
+#### 13.2.0.3. Order (Reservation)
 
 Adam taps **Reserve Slot → 12:45–13:15 PM**.
 
@@ -3468,7 +3467,7 @@ They confirm.
 
 The provider returns a **reservation ID and QR code**, plus a **navigation link** to the site.
 
-#### 13.2.0.4. 3\. Fulfilment (Session Start & Tracking)
+#### 13.2.0.4. Fulfilment (Session Start & Tracking)
 
 On arrival, Adam scans the charger’s **QR code**.
 
@@ -3485,7 +3484,7 @@ He enjoys lunch while the system manages the session.
 
 If she arrives a few minutes late, the charger holds the slot until the **grace period** expires.
 
-#### 13.2.0.5. 4\. Post-Fulfilment
+#### 13.2.0.5. Post-Fulfilment
 
 Charging auto-stops at her **target energy level (80 %)** or when she manually ends the session.
 
@@ -3499,7 +3498,7 @@ Satisfied, Adam resumes his trip—arriving in Mysuru with time to spare.
 
 ### 13.2.1. **API Calls and Schema**
 
-#### 13.2.1.1. **discover**
+#### 13.2.1.1. `action: discover`
 
 Consumers can search for EV charging stations with specific criteria including location, connector type, time window, finder fee etc.
 
@@ -3762,7 +3761,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 ```
 </details>
 
-#### 13.2.1.2. **on\_discover**
+#### 13.2.1.2. `action: on_discover`
 
 - Method: POST
 - Use Cases: Adam receives a comprehensive catalog of available charging stations from multiple CPOs with detailed specifications, pricing, and location information.
@@ -4350,7 +4349,7 @@ Offer schema in the catalog:
 3. The @type associates this object with the **class definition** beckn:Offer, enabling consistent validation across systems.  
 4. Nested entities (like beckn:Descriptor and beckn:Price) maintain **linked relationships**, preserving meaning across the semantic graph.
 
-#### 13.2.1.3. **Select**
+#### 13.2.1.3. `action: select`
 
 - Method: POST
 - Use Cases: Adam selects a charging session slot. 
@@ -4484,7 +4483,7 @@ Offer schema in the catalog:
 ```
 </details>
 
-#### 13.2.1.4. **on\_select** 
+#### 13.2.1.4. `action: on_select` 
 
 - Method: POST
 - Use Cases: Adam receives an estimated quotation for the selected slot. 
@@ -4715,7 +4714,7 @@ Quote Information:
   * price.currency: Currency of the individual charge in the breakup  
   * Breakup includes base charges, additional fees, surge pricing, and promotional discounts from applied offers
 
-#### 13.2.1.5. **init**
+#### 13.2.1.5. `action: init`
 
 Loyalty Program and Authorization Process:
 
@@ -4942,7 +4941,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### 13.2.1.6. **on\_init**
+#### 13.2.1.6. `action: on_init`
 
 - Method: POST
 - Use Cases: Adam receives the terms of the order(payment, cancellation, overcharge etc) and available payment methods.
@@ -5184,7 +5183,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### 13.2.1.7. **on\_status payment**
+#### 13.2.1.7. `action: on_status` (payment)
 
 - Method: POST
 - Use Cases: Adam receives a payment confirmation from BPP.
@@ -5240,7 +5239,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### 13.2.1.8. **confirm**
+#### 13.2.1.8. `action: confirm`
 
 - Method: POST
 - Use Cases: Adam accepts the terms of the order and confirms the order.
@@ -5475,7 +5474,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### 13.2.1.9. **on\_confirm**
+#### 13.2.1.9. `action: on_confirm`
 
 - Method: POST
 - Use Cases: Adam receives a reservation ID and QR code, plus a navigation link to the charging site.
@@ -5704,7 +5703,7 @@ Recommendations for BAP:
 ```
 </details>
 
-#### 13.2.1.10. **update (start charging)**
+#### 13.2.1.10. `action: update` (start charging)
 
 Physical Charging Process:
 
@@ -5945,7 +5944,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### 13.2.1.11. **on\_update (start charging)**
+#### 13.2.1.11. `action: on_update` (start charging)
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement on charging initialisation.
@@ -6181,7 +6180,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### 13.2.1.12. **track**
+#### 13.2.1.12. `action: track`
 
 - Method: POST
 - Use Cases: Adam initiates a request to track the charging progress of the active charging session.
@@ -6234,7 +6233,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### 13.2.1.13. **on\_track**
+#### 13.2.1.13. `action: on_track`
 
 - Method: POST
 - Use Cases: Adam receives the current charging progress.
@@ -6365,16 +6364,14 @@ Timestamp showing when these readings were last recorded or pushed — helps syn
 ```
 </details>
 
-#### 13.2.1.14. **Asynchronous on\_status (temporary connection interruption)**
+#### 13.2.1.14. asynchronous `action: on_status` (temporary connection interruption)
 
 1. This is used in case of a connection interruption during a charging session.  
 2. Applicable only in case of temporary connection interruptions, BPPs expect to recover from these connection interruptions in the short term.  
 3. BPP notifies the BAP about this interruption using an unsolicited on\_status callback.  
 4. NOTE: if the issue remains unresolved and BPP expects it to be a long term issue, BPP must send an unsolicited on\_update to the BAP with relevant details.
 
-##### 13.2.1.14.1. **Under and Overcharge Scenarios**
-
-###### 13.2.1.14.1.1. **A)Undercharge (Power Cut Mid-Session)**
+###### 13.2.1.14.0.1. **A)Undercharge (Power Cut Mid-Session)**
 
 Scenario: The user reserves a 12:45–13:30 slot and prepays ₹500 in the app to the BPP platform. Charging starts on time; the app shows ETA and live ₹/kWh. At 13:05 a power cut stops the charger. The charger loses connectivity and can’t push meter data. The app immediately shows: “Session interrupted—only actual energy will be billed. You may unplug or wait for power to resume.”
 
@@ -6388,7 +6385,7 @@ Handling & experience:
 
 Contract/UI terms to bake in: “Power/interruption protection: you are charged only for energy delivered; any excess prepayment is automatically refunded on sync.” Show an estimated refund immediately, and a final confirmation after sync.
 
-###### 13.2.1.14.1.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**
+###### 13.2.1.14.0.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**
 
 Scenario: The user reserves a slot with ₹500 budget. Charging begins; mid-session the charger loses connectivity to its CMS (e.g., basement, patchy network). Hardware keeps dispensing; when connectivity returns, the log shows ₹520 worth of energy delivered.
 
@@ -6652,7 +6649,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### 13.2.1.15. **Asynchronous on\_update (stop charging)**
+#### 13.2.1.15. Asynchronous `action: on_update` (stop charging)
 
 - Method: POST
 - Use Cases: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
@@ -7120,7 +7117,7 @@ EV user ends the charging session: [Example](../../../examples/v2/09_update/ev-c
 ```
 </details>
 
-#### 13.2.1.17. **Cancel**
+#### 13.2.1.17. `atcion: cancel`
 
 It’s like when a client calls to cancel an appointment — maybe something came up, or their plans have changed. When they request to cancel, it’s about freeing up that slot and keeping things organized.
 
@@ -7172,7 +7169,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### 13.2.1.18. **on\_cancel**
+#### 13.2.1.18. `action: on_cancel`
 
 - Method: POST
 - Use Cases: Adam receives order cancellation confirmation.  The advance payment will be adjusted as per network/CPO rule.
@@ -7212,7 +7209,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### 13.2.1.19. **Rating**
+#### 13.2.1.19. `action: rating`
 
 - Method: POST
 - Use Cases: Adam rates the order.
@@ -7263,7 +7260,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### 13.2.1.20. **on\_rating**
+#### 13.2.1.20. `action: on_rating`
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement.
@@ -7361,7 +7358,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 ```
 </details>
 
-#### 13.2.1.22. **on\_support**
+#### 13.2.1.22. `action: on_support`
 
 - Method: POST
 - Use Cases: Raghav receives a response to his support request.
