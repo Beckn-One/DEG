@@ -400,7 +400,7 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 - Use Cases: Raghav scans QR code on charger using his BAP user app
 - Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](../../../examples/v2/01_discover/discovery-by-EVSE.json)
 
-  <details>
+<details>
 <summary>Example json :rocket:</summary>
 
 ```json
