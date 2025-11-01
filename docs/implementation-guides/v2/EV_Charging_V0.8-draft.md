@@ -4246,6 +4246,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 
 ```
 </details>
+
 CPO returns EV Charging Service Catalog Listing: [Example](../../../examples/v2/02_on_discover/time-based-ev-charging-slot-catalog.json)
 
 Used together, these bring **true semantic meaning** to the payload, allowing any system to interpret the data consistently based on shared schema definitions.
@@ -7157,6 +7158,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 
 ```
 </details>
+
 - Successful Response: CPO cancels a charging session reservation: [Example](../../../examples/v2/20_on_cancel/cpo-cancels-reservation.json)
 
 <details>
