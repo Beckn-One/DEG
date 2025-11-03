@@ -166,12 +166,8 @@
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",

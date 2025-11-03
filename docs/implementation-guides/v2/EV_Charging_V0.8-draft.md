@@ -318,8 +318,8 @@ Fetching details of a specific charger (EVSE) after reaching site (using its ide
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:31:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:31:05Z"
 }
 ```
 
@@ -426,6 +426,7 @@ The app receives the charger’s details (connector, power rating, live status, 
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -434,12 +435,8 @@ The app receives the charger’s details (connector, power rating, live status, 
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "schema:UPI",
-                "schema:CreditCard",
-                "schema:Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -455,11 +452,7 @@ The app receives the charger’s details (connector, power rating, live status, 
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -526,6 +519,7 @@ The app receives the charger’s details (connector, power rating, live status, 
                 "schema:name": "GoGreen Charging Pvt Ltd"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -534,12 +528,8 @@ The app receives the charger’s details (connector, power rating, live status, 
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "schema:UPI",
-                "schema:CreditCard",
-                "schema:Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -555,11 +545,7 @@ The app receives the charger’s details (connector, power rating, live status, 
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -581,7 +567,9 @@ The app receives the charger’s details (connector, power rating, live status, 
               "@type": "beckn:Descriptor",
               "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
-            "beckn:items": ["ev-charger-ccs2-001"],
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -596,7 +584,7 @@ The app receives the charger’s details (connector, power rating, live status, 
               "schema:startDate": "2025-10-10T00:00:00Z",
               "schema:endDate": "2026-04-10T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -615,7 +603,9 @@ The app receives the charger’s details (connector, power rating, live status, 
               "@type": "beckn:Descriptor",
               "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
-            "beckn:items": ["ev-charger-ccs2-001"],
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
             "beckn:price": {
               "currency": "INR",
               "value": 18.5,
@@ -727,11 +717,7 @@ Raghav selects a service offering from the options he gets. He chooses a 100 INR
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -780,8 +766,8 @@ EV user requests charge worth specific amount in currency: [Example](https://git
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -849,11 +835,7 @@ Raghav receives estimated quotations for the selected service.
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -1140,8 +1122,8 @@ EV user requests final quote with payment terms by providing billing details: [E
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -1330,12 +1312,8 @@ He chooses UPI and authorizes payment (or an authorization hold, as supported)
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -1364,8 +1342,8 @@ CPO responds with final quote with payment terms: [Example](https://github.com/B
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -1542,16 +1520,12 @@ Raghav confirms the order.
         "beckn:status": "PENDING",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -1582,8 +1556,8 @@ EV user confirms reservation of a slot at a particular charging station at a par
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -1760,17 +1734,13 @@ The app returns a booking/transaction ID along with the other charging session d
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -1801,8 +1771,8 @@ CPO responds with confirmed slot: [Example](https://github.com/Beckn-One/DEG/blo
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -1982,17 +1952,13 @@ Raghav plugs in and starts the session from the app.
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2021,8 +1987,8 @@ EV user starts a charging session: [Example](https://github.com/Beckn-One/DEG/bl
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -2213,17 +2179,13 @@ Response for the charging session initiation.
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2252,8 +2214,8 @@ CPO responds with confirmed start of charging session: [Example](https://github.
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -2299,8 +2261,8 @@ EV User tracks a live charging session in real-time: [Example](https://github.co
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -2595,17 +2557,13 @@ Raghav receives a notification if there is any error during the charging session
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2634,8 +2592,8 @@ EV user reveives a notification in case of any error occuring during charging se
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -2816,17 +2774,13 @@ Note: In practive it is not necessary that an EV user initiates a charging sessi
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -3056,17 +3010,13 @@ At \~60 minutes(or upon the EV user request), the session stops (or notifies hth
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -3095,8 +3045,8 @@ EV user receives the session details upon chargign session end: [Example](https:
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -3146,8 +3096,8 @@ EV user rates charging service experience: [Example](https://github.com/Beckn-On
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -3200,8 +3150,8 @@ CPO accepts rating: [Example](https://github.com/Beckn-One/DEG/blob/draft/exampl
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -3244,8 +3194,8 @@ EV user contacts support: [Example](https://github.com/Beckn-One/DEG/blob/draft/
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -3294,8 +3244,8 @@ CPO returns support information: [Example](https://github.com/Beckn-One/DEG/blob
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -3631,7 +3581,6 @@ Adam receives a comprehensive catalog of available charging stations from multip
 #### Request
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -3678,6 +3627,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -3718,6 +3668,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -3726,12 +3677,8 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -3747,11 +3694,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -3780,6 +3723,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -3820,6 +3764,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "schema:name": "GreenCharge Energy Solutions"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet", "BankTransfer"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -3828,13 +3773,8 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "minPowerKW": 10,
               "socketCount": 1,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet",
-                "BankTransfer"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -3850,12 +3790,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi",
-                "Parking"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi","Parking"],
               "ocppId": "IN-GC-KOR-01",
               "evseId": "IN*GC*KOR*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -3884,6 +3819,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -3924,6 +3860,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "schema:name": "PowerGrid Charging Solutions"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -3932,12 +3869,8 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "minPowerKW": 3,
               "socketCount": 4,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -3953,11 +3886,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restroom",
-                "Wi-Fi",
-                "Parking"
-              ],
+              "amenityFeature": ["Restroom", "Wi-Fi", "Parking"],
               "ocppId": "IN-PG-IND-01",
               "evseId": "IN*PG*IND*01*TYPE2*A",
               "roamingNetwork": "GreenRoam",
@@ -3996,11 +3925,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "schema:startDate": "2025-10-01T00:00:00Z",
               "schema:endDate": "2026-03-31T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4036,12 +3961,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "schema:startDate": "2025-10-15T00:00:00Z",
               "schema:endDate": "2026-04-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet",
-              "NetBanking"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet","NetBanking"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4077,11 +3997,7 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "schema:startDate": "2025-10-20T00:00:00Z",
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4213,7 +4129,6 @@ Adam selects a charging session slot.
 #### Request
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -4268,11 +4183,7 @@ Adam selects a charging session slot.
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4398,11 +4309,7 @@ Adam receives an estimated quotation for the selected slot.
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4973,12 +4880,8 @@ Adam receives the terms of the order(payment, cancellation, overcharge etc) and 
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5260,16 +5163,12 @@ Adam accepts the terms of the order and confirms the order.
         "beckn:status": "PENDING",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5496,17 +5395,13 @@ Adam receives a reservation ID and QR code, plus a navigation link to the chargi
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5744,12 +5639,8 @@ The backend matches it to her **reservation ID**, verifies her **OTP authorizati
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5988,12 +5879,8 @@ Adam receives an acknowledgement on charging initialisation.
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -6448,12 +6335,8 @@ Adam receives notification when there is any error during an ongoing charging se
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -6669,12 +6552,8 @@ Note: In practive it is not necessary that an EV user initiates a charging sessi
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -6910,12 +6789,8 @@ Adam receives an update when the charging session ends. This might reflect payme
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:acceptedPaymentMethods": [
-          "schema:BankTransfer",
-          "schema:UPI",
-          "schema:Wallet"
-        ],
-        "beckn:beneficiary": "BPP"
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",

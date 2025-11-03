@@ -81,6 +81,7 @@
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -89,12 +90,8 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "schema:UPI",
-                "schema:CreditCard",
-                "schema:Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -110,11 +107,7 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -181,6 +174,7 @@
                 "schema:name": "GoGreen Charging Pvt Ltd"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -189,12 +183,8 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "schema:UPI",
-                "schema:CreditCard",
-                "schema:Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -210,11 +200,7 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -236,7 +222,9 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
-            "beckn:items": ["ev-charger-ccs2-001"],
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -251,7 +239,7 @@
               "schema:startDate": "2025-10-10T00:00:00Z",
               "schema:endDate": "2026-04-10T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -270,7 +258,9 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Per-kWh Tariff - CCS2 60kW"
             },
-            "beckn:items": ["ev-charger-ccs2-001"],
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
             "beckn:price": {
               "currency": "INR",
               "value": 18.5,

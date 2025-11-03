@@ -44,6 +44,7 @@
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -84,6 +85,7 @@
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -92,12 +94,8 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -113,11 +111,7 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -146,6 +140,7 @@
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -186,6 +181,7 @@
                 "schema:name": "GreenCharge Energy Solutions"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet", "BankTransfer"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -194,13 +190,8 @@
               "minPowerKW": 10,
               "socketCount": 1,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet",
-                "BankTransfer"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -216,12 +207,7 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi",
-                "Parking"
-              ],
+              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi","Parking"],
               "ocppId": "IN-GC-KOR-01",
               "evseId": "IN*GC*KOR*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -250,6 +236,7 @@
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -290,6 +277,7 @@
                 "schema:name": "PowerGrid Charging Solutions"
               }
             },
+            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -298,12 +286,8 @@
               "minPowerKW": 3,
               "socketCount": 4,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -319,11 +303,7 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": [
-                "Restroom",
-                "Wi-Fi",
-                "Parking"
-              ],
+              "amenityFeature": ["Restroom", "Wi-Fi", "Parking"],
               "ocppId": "IN-PG-IND-01",
               "evseId": "IN*PG*IND*01*TYPE2*A",
               "roamingNetwork": "GreenRoam",
@@ -362,11 +342,7 @@
               "schema:startDate": "2025-10-01T00:00:00Z",
               "schema:endDate": "2026-03-31T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -402,12 +378,7 @@
               "schema:startDate": "2025-10-15T00:00:00Z",
               "schema:endDate": "2026-04-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet",
-              "NetBanking"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet","NetBanking"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -443,11 +414,7 @@
               "schema:startDate": "2025-10-20T00:00:00Z",
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
