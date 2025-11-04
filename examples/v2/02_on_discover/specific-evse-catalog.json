@@ -300,28 +300,6 @@
               "idleFeePolicy": "₹2/min after 10 min post-charge"
             },
             "beckn:provider": "GoGreen-charging"
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "ev-charger-ccs2-001-basic-offer",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Basic Price"
-            },
-            "beckn:provider": "GoGreen-charging",
-            "beckn:items": [
-              "ev-charger-ccs2-001"
-            ],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 18.0,
-              "applicableQuantity": {
-                "unitText": "Kilowatt Hour",
-                "unitCode": "KWH",
-                "unitQuantity": 1
-              }
-            }
           }
         ]
       }
