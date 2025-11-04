@@ -426,7 +426,6 @@ The app receives the charger’s details (connector, power rating, live status, 
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -452,7 +451,11 @@ The app receives the charger’s details (connector, power rating, live status, 
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -519,7 +522,6 @@ The app receives the charger’s details (connector, power rating, live status, 
                 "schema:name": "GoGreen Charging Pvt Ltd"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -545,7 +547,11 @@ The app receives the charger’s details (connector, power rating, live status, 
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -584,7 +590,11 @@ The app receives the charger’s details (connector, power rating, live status, 
               "schema:startDate": "2025-10-10T00:00:00Z",
               "schema:endDate": "2026-04-10T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "CreditCard",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -593,7 +603,8 @@ The app receives the charger’s details (connector, power rating, live status, 
                 "feeValue": 2.5
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
-            }
+            },
+            "beckn:provider": "GoGreen-charging"
           },
           {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
@@ -620,7 +631,10 @@ The app receives the charger’s details (connector, power rating, live status, 
               "schema:startDate": "2025-10-20T00:00:00Z",
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -629,6 +643,29 @@ The app receives the charger’s details (connector, power rating, live status, 
                 "feeValue": 2.2
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
+            },
+            "beckn:provider": "GoGreen-charging"
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "ev-charger-ccs2-001-basic-offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Basic Price"
+            },
+            "beckn:provider": "GoGreen-charging",
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
             }
           }
         ]
@@ -645,8 +682,8 @@ CPO returns details of a specific charger: [Example](https://github.com/Beckn-On
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:32:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:32:05Z"
 }
 ```
 
@@ -3668,7 +3705,6 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -3694,7 +3730,11 @@ Adam receives a comprehensive catalog of available charging stations from multip
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -3764,7 +3804,6 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "schema:name": "GreenCharge Energy Solutions"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet", "BankTransfer"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -3790,7 +3829,12 @@ Adam receives a comprehensive catalog of available charging stations from multip
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi","Parking"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi",
+                "Parking"
+              ],
               "ocppId": "IN-GC-KOR-01",
               "evseId": "IN*GC*KOR*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -3860,7 +3904,6 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "schema:name": "PowerGrid Charging Solutions"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -3886,7 +3929,11 @@ Adam receives a comprehensive catalog of available charging stations from multip
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restroom", "Wi-Fi", "Parking"],
+              "amenityFeature": [
+                "Restroom",
+                "Wi-Fi",
+                "Parking"
+              ],
               "ocppId": "IN-PG-IND-01",
               "evseId": "IN*PG*IND*01*TYPE2*A",
               "roamingNetwork": "GreenRoam",
@@ -3925,7 +3972,11 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "schema:startDate": "2025-10-01T00:00:00Z",
               "schema:endDate": "2026-03-31T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -3934,7 +3985,8 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "feeValue": 2.5
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
-            }
+            },
+            "beckn:provider": "ecopower-charging"
           },
           {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
@@ -3961,7 +4013,12 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "schema:startDate": "2025-10-15T00:00:00Z",
               "schema:endDate": "2026-04-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet","NetBanking"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet",
+              "NetBanking"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -3970,7 +4027,8 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "feeValue": 2.0
               },
               "idleFeePolicy": "₹3/min after 15 min post-charge"
-            }
+            },
+            "beckn:provider": "greencharge-koramangala"
           },
           {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
@@ -3997,7 +4055,11 @@ Adam receives a comprehensive catalog of available charging stations from multip
               "schema:startDate": "2025-10-20T00:00:00Z",
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4006,6 +4068,73 @@ Adam receives a comprehensive catalog of available charging stations from multip
                 "feeValue": 1.5
               },
               "idleFeePolicy": "₹1/min after 30 min post-charge"
+            },
+            "beckn:provider": "powergrid-indiranagar"
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "ev-charger-ccs2-001-basic-offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Basic Price"
+            },
+            "beckn:provider": "ecopower-charging",
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "ev-charger-ccs2-002-basic-offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Basic Price"
+            },
+            "beckn:provider": "greencharge-koramangala",
+            "beckn:items": [
+              "ev-charger-ccs2-002"
+            ],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 22.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "ev-charger-type2-001-basic-offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Basic Price"
+            },
+            "beckn:provider": "powergrid-indiranagar",
+            "beckn:items": [
+              "ev-charger-type2-001"
+            ],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 15.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
             }
           }
         ]

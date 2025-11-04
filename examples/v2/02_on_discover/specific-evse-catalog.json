@@ -81,7 +81,6 @@
                 "schema:name": "EcoPower Charging Pvt Ltd"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -107,7 +106,11 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -174,7 +177,6 @@
                 "schema:name": "GoGreen Charging Pvt Ltd"
               }
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
@@ -200,7 +202,11 @@
                   "addressCountry": "IN"
                 }
               },
-              "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"],
+              "amenityFeature": [
+                "Restaurant",
+                "Restroom",
+                "Wi-Fi"
+              ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
@@ -239,7 +245,11 @@
               "schema:startDate": "2025-10-10T00:00:00Z",
               "schema:endDate": "2026-04-10T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "CreditCard","Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "CreditCard",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -248,7 +258,8 @@
                 "feeValue": 2.5
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
-            }
+            },
+            "beckn:provider": "GoGreen-charging"
           },
           {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
@@ -275,7 +286,10 @@
               "schema:startDate": "2025-10-20T00:00:00Z",
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -284,6 +298,29 @@
                 "feeValue": 2.2
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
+            },
+            "beckn:provider": "GoGreen-charging"
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "ev-charger-ccs2-001-basic-offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Basic Price"
+            },
+            "beckn:provider": "GoGreen-charging",
+            "beckn:items": [
+              "ev-charger-ccs2-001"
+            ],
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
             }
           }
         ]
