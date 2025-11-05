@@ -1,8 +1,7 @@
 Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc -->
 ==========================================================
 
-<details>
-  <summary>Table of Contents :rocket:</summary>
+## Table of Contents <!-- omit from toc -->
 
 - [1. Request for Comments](#1-request-for-comments)
 - [2. Copyright Notice](#2-copyright-notice)
@@ -108,7 +107,6 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
   - [13.4. References](#134-references)
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
-</details>
 
 # 1. Request for Comments
 
