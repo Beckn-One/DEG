@@ -1,13 +1,13 @@
 {
   "context": {
     "version": "2.0.0",
-    "action": "on_update",
+    "action": "on_status",
     "domain": "beckn.one:deg:ev-charging:*",
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
-    "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
-    "timestamp": "2025-01-27T10:15:30Z",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T13:15:00Z",
     "ttl": "PT30S"
   },
   "message": {
@@ -87,36 +87,11 @@
         "currency": "INR",
         "value": 128.64,
         "components": [
-          {
-            "type": "UNIT",
-            "value": 100.0,
-            "currency": "INR",
-            "description": "Base charging session cost (100 INR)"
-          },
-          {
-            "type": "SURCHARGE",
-            "value": 20.0,
-            "currency": "INR",
-            "description": "Surge price (20%)"
-          },
-          {
-            "type": "DISCOUNT",
-            "value": -15.0,
-            "currency": "INR",
-            "description": "Offer discount (15%)"
-          },
-          {
-            "type": "FEE",
-            "value": 10.0,
-            "currency": "INR",
-            "description": "Service fee"
-          },
-          {
-            "type": "FEE",
-            "value": 13.64,
-            "currency": "INR",
-            "description": "Overcharge estimation"
-          }
+          { "type": "UNIT", "value": 100.0, "currency": "INR", "description": "Base charging session cost (100 INR)" },
+          { "type": "SURCHARGE", "value": 20.0, "currency": "INR", "description": "Surge price (20%)" },
+          { "type": "DISCOUNT", "value": -15.0, "currency": "INR", "description": "Offer discount (15%)" },
+          { "type": "FEE", "value": 10.0, "currency": "INR", "description": "Service fee" },
+          { "type": "FEE", "value": 13.64, "currency": "INR", "description": "Overcharge estimation" }
         ]
       },
       "beckn:fulfillment": {
@@ -125,6 +100,15 @@
         "beckn:id": "fulfillment-001",
         "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
+        "trackingAction": {
+          "@type": "schema:TrackAction",
+          "target": {
+            "@type": "schema:EntryPoint",
+            "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
+          },
+          "deliveryMethod": "RESERVATION",
+          "reservationId": "TRACK-SESSION-9876543210"
+        },
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
@@ -141,19 +125,12 @@
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
         "beckn:status": "PAID",
-        "beckn:amount": {
-          "currency": "INR",
-          "value": 128.64
-        },
+        "beckn:amount": { "currency": "INR", "value": 128.64 },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": [
-          "BankTransfer",
-          "UPI",
-          "Wallet"
-        ]
+        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -161,11 +138,7 @@
         "sessionPreferences": {
           "preferredStartTime": "2025-01-27T10:00:00Z",
           "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
+          "notificationPreferences": { "email": true, "sms": true, "push": false }
         },
         "authorizationMode": "OTP",
         "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
@@ -173,3 +146,5 @@
     }
   }
 }
+
+

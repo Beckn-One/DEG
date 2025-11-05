@@ -26,6 +26,7 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -43,21 +44,61 @@
             {
               "eventTime": "2025-01-27T17:00:00Z",
               "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 62.5, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 18.4, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 10.2, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 392, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 47.0, "unitCode": "AMP" }
+                {
+                  "name": "STATE_OF_CHARGE",
+                  "value": 62.5,
+                  "unitCode": "PERCENTAGE"
+                },
+                {
+                  "name": "POWER",
+                  "value": 18.4,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "ENERGY",
+                  "value": 10.2,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 392,
+                  "unitCode": "VLT"
+                },
+                {
+                  "name": "CURRENT",
+                  "value": 47.0,
+                  "unitCode": "AMP"
+                }
               ]
             },
             {
               "eventTime": "2025-01-27T17:05:00Z",
               "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 65.0, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 17.1, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 11.1, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 388, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 44.2, "unitCode": "AMP" }
+                {
+                  "name": "STATE_OF_CHARGE",
+                  "value": 65.0,
+                  "unitCode": "PERCENTAGE"
+                },
+                {
+                  "name": "POWER",
+                  "value": 17.1,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "ENERGY",
+                  "value": 11.1,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 388,
+                  "unitCode": "VLT"
+                },
+                {
+                  "name": "CURRENT",
+                  "value": 44.2,
+                  "unitCode": "AMP"
+                }
               ]
             }
           ]

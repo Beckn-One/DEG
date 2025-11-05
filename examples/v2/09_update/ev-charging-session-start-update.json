@@ -123,35 +123,17 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "ACTIVE",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -167,7 +149,11 @@
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
