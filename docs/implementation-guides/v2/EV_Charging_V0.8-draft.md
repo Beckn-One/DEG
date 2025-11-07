@@ -872,7 +872,11 @@ Raghav receives estimated quotations for the selected service.
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -880,7 +884,7 @@ Raghav receives estimated quotations for the selected service.
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.5
               },
-              "idleFeePolicy": "₹2/min after 10 min post-charge"
+              "idleFeePolicy": "\u20b92/min after 10 min post-charge"
             }
           },
           "beckn:price": {
@@ -930,6 +934,24 @@ Raghav receives estimated quotations for the selected service.
           }
         ]
       },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "NOT_PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
+      },
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
@@ -965,8 +987,8 @@ CPO responds with dynamically calculated quote: [Example](https://github.com/Bec
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -1104,33 +1126,38 @@ Raghav provides his billing information.
           }
         ]
       },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "INITIATED",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
+      },
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi"
-          },
+          "sessionStatus": "PENDING",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:orderAttributes": {
@@ -1304,53 +1331,37 @@ He chooses UPI and authorizes payment (or an authorization hold, as supported)
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
-          "instructions": {
-            "short_desc": "OTP will be shared to the user's registered number to confirm order"
-          },
           "authorization": {
             "type": "OTP"
-          }
+          },
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PENDING",
+        "beckn:status": "INITIATED",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -1372,6 +1383,196 @@ He chooses UPI and authorizes payment (or an authorization hold, as supported)
 ```
 
 CPO responds with final quote with payment terms: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/06_on_init/time-based-ev-charging-slot-on-init.json)
+
+### **Async on\_status**
+
+### **Method**
+
+POST 
+
+### **Use Case**
+
+Raghav receives a notification on the status of the payment initiated for the charging session.
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T10:00:00Z",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-123456",
+      "beckn:orderStatus": "PENDING",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:name": "Ravi Kumar",
+        "beckn:organization": {
+          "descriptor": {
+            "name": "GreenCharge Pvt Ltd"
+          }
+        },
+        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
+        "beckn:email": "ravi.kumar@greencharge.com",
+        "beckn:phone": "+918765432100",
+        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
+              "@type": "ChargingOffer",
+              "offerType": "CHARGING_SESSION",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          "beckn:quantity": 5,
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 128.64,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 100.0,
+            "currency": "INR",
+            "description": "Base charging session cost (100 INR)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
+        "beckn:status": "PENDING",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
+          "@type": "ChargingSession",
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "authorization": {
+            "type": "OTP"
+          },
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "INITIATED",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
+        "@type": "ChargingSession",
+        "sessionPreferences": {
+          "preferredStartTime": "2025-01-27T10:00:00Z",
+          "preferredEndTime": "2025-01-27T11:30:00Z",
+          "notificationPreferences": {
+            "email": true,
+            "sms": true,
+            "push": false
+          }
+        }
+      }
+    }
+  }
+}
+
+```
+
+CPO responds with final quote with payment terms: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/06_on_status_1/time-based-ev-charging-slot-on-status.json)
+
 
 #### 
 
@@ -1522,39 +1723,22 @@ Raghav confirms the order.
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PENDING",
+        "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
@@ -1562,7 +1746,11 @@ Raghav confirms the order.
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -1736,32 +1924,15 @@ The app returns a booking/transaction ID along with the other charging session d
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "CONFIRMED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -1777,7 +1948,11 @@ The app returns a booking/transaction ID along with the other charging session d
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -1951,35 +2126,17 @@ Raghav plugs in and starts the session from the app.
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "ACTIVE",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -1995,7 +2152,11 @@ Raghav plugs in and starts the session from the app.
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2167,46 +2328,17 @@ Response for the charging session initiation.
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "ACTIVE",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Charging",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 45.2,
-            "energyDeliveredKWH": 0.0,
-            "estimatedTimeToComplete": "PT1H30M",
-            "chargingProgress": 0.0
-          },
-          "instructions": [
-            "Please ensure your vehicle is properly connected to the charging station",
-            "Do not disconnect the charging cable during the session",
-            "In case of emergency, press the emergency stop button on the station"
-          ]
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -2222,7 +2354,11 @@ Response for the charging session initiation.
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2393,8 +2529,8 @@ EV User receives a live charging session in real-time: [Example](https://github.
 
 ```json
 {
-    "ack_status": "ACK",
-    "timestamp": "2025-10-14T07:33:05Z"
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
 
@@ -2536,6 +2672,7 @@ Raghav receives a notification if there is any error during the charging session
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "INTERRUPTED",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -2549,42 +2686,12 @@ Raghav receives a notification if there is any error during the charging session
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "INTERRUPTED",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Connection Lost",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 0.0,
-            "energyDeliveredKWH": 4.2,
-            "estimatedTimeToComplete": "PT0M",
-            "chargingProgress": 84.0
-          },
-          "interruptionReason": "CONNECTION-INTERRUPTED",
-          "interruptionTime": "2025-01-27T13:07:02Z",
-          "interruptionMessage": "Charging connection lost. Retrying automatically. If this continues, please check your cable",
-          "retryAttempts": 2,
-          "maxRetryAttempts": 5
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -2600,7 +2707,11 @@ Raghav receives a notification if there is any error during the charging session
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2633,6 +2744,208 @@ EV user reveives a notification in case of any error occuring during charging se
   "timestamp": "2025-10-14T07:33:05Z"
 }
 ```
+
+### **Async on\_status**
+
+### **Method**
+
+POST 
+
+### **Use Case**
+
+Raghav receives a notification that the charging session automatically resumed after the interruption.
+
+#### Request
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_status",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+    "timestamp": "2025-01-27T13:15:00Z",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:name": "Ravi Kumar",
+        "beckn:organization": {
+          "descriptor": {
+            "name": "GreenCharge Pvt Ltd"
+          }
+        },
+        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
+        "beckn:email": "ravi.kumar@greencharge.com",
+        "beckn:phone": "+918765432100",
+        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
+              "@type": "ChargingOffer",
+              "offerType": "CHARGING_SESSION",
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          "beckn:quantity": 5,
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 128.64,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 100.0,
+            "currency": "INR",
+            "description": "Base charging session cost (100 INR)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
+        "beckn:status": "ACTIVE",
+        "trackingAction": {
+          "@type": "schema:TrackAction",
+          "target": {
+            "@type": "schema:EntryPoint",
+            "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
+          },
+          "deliveryMethod": "RESERVATION",
+          "reservationId": "TRACK-SESSION-9876543210"
+        },
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
+          "@type": "ChargingSession",
+          "sessionStatus": "ACTIVE",
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-01-27T10:05:00Z",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
+        "@type": "ChargingSession",
+        "sessionPreferences": {
+          "preferredStartTime": "2025-01-27T10:00:00Z",
+          "preferredEndTime": "2025-01-27T11:30:00Z",
+          "notificationPreferences": {
+            "email": true,
+            "sms": true,
+            "push": false
+          }
+        },
+        "authorizationMode": "OTP",
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+      }
+    }
+  }
+}
+
+```
+
+EV user reveives a notification in case of any error occuring during charging session: [Example](https://github.com/Beckn-One/DEG/blob/draft/examples/v2/13_on_status/time-based-ev-charging-slot-on-status-resumed.json)
 
 ### **Update(stop-charging)**
 
@@ -2773,35 +3086,17 @@ Note: In practive it is not necessary that an EV user initiates a charging sessi
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "END",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -2817,7 +3112,11 @@ Note: In practive it is not necessary that an EV user initiates a charging sessi
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -2980,6 +3279,7 @@ At \~60 minutes(or upon the EV user request), the session stops (or notifies hth
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "COMPLETED",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -2993,51 +3293,12 @@ At \~60 minutes(or upon the EV user request), the session stops (or notifies hth
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "COMPLETED",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 0.0,
-            "energyDeliveredKWH": 5.0,
-            "estimatedTimeToComplete": "PT0M",
-            "chargingProgress": 100.0
-          },
-          "finalBilling": {
-            "currency": "INR",
-            "value": 108.0,
-            "energyConsumedKWH": 5.0,
-            "sessionDuration": "PT1H30M",
-            "averagePowerKW": 3.33
-          },
-          "sessionSummary": {
-            "totalEnergyDelivered": "5.0 kWh",
-            "sessionDuration": "1 hour 30 minutes",
-            "averageChargingPower": "3.33 kW",
-            "peakChargingPower": "45.2 kW",
-            "chargingEfficiency": "95%"
-          }
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -3053,7 +3314,11 @@ At \~60 minutes(or upon the EV user request), the session stops (or notifies hth
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -4438,7 +4703,11 @@ Adam receives an estimated quotation for the selected slot.
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
+            "beckn:acceptedPaymentMethod": [
+              "UPI",
+              "Card",
+              "Wallet"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
@@ -4446,7 +4715,7 @@ Adam receives an estimated quotation for the selected slot.
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.5
               },
-              "idleFeePolicy": "₹2/min after 10 min post-charge"
+              "idleFeePolicy": "\u20b92/min after 10 min post-charge"
             }
           },
           "beckn:price": {
@@ -4494,6 +4763,24 @@ Adam receives an estimated quotation for the selected slot.
             "currency": "INR",
             "description": "Overcharge estimation"
           }
+        ]
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "NOT_PAID",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
         ]
       },
       "beckn:fulfillment": {
@@ -4551,54 +4838,58 @@ Recommendations for BPP:
 
 ### Surge Pricing
 
-A surge price is an additional fee applied on top of the base charging tariff under specific conditions-such as time of use or location.  
+Surge pricing is an uplift applied on top of the base charging tariff during peak conditions (for example, certain hours or high-demand locations).  
 User Journey:  
 Discovery  
 While searching for a charger around 6:15 PM, Srilekha sees a warning icon and note:  
-“Congestion Fee: ₹1/kWh between 6 PM – 9 PM”  
+“Peak-hour surge: +20% between 6 PM – 9 PM.”  
 The app highlights this surcharge in:
 
 * The station list view (via badge or icon)  
 * The charger details page  
 * A “Know More” section that explains:  
-  * What the surcharge is  
+  * Why the surge is applied  
   * When and where it applies  
-  * How it’s calculated
+  * How the uplift is calculated against the base fare
 
 Session preview  
-Before starting, the app shows the full estimated cost:
+Before starting, the app shows the full estimated cost with the same components used in the canonical example:
 
-* Base rate: ₹16/kWh  
-* Congestion fee: ₹1/kWh  
-* Estimated total for 5 kWh: ₹85
+* Base session cost (5 kWh bundle): ₹100.00  
+* Surge pricing uplift (20%): ₹20.00  
+* Service fee: ₹10.00  
+* Overcharge estimation buffer: ₹13.64  
+* Promotional discount (15% offer): -₹15.00  
+* Estimated total: ₹128.64
 
-Charging  
-Srilekha starts the session at 6:25 PM.  
-Mid-session:
+Mid-session  
+While charging (e.g., after 3.4 kWh delivered), the UI keeps a running tally so the user can see how surge pricing is influencing the bill:
 
-* She sees kWh delivered  
-* Total cost is incrementally calculated including the surcharge  
-  (e.g., 3.4 kWh → ₹58.00 \= ₹54.4 base \+ ₹3.4 congestion fee)
+* Base energy accrued: ~₹68.00 (3.4 kWh of the ₹100 base bundle)  
+* Surge uplift (20% of accrued base): ~₹13.60  
+* Running subtotal so far: ~₹81.60 (service fee, buffer, and discount are applied at session close)
 
 Post-charging  
-Once the session ends, Srilekha receives an itemized receipt:  
-Session Summary:
+When the session completes, Srilekha receives an itemized receipt that matches the quotation components:
 
-* Energy Delivered: 5.2 kWh  
-* Base Energy Cost: ₹83.20  
-* Congestion Fee (₹1 x 5.2): ₹5.20  
-* Total Payable: ₹88.40
+* Energy Delivered: 5.0 kWh (bundle)  
+* Base session cost: ₹100.00  
+* Surge pricing uplift (20%): ₹20.00  
+* Service fee: ₹10.00  
+* Overcharge estimation buffer: ₹13.64  
+* Offer discount (15%): -₹15.00  
+* Total Payable: ₹128.64
 
 Quote Information:
 
-* message.order.quote.price.value: Total estimated price for the service (e.g., "118" INR after applying offer discount)  
-* message.order.quote.currency: Currency of the total estimated price (e.g., "INR")  
-* message.order.quote.breakup: Itemized breakdown of the total estimated price including:  
-  * title: Description of the charge (e.g., "Charging session cost", "overcharge", "surge price(20%)", "offer discount(20%)")  
+* message.order["beckn:orderValue"].value: Total estimated price for the service (e.g., "128.64" INR after applying offer discount and fees)  
+* message.order["beckn:orderValue"].currency: Currency of the total estimated price (e.g., "INR")  
+* message.order["beckn:orderValue"].components: Itemized breakdown of the total estimated price reflecting the components below (mirrors the canonical example in section 4.6.3):  
+  * title: Description of the charge (e.g., "Base charging session cost", "Surge price (20%)", "Service fee", "Overcharge estimation", "Offer discount (15%)")  
   * item.id: Identifier of the item the charge applies to (if applicable)  
   * price.value: Value of the individual charge in the breakup (positive for charges, negative for discounts)  
   * price.currency: Currency of the individual charge in the breakup  
-  * Breakup includes base charges, additional fees, surge pricing, and promotional discounts from applied offers
+  * Breakup typically includes: base charge = 100.00 INR, surge = 20.00 INR, service fee = 10.00 INR, overcharge estimation = 13.64 INR, and offer discount = -15.00 INR
 
 ### **init**
 
@@ -4755,33 +5046,38 @@ Adam provides his billing details.
           }
         ]
       },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:status": "INITIATED",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
+      },
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi"
-          },
+          "sessionStatus": "PENDING",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:orderAttributes": {
@@ -4964,53 +5260,37 @@ Adam receives the terms of the order(payment, cancellation, overcharge etc) and 
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
-          "instructions": {
-            "short_desc": "OTP will be shared to the user's registered number to confirm order"
-          },
           "authorization": {
             "type": "OTP"
-          }
+          },
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PENDING",
+        "beckn:status": "INITIATED",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5257,39 +5537,22 @@ Adam accepts the terms of the order and confirms the order.
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PENDING",
+        "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
@@ -5297,7 +5560,11 @@ Adam accepts the terms of the order and confirms the order.
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5489,32 +5756,15 @@ Adam receives a reservation ID and QR code, plus a navigation link to the chargi
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "CONFIRMED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -5530,7 +5780,11 @@ Adam receives a reservation ID and QR code, plus a navigation link to the chargi
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5725,35 +5979,17 @@ The backend matches it to her **reservation ID**, verifies her **OTP authorizati
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "ACTIVE",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -5769,7 +6005,11 @@ The backend matches it to her **reservation ID**, verifies her **OTP authorizati
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -5954,46 +6194,17 @@ Adam receives an acknowledgement on charging initialisation.
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "ACTIVE",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Charging",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 45.2,
-            "energyDeliveredKWH": 0.0,
-            "estimatedTimeToComplete": "PT1H30M",
-            "chargingProgress": 0.0
-          },
-          "instructions": [
-            "Please ensure your vehicle is properly connected to the charging station",
-            "Do not disconnect the charging cable during the session",
-            "In case of emergency, press the emergency stop button on the station"
-          ]
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -6009,7 +6220,11 @@ Adam receives an acknowledgement on charging initialisation.
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -6401,6 +6616,7 @@ Adam receives notification when there is any error during an ongoing charging se
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "INTERRUPTED",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -6414,42 +6630,12 @@ Adam receives notification when there is any error during an ongoing charging se
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "INTERRUPTED",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Connection Lost",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 0.0,
-            "energyDeliveredKWH": 4.2,
-            "estimatedTimeToComplete": "PT0M",
-            "chargingProgress": 84.0
-          },
-          "interruptionReason": "CONNECTION-INTERRUPTED",
-          "interruptionTime": "2025-01-27T13:07:02Z",
-          "interruptionMessage": "Charging connection lost. Retrying automatically. If this continues, please check your cable",
-          "retryAttempts": 2,
-          "maxRetryAttempts": 5
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -6465,7 +6651,11 @@ Adam receives notification when there is any error during an ongoing charging se
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -6638,35 +6828,17 @@ Note: In practive it is not necessary that an EV user initiates a charging sessi
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "END",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:00:00Z",
-          "endTime": "2025-01-27T11:30:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484"
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -6682,7 +6854,11 @@ Note: In practive it is not necessary that an EV user initiates a charging sessi
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -6846,6 +7022,7 @@ Adam receives an update when the charging session ends. This might reflect payme
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "COMPLETED",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -6859,51 +7036,12 @@ Adam receives an update when the charging session ends. This might reflect payme
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionId": "session-001",
           "sessionStatus": "COMPLETED",
-          "sessionType": "CHARGING",
-          "startTime": "2025-01-27T10:15:00Z",
-          "endTime": "2025-01-27T11:45:00Z",
-          "customer": {
-            "name": "Ravi Kumar",
-            "phone": "+91-9887766554"
-          },
-          "vehicle": {
-            "make": "Tata",
-            "model": "Nexon EV"
-          },
-          "location": {
-            "gps": "28.345345,77.389754",
-            "address": "Connaught Place, New Delhi",
-            "descriptor": {
-              "name": "BlueCharge Connaught Place Station"
-            }
-          },
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "stationStatus": "Available",
           "authorizationMode": "OTP",
-          "authorizationToken": "7484",
-          "sessionDetails": {
-            "currentPowerKW": 0.0,
-            "energyDeliveredKWH": 5.0,
-            "estimatedTimeToComplete": "PT0M",
-            "chargingProgress": 100.0
-          },
-          "finalBilling": {
-            "currency": "INR",
-            "value": 108.0,
-            "energyConsumedKWH": 5.0,
-            "sessionDuration": "PT1H30M",
-            "averagePowerKW": 3.33
-          },
-          "sessionSummary": {
-            "totalEnergyDelivered": "5.0 kWh",
-            "sessionDuration": "1 hour 30 minutes",
-            "averageChargingPower": "3.33 kW",
-            "peakChargingPower": "45.2 kW",
-            "chargingEfficiency": "95%"
-          }
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV"
         }
       },
       "beckn:payment": {
@@ -6919,7 +7057,11 @@ Adam receives an update when the charging session ends. This might reflect payme
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": ["BankTransfer", "UPI", "Wallet"]
+        "beckn:acceptedPaymentMethod": [
+          "BankTransfer",
+          "UPI",
+          "Wallet"
+        ]
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
