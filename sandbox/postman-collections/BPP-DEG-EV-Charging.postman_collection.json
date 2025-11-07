@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b0ea3a4f-6b26-4c5e-a297-522ecfd81027",
-		"name": "BPP-DEG:EV-Charging-NPCI",
+		"_postman_id": "5ab68275-918f-4fb2-8940-586bc96093e3",
+		"name": "BPP-DEG:EV-Charging-Final",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "30848972"
 	},
@@ -127,7 +127,7 @@
 	"variable": [
 		{
 			"key": "domain",
-			"value": "beckn.one:deg:ev-charging:*"
+			"value": "beckn.one:deg:ev-charging:2.0.0"
 		},
 		{
 			"key": "version",
@@ -135,31 +135,31 @@
 		},
 		{
 			"key": "bap_id",
-			"value": "bap.example.com"
+			"value": "ev-charging.sandbox1.com"
 		},
 		{
 			"key": "bap_uri",
-			"value": "https://bap.example.com"
+			"value": "http://onix-bap:8081/bap/receiver"
 		},
 		{
 			"key": "bpp_id",
-			"value": "bpp.example.com"
+			"value": "ev-charging.sandbox2.com"
 		},
 		{
 			"key": "bpp_uri",
-			"value": "https://bpp.example.com"
+			"value": "http://onix-bpp:8082/bpp/receiver"
 		},
 		{
 			"key": "bap_adapter_url",
-			"value": "xyz"
+			"value": "http://localhost:8081/bap/caller"
 		},
 		{
 			"key": "transaction_id",
-			"value": "726a589c-dd79-44d6-9181-e6dfb4f74019"
+			"value": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002"
 		},
 		{
 			"key": "bpp_adapter_url",
-			"value": "zyx"
+			"value": "http://localhost:3002/api/webhook/trigger"
 		}
 	]
 }
