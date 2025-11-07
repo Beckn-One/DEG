@@ -26,6 +26,7 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "trackingAction": {
           "@type": "schema:TrackAction",

@@ -44,6 +44,7 @@
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -92,12 +93,8 @@
               "minPowerKW": 5,
               "socketCount": 2,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -146,6 +143,7 @@
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -194,13 +192,8 @@
               "minPowerKW": 10,
               "socketCount": 1,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet",
-                "BankTransfer"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -250,6 +243,7 @@
             },
             "beckn:availableAt": [
               {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -298,12 +292,8 @@
               "minPowerKW": 3,
               "socketCount": 4,
               "reservationSupported": true,
-              "acceptedPaymentMethod": [
-                "UPI",
-                "CreditCard",
-                "Wallet"
-              ],
               "serviceLocation": {
+                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -375,7 +365,8 @@
                 "feeValue": 2.5
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
-            }
+            },
+            "beckn:provider": "ecopower-charging"
           },
           {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
@@ -416,7 +407,8 @@
                 "feeValue": 2.0
               },
               "idleFeePolicy": "₹3/min after 15 min post-charge"
-            }
+            },
+            "beckn:provider": "greencharge-koramangala"
           },
           {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
@@ -456,7 +448,8 @@
                 "feeValue": 1.5
               },
               "idleFeePolicy": "₹1/min after 30 min post-charge"
-            }
+            },
+            "beckn:provider": "powergrid-indiranagar"
           }
         ]
       }

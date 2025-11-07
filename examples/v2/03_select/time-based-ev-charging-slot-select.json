@@ -52,11 +52,7 @@
               "schema:startDate": "2024-10-01T00:00:00Z",
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
-            "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
-            ],
+            "beckn:acceptedPaymentMethod": ["UPI", "Card", "Wallet"],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
