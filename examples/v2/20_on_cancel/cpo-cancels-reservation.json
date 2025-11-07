@@ -85,13 +85,19 @@
       ],
       "beckn:orderValue": {
         "currency": "INR",
-        "value": 100.0,
+        "value": 128.64,
         "components": [
           {
             "type": "UNIT",
-            "value": 72.73,
+            "value": 100.0,
             "currency": "INR",
-            "description": "Charging session cost (4.04 kWh @ ₹18.00/kWh)"
+            "description": "Base charging session cost (100 INR)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
           },
           {
             "type": "FEE",
@@ -106,16 +112,10 @@
             "description": "Overcharge estimation"
           },
           {
-            "type": "SURCHARGE",
-            "value": 14.55,
-            "currency": "INR",
-            "description": "Surge price (20%)"
-          },
-          {
             "type": "DISCOUNT",
-            "value": -10.92,
+            "value": -15.0,
             "currency": "INR",
-            "description": "Offer discount (20%)"
+            "description": "Offer discount (15%)"
           }
         ]
       },
@@ -141,7 +141,7 @@
         "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
-          "value": 100.0
+          "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
