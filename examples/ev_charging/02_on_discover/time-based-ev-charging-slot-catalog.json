@@ -88,7 +88,9 @@
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
-              "connectorType": "CCS2",
+              "connectorType": {
+                "@id": "beckn:ConnectorTypeCCS2"
+              },
               "maxPowerKW": 60,
               "minPowerKW": 5,
               "socketCount": 2,
@@ -111,19 +113,29 @@
                 }
               },
               "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi"
+                { "@id": "beckn:AmenityRestaurant" },
+                { "@id": "beckn:AmenityRestroom" },
+                { "@id": "beckn:AmenityWiFi" }
               ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
-              "parkingType": "Mall",
+              "parkingType": {
+                "@id": "beckn:ParkingTypeMall"
+              },
               "connectorId": "CCS2-A",
-              "powerType": "DC",
-              "connectorFormat": "CABLE",
-              "chargingSpeed": "FAST",
-              "stationStatus": "Available"
+              "powerType": {
+                "@id": "beckn:PowerTypeDC"
+              },
+              "connectorFormat": {
+                "@id": "beckn:ConnectorFormatCable"
+              },
+              "chargingSpeed": {
+                "@id": "beckn:ChargingSpeedFast"
+              },
+              "stationStatus": {
+                "@id": "beckn:StationStatusAvailable"
+              }
             }
           },
           {
@@ -187,7 +199,9 @@
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
-              "connectorType": "CCS2",
+              "connectorType": {
+                "@id": "beckn:ConnectorTypeCCS2"
+              },
               "maxPowerKW": 120,
               "minPowerKW": 10,
               "socketCount": 1,
@@ -210,20 +224,30 @@
                 }
               },
               "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "Wi-Fi",
-                "Parking"
+                { "@id": "beckn:AmenityRestaurant" },
+                { "@id": "beckn:AmenityRestroom" },
+                { "@id": "beckn:AmenityWiFi" },
+                { "@id": "beckn:AmenityParking" }
               ],
               "ocppId": "IN-GC-KOR-01",
               "evseId": "IN*GC*KOR*01*CCS2*A",
               "roamingNetwork": "GreenRoam",
-              "parkingType": "OffStreet",
+              "parkingType": {
+                "@id": "beckn:ParkingTypeOffStreet"
+              },
               "connectorId": "CCS2-B",
-              "powerType": "DC",
-              "connectorFormat": "CABLE",
-              "chargingSpeed": "ULTRAFAST",
-              "stationStatus": "Available"
+              "powerType": {
+                "@id": "beckn:PowerTypeDC"
+              },
+              "connectorFormat": {
+                "@id": "beckn:ConnectorFormatCable"
+              },
+              "chargingSpeed": {
+                "@id": "beckn:ChargingSpeedUltraFast"
+              },
+              "stationStatus": {
+                "@id": "beckn:StationStatusAvailable"
+              }
             }
           },
           {
@@ -287,7 +311,9 @@
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
               "@type": "ChargingService",
-              "connectorType": "Type2",
+              "connectorType": {
+                "@id": "beckn:ConnectorTypeType2"
+              },
               "maxPowerKW": 22,
               "minPowerKW": 3,
               "socketCount": 4,
@@ -310,19 +336,29 @@
                 }
               },
               "amenityFeature": [
-                "Restroom",
-                "Wi-Fi",
-                "Parking"
+                { "@id": "beckn:AmenityRestroom" },
+                { "@id": "beckn:AmenityWiFi" },
+                { "@id": "beckn:AmenityParking" }
               ],
               "ocppId": "IN-PG-IND-01",
               "evseId": "IN*PG*IND*01*TYPE2*A",
               "roamingNetwork": "GreenRoam",
-              "parkingType": "Office",
+              "parkingType": {
+                "@id": "beckn:ParkingTypeOffice"
+              },
               "connectorId": "TYPE2-A",
-              "powerType": "AC_3_PHASE",
-              "connectorFormat": "SOCKET",
-              "chargingSpeed": "NORMAL",
-              "stationStatus": "Available"
+              "powerType": {
+                "@id": "beckn:PowerTypeAC3Phase"
+              },
+              "connectorFormat": {
+                "@id": "beckn:ConnectorFormatSocket"
+              },
+              "chargingSpeed": {
+                "@id": "beckn:ChargingSpeedNormal"
+              },
+              "stationStatus": {
+                "@id": "beckn:StationStatusAvailable"
+              }
             }
           }
         ],
@@ -353,15 +389,17 @@
               "schema:endDate": "2026-03-31T23:59:59Z"
             },
             "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
+              { "@id": "beckn:UPI" },
+              { "@id": "beckn:CREDIT_CARD" },
+              { "@id": "beckn:WALLET" }
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
-                "feeType": "PERCENTAGE",
+                "feeType": {
+                  "@id": "beckn:FeeTypePercentage"
+                },
                 "feeValue": 2.5
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
@@ -394,16 +432,18 @@
               "schema:endDate": "2026-04-15T23:59:59Z"
             },
             "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet",
-              "NetBanking"
+              { "@id": "beckn:UPI" },
+              { "@id": "beckn:CREDIT_CARD" },
+              { "@id": "beckn:WALLET" },
+              { "@id": "beckn:BANK_TRANSFER" }
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
-                "feeType": "PERCENTAGE",
+                "feeType": {
+                  "@id": "beckn:FeeTypePercentage"
+                },
                 "feeValue": 2.0
               },
               "idleFeePolicy": "₹3/min after 15 min post-charge"
@@ -436,15 +476,18 @@
               "schema:endDate": "2026-04-20T23:59:59Z"
             },
             "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
+              { "@id": "beckn:UPI" },
+              { "@id": "beckn:CREDIT_CARD" },
+              { "@id": "beckn:WALLET" },
+              { "@id": "beckn:BANK_TRANSFER" }
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
-                "feeType": "PERCENTAGE",
+                "feeType": {
+                  "@id": "beckn:FeeTypePercentage"
+                },
                 "feeValue": 1.5
               },
               "idleFeePolicy": "₹1/min after 30 min post-charge"

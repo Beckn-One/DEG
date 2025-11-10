@@ -15,7 +15,9 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
-      "beckn:orderStatus": "QUOTE_RECEIVED",
+      "beckn:orderStatus": {
+        "@id": "beckn:OrderPending"
+      },
       "beckn:orderNumber": "ORD-2024-001",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": "user-12345",
@@ -50,18 +52,20 @@
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
             "beckn:acceptedPaymentMethod": [
-              "UPI",
-              "Card",
-              "Wallet"
+              { "@id": "beckn:UPI" },
+              { "@id": "beckn:CREDIT_CARD" },
+              { "@id": "beckn:WALLET" }
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
-                "feeType": "PERCENTAGE",
+                "feeType": {
+                  "@id": "beckn:FeeTypePercentage"
+                },
                 "feeValue": 2.5
               },
-              "idleFeePolicy": "\u20b92/min after 10 min post-charge"
+              "idleFeePolicy": "₹2/min after 10 min post-charge"
             }
           },
           "beckn:price": {
@@ -115,33 +119,42 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "NOT_PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
         },
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
-        "beckn:beneficiary": "BPP",
+        "beckn:beneficiary": {
+          "@id": "beckn:BPP"
+        },
         "beckn:acceptedPaymentMethod": [
-          "BankTransfer",
-          "UPI",
-          "Wallet"
-        ]
+          { "@id": "beckn:BANK_TRANSFER" },
+          { "@id": "beckn:UPI" },
+          { "@id": "beckn:WALLET" }
+        ],
+        "beckn:paymentStatus": {
+          "@id": "beckn:PaymentPending"
+        }
       },
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-charging-001",
         "beckn:mode": "RESERVATION",
-        "beckn:status": "QUOTED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionStatus": "PENDING",
-          "authorizationMode": "APP_QR",
+          "sessionStatus": {
+            "@id": "beckn:SessionStatusPending"
+          },
+          "authorizationMode": {
+            "@id": "beckn:AuthorizationModeAppQr"
+          },
           "authorizationOtpHint": "Scan QR code at charging station",
-          "connectorType": "CCS2",
+          "connectorType": {
+            "@id": "beckn:ConnectorTypeCCS2"
+          },
           "maxPowerKW": 60,
           "reservationId": "RESV-984532",
           "gracePeriodMinutes": 10,
