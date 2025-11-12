@@ -3,8 +3,9 @@ An energy contract defines the boundaries of interactions between two or more sy
 Interactions can range from simple acknowledgments - like a handshake signaling readiness to engage - to more complex activities, such as subscribing to demand-response programs, participating in energy trading, or applying for financing
 
 Examples of Energy Contracts:
-A home automation system interacting with devices like smart bulbs, air conditioners, and thermostats.
-A utility monitoring energy generation and consumption data from connected households.
+- A home automation system interacting with devices like smart bulbs, air conditioners, and thermostats.
+- A utility monitoring energy generation and consumption data from connected households.
+  
 Contracts can be thought of as layered frameworks, where the basic requirement is simply mutual acknowledgment by all involved parties that they are entering into an agreement. Energy contracts specify the parties involved, while other conditions - such as the purpose of the interaction, terms and conditions for fulfillment, payment terms, mode of energy delivery, and contract duration - are optional and can be included as needed.
 The legal enforceability of energy contracts can vary widely. Some contracts may not require legal enforceability or specific business requirements, such as Service Level Agreements (SLAs).
 
