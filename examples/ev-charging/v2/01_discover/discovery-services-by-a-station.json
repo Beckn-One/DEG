@@ -1,6 +1,8 @@
 {
- "context": {
+  "context": {
+    "version": "2.0.0",
     "action": "discover",
+    "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
@@ -8,10 +10,13 @@
     "timestamp": "2025-10-14T07:31:00Z",
     "ttl": "PT30S",
     "schema_context": [
-     "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schemas/charging_service/v1/context.jsonld"
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
     ]
- },
-"message": {
-    "filters": "$[?(@['beckn:id']=='ITEM-BTM-DC60')]"
+  },
+  "message": {
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:id=='ITEM-BTM-DC60')]"
+    }
   }
 }
