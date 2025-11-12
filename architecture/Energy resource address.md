@@ -1,0 +1,4 @@
+All nodes need a mechanism to be addressed for any interactions to happen seamlessly. The ERA is a unique digital ID assigned to any energy resource. 
+Any type of resource or actor in the energy ecosystem can have an ERA.  
+ERAs can be assigned globally, making them universally recognizable, or locally, within a specific context or environment. For example, individual consumers might have a global ERA, while their appliances, such as thermostats or smart bulbs, could have ERAs relevant only within the local context of the consumer’s home. Similarly, distributed energy resources (DERs), electric vehicles (EVs), utilities, energy producers, transformers, service providers, and financial institutions may have either local or global ERAs depending on their operational scope.
+The ERA functions similarly to an internet domain name, allowing any system or platform to easily recognize, reference, and interact with energy resources in a uniform and standardized manner.
