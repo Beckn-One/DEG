@@ -1,3 +1,5 @@
-An energy intent is a digital representation of energy demand, detailing what is required, preferred conditions, and any specific constraints. Examples include:
+An energy intent is a digital representation of energy demand, detailing what is required, preferred conditions, and any specific constraints. 
+
+Examples include:
 Simple intents: "As a consumer, I want to charge my electric scooter," or "As a utility, I need energy consumption data from households in sector XYZ," or "I require solar rooftop installation and financing."
 Detailed intents: "I need 20 kWh between 6 PM and 9 PM, preferably sourced from solar power, and will pay no more than ₹7 per kWh."
