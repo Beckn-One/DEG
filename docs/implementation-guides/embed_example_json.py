@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from bisect import bisect_right
 from pathlib import Path
+from typing import Callable
 
 
 # Regex pattern to match <details> blocks whose summary anchor text contains "json".
@@ -18,6 +20,27 @@ DETAILS_PATTERN = re.compile(
     re.DOTALL | re.IGNORECASE,
 )
 
+CODE_FENCE_PATTERN = re.compile(r"```.*?```", re.DOTALL)
+
+
+def build_code_fence_lookup(markdown_text: str) -> Callable[[int], bool]:
+    """Return a callable that reports whether a position is inside a ``` code fence."""
+
+    ranges = [match.span() for match in CODE_FENCE_PATTERN.finditer(markdown_text)]
+    if not ranges:
+        return lambda _: False
+
+    starts = [start for start, _ in ranges]
+
+    def _inside(position: int) -> bool:
+        fence_index = bisect_right(starts, position) - 1
+        if fence_index < 0:
+            return False
+        start, end = ranges[fence_index]
+        return position < end
+
+    return _inside
+
 
 def replace_blocks(
     markdown_text: str,
@@ -28,8 +51,12 @@ def replace_blocks(
     """Replace matching details blocks and return updated text with touched links."""
 
     touched_links: list[str] = []
+    inside_code_fence = build_code_fence_lookup(markdown_text)
 
     def _replacement(match: re.Match[str]) -> str:
+        if inside_code_fence(match.start()):
+            return match.group(0)
+
         link = match.group("link").strip()
         if not link:
             raise SystemExit("Encountered details block with an empty link.")
