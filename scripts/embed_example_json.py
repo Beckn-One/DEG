@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
-"""Populate example JSON <details> blocks with referenced file contents."""
+"""Populate example JSON <details> blocks with referenced file contents. Avoid manual copy/pasting and potential errors.
+
+To use this, embed following structure in your markdown file. 
+You can use either absolute paths (from the repository root) or paths relative to the markdown file:
+
+<details>
+  <summary><a href="path/to/example.json">Example JSON</a></summary>
+
+  <!-- Existing content will be replaced -->
+</details>
+
+and run this script to replace the content with the contents of the referenced JSON files.
+
+from the repository root, run:
+  python3 scripts/embed_example_json.py path/to/markdown_file.md
+"""
 
 from __future__ import annotations
 
