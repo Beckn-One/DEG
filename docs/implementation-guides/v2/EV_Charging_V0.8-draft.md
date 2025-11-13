@@ -109,7 +109,7 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
-Example jsons were imported directly from source of truth elsewhere in this repo inline by inserting the pattern below within all json expand blocks, and running this [script](/docs/implementation-guides/embed_example_json.py), e.g. `python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md`.
+Example jsons were imported directly from source of truth elsewhere in this repo inline by inserting the pattern below within all json expand blocks, and running this [script](/scripts/embed_example_json.py), e.g. `python3 scripts/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md`.
 
 ```
 <details><summary><a href="/path_to_file_from_root">txt_with_json_keyword</a></summary>
