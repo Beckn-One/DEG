@@ -109,7 +109,12 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
-Example jsons were imported directly from source of truth elsewhere in this repo inline by inserting pattern `<details><summary><a href="/path_to_json_file_from_repo_root">link_txt_that_includes_json_keyword</a></summary></details>` in all expand blocks, and running thi [script](/docs/implementation-guides/embed_example_json.py), e.g. `python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md`.
+Example jsons were imported directly from source of truth elsewhere in this repo inline by inserting pattern in all expand blocks, and running this [script](/docs/implementation-guides/embed_example_json.py), e.g. `python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md`.
+
+```
+<details><summary><a href="/path_to_file_from_root">txt_with_json_keyword</a></summary>
+</details>
+``` 
 
 
 # 1. Request for Comments
@@ -404,7 +409,7 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 - Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](/examples/ev_charging/01_discover/discovery-by-EVSE.json)
 
 <details>
-<summary><a href="/examples/ev_charging/01_discover/discovery-by-EVSE.json">Example json</a></summary>
+<summary><a href="/examples/ev_charging/01_discover/discovery-by-EVSE.json">Example json :rocket:</a></summary>
 
 ```json
 {
