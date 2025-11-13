@@ -109,6 +109,9 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
+Example jsons were imported directly from source of truth elsewhere in this repo inline by inserting pattern `<details><summary><a href="/path_to_json_file_from_repo_root">link_txt_that_includes_json_keyword</a></summary></details>` in all expand blocks, and running thi [script](/docs/implementation-guides/embed_example_json.py), e.g. `python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md`.
+
+
 # 1. Request for Comments
 
 # 2. Copyright Notice
@@ -403,7 +406,6 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 <details>
 <summary><a href="/examples/ev_charging/01_discover/discovery-by-EVSE.json">Example json</a></summary>
 
-
 ```json
 {
   "context": {
@@ -427,6 +429,7 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
     }
   }
 }
+
 ```
 </details>
 
@@ -761,28 +764,6 @@ Note: Users can discover the charging station through off-network channels (such
               "idleFeePolicy": "₹2/min after 10 min post-charge"
             },
             "beckn:provider": "GoGreen-charging"
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "ev-charger-ccs2-001-basic-offer",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Basic Price"
-            },
-            "beckn:provider": "GoGreen-charging",
-            "beckn:items": [
-              "ev-charger-ccs2-001"
-            ],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 18.0,
-              "applicableQuantity": {
-                "unitText": "Kilowatt Hour",
-                "unitCode": "KWH",
-                "unitQuantity": 1
-              }
-            }
           }
         ]
       }
@@ -2595,6 +2576,7 @@ EV User tracks a live charging session in real-time: [Example](/examples/ev_char
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -3052,6 +3034,7 @@ EV user reveives a notification in case of any error occuring during charging se
 }
 
 ```
+</details>
 
 EV user stops the charging session: [Example](/examples/ev_charging/09_update/ev-charging-session-end-update.json)
 
@@ -3565,16 +3548,16 @@ Consumers can search for EV charging stations with specific criteria including l
 <summary><a href="/examples/ev_charging/01_discover/discovery-within-a-circular-boundary.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
     "action": "discover",
-    "bap_id": "bap.example.com",
-    "bap_uri": "https://bap.example.com",
-    "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
-    "transaction_id": "f9d1e7f3-5f1a-4d23-9f10-31b72c0b0c01",
-    "timestamp": "2024-01-15T10:30:00Z",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "app.example.com",
+    "bap_uri": "https://app.example.com/bap",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
+    "timestamp": "2025-10-14T07:31:00Z",
     "ttl": "PT30S",
     "schema_context": [
       "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld"
@@ -3585,7 +3568,13 @@ Consumers can search for EV charging stations with specific criteria including l
       {
         "op": "s_dwithin",
         "targets": "$['beckn:availableAt'][*]['geo']",
-        "geometry": { "type": "Point", "coordinates": [77.5900, 12.9400] },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            77.59,
+            12.94
+          ]
+        },
         "distanceMeters": 10000
       }
     ]
@@ -3607,6 +3596,7 @@ Discovery of EV charging services within a circular boundary: [Example](/example
   "context": {
     "version": "2.0.0",
     "action": "discover",
+    "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
@@ -3625,8 +3615,14 @@ Discovery of EV charging services within a circular boundary: [Example](/example
         "geometry": {
           "type": "LineString",
           "coordinates": [
-            [77.5946, 12.9716],  // Bengaluru (start)
-            [76.6394, 12.2958]   // Mysuru (end)
+            [
+              77.5946,
+              12.9716
+            ],
+            [
+              76.6394,
+              12.2958
+            ]
           ]
         },
         "distanceMeters": 5000
@@ -4281,72 +4277,6 @@ Discovering chargers in a specific circular area, a specific connector type and 
               "idleFeePolicy": "₹1/min after 30 min post-charge"
             },
             "beckn:provider": "powergrid-indiranagar"
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "ev-charger-ccs2-001-basic-offer",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Basic Price"
-            },
-            "beckn:provider": "ecopower-charging",
-            "beckn:items": [
-              "ev-charger-ccs2-001"
-            ],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 18.0,
-              "applicableQuantity": {
-                "unitText": "Kilowatt Hour",
-                "unitCode": "KWH",
-                "unitQuantity": 1
-              }
-            }
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "ev-charger-ccs2-002-basic-offer",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Basic Price"
-            },
-            "beckn:provider": "greencharge-koramangala",
-            "beckn:items": [
-              "ev-charger-ccs2-002"
-            ],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 22.0,
-              "applicableQuantity": {
-                "unitText": "Kilowatt Hour",
-                "unitCode": "KWH",
-                "unitQuantity": 1
-              }
-            }
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "ev-charger-type2-001-basic-offer",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Basic Price"
-            },
-            "beckn:provider": "powergrid-indiranagar",
-            "beckn:items": [
-              "ev-charger-type2-001"
-            ],
-            "beckn:price": {
-              "currency": "INR",
-              "value": 15.0,
-              "applicableQuantity": {
-                "unitText": "Kilowatt Hour",
-                "unitCode": "KWH",
-                "unitQuantity": 1
-              }
-            }
           }
         ]
       }
@@ -4614,7 +4544,6 @@ Recommendations for BPP:
 <summary><a href="/examples/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -4885,7 +4814,6 @@ Recommendations for BAP:
 <summary><a href="/examples/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -5103,7 +5031,6 @@ Recommendations for BAP:
 <summary><a href="/examples/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -5592,7 +5519,6 @@ Recommendations for BAP:
 <summary><a href="/examples/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -5766,6 +5692,7 @@ Recommendations for BAP:
     }
   }
 }
+
 ```
 </details>
 
@@ -6322,6 +6249,7 @@ Once these physical steps are completed, the charging session can be initiated t
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
         "beckn:status": "ACTIVE",
         "trackingAction": {
           "@type": "schema:TrackAction",
@@ -6364,6 +6292,7 @@ Once these physical steps are completed, the charging session can be initiated t
 }
 
 ```
+</details>
 
 EV User receives live charging session details in real-time: [Example](/examples/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json)
 
@@ -6388,6 +6317,8 @@ Timestamp showing when these readings were last recorded or pushed — helps syn
 
 - Successful Response:
 
+<details>
+<summary>Example json :rocket:</summary>
 ```json
 {
   "ack_status": "ACK",
@@ -6670,7 +6601,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
 <summary><a href="/examples/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",
@@ -6856,13 +6786,13 @@ API Implementation: The above under and overcharge scenarios are supported throu
 - Method: POST 
 - Use Case: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
 - EV user ends the charging session: [Example](/examples/ev_charging/09_update/ev-charging-session-end-update.json)
+- Receives on_update response with completed status. [Example](/examples/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json)
 - Request:
 
 <details>
-<summary><a href="/examples/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
+<summary><a href="/examples/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
-
 {
   "context": {
     "version": "2.0.0",

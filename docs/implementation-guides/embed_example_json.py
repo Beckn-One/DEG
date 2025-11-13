@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Populate example JSON <details> blocks with referenced file contents."""
+
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+
+# Regex pattern to match <details> blocks whose summary anchor text contains "json".
+DETAILS_PATTERN = re.compile(
+    r"(?P<header><details>\s*<summary>\s*<a\s+href=(?P<quote>[\"'])(?P<link>[^\"']+)(?P=quote)[^>]*>"
+    r"(?P<label>[^<]*json[^<]*)</a>\s*</summary>)"
+    r"(?P<gap>\s*)"
+    r"(?P<body>.*?)(?P<suffix></details>)",
+    re.DOTALL | re.IGNORECASE,
+)
+
+
+def replace_blocks(
+    markdown_text: str,
+    repo_root: Path,
+    source_dir: Path,
+    encoding: str,
+) -> tuple[str, list[str]]:
+    """Replace matching details blocks and return updated text with touched links."""
+
+    touched_links: list[str] = []
+
+    def _replacement(match: re.Match[str]) -> str:
+        link = match.group("link").strip()
+        if not link:
+            raise SystemExit("Encountered details block with an empty link.")
+
+        if link.startswith("/"):
+            json_path = (repo_root / link.lstrip("/")).resolve()
+        else:
+            json_path = (source_dir / link).resolve()
+
+        try:
+            json_path.relative_to(repo_root)
+        except ValueError as exc:
+            raise SystemExit(f"Refusing to read outside repository: {json_path}") from exc
+
+        try:
+            json_text = json_path.read_text(encoding=encoding)
+        except FileNotFoundError as exc:
+            raise SystemExit(f"Referenced JSON file not found: {json_path}") from exc
+
+        # if json_text.endswith("\n"):
+        #     json_text = json_text.rstrip("\n")
+
+        touched_links.append(link)
+        replacement_body = f"\n```json\n{json_text}\n```\n"
+        return f"{match.group('header')}\n{replacement_body}{match.group('suffix')}"
+
+    updated_text, _ = DETAILS_PATTERN.subn(_replacement, markdown_text)
+    return updated_text, touched_links
+
+
+def main() -> None:
+    """
+    Command-line interface for embedding example JSON into markdown files.
+    - Looks for <details> blocks whose summary is an anchor (<summary><a ...>...</a></summary>)
+      where the anchor text contains the word "json" (case-insensitive).
+      Replaces block content with JSON file contents.
+    - json_file_link can be an absolute path (from repo root) or relative to the markdown file.
+    - Supports dry-run mode to preview changes.
+
+    Usage:
+    python3 docs/implementation-guides/embed_example_json.py <markdown-file> [--dry-run] [--encoding <encoding>]
+
+    e.g. 
+    to preview changes without modifying the file:
+    python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md --dry-run
+
+    to update the file with embedded JSON:
+    python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md 
+    """
+
+    parser = argparse.ArgumentParser(
+        description="Inject referenced JSON into <details> blocks in a markdown file.",
+        epilog=(
+            "Example:\n"
+            "  python3 docs/implementation-guides/embed_example_json.py "
+            "docs/implementation-guides/v2/EV_Charging_V0.8-draft.md"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("markdown", type=Path, help="Path to the markdown file to transform.")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show which blocks would change without modifying the file.",
+    )
+    parser.add_argument(
+        "--encoding",
+        default="utf-8",
+        help="File encoding for markdown and JSON files (default: %(default)s).",
+    )
+
+    args = parser.parse_args()
+
+    markdown_path: Path = args.markdown
+    if not markdown_path.is_file():
+        raise SystemExit(f"Markdown file not found: {markdown_path}")
+
+    repo_root = Path(__file__).resolve().parents[2]
+
+    markdown_text = markdown_path.read_text(encoding=args.encoding)
+    updated_text, touched_links = replace_blocks(
+        markdown_text=markdown_text,
+        repo_root=repo_root,
+        source_dir=markdown_path.parent,
+        encoding=args.encoding,
+    )
+
+    if not touched_links:
+        print("No matching <details> blocks found.", file=sys.stderr)
+        return
+
+    if args.dry_run:
+        print("Blocks to update:")
+        for link in touched_links:
+            print(f" - {link}")
+        return
+
+    markdown_path.write_text(updated_text, encoding=args.encoding)
+    print(f"Updated {len(touched_links)} block(s).")
+
+
+if __name__ == "__main__":
+    main()
