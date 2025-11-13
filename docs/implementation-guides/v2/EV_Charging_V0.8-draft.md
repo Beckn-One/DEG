@@ -5796,7 +5796,7 @@ Once these physical steps are completed, the charging session can be initiated t
 
 - Method: POST
 - Use Cases: On arrival, Adam scans the charger’s **QR code**. The backend matches it to her **reservation ID**, verifies her **OTP authorization**, and starts charging.
-- Request: EV user starts a charging session: [Example](/examples/ev_charging/09_update/time-based-ev-charging-slot-update.json)
+- Request: EV user starts a charging session: [Example](/examples/ev_charging/09_update/ev-charging-session-start-update.json)
   **beckn:[fulfillment.ev](http://fulfillment.ev):fulfillmentstate:** Communicates the *real-time operational status* of the charging session.
 
   * "Charging Active" / code "CHARGING-ACTIVE" indicates that the EV charging session has started and energy delivery is in progress.  
@@ -5811,7 +5811,7 @@ Once these physical steps are completed, the charging session can be initiated t
   * **beckn:purpose:** Human-readable explanation of why this authorization is needed — in this case, to verify the user at the EV station before starting the session.
 
 <details>
-<summary><a href="/examples/ev_charging/09_update/time-based-ev-charging-slot-update.json">Example json :rocket:</a></summary>
+<summary><a href="/examples/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
