@@ -99,4 +99,4 @@ Explore each primitive in detail:
 
 For implementation examples, see:
 - [EV Charging Implementation Guide](../docs/implementation-guides/v2/EV_Charging_V0.8-draft.md)
-- [P2P Energy Trading Implementation Guide](../docs/implementation-guides/v2/P2P_Energy_Trading.md) (coming soon)
+- [P2P Energy Trading Implementation Guide](../docs/implementation-guides/v2/P2P_Trading) (coming soon)
