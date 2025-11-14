@@ -18,10 +18,10 @@
       "url": "https://support.bluechargenet-aggregator.io/ticket/SUP-20250730-001",
       "hours": "Mon–Sun 24/7 IST",
       "channels": [
-        { "@id": "beckn:SupportChannelPhone" },
-        { "@id": "beckn:SupportChannelEmail" },
-        { "@id": "beckn:SupportChannelWeb" },
-        { "@id": "beckn:SupportChannelChat" }
+        "PHONE",
+        "EMAIL",
+        "WEB",
+        "CHAT"
       ]
     }
   }

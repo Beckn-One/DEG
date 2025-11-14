@@ -15,11 +15,8 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
-      "beckn:orderStatus": {
-        "@id": "beckn:OrderCreated"
-      },
+      "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
-      "beckn:buyer": "user-12345",
       "beckn:orderValue": {
         "currency": "INR",
         "value": 100.0
@@ -28,7 +25,11 @@
         {
           "beckn:lineId": "line-001",
           "beckn:orderedItem": "ev-charger-ccs2-001",
-          "beckn:quantity": 2.5,
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 2.5
+          },
           "beckn:acceptedOffer": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
@@ -55,17 +56,15 @@
               "schema:endDate": "2025-01-15T23:59:59Z"
             },
             "beckn:acceptedPaymentMethod": [
-              { "@id": "beckn:UPI" },
-              { "@id": "beckn:CREDIT_CARD" },
-              { "@id": "beckn:WALLET" }
+              "UPI",
+              "CREDIT_CARD",
+              "WALLET"
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
               "buyerFinderFee": {
-                "feeType": {
-                  "@id": "beckn:FeeTypePercentage"
-                },
+                "feeType": "PERCENTAGE",
                 "feeValue": 2.5
               },
               "idleFeePolicy": "₹2/min after 10 min post-charge"
@@ -81,15 +80,9 @@
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionStatus": {
-            "@id": "beckn:SessionStatusPending"
-          },
-          "authorizationMode": {
-            "@id": "beckn:AuthorizationModeAppQr"
-          },
-          "connectorType": {
-            "@id": "beckn:ConnectorTypeCCS2"
-          },
+          "sessionStatus": "PENDING",
+          "authorizationMode": "APP_QR",
+          "connectorType": "CCS2",
           "maxPowerKW": 60,
           "reservationId": "RESV-984532",
           "gracePeriodMinutes": 10
@@ -99,9 +92,7 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
         "@type": "ChargingSession",
         "buyerFinderFee": {
-          "feeType": {
-            "@id": "beckn:FeeTypePercentage"
-          },
+          "feeType": "PERCENTAGE",
           "feeValue": 2.5
         }
       }

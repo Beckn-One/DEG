@@ -15,9 +15,7 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": {
-        "@id": "beckn:OrderInProgress"
-      },
+      "beckn:orderStatus": "INPROGRESS",
       "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
@@ -67,15 +65,17 @@
               "@type": "ChargingOffer",
               "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
-                "feeType": {
-                  "@id": "beckn:FeeTypePercentage"
-                },
+                "feeType": "PERCENTAGE",
                 "feeValue": 2.0
               },
               "discountPercentage": 20.0
             }
           },
-          "beckn:quantity": 5,
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 5
+          },
           "beckn:price": {
             "currency": "INR",
             "value": 90.0,
@@ -131,16 +131,10 @@
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionStatus": {
-            "@id": "beckn:SessionStatusActive"
-          },
-          "connectorType": {
-            "@id": "beckn:ConnectorTypeCCS2"
-          },
+          "sessionStatus": "ACTIVE",
+          "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorizationMode": {
-            "@id": "beckn:AuthorizationModeOtp"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -156,17 +150,13 @@
         "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
         "beckn:txnRef": "TXN-123456789",
         "beckn:paidAt": "2025-01-27T10:05:00Z",
-        "beckn:beneficiary": {
-          "@id": "beckn:BPP"
-        },
+        "beckn:beneficiary": "BPP",
         "beckn:acceptedPaymentMethod": [
-          { "@id": "beckn:BANK_TRANSFER" },
-          { "@id": "beckn:UPI" },
-          { "@id": "beckn:WALLET" }
+          "BANK_TRANSFER",
+          "UPI",
+          "WALLET"
         ],
-        "beckn:paymentStatus": {
-          "@id": "beckn:PaymentCompleted"
-        }
+        "beckn:paymentStatus": "COMPLETED"
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -180,9 +170,7 @@
             "push": false
           }
         },
-        "authorizationMode": {
-          "@id": "beckn:AuthorizationModeOtp"
-        },
+        "authorizationMode": "OTP",
         "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }

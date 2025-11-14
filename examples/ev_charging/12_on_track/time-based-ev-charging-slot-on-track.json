@@ -15,9 +15,7 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": {
-        "@id": "beckn:OrderInProgress"
-      },
+      "beckn:orderStatus": "INPROGRESS",
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-001",
