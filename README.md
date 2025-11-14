@@ -14,7 +14,7 @@ Version 0.4.0
 | Pramod Varma            | Maintainer, Reviewer           | @pramodkvarma    |
 | Sujith Nair             | Reviewer                       | @sjthnrk         |
 | Ameet Deshpande         | Subject Matter Expert          | @ameetdesh       |
-| Vish Ganti              | Subject Matter Expert          | ---              |
+| Vish Ganti              | Subject Matter Expert          | @vganti1         |
 | Anusree Jayakrishnan    | Reviewer                       | @Anusree-J       |
 | Anirban Sinha           | Implementation Specialist      | @i-am-anirban-95 |
 | Tanmoy Adhikary         | Implementation Specialist      | @TANMOYDADA      |
