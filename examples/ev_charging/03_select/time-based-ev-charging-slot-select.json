@@ -72,22 +72,6 @@
           }
         }
       ],
-      "beckn:fulfillment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-charging-001",
-        "beckn:mode": "RESERVATION",
-        "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-          "@type": "ChargingSession",
-          "sessionStatus": "PENDING",
-          "authorizationMode": "APP_QR",
-          "connectorType": "CCS2",
-          "maxPowerKW": 60,
-          "reservationId": "RESV-984532",
-          "gracePeriodMinutes": 10
-        }
-      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
         "@type": "ChargingSession",

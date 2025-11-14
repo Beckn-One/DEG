@@ -16,7 +16,6 @@
       "@type": "beckn:Order",
       "beckn:id": "order-123456",
       "beckn:orderStatus": "PENDING",
-      "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",

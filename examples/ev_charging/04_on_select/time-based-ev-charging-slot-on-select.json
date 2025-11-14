@@ -16,7 +16,6 @@
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "PENDING",
-      "beckn:orderNumber": "ORD-2024-001",
       "beckn:seller": "ecopower-charging",
       "beckn:orderItems": [
         {
