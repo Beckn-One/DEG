@@ -12,9 +12,9 @@
   },
   "message": {
     "id": "fulfillment-001",
-    "value": 5,
-    "best": 5,
-    "worst": 1,
+    "ratingValue": 5,
+    "bestRating": 5,
+    "worstRating": 1,
     "category": "fulfillment",
     "feedback": {
       "comments": "Excellent charging experience! The station was clean, easy to find, and the charging was fast and reliable. The staff was helpful and the payment process was smooth.",

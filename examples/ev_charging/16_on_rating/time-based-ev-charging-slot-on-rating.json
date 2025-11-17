@@ -12,12 +12,6 @@
   },
   "message": {
     "received": true,
-    "aggregate": {
-      "count": 127,
-      "value": 4.6,
-      "best": 5,
-      "worst": 1
-    },
     "feedbackForm": {
       "url": "https://example-bpp.com/feedback/portal",
       "mime_type": "application/xml",

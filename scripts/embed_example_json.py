@@ -112,21 +112,21 @@ def main() -> None:
     - Supports dry-run mode to preview changes.
 
     Usage:
-    python3 docs/implementation-guides/embed_example_json.py <markdown-file> [--dry-run] [--encoding <encoding>]
+    python3 scripts/embed_example_json.py <markdown-file> [--dry-run] [--encoding <encoding>]
 
     e.g. 
     to preview changes without modifying the file:
-    python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md --dry-run
+    python3 scripts/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md --dry-run
 
     to update the file with embedded JSON:
-    python3 docs/implementation-guides/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md 
+    python3 scripts/embed_example_json.py docs/implementation-guides/v2/EV_Charging_V0.8-draft.md 
     """
 
     parser = argparse.ArgumentParser(
         description="Inject referenced JSON into <details> blocks in a markdown file.",
         epilog=(
             "Example:\n"
-            "  python3 docs/implementation-guides/embed_example_json.py "
+            "  python3 scripts/embed_example_json.py "
             "docs/implementation-guides/v2/EV_Charging_V0.8-draft.md"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,

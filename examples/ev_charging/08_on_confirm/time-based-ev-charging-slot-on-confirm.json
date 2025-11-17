@@ -71,7 +71,11 @@
               "discountPercentage": 20.0
             }
           },
-          "beckn:quantity": 5,
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 5
+          },
           "beckn:price": {
             "currency": "INR",
             "value": 90.0,
@@ -124,21 +128,20 @@
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
         "beckn:mode": "RESERVATION",
-        "beckn:status": "CONFIRMED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "vehicleMake": "Tata",
-          "vehicleModel": "Nexon EV"
+          "vehicleModel": "Nexon EV",
+          "sessionStatus": "PENDING"
         }
       },
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
@@ -148,10 +151,11 @@
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
         "beckn:acceptedPaymentMethod": [
-          "BankTransfer",
+          "BANK_TRANSFER",
           "UPI",
-          "Wallet"
-        ]
+          "WALLET"
+        ],
+        "beckn:paymentStatus": "COMPLETED"
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -166,7 +170,8 @@
           }
         },
         "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
+        "sessionStatus": "PENDING"
       }
     }
   }

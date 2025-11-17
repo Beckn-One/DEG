@@ -113,7 +113,7 @@
               "amenityFeature": [
                 "Restaurant",
                 "Restroom",
-                "Wi-Fi"
+                "WiFi"
               ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
@@ -212,7 +212,7 @@
               "amenityFeature": [
                 "Restaurant",
                 "Restroom",
-                "Wi-Fi",
+                "WiFi",
                 "Parking"
               ],
               "ocppId": "IN-GC-KOR-01",
@@ -311,7 +311,7 @@
               },
               "amenityFeature": [
                 "Restroom",
-                "Wi-Fi",
+                "WiFi",
                 "Parking"
               ],
               "ocppId": "IN-PG-IND-01",
@@ -354,8 +354,8 @@
             },
             "beckn:acceptedPaymentMethod": [
               "UPI",
-              "Card",
-              "Wallet"
+              "CREDIT_CARD",
+              "WALLET"
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
@@ -395,9 +395,9 @@
             },
             "beckn:acceptedPaymentMethod": [
               "UPI",
-              "Card",
-              "Wallet",
-              "NetBanking"
+              "CREDIT_CARD",
+              "WALLET",
+              "BANK_TRANSFER"
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
@@ -437,8 +437,9 @@
             },
             "beckn:acceptedPaymentMethod": [
               "UPI",
-              "Card",
-              "Wallet"
+              "CREDIT_CARD",
+              "WALLET",
+              "BANK_TRANSFER"
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
