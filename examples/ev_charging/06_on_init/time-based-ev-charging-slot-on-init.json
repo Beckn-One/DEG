@@ -71,7 +71,11 @@
               "discountPercentage": 20.0
             }
           },
-          "beckn:quantity": 5,
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 5
+          },
           "beckn:price": {
             "currency": "INR",
             "value": 90.0,
@@ -124,7 +128,6 @@
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
         "beckn:mode": "RESERVATION",
-        "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
@@ -134,14 +137,14 @@
             "type": "OTP"
           },
           "vehicleMake": "Tata",
-          "vehicleModel": "Nexon EV"
+          "vehicleModel": "Nexon EV",
+          "sessionStatus": "PENDING"
         }
       },
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "INITIATED",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
@@ -150,10 +153,11 @@
         "beckn:txnRef": "TXN-123456789",
         "beckn:beneficiary": "BPP",
         "beckn:acceptedPaymentMethod": [
-          "BankTransfer",
+          "BANK_TRANSFER",
           "UPI",
-          "Wallet"
-        ]
+          "WALLET"
+        ],
+        "beckn:paymentStatus": "INITIATED"
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
@@ -166,7 +170,8 @@
             "sms": true,
             "push": false
           }
-        }
+        },
+        "sessionStatus": "PENDING"
       }
     }
   }

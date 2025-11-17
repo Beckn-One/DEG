@@ -15,15 +15,17 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
-      "beckn:orderStatus": "QUOTE_RECEIVED",
-      "beckn:orderNumber": "ORD-2024-001",
+      "beckn:orderStatus": "PENDING",
       "beckn:seller": "ecopower-charging",
-      "beckn:buyer": "user-12345",
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-001",
           "beckn:orderedItem": "ev-charger-ccs2-001",
-          "beckn:quantity": 2.5,
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 2.5
+          },
           "beckn:acceptedOffer": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
@@ -51,8 +53,8 @@
             },
             "beckn:acceptedPaymentMethod": [
               "UPI",
-              "Card",
-              "Wallet"
+              "CREDIT_CARD",
+              "WALLET"
             ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingOffer/v1/context.jsonld",
@@ -61,7 +63,7 @@
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.5
               },
-              "idleFeePolicy": "\u20b92/min after 10 min post-charge"
+              "idleFeePolicy": "₹2/min after 10 min post-charge"
             }
           },
           "beckn:price": {
@@ -115,7 +117,6 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "NOT_PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
@@ -124,17 +125,17 @@
         "beckn:txnRef": "TXN-123456789",
         "beckn:beneficiary": "BPP",
         "beckn:acceptedPaymentMethod": [
-          "BankTransfer",
+          "BANK_TRANSFER",
           "UPI",
-          "Wallet"
-        ]
+          "WALLET"
+        ],
+        "beckn:paymentStatus": "PENDING"
       },
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-charging-001",
         "beckn:mode": "RESERVATION",
-        "beckn:status": "QUOTED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",

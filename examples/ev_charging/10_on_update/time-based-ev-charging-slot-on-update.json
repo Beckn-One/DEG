@@ -15,7 +15,7 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "ACTIVE",
+      "beckn:orderStatus": "INPROGRESS",
       "beckn:orderNumber": "ORD-2025-001",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
@@ -71,7 +71,11 @@
               "discountPercentage": 20.0
             }
           },
-          "beckn:quantity": 5,
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 5
+          },
           "beckn:price": {
             "currency": "INR",
             "value": 90.0,
@@ -124,7 +128,6 @@
         "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-001",
         "beckn:mode": "RESERVATION",
-        "beckn:status": "ACTIVE",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
@@ -140,7 +143,6 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
         "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
-        "beckn:status": "PAID",
         "beckn:amount": {
           "currency": "INR",
           "value": 128.64
@@ -150,10 +152,11 @@
         "beckn:paidAt": "2025-01-27T10:05:00Z",
         "beckn:beneficiary": "BPP",
         "beckn:acceptedPaymentMethod": [
-          "BankTransfer",
+          "BANK_TRANSFER",
           "UPI",
-          "Wallet"
-        ]
+          "WALLET"
+        ],
+        "beckn:paymentStatus": "COMPLETED"
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
