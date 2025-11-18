@@ -1,0 +1,20 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "support",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-08-28T10:00:00+05:30",
+    "message_id": "msg-support-df-001",
+    "transaction_id": "txn-df-subscription-001",
+    "bap_id": "consumer-app.example.com",
+    "bap_uri": "https://consumer-app.example.com",
+    "bpp_id": "greenpower-utility.example.com",
+    "bpp_uri": "https://greenpower-utility.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "ref_id": "order-df-subscription-001",
+    "ref_type": "order"
+  }
+}
+

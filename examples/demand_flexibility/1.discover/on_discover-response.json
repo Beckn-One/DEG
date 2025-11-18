@@ -1,0 +1,268 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_search",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-08-20T14:30:02+05:30",
+    "message_id": "msg-on-search-df-001",
+    "transaction_id": "txn-df-program-search-001",
+    "bap_id": "consumer-app.example.com",
+    "bap_uri": "https://consumer-app.example.com",
+    "bpp_id": "greenpower-utility.example.com",
+    "bpp_uri": "https://greenpower-utility.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-df-programs-gp-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "GreenPower Demand Flexibility Programs",
+          "beckn:shortDesc": "Available demand flexibility programs for Delhi NCR region"
+        },
+        "beckn:validity": {
+          "@type": "beckn:TimePeriod",
+          "schema:startDate": "2025-08-01T00:00:00Z",
+          "schema:endDate": "2026-07-31T23:59:59Z"
+        },
+        "beckn:provider": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+          "@type": "beckn:Provider",
+          "beckn:id": "provider-gp-df-001",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "GreenPower Utility",
+            "beckn:shortDesc": "GreenPower Demand Flexibility Programs for Delhi NCR",
+            "schema:image": [
+              "https://greenpower-utility.example.com/assets/logo.png"
+            ]
+          },
+          "beckn:rateable": true,
+          "beckn:rating": {
+            "@type": "beckn:Rating",
+            "beckn:ratingValue": 4.5,
+            "beckn:ratingCount": 1247
+          }
+        },
+        "beckn:items": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-df-peak-saver-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Evening Peak Saver Program",
+              "beckn:shortDesc": "₹5/kWh for 2-5 PM reductions (manual acceptance)",
+              "beckn:longDesc": "Users will receive app notifications during afternoon peak hours (2–5 PM). Upon manual acceptance, they can reduce usage and earn ₹5 for every kWh saved during the window."
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "seasonal_programs",
+              "schema:name": "Seasonal Programs (Summer/Winter)"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [77.209010, 28.613901]
+                },
+                "address": {
+                  "streetAddress": "GreenPower Service Area",
+                  "addressLocality": "New Delhi",
+                  "addressRegion": "Delhi",
+                  "postalCode": "110001",
+                  "addressCountry": "IN"
+                }
+              }
+            ],
+            "beckn:rateable": true,
+            "beckn:rating": {
+              "@type": "beckn:Rating",
+              "beckn:ratingValue": 4.7,
+              "beckn:ratingCount": 523
+            },
+            "beckn:provider": {
+              "beckn:id": "provider-gp-df-001",
+              "beckn:descriptor": {
+                "@type": "beckn:Descriptor",
+                "schema:name": "GreenPower Utility",
+                "beckn:shortDesc": "GreenPower Demand Flexibility Programs for Delhi NCR"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityProgram",
+              "beckn:programType": "voluntary",
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial", "residential"],
+                "loadCapacity": {
+                  "min": 100,
+                  "max": 1000,
+                  "unit": "kW"
+                },
+                "controlType": "manual",
+                "responseTime": "PT30M"
+              },
+              "beckn:availabilityParameters": {
+                "hours": {
+                  "start": "14:00",
+                  "end": "17:00"
+                },
+                "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+                "seasonal": ["summer", "monsoon"]
+              },
+              "beckn:eventParameters": {
+                "duration": {
+                  "min": "PT60M",
+                  "max": "PT180M"
+                },
+                "notificationType": "day_ahead",
+                "priority": "medium",
+                "gridConditionTrigger": "peak_demand"
+              },
+              "beckn:incentiveParameters": {
+                "rate": 5.00,
+                "currency": "INR",
+                "type": "per_kWh_reduced",
+                "settlementFrequency": "monthly"
+              },
+              "beckn:priorityParameters": {
+                "eventPriority": ["high", "medium"],
+                "participationMode": "voluntary"
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-df-emergency-response-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Emergency Grid Response Program",
+              "beckn:shortDesc": "₹10/kWh for emergency load reductions",
+              "beckn:longDesc": "Critical grid emergency program requiring immediate load reduction. Premium compensation for rapid response during grid stress events."
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "emergency_only",
+              "schema:name": "Emergency-Only Programs"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [77.209010, 28.613901]
+                },
+                "address": {
+                  "streetAddress": "GreenPower Service Area",
+                  "addressLocality": "New Delhi",
+                  "addressRegion": "Delhi",
+                  "postalCode": "110001",
+                  "addressCountry": "IN"
+                }
+              }
+            ],
+            "beckn:rateable": true,
+            "beckn:rating": {
+              "@type": "beckn:Rating",
+              "beckn:ratingValue": 4.9,
+              "beckn:ratingCount": 187
+            },
+            "beckn:provider": {
+              "beckn:id": "provider-gp-df-001",
+              "beckn:descriptor": {
+                "@type": "beckn:Descriptor",
+                "schema:name": "GreenPower Utility",
+                "beckn:shortDesc": "GreenPower Demand Flexibility Programs for Delhi NCR"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityProgram",
+              "beckn:programType": "mandatory",
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial", "industrial"],
+                "loadCapacity": {
+                  "min": 500,
+                  "max": 5000,
+                  "unit": "kW"
+                },
+                "controlType": "automated",
+                "responseTime": "PT5M"
+              },
+              "beckn:availabilityParameters": {
+                "hours": {
+                  "start": "00:00",
+                  "end": "23:59"
+                },
+                "days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+                "seasonal": ["all"]
+              },
+              "beckn:eventParameters": {
+                "duration": {
+                  "min": "PT30M",
+                  "max": "PT240M"
+                },
+                "notificationType": "instant",
+                "priority": "high",
+                "gridConditionTrigger": "emergency"
+              },
+              "beckn:incentiveParameters": {
+                "rate": 10.00,
+                "currency": "INR",
+                "type": "per_kWh_reduced",
+                "settlementFrequency": "weekly"
+              },
+              "beckn:priorityParameters": {
+                "eventPriority": ["high"],
+                "participationMode": "mandatory"
+              }
+            }
+          }
+        ],
+        "beckn:offers": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-df-peak-saver-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Evening Peak Saver Program - Incentive"
+            },
+            "beckn:items": [
+              "item-df-peak-saver-001"
+            ],
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-08-01T00:00:00Z",
+              "schema:endDate": "2026-07-31T23:59:59Z"
+            },
+            "beckn:provider": "provider-gp-df-001"
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-df-emergency-response-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Emergency Grid Response Program - Premium Incentive"
+            },
+            "beckn:items": [
+              "item-df-emergency-response-001"
+            ],
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-08-01T00:00:00Z",
+              "schema:endDate": "2026-07-31T23:59:59Z"
+            },
+            "beckn:provider": "provider-gp-df-001"
+          }
+        ]
+      }
+    ]
+  }
+}
+

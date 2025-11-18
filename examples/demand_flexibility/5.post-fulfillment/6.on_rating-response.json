@@ -1,0 +1,31 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_rating",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-09-20T15:30:02+05:30",
+    "message_id": "msg-on-rating-df-001",
+    "transaction_id": "txn-df-subscription-001",
+    "bap_id": "consumer-app.example.com",
+    "bap_uri": "https://consumer-app.example.com",
+    "bpp_id": "greenpower-utility.example.com",
+    "bpp_uri": "https://greenpower-utility.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "received": true,
+    "aggregate": {
+      "count": 127,
+      "value": 4.65,
+      "best": 5,
+      "worst": 1
+    },
+    "feedbackForm": {
+      "id": "df-detailed-feedback-form-001",
+      "name": "Demand Flexibility Program Detailed Feedback",
+      "url": "https://feedback.greenpower-utility.example.com/df/order-df-subscription-001",
+      "mime_type": "text/html"
+    }
+  }
+}
+

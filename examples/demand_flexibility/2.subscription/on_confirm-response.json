@@ -1,0 +1,121 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-08-20T14:46:00+05:30",
+    "message_id": "msg-on-confirm-subscription-001",
+    "transaction_id": "txn-df-subscription-001",
+    "bap_id": "consumer-app.example.com",
+    "bap_uri": "https://consumer-app.example.com",
+    "bpp_id": "greenpower-utility.example.com",
+    "bpp_uri": "https://greenpower-utility.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-df-subscription-001",
+      "beckn:orderStatus": "SUBSCRIPTION_CONFIRMED",
+      "beckn:seller": "provider-gp-df-001",
+      "beckn:buyer": "buyer-dtc-001",
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "order-item-subscription-001",
+          "beckn:orderedItem": "item-df-peak-saver-001",
+          "beckn:quantity": 1,
+          "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-df-peak-saver-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Evening Peak Saver Program - Incentive"
+            },
+            "beckn:provider": "provider-gp-df-001",
+            "beckn:items": [
+              "item-df-peak-saver-001"
+            ]
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilitySubscription",
+            "beckn:subscriptionId": "sub-df-peak-saver-001",
+            "beckn:participantCapabilities": {
+              "participantType": ["commercial"],
+              "loadCapacity": {
+                "min": 100,
+                "max": 200,
+                "unit": "kW"
+              },
+              "controlType": "manual",
+              "responseTime": "PT30M"
+            },
+            "beckn:availabilityParameters": {
+              "hours": {
+                "start": "14:00",
+                "end": "17:00"
+              },
+              "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+              "seasonal": ["summer", "monsoon"]
+            },
+            "beckn:eventParameters": {
+              "duration": {
+                "min": "PT60M",
+                "max": "PT180M"
+              },
+              "notificationType": "day_ahead",
+              "priority": "medium",
+              "gridConditionTrigger": "peak_demand"
+            },
+            "beckn:incentiveParameters": {
+              "rate": 5.00,
+              "currency": "INR",
+              "type": "per_kWh_reduced",
+              "settlementFrequency": "monthly"
+            },
+            "beckn:priorityParameters": {
+              "eventPriority": ["high", "medium"],
+              "participationMode": "voluntary"
+            }
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-subscription-001",
+        "beckn:mode": "GRID-BASED",
+        "beckn:status": "SUBSCRIPTION_CONFIRMED",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilitySubscription",
+          "beckn:meterId": "meter://abc/98765456",
+          "beckn:location": {
+            "@type": "beckn:Location",
+            "geo": {
+              "type": "Point",
+              "coordinates": [77.209010, 28.613901]
+            },
+            "address": {
+              "streetAddress": "Gov Bus Depot, Anand Vihar",
+              "addressLocality": "New Delhi",
+              "addressRegion": "Delhi",
+              "postalCode": "110001",
+              "addressCountry": "IN"
+            }
+          },
+          "beckn:startDate": "2025-08-26T00:00:00+05:30"
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+        "@type": "beckn:DemandFlexibilitySubscription",
+        "beckn:requestType": "program_subscription"
+      }
+    }
+  }
+}
+

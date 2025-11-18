@@ -1,0 +1,27 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "rating",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-09-20T15:30:00+05:30",
+    "message_id": "msg-rating-df-001",
+    "transaction_id": "txn-df-subscription-001",
+    "bap_id": "consumer-app.example.com",
+    "bap_uri": "https://consumer-app.example.com",
+    "bpp_id": "greenpower-utility.example.com",
+    "bpp_uri": "https://greenpower-utility.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "id": "order-df-subscription-001",
+    "value": 5,
+    "best": 5,
+    "worst": 1,
+    "category": "program",
+    "feedback": {
+      "comments": "Excellent demand flexibility program! The event notifications were timely, incentive calculations were transparent, and the overall experience was smooth. The program helped us optimize our energy costs significantly.",
+      "tags": ["timely-notifications", "transparent-incentives", "easy-participation", "cost-savings", "reliable-service"]
+    }
+  }
+}
+

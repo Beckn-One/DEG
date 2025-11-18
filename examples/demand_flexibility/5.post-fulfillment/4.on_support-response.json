@@ -1,0 +1,26 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_support",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-08-28T10:00:02+05:30",
+    "message_id": "msg-on-support-df-001",
+    "transaction_id": "txn-df-subscription-001",
+    "bap_id": "consumer-app.example.com",
+    "bap_uri": "https://consumer-app.example.com",
+    "bpp_id": "greenpower-utility.example.com",
+    "bpp_uri": "https://greenpower-utility.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "support": {
+      "name": "GreenPower Demand Flexibility Support",
+      "phone": "+91-11-1234-5678",
+      "email": "df-support@greenpower-utility.example.com",
+      "url": "https://support.greenpower-utility.example.com/demand-flexibility",
+      "hours": "Monday-Saturday, 9:00 AM - 6:00 PM IST",
+      "channels": ["phone", "email", "web", "chat"]
+    }
+  }
+}
+
