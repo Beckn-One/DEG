@@ -3763,7 +3763,7 @@ Discovery of EV charging services offered by a specific CPO: [Example](../../../
     ....
   },
   "message": {
-    "filters": "$[?(@['beckn:id']=='ITEM-BTM-DC60')]"
+    "filters": "$[?(@['beckn:id']=='ev-charger-ccs2-001')]"
   }
 }
 ```
@@ -3801,17 +3801,12 @@ Fetching details of a specific charger (EVSE) after reaching site (using its ide
     ....
   },
   "message": {
-    "spatial": [
-      {
-        ....
-      }
-    ],
     "filters": {
       "type": "jsonpath",
       {
         "expression": "$[?(
-          @['beckn:itemAttributes']['connectorType'] == 'CCS2' &&
-          @['beckn:availabilityWindow']['schema:startTime'] <= '12:30:00' &&
+          @['beckn:itemAttributes']['connectorType'] == 'Type2' &&
+          @['beckn:availabilityWindow']['schema:startTime'] <= '11:30:00' &&
           @['beckn:availabilityWindow']['schema:endTime'] >= '14:30:00'
         )]"
       }
