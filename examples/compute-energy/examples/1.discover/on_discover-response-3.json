@@ -1,0 +1,283 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-19T14:15:02Z",
+    "message_id": "msg-on-discover-ce-003",
+    "transaction_id": "txn-ce-compflex-003",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "sunpower-grid.example.com",
+    "bpp_uri": "https://sunpower-grid.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-ce-grid-windows-003",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "Grid Flexibility Windows - US West Coast",
+          "beckn:shortDesc": "Solar and wind powered compute windows with dynamic pricing"
+        },
+        "beckn:validity": {
+          "@type": "beckn:TimePeriod",
+          "schema:startDate": "2025-11-19T00:00:00Z",
+          "schema:endDate": "2025-11-19T23:59:59Z"
+        },
+        "beckn:provider": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+          "@type": "beckn:Provider",
+          "beckn:id": "provider-sunpower-003",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "SunPower Grid",
+            "beckn:shortDesc": "California renewable energy coordination service",
+            "schema:image": [
+              "https://sunpower-grid.example.com/assets/logo.png"
+            ]
+          },
+          "beckn:rateable": true,
+          "beckn:rating": {
+            "@type": "beckn:Rating",
+            "beckn:ratingValue": 4.7,
+            "beckn:ratingCount": 389
+          }
+        },
+        "beckn:items": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-sanfrancisco-solar-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "San Francisco Solar Peak Window",
+              "beckn:shortDesc": "High solar generation period with low carbon intensity"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [-122.5, 37.5],
+                  [-122.0, 37.5],
+                  [-122.0, 38.0],
+                  [-122.5, 38.0],
+                  [-122.5, 37.5]
+                ]]
+              },
+              "address": {
+                "streetAddress": "San Francisco Bay Area Grid Zone",
+                "addressLocality": "San Francisco",
+                "addressRegion": "California",
+                "addressCountry": "US"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "San Francisco Bay",
+                "gridZone": "CAISO-WEST-1",
+                "renewableMix": 70,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 180,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "19:00:00Z",
+                "end": "23:00:00Z",
+                "duration": "PT4H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 7.5,
+                "capacityUnit": "MW",
+                "reservationRequired": false
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-portland-wind-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Portland Evening Wind Window",
+              "beckn:shortDesc": "Wind-powered compute with competitive rates"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [-123.0, 45.3],
+                  [-122.3, 45.3],
+                  [-122.3, 45.8],
+                  [-123.0, 45.8],
+                  [-123.0, 45.3]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Portland Metro Grid Zone",
+                "addressLocality": "Portland",
+                "addressRegion": "Oregon",
+                "addressCountry": "US"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Portland Metro",
+                "gridZone": "BPA-NORTH-1",
+                "renewableMix": 85,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 95,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "01:00:00Z",
+                "end": "05:00:00Z",
+                "duration": "PT4H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 6.0,
+                "capacityUnit": "MW",
+                "reservationRequired": false
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-losangeles-mixed-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Los Angeles Mixed Renewable Window",
+              "beckn:shortDesc": "Combined solar and wind with flexible scheduling"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [-118.7, 33.7],
+                  [-117.8, 33.7],
+                  [-117.8, 34.3],
+                  [-118.7, 34.3],
+                  [-118.7, 33.7]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Los Angeles Basin Grid Zone",
+                "addressLocality": "Los Angeles",
+                "addressRegion": "California",
+                "addressCountry": "US"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Los Angeles Basin",
+                "gridZone": "CAISO-SOUTH-1",
+                "renewableMix": 65,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 210,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "20:00:00Z",
+                "end": "04:00:00Z",
+                "duration": "PT8H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 10.0,
+                "capacityUnit": "MW",
+                "reservationRequired": true
+              }
+            }
+          }
+        ],
+        "beckn:offers": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-sanfrancisco-solar-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "San Francisco Solar Peak Slot"
+            },
+            "beckn:provider": "provider-sunpower-003",
+            "beckn:items": [
+              "item-ce-sanfrancisco-solar-001"
+            ],
+            "beckn:price": {
+              "value": "0.115",
+              "currency": "USD"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "variable"
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-portland-wind-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Portland Evening Wind Slot"
+            },
+            "beckn:provider": "provider-sunpower-003",
+            "beckn:items": [
+              "item-ce-portland-wind-001"
+            ],
+            "beckn:price": {
+              "value": "0.088",
+              "currency": "USD"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-losangeles-mixed-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Los Angeles Mixed Renewable Slot"
+            },
+            "beckn:provider": "provider-sunpower-003",
+            "beckn:items": [
+              "item-ce-losangeles-mixed-001"
+            ],
+            "beckn:price": {
+              "value": "0.105",
+              "currency": "USD"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+

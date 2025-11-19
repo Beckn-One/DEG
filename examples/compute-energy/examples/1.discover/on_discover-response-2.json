@@ -1,0 +1,283 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-18T06:30:02Z",
+    "message_id": "msg-on-discover-ce-002",
+    "transaction_id": "txn-ce-compflex-002",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "greengrid-service.example.com",
+    "bpp_uri": "https://greengrid-service.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-ce-grid-windows-002",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "Grid Flexibility Windows - Nordic Region",
+          "beckn:shortDesc": "Ultra-low carbon compute windows powered by hydro and wind"
+        },
+        "beckn:validity": {
+          "@type": "beckn:TimePeriod",
+          "schema:startDate": "2025-11-18T00:00:00Z",
+          "schema:endDate": "2025-11-18T23:59:59Z"
+        },
+        "beckn:provider": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+          "@type": "beckn:Provider",
+          "beckn:id": "provider-greengrid-002",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "GreenGrid Service",
+            "beckn:shortDesc": "Nordic renewable energy optimization platform",
+            "schema:image": [
+              "https://greengrid-service.example.com/assets/logo.png"
+            ]
+          },
+          "beckn:rateable": true,
+          "beckn:rating": {
+            "@type": "beckn:Rating",
+            "beckn:ratingValue": 4.9,
+            "beckn:ratingCount": 512
+          }
+        },
+        "beckn:items": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-stockholm-night-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Stockholm Night Wind Window",
+              "beckn:shortDesc": "Premium wind-powered compute slot with near-zero carbon"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [17.5, 59.0],
+                  [18.5, 59.0],
+                  [18.5, 59.8],
+                  [17.5, 59.8],
+                  [17.5, 59.0]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Stockholm Grid Zone",
+                "addressLocality": "Stockholm",
+                "addressRegion": "Stockholm County",
+                "addressCountry": "SE"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Stockholm",
+                "gridZone": "SE-NORD-1",
+                "renewableMix": 95,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 45,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "22:00:00Z",
+                "end": "06:00:00Z",
+                "duration": "PT8H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 8.0,
+                "capacityUnit": "MW",
+                "reservationRequired": true
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-oslo-hydro-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Oslo Hydro Baseload Window",
+              "beckn:shortDesc": "Stable hydro-powered compute with guaranteed capacity"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [10.0, 59.5],
+                  [11.0, 59.5],
+                  [11.0, 60.2],
+                  [10.0, 60.2],
+                  [10.0, 59.5]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Oslo Grid Zone",
+                "addressLocality": "Oslo",
+                "addressRegion": "Oslo County",
+                "addressCountry": "NO"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Oslo",
+                "gridZone": "NO-SOUTH-1",
+                "renewableMix": 98,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 30,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "00:00:00Z",
+                "end": "23:59:59Z",
+                "duration": "PT24H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 12.0,
+                "capacityUnit": "MW",
+                "reservationRequired": true
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-copenhagen-solar-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Copenhagen Solar Peak Window",
+              "beckn:shortDesc": "Midday solar-optimized compute window"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [12.3, 55.5],
+                  [12.8, 55.5],
+                  [12.8, 55.9],
+                  [12.3, 55.9],
+                  [12.3, 55.5]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Copenhagen Grid Zone",
+                "addressLocality": "Copenhagen",
+                "addressRegion": "Capital Region",
+                "addressCountry": "DK"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Copenhagen",
+                "gridZone": "DK-EAST-1",
+                "renewableMix": 88,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 65,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "11:00:00Z",
+                "end": "15:00:00Z",
+                "duration": "PT4H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 6.5,
+                "capacityUnit": "MW",
+                "reservationRequired": false
+              }
+            }
+          }
+        ],
+        "beckn:offers": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-stockholm-night-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Stockholm Night Premium Slot"
+            },
+            "beckn:provider": "provider-greengrid-002",
+            "beckn:items": [
+              "item-ce-stockholm-night-001"
+            ],
+            "beckn:price": {
+              "value": "0.078",
+              "currency": "EUR"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-oslo-hydro-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Oslo Hydro Baseload Slot"
+            },
+            "beckn:provider": "provider-greengrid-002",
+            "beckn:items": [
+              "item-ce-oslo-hydro-001"
+            ],
+            "beckn:price": {
+              "value": "0.065",
+              "currency": "EUR"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "guaranteed"
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-copenhagen-solar-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Copenhagen Solar Peak Slot"
+            },
+            "beckn:provider": "provider-greengrid-002",
+            "beckn:items": [
+              "item-ce-copenhagen-solar-001"
+            ],
+            "beckn:price": {
+              "value": "0.085",
+              "currency": "EUR"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "variable"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+
