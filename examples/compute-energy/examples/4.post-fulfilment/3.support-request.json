@@ -1,0 +1,20 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "support",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T19:00:00Z",
+    "message_id": "msg-support-ce-001",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "ref_id": "order-ce-cambridge-morning-001",
+    "ref_type": "order"
+  }
+}
+

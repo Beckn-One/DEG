@@ -1,7 +1,7 @@
 {
   "context": {
     "version": "2.0.0",
-    "action": "on_search",
+    "action": "on_discover",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
     "timestamp": "2025-08-20T14:30:02+05:30",
     "message_id": "msg-on-search-df-001",

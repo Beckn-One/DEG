@@ -1,0 +1,33 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "discover",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T08:00:00Z",
+    "message_id": "msg-discover-ce-001",
+    "transaction_id": "txn-ce-compflex-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "ttl": "PT30S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld"
+    ]
+  },
+  "message": {
+    "text_search": "Grid flexibility windows",
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:itemAttributes.beckn:gridParameters.gridArea in ['Cambridge-East', 'Manchester'] && @.beckn:itemAttributes.beckn:gridParameters.renewableMix >= 70)]"
+    },
+    "spatial": [
+      {
+        "targets": "$['beckn:availableAt'][*]['geo']",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [0.1218, 52.2053]
+        }
+      }
+    ]
+  }
+}
+

@@ -1,0 +1,208 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T08:00:02Z",
+    "message_id": "msg-on-discover-ce-001",
+    "transaction_id": "txn-ce-compflex-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-ce-grid-windows-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "Grid Flexibility Windows - UK East",
+          "beckn:shortDesc": "Available low-carbon compute windows for November 17, 2025"
+        },
+        "beckn:validity": {
+          "@type": "beckn:TimePeriod",
+          "schema:startDate": "2025-11-17T00:00:00Z",
+          "schema:endDate": "2025-11-17T23:59:59Z"
+        },
+        "beckn:provider": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+          "@type": "beckn:Provider",
+          "beckn:id": "provider-gridflex-001",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "GridFlex Agent",
+            "beckn:shortDesc": "Real-time grid flexibility and carbon intensity service",
+            "schema:image": [
+              "https://gridflex-agent.example.com/assets/logo.png"
+            ]
+          },
+          "beckn:rateable": true,
+          "beckn:rating": {
+            "@type": "beckn:Rating",
+            "beckn:ratingValue": 4.8,
+            "beckn:ratingCount": 245
+          }
+        },
+        "beckn:items": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-cambridge-morning-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Cambridge-East Morning Window",
+              "beckn:shortDesc": "Optimal renewable energy window for compute workloads"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [0.0, 52.0],
+                  [0.5, 52.0],
+                  [0.5, 52.5],
+                  [0.0, 52.5],
+                  [0.0, 52.0]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Cambridge-East Grid Zone",
+                "addressLocality": "Cambridge",
+                "addressRegion": "East England",
+                "addressCountry": "GB"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Cambridge-East",
+                "gridZone": "UK-EAST-1",
+                "renewableMix": 80,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 120,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "10:00:00Z",
+                "end": "14:00:00Z",
+                "duration": "PT4H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 5.0,
+                "capacityUnit": "MW",
+                "reservationRequired": false
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "item-ce-manchester-afternoon-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Manchester Afternoon Window",
+              "beckn:shortDesc": "Clean energy window with competitive pricing"
+            },
+            "beckn:rateable": false,
+            "beckn:availableAt": {
+              "@type": "beckn:Location",
+              "geo": {
+                "type": "Polygon",
+                "coordinates": [[
+                  [-2.5, 53.3],
+                  [-2.0, 53.3],
+                  [-2.0, 53.7],
+                  [-2.5, 53.7],
+                  [-2.5, 53.3]
+                ]]
+              },
+              "address": {
+                "streetAddress": "Manchester Grid Zone",
+                "addressLocality": "Manchester",
+                "addressRegion": "North West England",
+                "addressCountry": "GB"
+              }
+            },
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyWindow",
+              "beckn:gridParameters": {
+                "gridArea": "Manchester",
+                "gridZone": "UK-NORTH-1",
+                "renewableMix": 75,
+                "renewableMixUnit": "percent",
+                "carbonIntensity": 140,
+                "carbonIntensityUnit": "gCO2/kWh"
+              },
+              "beckn:timeWindow": {
+                "start": "14:00:00Z",
+                "end": "18:00:00Z",
+                "duration": "PT4H"
+              },
+              "beckn:capacityParameters": {
+                "availableCapacity": 4.5,
+                "capacityUnit": "MW",
+                "reservationRequired": false
+              }
+            }
+          }
+        ],
+        "beckn:offers": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-cambridge-morning-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Cambridge Morning Compute Slot"
+            },
+            "beckn:provider": "provider-gridflex-001",
+            "beckn:items": [
+              "item-ce-cambridge-morning-001"
+            ],
+            "beckn:price": {
+              "value": "0.102",
+              "currency": "GBP"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-manchester-afternoon-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Manchester Afternoon Compute Slot"
+            },
+            "beckn:provider": "provider-gridflex-001",
+            "beckn:items": [
+              "item-ce-manchester-afternoon-001"
+            ],
+            "beckn:price": {
+              "value": "0.092",
+              "currency": "GBP"
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+

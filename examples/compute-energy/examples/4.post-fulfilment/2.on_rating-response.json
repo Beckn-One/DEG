@@ -1,0 +1,31 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_rating",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T20:00:02Z",
+    "message_id": "msg-on-rating-ce-001",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "received": true,
+    "aggregate": {
+      "count": 89,
+      "value": 4.7,
+      "best": 5,
+      "worst": 1
+    },
+    "feedbackForm": {
+      "id": "ce-detailed-feedback-form-001",
+      "name": "Compute-Energy Convergence Detailed Feedback",
+      "url": "https://feedback.gridflex-agent.example.com/ce/order-ce-cambridge-morning-001",
+      "mime_type": "text/html"
+    }
+  }
+}
+

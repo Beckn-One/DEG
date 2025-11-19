@@ -1,0 +1,27 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "rating",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T20:00:00Z",
+    "message_id": "msg-rating-ce-001",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "id": "order-ce-cambridge-morning-001",
+    "value": 5,
+    "best": 5,
+    "worst": 1,
+    "category": "grid_service",
+    "feedback": {
+      "comments": "Excellent grid flexibility service! Real-time signals were accurate, workload shifting was seamless, and the carbon savings exceeded expectations. The incentive settlement was transparent and timely.",
+      "tags": ["accurate-signals", "seamless-integration", "carbon-savings", "transparent-settlement", "reliable-service"]
+    }
+  }
+}
+

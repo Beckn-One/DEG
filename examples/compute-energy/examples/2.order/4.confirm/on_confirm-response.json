@@ -1,0 +1,155 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T08:15:02Z",
+    "message_id": "msg-on-confirm-ce-001",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-ce-cambridge-morning-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "provider-gridflex-001",
+      "beckn:buyer": "buyer-compflex-001",
+      "beckn:invoice": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "schema:Invoice",
+        "schema:customer": {
+          "email": "leena.jones@computecloud.ai",
+          "phone": "+44 7911 123456",
+          "legalName": "ComputeCloud.ai",
+          "address": {
+            "streetAddress": "123 Main St",
+            "addressLocality": "Cambridge",
+            "addressRegion": "East England",
+            "postalCode": "CB1 2AB",
+            "addressCountry": "GB"
+          }
+        }
+      },
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "order-item-ce-001",
+          "beckn:orderedItem": "item-ce-cambridge-morning-001",
+          "beckn:quantity": 1,
+          "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-cambridge-morning-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Cambridge Morning Compute Slot"
+            },
+            "beckn:provider": "provider-gridflex-001",
+            "beckn:items": [
+              "item-ce-cambridge-morning-001"
+            ],
+            "beckn:price": {
+              "currency": "GBP",
+              "price": 0.102
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+            "@type": "beckn:ComputeEnergyWindow",
+            "beckn:slotId": "slot-cambridge-morning-20251117-001",
+            "beckn:gridParameters": {
+              "gridArea": "Cambridge-East",
+              "gridZone": "UK-EAST-1",
+              "renewableMix": 80,
+              "carbonIntensity": 120,
+              "carbonIntensityUnit": "gCO2/kWh",
+              "frequency": 50.0,
+              "frequencyUnit": "Hz"
+            },
+            "beckn:timeWindow": {
+              "start": "2025-11-17T10:00:00Z",
+              "end": "2025-11-17T14:00:00Z",
+              "duration": "PT4H"
+            },
+            "beckn:pricingParameters": {
+              "spotPrice": 0.102,
+              "currency": "GBP",
+              "unit": "per_kWh",
+              "priceStability": "stable",
+              "estimatedCost": 489.6
+            },
+            "beckn:capacityParameters": {
+              "reservedCapacity": 1.2,
+              "capacityUnit": "MW",
+              "availableCapacity": 3.8
+            }
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-ce-cambridge-001",
+        "beckn:mode": "GRID-BASED",
+        "beckn:status": "CONFIRMED",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+          "@type": "beckn:ComputeEnergyFulfillment",
+          "beckn:computeLoad": 1.2,
+          "beckn:computeLoadUnit": "MW",
+          "beckn:location": {
+            "@type": "beckn:Location",
+            "geo": {
+              "type": "Point",
+              "coordinates": [0.1218, 52.2053]
+            },
+            "address": {
+              "streetAddress": "ComputeCloud Data Centre",
+              "addressLocality": "Cambridge",
+              "addressRegion": "East England",
+              "postalCode": "CB1 2AB",
+              "addressCountry": "GB"
+            }
+          },
+          "beckn:timeWindow": {
+            "start": "2025-11-17T10:00:00Z",
+            "end": "2025-11-17T14:00:00Z"
+          },
+          "beckn:workloadMetadata": {
+            "workloadType": "AI_TRAINING",
+            "workloadId": "batch-a-001",
+            "gpuHours": 4800,
+            "carbonBudget": 576,
+            "carbonBudgetUnit": "kgCO2"
+          }
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+        "@type": "beckn:ComputeEnergyOrder",
+        "beckn:requestType": "compute_slot_reservation",
+        "beckn:priority": "medium",
+        "beckn:flexibilityLevel": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T08:15:02Z"
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+        "@type": "beckn:ComputeEnergyPayment",
+        "beckn:settlement": "next-billing-cycle"
+      }
+    }
+  }
+}
+

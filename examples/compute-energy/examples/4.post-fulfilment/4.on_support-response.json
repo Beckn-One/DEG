@@ -1,0 +1,26 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_support",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T19:00:02Z",
+    "message_id": "msg-on-support-ce-001",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "support": {
+      "name": "GridFlex Agent Support",
+      "phone": "+44-20-1234-5678",
+      "email": "support@gridflex-agent.example.com",
+      "url": "https://support.gridflex-agent.example.com/compute-energy",
+      "hours": "24/7",
+      "channels": ["phone", "email", "web", "chat", "api"]
+    }
+  }
+}
+

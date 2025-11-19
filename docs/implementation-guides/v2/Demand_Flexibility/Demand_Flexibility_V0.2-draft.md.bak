@@ -33,23 +33,23 @@
       - [10.2.2 Configuring Beckn ONIX for Demand Flexibility Transactions](#1022-configuring-beckn-onix-for-demand-flexibility-transactions)
       - [10.2.3 Performing a test Demand Flexibility transaction](#1023-performing-a-test-demand-flexibility-transaction)
   - [11. Implementation Guide](#11-implementation-guide)
-    - [11.1 Overview](#111-overview)
-    - [11.2 Prerequisites](#112-prerequisites)
-    - [11.3 Configuration](#113-configuration)
-      - [11.3.1 Network Architecture Setup](#1131-network-architecture-setup)
-      - [11.3.2 Security and Communication Infrastructure](#1132-security-and-communication-infrastructure)
-      - [11.3.3 Domain Configuration](#1133-domain-configuration)
-      - [11.3.4 Integration Requirements](#1134-integration-requirements)
-    - [11.4 Step-by-Step Implementation](#114-step-by-step-implementation)
-      - [11.4.1 Step 1: Program Discovery](#1141-step-1-program-discovery)
-      - [11.4.2 Step 2: Program Subscription](#1142-step-2-program-subscription)
-      - [11.4.3 Step 3: DF Event Notification](#1143-step-3-df-event-notification)
-      - [11.4.4 Step 4: Event Participation Confirmation](#1144-step-4-event-participation-confirmation)
-      - [11.4.5 Step 5: Performance Verification](#1145-step-5-performance-verification)
-      - [11.4.6 Step 6: Incentive Settlement](#1146-step-6-incentive-settlement)
-    - [11.5 Testing](#115-testing)
-      - [11.5.1 Test Scenarios](#1151-test-scenarios)
-      - [11.5.2 Validation Checklist](#1152-validation-checklist)
+    - [14.1 Overview](#141-overview)
+    - [14.2 Prerequisites](#142-prerequisites)
+    - [14.3 Configuration](#143-configuration)
+      - [14.3.1 Network Architecture Setup](#1431-network-architecture-setup)
+      - [14.3.2 Security and Communication Infrastructure](#1432-security-and-communication-infrastructure)
+      - [14.3.3 Domain Configuration](#1433-domain-configuration)
+      - [14.3.4 Integration Requirements](#1434-integration-requirements)
+    - [14.4 Step-by-Step Implementation](#144-step-by-step-implementation)
+      - [14.4.1 Step 1: Program Discovery](#1441-step-1-program-discovery)
+      - [14.4.2 Step 2: Program Subscription](#1442-step-2-program-subscription)
+      - [14.4.3 Step 3: DF Event Notification](#1443-step-3-df-event-notification)
+      - [14.4.4 Step 4: Event Participation Confirmation](#1444-step-4-event-participation-confirmation)
+      - [14.4.5 Step 5: Performance Verification](#1445-step-5-performance-verification)
+      - [14.4.6 Step 6: Incentive Settlement](#1446-step-6-incentive-settlement)
+    - [14.5 Testing](#145-testing)
+      - [14.5.1 Test Scenarios](#1451-test-scenarios)
+      - [14.5.2 Validation Checklist](#1452-validation-checklist)
   - [12. Best Practices](#12-best-practices)
     - [12.1 Design Principles](#121-design-principles)
     - [12.2 Common Patterns](#122-common-patterns)
@@ -67,8 +67,8 @@
   - [13. IANA Considerations](#13-iana-considerations)
   - [14. Examples](#14-examples)
     - [14.1 Discovery Examples](#141-discovery-examples)
-      - [14.1.1 Program Discovery (discover API)](#1411-program-discovery-discover-api)
-      - [14.1.2 A catalog of DF programs (on\_discover API)](#1412-a-catalog-of-df-programs-on_discover-api)
+      - [14.1.1 Program Discovery (search API)](#1411-program-discovery-search-api)
+      - [14.1.2 A catalog of DF programs (on\_search API)](#1412-a-catalog-of-df-programs-on_search-api)
     - [14.2 DF program subscription Examples](#142-df-program-subscription-examples)
       - [14.2.1 DF program Subscription Request (confirm API)](#1421-df-program-subscription-request-confirm-api)
       - [14.2.2 DF program Subscription confirmation (on\_confirm API)](#1422-df-program-subscription-confirmation-on_confirm-api)
@@ -349,7 +349,7 @@ If you are a BPP:
 
 ## 11. Implementation Guide
 
-### 11.1 Overview
+### 14.1 Overview
 
 **Beckn Protocol as the Foundation for Grid Communication**
 
@@ -375,7 +375,7 @@ An implementation follows a **discovery-first marketplace approach** where each 
 
 Each phase leverages **native Beckn Protocol capabilities**—search, select, init, confirm, status, update, support, cancel, rating-adapted specifically for the energy domain while maintaining full protocol compliance and interoperability.
 
-### 11.2 Prerequisites
+### 14.2 Prerequisites
 
 Before implementation, the following infrastructure must be in place:
 
@@ -392,9 +392,9 @@ Before implementation, the following infrastructure must be in place:
 - **Data Management**: Baseline calculation engines, performance measurement systems, and billing/settlement infrastructure
 - **Regulatory Compliance**: Appropriate approvals for demand response programs and consumer participation frameworks
 
-### 11.3 Configuration
+### 14.3 Configuration
 
-#### 11.3.1 Network Architecture Setup
+#### 14.3.1 Network Architecture Setup
 
 **The Distributed Intelligence Paradigm**
 
@@ -514,7 +514,7 @@ Recommendation for implementing BPPs:
     - BPP MAY implement get_rating_categories Meta API if it requires BAP to fetch a predefined set of rating categories
   - Here is a step by step guide for [setting up a BPP using Beckn-ONIX](https://github.com/beckn/beckn-onix/blob/main/docs/user_guide.md#setting-up-a-bpp-beckn-adapter)
 
-#### 11.3.2 Security and Communication Infrastructure
+#### 14.3.2 Security and Communication Infrastructure
 
 **Security Infrastructure:**
 - Digital signature capabilities for message authentication
@@ -534,7 +534,7 @@ Recommendation for implementing BPPs:
 - Performance monitoring and reporting
 - Compliance and audit trail maintenance
 
-#### 11.3.3 Domain Configuration
+#### 14.3.3 Domain Configuration
 
 **Layer 2 Configuration:**
 DF networks require domain-specific configuration files that enforce network-wide rules and standards across all DF transactions. These Layer 2 configurations act as **governance mechanisms** that ensure protocol compliance, data consistency, and semantic interoperability throughout the network.
@@ -550,7 +550,7 @@ Layer 2 configurations define and enforce:
 
 These configurations are applied automatically to **every API call** within the DF network, ensuring that all participants—whether residential aggregators or industrial facilities—operate within consistent technical and business parameters while maintaining full Beckn Protocol compatibility.
 
-#### 11.3.4 Integration Requirements
+#### 14.3.4 Integration Requirements
 
 **Energy Management System Integration:**
 Commercial facilities must integrate their energy management systems with the BAP client endpoint to:
@@ -570,9 +570,9 @@ Grid operators must enhance their existing Energy Management Systems (EMS) to:
 
 **The Engineering Challenge**: Traditional grid operations think in terms of "firm capacity" (guaranteed available power), but DF resources are probabilistic (dependent on participant availability and response). Grid operators must develop new reliability frameworks that account for the statistical nature of distributed flexibility while maintaining the same N-1 contingency standards required for grid stability.
 
-### 11.4 Step-by-Step Implementation
+### 14.4 Step-by-Step Implementation
 
-#### 11.4.1 Step 1: Program Discovery
+#### 14.4.1 Step 1: Program Discovery
 
 Consumers (residential, commercial, or through aggregators) discover available DF programs using search APIs.
 
@@ -589,7 +589,7 @@ Consumers (residential, commercial, or through aggregators) discover available D
 - Program types and incentive structures tailored to consumer size
 - Participation requirements, terms, and minimum commitment levels
 
-#### 11.4.2 Step 2: Program Subscription
+#### 14.4.2 Step 2: Program Subscription
 
 Consumer subscribes to selected DF program (directly or through aggregator).
 
@@ -606,7 +606,7 @@ Consumer subscribes to selected DF program (directly or through aggregator).
 - Program duration, renewal options, and opt-out procedures
 - Performance requirements, penalties, and consumer protection measures
 
-#### 11.4.3 Step 3: DF Event Notification
+#### 14.4.3 Step 3: DF Event Notification
 
 **The Moment of Truth: When the Grid Calls for Help**
 
@@ -631,7 +631,7 @@ When system stress is detected, grid operators must make rapid decisions balanci
 - **Economic Signals**: Real-time pricing that reflects both grid need and participant availability
 - **Technical Requirements**: Precise timing (including required ramp rates), duration, and any operational constraints
 
-#### 11.4.4 Step 4: Event Participation Confirmation
+#### 14.4.4 Step 4: Event Participation Confirmation
 
 Commercial consumer confirms participation in DF event.
 
@@ -648,7 +648,7 @@ Commercial consumer confirms participation in DF event.
 - Equipment and systems to be controlled during event
 - Emergency override and safety procedures
 
-#### 11.4.5 Step 5: Performance Verification
+#### 14.4.5 Step 5: Performance Verification
 
 Utility verifies actual load reduction delivered during the DF event.
 
@@ -666,7 +666,7 @@ Utility verifies actual load reduction delivered during the DF event.
 - Performance percentage against commitment
 - Any qualifying events or exceptions
 
-#### 11.4.6 Step 6: Incentive Settlement
+#### 14.4.6 Step 6: Incentive Settlement
 
 Utility processes incentive payments based on verified performance.
 
@@ -684,9 +684,9 @@ Utility processes incentive payments based on verified performance.
 - Settlement status and confirmation
 - Updated performance metrics for future events
 
-### 11.5 Testing
+### 14.5 Testing
 
-#### 11.5.1 Test Scenarios
+#### 14.5.1 Test Scenarios
 
 Key validation scenarios for DF implementation:
 
@@ -710,7 +710,7 @@ Key validation scenarios for DF implementation:
    - **Test Case:** Calculate and verify incentive payments
    - **Expected Result:** Accurate calculation based on actual performance
 
-#### 11.5.2 Validation Checklist
+#### 14.5.2 Validation Checklist
 
 - [ ] API endpoints respond within timeout limits
 - [ ] Digital signatures validate correctly
@@ -888,7 +888,7 @@ This section provides comprehensive JSON examples for all Demand Flexibility API
 
 ### 14.1 Discovery Examples
 
-#### 14.1.1 Program Discovery (discover API)
+#### 14.1.1 Program Discovery (search API)
 
 - Consumers (residential, commercial, retail, industrial) search for available DF programs for subscription
 - The example below demonstrates a comprehensive parameter set; consumers MAY use a subset of these parameters as per their requirements
@@ -904,7 +904,7 @@ Consumer searches for available DF programs:
 {
   "context": {
     "version": "2.0.0",
-    "action": "discover",
+    "action": "search",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
     "timestamp": "2025-08-20T14:30:00+05:30",
     "message_id": "msg-search-df-001",
@@ -938,7 +938,45 @@ Consumer searches for available DF programs:
 ```
 </details>
 
-#### 14.1.2 A catalog of DF programs (on_discover API)
+**Parameter Explanation:**
+
+**Search Criteria:**
+- `descriptor.name`: Free text search for DF programs (user can enter any search terms)
+- `category.descriptor.name`: Category-based search filter (user can choose specific program categories)
+
+**Location and Timing:**
+- `stops.type`: Set to "end" to indicate consumer location
+- `stops.location`: Consumer's location details (REQUIRED - MAY include any combination of gps, address, or area_code as per implementor needs)
+- `stops.time.range`: Time range for which DF programs are sought (OPTIONAL - can be omitted if searching for all available programs)
+
+**Participant Capabilities:**
+- `load_capacity`: Total load reduction capacity the participant can offer (used by grid to assess potential impact)
+- `participant_type`: Type of participant - residential, commercial, industrial, retail (used for program eligibility filtering)
+- `control_type`: Load control capabilities this consumer has - automated, manual, hybrid (used to match with program requirements)
+
+**Availability Parameters:**
+- `response_time`: How quickly participant can respond to DF events (used to match with program urgency requirements)
+- `availability_hours`: Operating hours when participant can participate (used to align with event timing)
+- `availability_days`: Days of the week when participation is possible (used for program scheduling)
+- `seasonal_availability`: Seasons when participant is available - summer, winter, all (used for seasonal program matching)
+
+**Event Parameters:**
+- `min_event_duration`: Shortest duration participant can maintain load reduction (used to filter compatible programs)
+- `max_event_duration`: Longest duration participant can sustain response (used to prevent overcommitment)
+- `notification_type`: Preferred advance notice period - instant, day_ahead, week_ahead (used to match notification preferences)
+
+**Technical Parameters:**
+- `load_type`: Types of controllable loads - hvac, lighting, process, pumps that participant has (used to match with program requirements)
+
+**Incentive Parameters:**
+- `min_incentive_rate`: Minimum acceptable compensation rate (used to filter programs meeting economic requirements)
+- `incentive_currency`: Expected currency and basis - INR_per_kWh_load_reduction (used to clarify compensation structure)
+
+**Priority Parameters:**
+- `event_priority`: Priority levels participant will respond to - high, medium, low (used to match with grid urgency levels)
+- `participation_mode`: Participation type preference - mandatory, voluntary (used to filter program types)
+
+#### 14.1.2 A catalog of DF programs (on_search API)
 
 - Consumers receive a catalog of available DF programs for subscription
 - The example below demonstrates a comprehensive catalog response
@@ -954,7 +992,7 @@ DISCOM returns catalog of available DF programs:
 {
   "context": {
     "version": "2.0.0",
-    "action": "on_discover",
+    "action": "on_search",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
     "timestamp": "2025-08-20T14:30:02+05:30",
     "message_id": "msg-on-search-df-001",
@@ -1223,6 +1261,39 @@ DISCOM returns catalog of available DF programs:
 ```
 </details>
 
+**Response Structure Explanation:**
+
+**Provider Information:**
+- `id`: Unique identifier for the DF program provider (used for subsequent API calls)
+- `descriptor.name`: Provider's display name (e.g., "BRPL")
+- `descriptor.short_desc`: Brief description of provider's DF programs and coverage area
+- `locations`: Geographic areas where provider operates DF programs
+
+**Fulfillment Options:**
+- `id`: Unique identifier for the fulfillment method
+- `type`: Service delivery type (typically "DIGITAL" for DF programs)
+- `event_notification_delivery`: Available notification methods for DF event push (api_push, sms_alert, email_notice)
+
+**Program Categories:**
+- Categories help consumers filter programs by availability commitment (always available, seasonal, emergency-only)
+- Each category has a unique `id` and descriptive `code` for filtering
+
+**Available Programs (Items):**
+- `id`: Unique program identifier for subscription requests
+- `descriptor.name`: Program display name
+- `descriptor.short_desc`: Brief program summary including incentive rate
+- `descriptor.long_desc`: Detailed program description and participation requirements
+- `category_ids`: Links to applicable program categories
+- `fulfillment_ids`: Links to available fulfillment methods
+- `location_ids`: Links to available location objects
+
+**Program Tags (Key Parameters):**
+- **Participant Capabilities**: `load_capacity` (capacity range), `participant_type` (eligible consumer types), `control_type` (required control method)
+- **Availability Parameters**: `response_time` (required response time), `availability_hours` (operating hours), `availability_days` (operating days), `seasonal_availability` (seasons)
+- **Event Parameters**: `min_event_duration` and `max_event_duration` (event duration range), `notification_type` (advance notice period)
+- **Incentive Parameters**: `incentive_rate` (compensation rate), `incentive_currency` (payment currency), `settlement_frequency` (payment schedule)
+- **Priority Parameters**: `event_priority` (priority levels), `participation_mode` (voluntary/mandatory), `grid_condition` (triggering conditions)
+
 This catalog structure allows consumers to evaluate and select DF programs that match their capabilities and preferences.
 
 ### 14.2 DF program subscription Examples
@@ -1325,6 +1396,22 @@ Consumer confirms subscription to a DF program:
 
 ```
 </details>
+
+**Request Structure Explanation:**
+
+**Order Information:**
+- `order.type`: Set to "program_subscription" to indicate subscription request
+- `order.provider`: References the selected provider from on_search response
+- `order.items`: Contains the specific DF program consumer wishes to subscribe
+
+**Item Details:**
+- `id`: Program identifier from the catalog (used to identify specific program)
+
+**Fulfillment Method:**
+- `id`: Selected fulfillment option from available options
+- `stops`: Contains consumer's location and operational timeframe
+
+This request formally commits the consumer to participate in the selected DF program.
 
 #### 14.2.2 DF program Subscription confirmation (on_confirm API)
 
@@ -1464,6 +1551,23 @@ DISCOM confirms consumer subscription to DF program:
 ```
 </details>
 
+**Response Structure Explanation:**
+
+**Subscription Confirmation:**
+- `order.type`: type of the info this payload contains, in this case it is "program_subscription" type
+- `order.id`: Unique identifier assigned for this particular subscription
+- `order.provider`: Provider details confirming program enrollment
+- `order.items`: Enrolled program details
+
+**Enrollment Details:**
+- Item details are the same as received in the on_search response, confirming the specific program that was subscribed to
+
+**Assigned Fulfillment:**
+- Fulfillment details are the same as in on_search response, but with updated state
+- State changes to "SUBSCRIBED" after successful subscription, or relevant error state if subscription failed at BPP level
+
+This response confirms successful enrollment and provides the consumer with subscription details and assigned identifiers for future reference.
+
 ### 14.3 DF Event Management Examples
 
 #### 14.3.1 DF Event Notification (on_init API)
@@ -1578,6 +1682,60 @@ DISCOM notifies consumer of a DF event:
 ```
 </details>
 
+**Request Structure Explanation:**
+
+**Critical API Overview:**
+This API represents the core moment when grid operators request demand flexibility from consumers. It transforms grid stress into actionable consumer requests, making it the cornerstone of demand response programs.
+
+**Event Details:**
+- `order.type`: Set to "event_participation" to distinguish this from subscription requests - this is an actual event call
+- `order.provider`: Grid operator/utility initiating the event, establishing accountability and trust
+- `order.items`: Contains the specific DF event details that consumers must evaluate for participation
+
+**Event Parameters (Consumer Decision Factors):**
+- `items.id`: Unique event identifier enabling precise tracking across all systems and settlement processes
+- `items.descriptor`: Human-readable event description including context and load reduction requirements
+- `quantity.measure.value`: Specific load reduction requested from this consumer (in kW) - forms the basis of commitment and compensation
+- `quantity.measure.unit`: Unit of measurement for the requested reduction (typically "kW")
+
+**Event Details Tags:**
+- `status`: Current event status - "REQUESTED" indicates the grid operator is awaiting consumer's participation decision
+- `priority`: Event urgency classification (high=critical grid stress requiring immediate response, medium=economic optimization, low=voluntary participation)
+- `grid_frequency`: Real-time grid frequency measurement (normal=50Hz, deviations indicate system stress requiring demand response)
+- `response_deadline`: Critical deadline for consumer confirmation - enables grid operator to plan alternative actions
+- `baseline_kw`: Consumer's calculated normal consumption during event period - critical for fair performance measurement
+- `baseline_method`: How baseline was calculated (e.g., "3-of-5_average") - provides transparency in measurement
+
+**Program Context Tags:**
+- `subscription_id`: Links to consumer's program enrollment - ensures event is sent to eligible participants only
+- `program_id`: Specific DF program triggering this event - enables program-specific response rules and compensation
+
+**Incentive Information Tags:**
+- `incentive_rate`: Compensation rate for load reduction
+- `incentive_currency`: Payment currency (e.g., "INR")
+- `incentive_type`: Basis for calculation (e.g., "per_kWh_reduced")
+
+**Event Timing (Operational Coordination):**
+- `fulfillments.stops.time.range`: Event start and end times - ensures synchronized response across grid
+- `fulfillments.state`: Current fulfillment status of the event
+
+**Consumer Response Requirements:**
+Consumers receiving this notification must:
+1. Evaluate their operational ability to provide the requested load reduction
+2. Consider the event timing against their operational schedules
+3. Assess the baseline calculation for accuracy
+4. Respond within the specified deadline with their participation decision
+5. Understand that non-response may be treated as non-participation
+
+**Grid Operator Responsibilities:**
+- Ensure baseline calculations are accurate and fair
+- Provide sufficient advance notice as per program terms
+- Send events only to eligible, subscribed consumers
+- Include all necessary context for informed consumer decisions
+- Respect consumer operational constraints and response capabilities
+
+This notification represents a bilateral contract offer that, once accepted, creates binding obligations for both parties.
+
 #### 14.3.2 DF Event Participation Confirmation (confirm API)
 
 - Consumers respond to DF event notifications by confirming their participation decision using order.type = "event_participation"
@@ -1680,6 +1838,22 @@ Consumer confirms participation in DF event:
 
 ```
 </details>
+
+**Understanding the Event Participation Confirmation:**
+**Request Structure Explanation:**
+
+This confirm API response contains the same structure and fields as the on_init notification, with few key differences:
+
+**Key Changes from on_init:**
+- `quantity.measure.value`: Consumer's committed reduction amount (e.g., "120" kW) - this is how much the consumer promises they will reduce, may differ from the originally requested amount
+- `fulfillment.state`: Changes from "REQUESTED" to "CONFIRMED" (if accepting) or "REJECTED" (if declining) indicating consumer's participation decision
+- `commitment_confidence`: New tag indicating consumer's confidence level in their ability to deliver the committed reduction (e.g., "high")
+
+**Unchanged Elements:**
+- All event details, baseline information, incentive parameters, and timing remain identical to the on_init request
+- Consumer confirms participation with the same event parameters provided by the grid operator
+
+This confirmation creates a binding commitment for the consumer to reduce specified load during the DF event period.
 
 #### 14.3.3 DF Event Participation Acknowledgement (on_confirm API)
 
@@ -1786,6 +1960,22 @@ DISCOM acknowledges consumer participation in DF event:
 
 ```
 </details>
+
+**Understanding the Event Participation Acknowledgement:**
+**Response Structure Explanation:**
+
+This on_confirm API response contains the same structure and fields as the confirm request, with key differences:
+
+**Key Changes from confirm:**
+- `order.id`: New unique identifier is created to track this acknowledgment response
+- `order.status`: BPP's response to the participation decision ("ACCEPTED" if BPP accepts consumer's commitment, or relevant status if declined)
+- Additional tags may be added for incentive estimation and performance monitoring setup
+
+**Unchanged Elements:**
+- All event details, baseline information, committed reduction amount, and timing remain identical to the confirm request
+- BPP acknowledges the consumer's participation decision with the same event parameters
+
+This acknowledgment confirms that the BPP has processed the consumer's participation decision and establishes the framework for performance monitoring and incentive calculation.
 
 ### 14.4 Settlement and Monitoring Examples
 
@@ -1903,6 +2093,32 @@ DISCOM provides settlement details and incentive calculation:
 
 ```
 </details>
+
+**Understanding the Settlement and Performance Metrics:**
+**Response Structure Explanation:**
+
+**Performance Metrics:**
+- `actual_avg_load`: Measured average consumption during event period
+- `load_reduction_achieved`: Calculated actual load reduction (baseline - actual)
+- `performance_percentage`: Performance ratio (achieved/committed * 100)
+
+**Settlement Calculation:**
+- `total_reduction_kwh`: Total energy reduced during event period
+- `incentive_rate`: Applied compensation rate per kWh reduced
+- `total_incentive`: Final calculated compensation amount
+- `incentive_currency`: Payment currency and denomination
+
+**Settlement Status:**
+- `settlement_status`: Payment processing status (calculated/pending/paid)
+- `settlement_period`: Billing cycle when payment will be processed
+- `performance_verified`: Indicates completion of performance validation
+
+**Quality Metrics:**
+- `baseline_accuracy`: Validation of baseline calculation method
+- `measurement_quality`: Data quality assessment for settlement
+- `compliance_status`: Adherence to program participation requirements
+
+This status response provides comprehensive performance assessment and final incentive calculation for the completed DF event.
 
 ### 14.5 Post-Fulfillment Examples
 
