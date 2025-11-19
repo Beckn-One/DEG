@@ -14,22 +14,9 @@
     ]
   },
   "message": {
-    "spatial": [
-      {
-        "op": "s_dwithin",
-        "targets": "$['beckn:availableAt'][*]['geo']",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            77.59,
-            12.94
-          ]
-        }
-      }
-    ],
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:availabilityWindow.schema:startTime <= '12:30:00' && @.beckn:availabilityWindow.schema:endTime >= '14:30:00')]"
+      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'Type2' && @.beckn:availabilityWindow.schema:startTime <= '11:30:00' && @.beckn:availabilityWindow.schema:endTime >= '14:30:00')]"
     }
   }
 }

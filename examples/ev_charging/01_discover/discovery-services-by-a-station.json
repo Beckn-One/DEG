@@ -16,7 +16,7 @@
   "message": {
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.beckn:id=='ITEM-BTM-DC60')]"
+      "expression": "$[?(@.beckn:id=='ev-charger-ccs2-001')]"
     }
   }
 }
