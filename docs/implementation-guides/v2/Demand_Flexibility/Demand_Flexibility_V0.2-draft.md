@@ -369,7 +369,7 @@ An implementation follows a **discovery-first marketplace approach** where each 
 
 Each phase leverages **native Beckn Protocol capabilities**—search, select, init, confirm, status, update, support, cancel, rating-adapted specifically for the energy domain while maintaining full protocol compliance and interoperability.
 
-**Demand Flexibility Transaction Flow:**
+**Demand Flexibility Transaction Flow (Current Implementation):**
 
 ```mermaid
 sequenceDiagram
@@ -392,19 +392,7 @@ sequenceDiagram
         D-->>C: on_confirm (event confirmed, baseline set)
     end
     
-    Note over C,D: Phase 3: Monitoring & Flexibility (Future Extension)
-    rect rgb(230, 245, 255)
-        Note over C: Load Reduction Execution
-        C->>D: status (check event status)
-        D-->>C: on_status (real-time performance tracking)
-        
-        opt Grid Event Update
-            D-->>C: on_update (event extension/modification)
-            C->>D: update (updated commitment)
-        end
-    end
-    
-    Note over C,D: Phase 4: Settlement
+    Note over C,D: Phase 3: Settlement
     D-->>C: on_status (performance verification, incentive settlement)
     
     opt Post-Fulfillment
@@ -413,6 +401,27 @@ sequenceDiagram
         
         C->>D: support (if issues arise)
         D-->>C: on_support (support response)
+    end
+```
+
+**Future Extension: Real-time Monitoring & Flexibility:**
+
+```mermaid
+sequenceDiagram
+    participant C as Consumer (BAP)
+    participant D as DISCOM/Utility (BPP)
+    
+    Note over C,D: Enhanced Phase: Real-time Monitoring & Dynamic Flexibility
+    rect rgb(230, 245, 255)
+        Note over C: Load Reduction Execution
+        C->>D: status (check event status)
+        D-->>C: on_status (real-time performance tracking)
+        
+        opt Grid Event Update
+            D-->>C: on_update (event extension/modification)
+            C->>D: update (updated commitment)
+            D-->>C: on_update (acknowledgement)
+        end
     end
 ```
 
