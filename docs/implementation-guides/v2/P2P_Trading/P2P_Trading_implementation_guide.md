@@ -1549,12 +1549,12 @@ All examples are available in:
   - `order-example.json` - EnergyTradeContract
   - `fulfillment-example.json` - EnergyTradeDelivery
 
-- **Transaction Flow Examples**: [`/examples/v2/P2P_Trading /`](../examples)
-  - [`discover-request.json`](/examples/v2/P2P_Trading /discover-request.json) / [`discover-response.json`](/examples/v2/P2P_Trading /discover-response.json)
-  - [`select-request.json`](/examples/v2/P2P_Trading /select-request.json) / [`select-response.json`](/examples/v2/P2P_Trading /select-response.json)
-  - [`init-request.json`](/examples/v2/P2P_Trading /`init-request.json) / [`init-response.json`](/examples/v2/P2P_Trading /init-response.json)
-  - [`confirm-request.json`](/examples/v2/P2P_Trading /confirm-request.json) / [`confirm-response.json`](/examples/v2/P2P_Trading /confirm-response.json)
-  - [`status-request.json`](/examples/v2/P2P_Trading /status-request.json) / [`status-response.json`](/examples/v2/P2P_Trading /status-response.json)
+- **Transaction Flow Examples**: [`/examples/v2/P2P_Trading/`](../examples)
+  - [`discover-request.json`](/examples/v2/P2P_Trading/discover-request.json) / [`discover-response.json`](/examples/v2/P2P_Trading/discover-response.json)
+  - [`select-request.json`](/examples/v2/P2P_Trading/select-request.json) / [`select-response.json`](/examples/v2/P2P_Trading/select-response.json)
+  - [`init-request.json`](/examples/v2/P2P_Trading/`init-request.json) / [`init-response.json`](/examples/v2/P2P_Trading/init-response.json)
+  - [`confirm-request.json`](/examples/v2/P2P_Trading/confirm-request.json) / [`confirm-response.json`](/examples/v2/P2P_Trading/confirm-response.json)
+  - [`status-request.json`](/examples/v2/P2P_Trading/status-request.json) / [`status-response.json`](/examples/v2/P2P_Trading/status-response.json)
 
 
 ### Example Scenarios
