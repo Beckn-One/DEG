@@ -394,45 +394,45 @@ Each phase leverages **native Beckn Protocol capabilities**—discover, select, 
 
 ```mermaid
 sequenceDiagram
-    participant CA as Compute Agent<br/>(BAP)
-    participant CDS as Catalog Discovery<br/>Service (CDS)
-    participant GA as Grid Agent<br/>(BPP)
+    participant CA as Compute Agent (BAP)
+    participant CDS as Catalog Discovery Service
+    participant GA as Grid Agent (BPP)
     
-    Note over CA,CDS,GA: Phase 1: Discovery
-    CA->>CDS: discover<br/>(grid conditions, carbon thresholds)
-    CDS-->>CA: on_discover<br/>(available grid windows, carbon intensity)
+    Note over CA,GA: Phase 1: Discovery
+    CA->>CDS: discover (grid conditions, carbon thresholds)
+    CDS-->>CA: on_discover (available grid windows, carbon intensity)
     
     Note over CA,GA: Phase 2: Selection
-    CA->>GA: select<br/>(chosen grid windows, capacity)
-    GA-->>CA: on_select<br/>(availability confirmation, detailed terms)
+    CA->>GA: select (chosen grid windows, capacity)
+    GA-->>CA: on_select (availability confirmation, detailed terms)
     
     Note over CA,GA: Phase 3: Initialization
-    CA->>GA: init<br/>(workload details, carbon budget)
-    GA-->>CA: on_init<br/>(order validation, billing details)
+    CA->>GA: init (workload details, carbon budget)
+    GA-->>CA: on_init (order validation, billing details)
     
     Note over CA,GA: Phase 4: Confirmation
-    CA->>GA: confirm<br/>(finalize order)
-    GA-->>CA: on_confirm<br/>(order confirmed, reservation ID)
+    CA->>GA: confirm (finalize order)
+    GA-->>CA: on_confirm (order confirmed, reservation ID)
     
     Note over CA,GA: Phase 5: Execution
     rect rgb(230, 245, 255)
-        Note over CA: Workload Execution Begins
-        CA->>GA: status<br/>(check execution state)
-        GA-->>CA: on_status<br/>(power consumption, carbon tracking)
+        Note over CA,GA: Workload Execution Begins
+        CA->>GA: status (check execution state)
+        GA-->>CA: on_status (power consumption, carbon tracking)
     end
     
     Note over CA,GA: Phase 6: Dynamic Flexibility
     rect rgb(255, 240, 230)
-        GA-->>CA: on_update<br/>(grid stress event, flexibility request)
-        Note over CA: Evaluate & Execute<br/>Flexibility Response
-        CA->>GA: update<br/>(flexibility action: migrate/pause)
-        GA-->>CA: on_update<br/>(action acknowledged)
+        GA-->>CA: on_update (grid stress event, flexibility request)
+        Note over CA: Evaluate and Execute Flexibility Response
+        CA->>GA: update (flexibility action: migrate/pause)
+        GA-->>CA: on_update (action acknowledged)
     end
     
     Note over CA,GA: Phase 7: Settlement
-    GA-->>CA: on_status<br/>(final settlement, carbon emissions)
-    CA->>GA: rating<br/>(rate grid service)
-    GA-->>CA: on_rating<br/>(rating acknowledged)
+    GA-->>CA: on_status (final settlement, carbon emissions)
+    CA->>GA: rating (rate grid service)
+    GA-->>CA: on_rating (rating acknowledged)
 ```
 
 ### 11.2 Step-by-Step Implementation

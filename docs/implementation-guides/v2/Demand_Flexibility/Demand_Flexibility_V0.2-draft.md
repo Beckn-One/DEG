@@ -373,52 +373,46 @@ Each phase leverages **native Beckn Protocol capabilities**—search, select, in
 
 ```mermaid
 sequenceDiagram
-    participant C as Consumer<br/>(BAP)
-    participant CDS as Catalog Discovery<br/>Service (CDS)
-    participant D as DISCOM/Utility<br/>(BPP)
+    participant C as Consumer (BAP)
+    participant CDS as Catalog Discovery Service
+    participant D as DISCOM/Utility (BPP)
     
-    Note over C,CDS,D: Phase 1: Discovery & Subscription
-    C->>CDS: discover<br/>(location, load capacity, segment)
-    CDS-->>C: on_discover<br/>(available DF programs, incentive rates)
+    Note over C,D: Phase 1: Discovery & Subscription
+    C->>CDS: discover (location, load capacity, segment)
+    CDS-->>C: on_discover (available DF programs, incentive rates)
     
-    C->>D: select<br/>(chosen program)
-    D-->>C: on_select<br/>(program terms, requirements)
-    
-    C->>D: init<br/>(consumer details, capabilities)
-    D-->>C: on_init<br/>(subscription validation, billing setup)
-    
-    C->>D: confirm<br/>(finalize subscription)
-    D-->>C: on_confirm<br/>(subscription confirmed, active)
+    C->>D: confirm (subscribe to DF program)
+    D-->>C: on_confirm (subscription confirmed, active)
     
     Note over C,D: Phase 2: DF Event Execution
     rect rgb(255, 245, 230)
-        D-->>C: on_init<br/>(DF event notification, grid conditions)
-        Note over C: Evaluate Event<br/>Against Operations
-        C->>D: confirm<br/>(participation commitment, load reduction)
-        D-->>C: on_confirm<br/>(event confirmed, baseline set)
+        D-->>C: on_init (DF event notification, grid conditions)
+        Note over C: Evaluate Event Against Operations
+        C->>D: confirm (participation commitment, load reduction)
+        D-->>C: on_confirm (event confirmed, baseline set)
     end
     
-    Note over C,D: Phase 3: Monitoring & Flexibility
+    Note over C,D: Phase 3: Monitoring & Flexibility (Future Extension)
     rect rgb(230, 245, 255)
-        Note over C: Load Reduction<br/>Execution
-        C->>D: status<br/>(check event status)
-        D-->>C: on_status<br/>(real-time performance tracking)
+        Note over C: Load Reduction Execution
+        C->>D: status (check event status)
+        D-->>C: on_status (real-time performance tracking)
         
         opt Grid Event Update
-            D-->>C: on_update<br/>(event extension/modification)
-            C->>D: update<br/>(updated commitment)
+            D-->>C: on_update (event extension/modification)
+            C->>D: update (updated commitment)
         end
     end
     
     Note over C,D: Phase 4: Settlement
-    D-->>C: on_status<br/>(performance verification, incentive settlement)
+    D-->>C: on_status (performance verification, incentive settlement)
     
     opt Post-Fulfillment
-        C->>D: rating<br/>(rate DF program)
-        D-->>C: on_rating<br/>(rating acknowledged)
+        C->>D: rating (rate DF program)
+        D-->>C: on_rating (rating acknowledged)
         
-        C->>D: support<br/>(if issues arise)
-        D-->>C: on_support<br/>(support response)
+        C->>D: support (if issues arise)
+        D-->>C: on_support (support response)
     end
 ```
 
