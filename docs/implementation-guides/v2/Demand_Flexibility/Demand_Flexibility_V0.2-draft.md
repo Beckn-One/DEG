@@ -32,24 +32,18 @@
       - [10.2.1 Installing Beckn ONIX](#1021-installing-beckn-onix)
       - [10.2.2 Configuring Beckn ONIX for Demand Flexibility Transactions](#1022-configuring-beckn-onix-for-demand-flexibility-transactions)
       - [10.2.3 Performing a test Demand Flexibility transaction](#1023-performing-a-test-demand-flexibility-transaction)
-  - [11. Implementation Guide](#11-implementation-guide)
+  - [11. Implementing Demand Flexibility semantics with Beckn Protocol](#11-implementing-demand-flexibility-semantics-with-beckn-protocol)
     - [11.1 Overview](#111-overview)
-    - [11.2 Prerequisites](#112-prerequisites)
-    - [11.3 Configuration](#113-configuration)
-      - [11.3.1 Network Architecture Setup](#1131-network-architecture-setup)
-      - [11.3.2 Security and Communication Infrastructure](#1132-security-and-communication-infrastructure)
-      - [11.3.3 Domain Configuration](#1133-domain-configuration)
-      - [11.3.4 Integration Requirements](#1134-integration-requirements)
-    - [11.4 Step-by-Step Implementation](#114-step-by-step-implementation)
-      - [11.4.1 Step 1: Program Discovery](#1141-step-1-program-discovery)
-      - [11.4.2 Step 2: Program Subscription](#1142-step-2-program-subscription)
-      - [11.4.3 Step 3: DF Event Notification](#1143-step-3-df-event-notification)
-      - [11.4.4 Step 4: Event Participation Confirmation](#1144-step-4-event-participation-confirmation)
-      - [11.4.5 Step 5: Performance Verification](#1145-step-5-performance-verification)
-      - [11.4.6 Step 6: Incentive Settlement](#1146-step-6-incentive-settlement)
-    - [11.5 Testing](#115-testing)
-      - [11.5.1 Test Scenarios](#1151-test-scenarios)
-      - [11.5.2 Validation Checklist](#1152-validation-checklist)
+    - [11.2 Step-by-Step Implementation](#112-step-by-step-implementation)
+      - [11.2.1 Step 1: Program Discovery](#1121-step-1-program-discovery)
+      - [11.2.2 Step 2: Program Subscription](#1122-step-2-program-subscription)
+      - [11.2.3 Step 3: DF Event Notification](#1123-step-3-df-event-notification)
+      - [11.2.4 Step 4: Event Participation Confirmation](#1124-step-4-event-participation-confirmation)
+      - [11.2.5 Step 5: Performance Verification](#1125-step-5-performance-verification)
+      - [11.2.6 Step 6: Incentive Settlement](#1126-step-6-incentive-settlement)
+    - [11.3 Testing](#113-testing)
+      - [11.3.1 Test Scenarios](#1131-test-scenarios)
+      - [11.3.2 Validation Checklist](#1132-validation-checklist)
   - [12. Best Practices](#12-best-practices)
     - [12.1 Design Principles](#121-design-principles)
     - [12.2 Common Patterns](#122-common-patterns)
@@ -347,7 +341,7 @@ If you are a BPP:
 2. Select the on_status example and hit send
 3. You should see the response in your console
 
-## 11. Implementation Guide
+## 11. Implementing Demand Flexibility semantics with Beckn Protocol
 
 ### 11.1 Overview
 
@@ -375,212 +369,69 @@ An implementation follows a **discovery-first marketplace approach** where each 
 
 Each phase leverages **native Beckn Protocol capabilities**—search, select, init, confirm, status, update, support, cancel, rating-adapted specifically for the energy domain while maintaining full protocol compliance and interoperability.
 
-### 11.2 Prerequisites
+**Demand Flexibility Transaction Flow:**
 
-Before implementation, the following infrastructure must be in place:
+```mermaid
+sequenceDiagram
+    participant C as Consumer<br/>(BAP)
+    participant CDS as Catalog Discovery<br/>Service (CDS)
+    participant D as DISCOM/Utility<br/>(BPP)
+    
+    Note over C,CDS,D: Phase 1: Discovery & Subscription
+    C->>CDS: discover<br/>(location, load capacity, segment)
+    CDS-->>C: on_discover<br/>(available DF programs, incentive rates)
+    
+    C->>D: select<br/>(chosen program)
+    D-->>C: on_select<br/>(program terms, requirements)
+    
+    C->>D: init<br/>(consumer details, capabilities)
+    D-->>C: on_init<br/>(subscription validation, billing setup)
+    
+    C->>D: confirm<br/>(finalize subscription)
+    D-->>C: on_confirm<br/>(subscription confirmed, active)
+    
+    Note over C,D: Phase 2: DF Event Execution
+    rect rgb(255, 245, 230)
+        D-->>C: on_init<br/>(DF event notification, grid conditions)
+        Note over C: Evaluate Event<br/>Against Operations
+        C->>D: confirm<br/>(participation commitment, load reduction)
+        D-->>C: on_confirm<br/>(event confirmed, baseline set)
+    end
+    
+    Note over C,D: Phase 3: Monitoring & Flexibility
+    rect rgb(230, 245, 255)
+        Note over C: Load Reduction<br/>Execution
+        C->>D: status<br/>(check event status)
+        D-->>C: on_status<br/>(real-time performance tracking)
+        
+        opt Grid Event Update
+            D-->>C: on_update<br/>(event extension/modification)
+            C->>D: update<br/>(updated commitment)
+        end
+    end
+    
+    Note over C,D: Phase 4: Settlement
+    D-->>C: on_status<br/>(performance verification, incentive settlement)
+    
+    opt Post-Fulfillment
+        C->>D: rating<br/>(rate DF program)
+        D-->>C: on_rating<br/>(rating acknowledged)
+        
+        C->>D: support<br/>(if issues arise)
+        D-->>C: on_support<br/>(support response)
+    end
+```
 
-**For Participating Consumers:**
-- **Smart Metering**: Advanced metering infrastructure (AMI) with 15-minute or hourly interval data capability
-- **Controllable Devices** (recommended): Smart thermostats, automated equipment controls, or energy management systems capable of load adjustment, or manual procedures for load modification
-- **Communication Infrastructure**: Reliable internet connectivity for receiving API calls and sending responses
-- **Local Intelligence**: Basic automation or manual procedures to execute load reduction commands
+### 11.2 Step-by-Step Implementation
 
-**For Utilities/DISCOMs:**
-- **Grid Operations Integration**: Existing SCADA, Energy Management Systems (EMS), and demand forecasting capabilities
-- **Communication Systems**: API infrastructure capable of handling real-time message exchange with multiple participants
-- **Authorization Framework**: Digital signature capabilities, participant authentication, and access control systems
-- **Data Management**: Baseline calculation engines, performance measurement systems, and billing/settlement infrastructure
-- **Regulatory Compliance**: Appropriate approvals for demand response programs and consumer participation frameworks
-
-### 11.3 Configuration
-
-#### 11.3.1 Network Architecture Setup
-
-**The Distributed Intelligence Paradigm**
-
-Demand Flexibility fundamentally reimagines grid operations as a **distributed intelligence network** rather than centralized command-and-control. Each participant—whether utility or consumer—operates as an autonomous agent capable of making intelligent decisions while coordinating with the broader grid ecosystem.
-
-**Consumer Entity (BAP) - The Intelligent Edge Node:**
-
-Think of each participating entity—whether a household, commercial building, industrial facility, or aggregator managing multiple consumers—as a "smart grid edge node" with decision-making capabilities. A BAP implementation consists of three logical components:
-
-**1. Network-Side Interface (Beckn Protocol Communication):**
-This component handles all Beckn Protocol API communications with the utility network. It processes search requests, subscription confirmations, event notifications, and status updates. This is the standard Beckn BAP endpoint that accepts BPP callbacks following the protocol specification.
-
-**2. Decision Engine (Local Intelligence):**
-This is the business logic component that makes participation decisions by considering:
-  - Current operational priorities (production schedules, occupancy patterns, comfort settings, equipment maintenance)
-  - Economic opportunities (electricity prices, incentive rates, demand charges, bill savings)
-  - Technical constraints (equipment ramp rates, minimum run times, safety interlocks, comfort bounds)
-  - Consumer preferences (participation willingness, priority loads, override capabilities)
-  - Historical performance (baseline accuracy, commitment reliability, revenue optimization)
-
-**3. Client-Side Interface (Internal Systems Integration):**
-This component interfaces with the consumer's internal energy systems—home automation platforms, Building Management Systems, SCADA, IoT sensors, or aggregator platforms. It translates between "consumer language" (comfort settings, production schedules, operational constraints) and "DF program language" (load reduction commitments, baseline calculations, participation decisions).
-
-**Note:** These are **logical components within a single BAP application**, not separate physical services. They can be implemented as modules within one software system or as separate microservices depending on the deployment architecture.
-
-**Utility/DISCOM (BPP) - The Grid Orchestrator:**
-
-The utility transforms from a traditional "power deliverer" to a "flexibility marketplace operator". A BPP implementation consists of three logical components:
-
-**1. Grid Operations Interface (Internal Systems Integration):**
-This component interfaces with traditional utility systems—SCADA, Energy Management Systems (EMS), Market Operations, demand forecasting, and billing systems. It translates between "grid operations language" (MW requirements, frequency deviations, transmission constraints) and "DF marketplace language" (event notifications, participant capacity, incentive calculations).
-
-**2. DF Program Management Engine (Grid Intelligence):**
-This is the business logic component that orchestrates DF programs by:
-  - Monitoring grid conditions and forecasting flexibility needs
-  - Managing participant portfolios and capacity tracking
-  - Optimizing event dispatch across multiple participants
-  - Calculating baselines, measuring performance, and processing settlements
-  - Coordinating with traditional grid operations and market systems
-
-**3. Network-Side Interface (Beckn Protocol Communication):**
-This component handles all Beckn Protocol API communications with consumer BAPs. It processes search responses, subscription management, event dispatch, and status collection. This is the standard Beckn BPP endpoint that serves BAP requests following the protocol specification.
-
-**Note:** Like BAP components, these are **logical components within a single BPP application**. The implementation can range from integrated modules within existing utility systems to standalone DF marketplace platforms depending on utility architecture and integration requirements.
-
-**Gateway Service:**
-Discovery requests flow through gateways(Beckn Gateway) that broadcast search queries to all relevant providers in the network. Gateways filter and route messages based on domain and geographic criteria.
-
-**Registry Service:**
-Each DF network or Energy network requires a registry where all participants(BAP, BPP, BG) register themselves with details such as network endpoint, domains, region of operation, public keys. The registry maintains the authoritative list of network participants and their subscription status.
-
-Participant Registration contains:
-- Unique participant identifiers across the network
-- Endpoint URLs for client and network communication
-- Geographic coverage and operational hours
-- Subscription status and access permissions
-
-**Recommendations for implementing the above mentioned components**
-
-  - BAP: All BAP implementations MUST follow the relevant APIs from the Beckn [transaction](https://github.com/beckn/protocol-specifications/blob/master/api/transaction/build/transaction.yaml) and [meta](https://github.com/beckn/protocol-specifications/blob/master/api/meta/build/meta.yaml) specifications.
-  - BPP: All BPP implementations MUST follow the relevant APIs from the Beckn [transaction](https://github.com/beckn/protocol-specifications/blob/master/api/transaction/build/transaction.yaml) and [meta](https://github.com/beckn/protocol-specifications/blob/master/api/meta/build/meta.yaml) specifications.
-  - Beckn Gateway: The implemented gateway MUST follow the Beckn [gateway](https://github.com/beckn/protocol-specifications/blob/master/api/transaction/build/transaction.yaml) specifications.
-  - Beckn Registry: The implemented registry MUST follow the Beckn [registry](https://github.com/beckn/protocol-specifications/tree/master/api/registry/build/registry.yaml) specifications.
-
-NOTE: FIDE provides a software stack called [Beckn-ONIX](https://becknprotocol.io/beckn-onix/), for rapidly deploying and configuring a Beckn enabled network. This is just one of many ways to deploy a Beckn enabled network.
-
-Recommendation for implementing Registry:
-  - **Participant Registration**: Registry MUST allow Network Participants to register themselves with a Subscriber ID and Subscriber URL
-  - **Approval Criteria**: Registry MAY have approval criteria for registrants, once the criteria are met, the registrants MAY be considered as subscribers
-  - **Participant Rights**: Registry MUST allow network participants to own and have rights to modify their network roles and participant keys
-  - **Access Control**: Registry MUST NOT allow a user to change other user's network participant details
-  - **Detail Management**: Registry MUST allow subscribers to create and alter their details including domain, role, and location
-  - **Key Management**: Registry MUST allow public keys associated with network participants to be changed
-  - **Information Updates**: Registry MUST support the modification of subscriber information
-  - **Lookup Services**: Registry MUST support the lookup of Subscriber information through the registry lookup endpoint
-  - Here is a step by step guide for [setting up Beckn registry using Beckn-ONIX](https://github.com/beckn/beckn-onix/blob/main/docs/user_guide.md#setting-up-a-new-network---registry)
-  
-Recommendation for implementing Gateway:
-  - **Authentication & Signing**: Gateway MUST implement signature addition with X-Gateway-Authorization header when forwarding BAP messages to BPPs
-  - **Search Endpoint**: Gateway MUST implement and expose search endpoint at subscriber URL to receive search requests from BAPs
-  - **Registry Integration**: Gateway MUST use lookup API to fetch relevant BPPs based on message context (domain, location, capabilities)
-  - **Message Forwarding**: Gateway MUST forward signed search requests to all relevant BPPs returned by Registry lookup
-  - **Caching**: Gateway SHOULD implement short-term caching to reduce Registry lookup load during peak grid events
-  - **Error Handling**: Gateway MUST gracefully handle Registry lookup failures and BPP communication errors
-  - Here is a step by step guide for [setting up Beckn Gateway using Beckn-ONIX](https://github.com/beckn/beckn-onix/blob/main/docs/user_guide.md#setting-up-a-gateway)
-
-Recommendation for implementing BAPs:
-  - **Transaction APIs**: 
-    - BAP MUST implement the mandatory Transaction APIs (on_init, on_confirm, on_status). These APIs are required for receiving DF events and incentive details.
-    - BAP MAY implement additional APIs (on_search, on_cancel, on_rating, on_support): 
-      - on_search is required if a network wishes to implement DF program discovery and subscription features
-      - on_cancel is required for cancellation of an existing DF program subscription
-      - on_rating is required for rating existing DF programs
-      - on_support is required for handling customer support requests and technical assistance
-  - **Layer 2 Compliance**: BAP MUST ensure all requests/responses comply with Layer 2 configuration rules for demand-flexibility domain
-  - **Context Management**: BAP MUST generate unique message_id for each interaction and maintain transaction_id across workflow stages
-  - **Authentication**: BAP MUST provide on_subscribe endpoint for Registry public-key verification
-  - **Error Handling**: BAP MUST gracefully handle NACK responses and implement appropriate business logic triggers
-  - **Meta APIs**:
-    - BAP MAY implement cancellation_reasons Meta API to receive predefined cancellation reasons from BPP
-    - BAP MAY implement rating_categories Meta API to receive predefined rating categories from BPP
-  - Here is a step by step guide for [setting up a BAP using Beckn-ONIX](https://github.com/beckn/beckn-onix/blob/main/docs/user_guide.md#setting-up-a-bap-beckn-adapter)
-
-Recommendation for implementing BPPs:
-  - **Transaction APIs**: 
-    - BPP MUST implement the mandatory Transaction APIs (init, confirm, status). These APIs are required for sending DF events and providing incentive status updates
-    - BPP MAY implement additional APIs (search, cancel, rating, support):
-      - search is required if a network wishes to implement DF program discovery and subscription features
-      - cancel is required for cancellation of an existing DF program subscription
-      - rating is required for receiving ratings for a DF program
-      - support is required for providing customer support and resolving technical issues
-  - **Layer 2 Validation**: BPP MUST ensure all requests/responses comply with Layer 2 configuration rules for demand-flexibility domain
-  - **Context Preservation**: BPP MUST return unaltered message_id, transaction_id, bap_id, and bap_uri in responses
-  - **Authentication**: BPP MUST provide on_subscribe endpoint for Registry verification and implement Gateway proxy verification for search messages
-  - **Meta APIs**: 
-    - BPP MAY implement get_cancellation_reasons Meta API if it requires BAP to fetch a predefined set of cancellation reasons
-    - BPP MAY implement get_rating_categories Meta API if it requires BAP to fetch a predefined set of rating categories
-  - Here is a step by step guide for [setting up a BPP using Beckn-ONIX](https://github.com/beckn/beckn-onix/blob/main/docs/user_guide.md#setting-up-a-bpp-beckn-adapter)
-
-#### 11.3.2 Security and Communication Infrastructure
-
-**Security Infrastructure:**
-- Digital signature capabilities for message authentication
-- Public key management system for participant verification
-- Certificate authorities for endpoint validation
-- Secure storage for cryptographic keys
-
-**Communication Infrastructure:**
-- HTTPS endpoints for all network communication
-- Reverse proxy configuration (typically Nginx) for routing internal services
-- Load balancing for high-availability deployments
-- Message queuing for asynchronous processing
-
-**Data Management Infrastructure:**
-- Real-time data collection from smart meters
-- Historical data storage for baseline calculations
-- Performance monitoring and reporting
-- Compliance and audit trail maintenance
-
-#### 11.3.3 Domain Configuration
-
-**Layer 2 Configuration:**
-DF networks require domain-specific configuration files that enforce network-wide rules and standards across all DF transactions. These Layer 2 configurations act as **governance mechanisms** that ensure protocol compliance, data consistency, and semantic interoperability throughout the network.
-
-Layer 2 configurations define and enforce:
-- **Schema Compliance Rules**: Mandatory field validations, data type constraints, and API payload structure requirements
-- **Energy Domain Vocabularies**: Standardized taxonomies for equipment types, load categories, and flexibility services
-- **Measurement Standards**: Required units (kW, kWh, Hz), precision requirements, and conversion factors
-- **Baseline Methodology Enforcement**: Approved calculation methods, data requirements, and validation criteria  
-- **Incentive Calculation Standards**: Compensation formulas, payment timing rules, and settlement procedures
-- **Regional Grid Compliance**: Local grid codes, regulatory requirements, and operational constraints
-- **Field Inclusion Policies**: Mandatory vs. optional fields for different transaction types and participant categories
-
-These configurations are applied automatically to **every API call** within the DF network, ensuring that all participants—whether residential aggregators or industrial facilities—operate within consistent technical and business parameters while maintaining full Beckn Protocol compatibility.
-
-#### 11.3.4 Integration Requirements
-
-**Energy Management System Integration:**
-Commercial facilities must integrate their energy management systems with the BAP client endpoint to:
-- Monitor real-time energy consumption
-- Control flexible loads and equipment
-- Calculate available flexibility capacity
-- Execute load reduction commands
-
-**Grid Operations Integration - The Mission-Critical Interface:**
-This integration represents the most technically challenging aspect of DF implementation because it bridges two fundamentally different worlds: traditional power system operations (millisecond response times, N-1 contingency planning, physical laws of power flow) and modern digital marketplaces (API calls, data validation, distributed decision-making).
-
-Grid operators must enhance their existing Energy Management Systems (EMS) to:
-- **Real-time Grid Monitoring**: Continuously assess grid frequency (typically 50 or 60 Hz with tolerances of ±0.2 Hz), transmission line loadings (percentage of thermal capacity), and reserve margins (MW of available generation above current load)
-- **Predictive Analytics**: Use machine learning models to forecast system stress 15 minutes to 24 hours ahead, accounting for weather forecasts, historical patterns, and planned outages
-- **Resource Optimization**: Calculate optimal DF event sizing and timing by modeling the grid impact of distributed load reductions, considering transmission constraints and voltage stability
-- **Emergency Procedures**: Integrate DF resources into established grid emergency protocols, including automatic load shedding sequences and black start procedures
-
-**The Engineering Challenge**: Traditional grid operations think in terms of "firm capacity" (guaranteed available power), but DF resources are probabilistic (dependent on participant availability and response). Grid operators must develop new reliability frameworks that account for the statistical nature of distributed flexibility while maintaining the same N-1 contingency standards required for grid stability.
-
-### 11.4 Step-by-Step Implementation
-
-#### 11.4.1 Step 1: Program Discovery
+#### 11.2.1 Step 1: Program Discovery
 
 Consumers (residential, commercial, or through aggregators) discover available DF programs using search APIs.
 
 **Process:**
 - Consumer entity (household, business, or aggregator) sends search request to find available DF programs
 - Search criteria include location, load capacity, participant type, and consumer segment
-- Gateway broadcasts the search to all relevant utilities in the network
-- Utilities respond with available programs matching the criteria and consumer characteristics
+- CDS responds with available programs matching the criteria and consumer characteristics
 
 **Key Information Exchanged:**
 - Geographic location and coverage area
@@ -589,7 +440,7 @@ Consumers (residential, commercial, or through aggregators) discover available D
 - Program types and incentive structures tailored to consumer size
 - Participation requirements, terms, and minimum commitment levels
 
-#### 11.4.2 Step 2: Program Subscription
+#### 11.2.2 Step 2: Program Subscription
 
 Consumer subscribes to selected DF program (directly or through aggregator).
 
@@ -606,7 +457,7 @@ Consumer subscribes to selected DF program (directly or through aggregator).
 - Program duration, renewal options, and opt-out procedures
 - Performance requirements, penalties, and consumer protection measures
 
-#### 11.4.3 Step 3: DF Event Notification
+#### 11.2.3 Step 3: DF Event Notification
 
 **The Moment of Truth: When the Grid Calls for Help**
 
@@ -631,7 +482,7 @@ When system stress is detected, grid operators must make rapid decisions balanci
 - **Economic Signals**: Real-time pricing that reflects both grid need and participant availability
 - **Technical Requirements**: Precise timing (including required ramp rates), duration, and any operational constraints
 
-#### 11.4.4 Step 4: Event Participation Confirmation
+#### 11.2.4 Step 4: Event Participation Confirmation
 
 Commercial consumer confirms participation in DF event.
 
@@ -648,7 +499,7 @@ Commercial consumer confirms participation in DF event.
 - Equipment and systems to be controlled during event
 - Emergency override and safety procedures
 
-#### 11.4.5 Step 5: Performance Verification
+#### 11.2.5 Step 5: Performance Verification
 
 Utility verifies actual load reduction delivered during the DF event.
 
@@ -666,7 +517,7 @@ Utility verifies actual load reduction delivered during the DF event.
 - Performance percentage against commitment
 - Any qualifying events or exceptions
 
-#### 11.4.6 Step 6: Incentive Settlement
+#### 11.2.6 Step 6: Incentive Settlement
 
 Utility processes incentive payments based on verified performance.
 
@@ -684,9 +535,9 @@ Utility processes incentive payments based on verified performance.
 - Settlement status and confirmation
 - Updated performance metrics for future events
 
-### 11.5 Testing
+### 11.3 Testing
 
-#### 11.5.1 Test Scenarios
+#### 11.3.1 Test Scenarios
 
 Key validation scenarios for DF implementation:
 
@@ -710,7 +561,7 @@ Key validation scenarios for DF implementation:
    - **Test Case:** Calculate and verify incentive payments
    - **Expected Result:** Accurate calculation based on actual performance
 
-#### 11.5.2 Validation Checklist
+#### 11.3.2 Validation Checklist
 
 - [ ] API endpoints respond within timeout limits
 - [ ] Digital signatures validate correctly

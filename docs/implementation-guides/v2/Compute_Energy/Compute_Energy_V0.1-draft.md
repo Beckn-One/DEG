@@ -35,23 +35,17 @@
       - [10.2.3 Performing a test transaction](#1023-performing-a-test-transaction)
   - [11. Implementing Compute Energy semantics with Beckn Protocol](#11-implementing-compute-energy-semantics-with-beckn-protocol)
     - [11.1 Overview](#111-overview)
-    - [11.2 Prerequisites](#112-prerequisites)
-    - [11.3 Configuration](#113-configuration)
-      - [11.3.1 Network Architecture Setup](#1131-network-architecture-setup)
-      - [11.3.2 Security and Communication Infrastructure](#1132-security-and-communication-infrastructure)
-      - [11.3.3 Domain Configuration](#1133-domain-configuration)
-      - [11.3.4 Integration Requirements](#1134-integration-requirements)
-    - [11.4 Step-by-Step Implementation](#114-step-by-step-implementation)
-      - [11.4.1 Step 1: Grid Window Discovery](#1141-step-1-grid-window-discovery)
-      - [11.4.2 Step 2: Workload Selection](#1142-step-2-workload-selection)
-      - [11.4.3 Step 3: Order Initialization](#1143-step-3-order-initialization)
-      - [11.4.4 Step 4: Order Confirmation](#1144-step-4-order-confirmation)
-      - [11.4.5 Step 5: Workload Execution](#1145-step-5-workload-execution)
-      - [11.4.6 Step 6: Dynamic Flexibility Response](#1146-step-6-dynamic-flexibility-response)
-      - [11.4.7 Step 7: Settlement and Verification](#1147-step-7-settlement-and-verification)
-    - [11.5 Testing](#115-testing)
-      - [11.5.1 Test Scenarios](#1151-test-scenarios)
-      - [11.5.2 Validation Checklist](#1152-validation-checklist)
+    - [11.2 Step-by-Step Implementation](#112-step-by-step-implementation)
+      - [11.2.1 Step 1: Grid Window Discovery](#1121-step-1-grid-window-discovery)
+      - [11.2.2 Step 2: Workload Selection](#1122-step-2-workload-selection)
+      - [11.2.3 Step 3: Order Initialization](#1123-step-3-order-initialization)
+      - [11.2.4 Step 4: Order Confirmation](#1124-step-4-order-confirmation)
+      - [11.2.5 Step 5: Workload Execution](#1125-step-5-workload-execution)
+      - [11.2.6 Step 6: Dynamic Flexibility Response](#1126-step-6-dynamic-flexibility-response)
+      - [11.2.7 Step 7: Settlement and Verification](#1127-step-7-settlement-and-verification)
+    - [11.3 Testing](#113-testing)
+      - [11.3.1 Test Scenarios](#1131-test-scenarios)
+      - [11.3.2 Validation Checklist](#1132-validation-checklist)
   - [12. Best Practices](#12-best-practices)
     - [12.1 Design Principles](#121-design-principles)
     - [12.2 Common Patterns](#122-common-patterns)
@@ -396,161 +390,60 @@ An implementation follows a **discovery-first coordination approach** where each
 
 Each phase leverages **native Beckn Protocol capabilities**—discover, select, init, confirm, update, status, support, rating—adapted specifically for the compute-energy domain while maintaining full protocol compliance and interoperability.
 
-### 11.2 Prerequisites
+**Compute-Energy Transaction Flow:**
 
-Before implementation, the following infrastructure must be in place:
+```mermaid
+sequenceDiagram
+    participant CA as Compute Agent<br/>(BAP)
+    participant CDS as Catalog Discovery<br/>Service (CDS)
+    participant GA as Grid Agent<br/>(BPP)
+    
+    Note over CA,CDS,GA: Phase 1: Discovery
+    CA->>CDS: discover<br/>(grid conditions, carbon thresholds)
+    CDS-->>CA: on_discover<br/>(available grid windows, carbon intensity)
+    
+    Note over CA,GA: Phase 2: Selection
+    CA->>GA: select<br/>(chosen grid windows, capacity)
+    GA-->>CA: on_select<br/>(availability confirmation, detailed terms)
+    
+    Note over CA,GA: Phase 3: Initialization
+    CA->>GA: init<br/>(workload details, carbon budget)
+    GA-->>CA: on_init<br/>(order validation, billing details)
+    
+    Note over CA,GA: Phase 4: Confirmation
+    CA->>GA: confirm<br/>(finalize order)
+    GA-->>CA: on_confirm<br/>(order confirmed, reservation ID)
+    
+    Note over CA,GA: Phase 5: Execution
+    rect rgb(230, 245, 255)
+        Note over CA: Workload Execution Begins
+        CA->>GA: status<br/>(check execution state)
+        GA-->>CA: on_status<br/>(power consumption, carbon tracking)
+    end
+    
+    Note over CA,GA: Phase 6: Dynamic Flexibility
+    rect rgb(255, 240, 230)
+        GA-->>CA: on_update<br/>(grid stress event, flexibility request)
+        Note over CA: Evaluate & Execute<br/>Flexibility Response
+        CA->>GA: update<br/>(flexibility action: migrate/pause)
+        GA-->>CA: on_update<br/>(action acknowledged)
+    end
+    
+    Note over CA,GA: Phase 7: Settlement
+    GA-->>CA: on_status<br/>(final settlement, carbon emissions)
+    CA->>GA: rating<br/>(rate grid service)
+    GA-->>CA: on_rating<br/>(rating acknowledged)
+```
 
-**For Data Center Operators (Compute Agents):**
-- **Workload Orchestration**: Container orchestration platform (Kubernetes, etc.) with workload scheduling capabilities
-- **Metering Infrastructure**: Real-time power consumption monitoring at workload or cluster level
-- **Checkpointing Support**: Ability to save/restore workload state for migration (for flexible workloads)
-- **Multi-Region Capability**: Infrastructure in multiple geographic regions (for spatial flexibility)
-- **Communication Infrastructure**: API infrastructure for receiving grid signals and sending workload status
-- **Carbon Tracking**: Systems to track and report carbon emissions per workload
+### 11.2 Step-by-Step Implementation
 
-**For Grid Operators (Grid Agents):**
-- **Grid Monitoring**: Real-time grid frequency, load, and renewable generation data
-- **Carbon Intensity Data**: Access to regional carbon intensity measurements or forecasts
-- **Pricing Systems**: Real-time or forecast electricity pricing data
-- **Communication Systems**: API infrastructure for broadcasting grid conditions and flexibility signals
-- **Metering Integration**: Ability to verify data center energy consumption
-
-### 11.3 Configuration
-
-#### 11.3.1 Network Architecture Setup
-
-**The Distributed Intelligence Paradigm for Compute-Energy**
-
-Compute-Energy Convergence reimagines data center operations as a **distributed coordination network** where Compute Agents and Grid Agents operate as autonomous intelligent entities making decisions while coordinating through standardized protocols.
-
-**Compute Agent (BAP) - The Intelligent Workload Orchestrator:**
-
-Think of the Compute Agent as a "smart scheduler" that understands both compute requirements and grid conditions. A BAP implementation consists of three logical components:
-
-**1. Network-Side Interface (Beckn Protocol Communication):**
-This component handles all Beckn Protocol API communications with Grid Agents. It processes grid window catalogs, confirms workload orders, receives grid event notifications, and reports workload status. This is the standard Beckn BAP endpoint that accepts BPP callbacks.
-
-**2. Decision Engine (Workload Intelligence):**
-This is the business logic component that makes scheduling decisions by considering:
-  - Workload characteristics (compute requirements, time flexibility, carbon budget, priority)
-  - Grid conditions (renewable mix, carbon intensity, pricing, capacity)
-  - Economic objectives (cost minimization, carbon reduction targets)
-  - Operational constraints (SLA requirements, data locality, network latency)
-  - Historical performance (workload execution times, migration success rates)
-
-**3. Orchestration Interface (Data Center Integration):**
-This component interfaces with the data center's orchestration platform—Kubernetes, workload schedulers, power monitoring systems. It translates between "compute language" (pod scheduling, resource allocation) and "grid language" (carbon intensity, renewable availability, flexibility signals).
-
-**Note:** These are **logical components within a single BAP application**, not separate physical services.
-
-**Grid Agent (BPP) - The Grid Intelligence Provider:**
-
-The Grid Agent transforms from a simple data provider to an **active coordination partner** in compute scheduling. A BPP implementation consists of three logical components:
-
-**1. Grid Monitoring Interface (Internal Systems Integration):**
-This component interfaces with grid monitoring systems—SCADA, renewable generation forecasts, carbon intensity APIs, pricing systems. It translates between "grid operations language" (frequency, load, generation mix) and "compute coordination language" (grid windows, carbon intensity, flexibility requests).
-
-**2. Intelligence Engine (Grid Optimization):**
-This is the business logic component that:
-  - Forecasts grid conditions and renewable availability
-  - Identifies optimal compute windows for carbon and cost optimization
-  - Monitors real-time grid stress and generates flexibility signals
-  - Calculates carbon intensity and energy costs
-  - Coordinates with multiple compute agents for grid balancing
-
-**3. Network-Side Interface (Beckn Protocol Communication):**
-This component handles all Beckn Protocol API communications with Compute Agents. It publishes grid window catalogs, processes workload orders, sends grid event notifications, and provides settlement data. This is the standard Beckn BPP endpoint.
-
-**Note:** Like BAP components, these are **logical components within a single BPP application**.
-
-**Gateway Service:**
-Discovery requests flow through gateways (Beckn Gateway) that broadcast search queries to all relevant Grid Agents in the network. Gateways filter and route messages based on domain and geographic criteria.
-
-**Registry Service:**
-Each Compute-Energy network requires a registry where all participants (Compute Agents, Grid Agents, Gateways) register themselves with details such as network endpoint, domains, region of operation, public keys. The registry maintains the authoritative list of network participants and their subscription status.
-
-**Recommendations for implementing components:**
-
-- BAP: All BAP implementations MUST follow the relevant APIs from the Beckn [transaction](https://github.com/beckn/protocol-specifications/blob/master/api/transaction/build/transaction.yaml) and [meta](https://github.com/beckn/protocol-specifications/blob/master/api/meta/build/meta.yaml) specifications.
-- BPP: All BPP implementations MUST follow the relevant APIs from the Beckn [transaction](https://github.com/beckn/protocol-specifications/blob/master/api/transaction/build/transaction.yaml) and [meta](https://github.com/beckn/protocol-specifications/blob/master/api/meta/build/meta.yaml) specifications.
-- Beckn Gateway: The implemented gateway MUST follow the Beckn [gateway](https://github.com/beckn/protocol-specifications/blob/master/api/transaction/build/transaction.yaml) specifications.
-- Beckn Registry: The implemented registry MUST follow the Beckn [registry](https://github.com/beckn/protocol-specifications/tree/master/api/registry/build/registry.yaml) specifications.
-
-NOTE: FIDE provides a software stack called [Beckn-ONIX](https://becknprotocol.io/beckn-onix/), for rapidly deploying and configuring a Beckn enabled network.
-
-#### 11.3.2 Security and Communication Infrastructure
-
-**Security Infrastructure:**
-- Digital signature capabilities for message authentication
-- Public key management system for participant verification
-- Certificate authorities for endpoint validation
-- Secure storage for cryptographic keys
-- Data privacy protection for workload metadata
-
-**Communication Infrastructure:**
-- HTTPS endpoints for all network communication
-- Reverse proxy configuration for routing internal services
-- Load balancing for high-availability deployments
-- Message queuing for asynchronous processing
-- WebSocket support for real-time grid event notifications (optional)
-
-**Data Management Infrastructure:**
-- Real-time power consumption monitoring
-- Carbon intensity data collection and forecasting
-- Historical workload execution data for optimization
-- Compliance and audit trail maintenance
-
-#### 11.3.3 Domain Configuration
-
-**Layer 2 Configuration:**
-Compute-Energy networks require domain-specific configuration files that enforce network-wide rules and standards across all transactions. These Layer 2 configurations act as **governance mechanisms** that ensure protocol compliance, data consistency, and semantic interoperability.
-
-Layer 2 configurations define and enforce:
-- **Schema Compliance Rules**: Mandatory field validations, data type constraints, and API payload structure requirements
-- **Compute-Energy Vocabularies**: Standardized taxonomies for workload types, grid conditions, and carbon metrics
-- **Measurement Standards**: Required units (MW, kWh, gCO2/kWh), precision requirements, and conversion factors
-- **Carbon Accounting Standards**: Approved calculation methods, data sources, and reporting requirements
-- **Pricing Standards**: Currency formats, pricing models, and settlement procedures
-- **Regional Grid Compliance**: Local grid codes, carbon intensity data sources, and operational constraints
-- **Field Inclusion Policies**: Mandatory vs. optional fields for different transaction types
-
-These configurations are applied automatically to **every API call** within the Compute-Energy network.
-
-#### 11.3.4 Integration Requirements
-
-**Data Center Orchestration Integration:**
-Compute Agents must integrate with workload orchestration platforms to:
-- Query available compute capacity across regions
-- Schedule workloads based on grid window availability
-- Monitor real-time power consumption
-- Checkpoint and migrate workloads when needed
-- Track workload execution status and performance
-
-**Grid Monitoring Integration:**
-Grid Agents must integrate with grid monitoring systems to:
-- Access real-time grid frequency and load data
-- Obtain renewable generation forecasts
-- Query carbon intensity data sources (e.g., Electricity Maps, WattTime)
-- Monitor regional electricity pricing
-- Detect grid stress events requiring flexibility response
-
-**Carbon Accounting Integration:**
-Both agents must integrate with carbon tracking systems to:
-- Calculate carbon emissions per workload
-- Verify carbon intensity data sources
-- Generate carbon reports for compliance
-- Track progress against carbon reduction targets
-
-### 11.4 Step-by-Step Implementation
-
-#### 11.4.1 Step 1: Grid Window Discovery
+#### 11.2.1 Step 1: Grid Window Discovery
 
 Compute Agents discover available grid windows with optimal renewable energy availability and low carbon intensity.
 
 **Process:**
 - Compute Agent sends discover request specifying desired grid conditions (renewable mix, carbon intensity thresholds, geographic regions)
 - Search criteria include time ranges, capacity requirements, and carbon budget constraints
-- Gateway broadcasts the search to all relevant Grid Agents in the network
 - Grid Agents respond with available grid windows matching the criteria
 
 **Key Information Exchanged:**
@@ -561,7 +454,7 @@ Compute Agents discover available grid windows with optimal renewable energy ava
 - Electricity pricing (per kWh)
 - Available grid capacity for compute workloads
 
-#### 11.4.2 Step 2: Workload Selection
+#### 11.2.2 Step 2: Workload Selection
 
 Compute Agent evaluates grid windows and selects optimal slots for workload execution.
 
@@ -578,7 +471,7 @@ Compute Agent evaluates grid windows and selects optimal slots for workload exec
 - Carbon budget constraints
 - Pricing confirmation
 
-#### 11.4.3 Step 3: Order Initialization
+#### 11.2.3 Step 3: Order Initialization
 
 Compute Agent prepares detailed workload order with compute requirements and metadata.
 
@@ -597,7 +490,7 @@ Compute Agent prepares detailed workload order with compute requirements and met
 - Data center location and metering details
 - Customer billing information
 
-#### 11.4.4 Step 4: Order Confirmation
+#### 11.2.4 Step 4: Order Confirmation
 
 Compute Agent confirms the workload order, creating a binding reservation.
 
@@ -614,7 +507,7 @@ Compute Agent confirms the workload order, creating a binding reservation.
 - Workload execution schedule
 - Settlement terms and payment method
 
-#### 11.4.5 Step 5: Workload Execution
+#### 11.2.5 Step 5: Workload Execution
 
 Workload executes during the reserved grid window with real-time monitoring.
 
@@ -632,7 +525,7 @@ Workload executes during the reserved grid window with real-time monitoring.
 - Grid conditions (frequency, renewable mix)
 - Any deviations from planned execution
 
-#### 11.4.6 Step 6: Dynamic Flexibility Response
+#### 11.2.6 Step 6: Dynamic Flexibility Response
 
 System responds dynamically to grid stress events through workload migration or adjustment.
 
@@ -652,7 +545,7 @@ System responds dynamically to grid stress events through workload migration or 
 - Flexibility incentives or cost adjustments
 - Updated carbon and cost tracking
 
-#### 11.4.7 Step 7: Settlement and Verification
+#### 11.2.7 Step 7: Settlement and Verification
 
 Final settlement with verified energy consumption, carbon emissions, and cost calculation.
 
@@ -674,9 +567,9 @@ Final settlement with verified energy consumption, carbon emissions, and cost ca
 - Carbon savings achieved vs. baseline
 - Settlement status and payment confirmation
 
-### 11.5 Testing
+### 11.3 Testing
 
-#### 11.5.1 Test Scenarios
+#### 11.3.1 Test Scenarios
 
 Key validation scenarios for Compute-Energy implementation:
 
@@ -704,7 +597,7 @@ Key validation scenarios for Compute-Energy implementation:
    - **Test Case:** Verify final settlement with all cost and carbon components
    - **Expected Result:** Accurate settlement matching actual execution data
 
-#### 11.5.2 Validation Checklist
+#### 11.3.2 Validation Checklist
 
 - [ ] API endpoints respond within timeout limits
 - [ ] Digital signatures validate correctly
