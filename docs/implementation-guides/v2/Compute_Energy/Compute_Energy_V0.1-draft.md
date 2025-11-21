@@ -950,27 +950,46 @@ Compute Agent selects specific grid window for workload execution.
     "bap_uri": "https://compflex-agent.computecloud.ai",
     "bpp_id": "gridflex-agent.example.com",
     "bpp_uri": "https://gridflex-agent.example.com",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "schema_context": [
+      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld"
+    ]
   },
   "message": {
     "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
       "beckn:id": "order-ce-cambridge-morning-001",
       "beckn:orderStatus": "QUOTE_REQUESTED",
       "beckn:seller": "provider-gridflex-001",
       "beckn:buyer": "buyer-compflex-001",
       "beckn:orderItems": [
         {
+          "@type": "beckn:OrderItem",
           "beckn:lineId": "order-item-ce-001",
           "beckn:orderedItem": "item-ce-cambridge-morning-001",
           "beckn:quantity": 1,
           "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
             "beckn:id": "offer-ce-cambridge-morning-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "schema:name": "Cambridge Morning Compute Slot"
             },
+            "beckn:items": [
+              "item-ce-cambridge-morning-001"
+            ],
+            "beckn:provider": "provider-gridflex-001",
             "beckn:price": {
               "currency": "GBP",
               "price": 0.102
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
             }
           }
         }
@@ -1005,26 +1024,77 @@ Grid Agent confirms selection availability.
   },
   "message": {
     "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
       "beckn:id": "order-ce-cambridge-morning-001",
       "beckn:orderStatus": "QUOTE_REQUESTED",
+      "beckn:seller": "provider-gridflex-001",
+      "beckn:buyer": "buyer-compflex-001",
       "beckn:orderItems": [
         {
+          "@type": "beckn:OrderItem",
           "beckn:lineId": "order-item-ce-001",
           "beckn:orderedItem": "item-ce-cambridge-morning-001",
+          "beckn:quantity": 1,
+          "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-ce-cambridge-morning-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Cambridge Morning Compute Slot"
+            },
+            "beckn:provider": "provider-gridflex-001",
+            "beckn:items": [
+              "item-ce-cambridge-morning-001"
+            ],
+            "beckn:price": {
+              "currency": "GBP",
+              "price": 0.102
+            },
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+              "@type": "beckn:ComputeEnergyPricing",
+              "beckn:unit": "per_kWh",
+              "beckn:priceStability": "stable"
+            }
+          },
           "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+            "@type": "beckn:ComputeEnergyWindow",
             "beckn:slotId": "slot-cambridge-morning-20251117-001",
             "beckn:gridParameters": {
               "gridArea": "Cambridge-East",
+              "gridZone": "UK-EAST-1",
               "renewableMix": 80,
-              "carbonIntensity": 120
+              "carbonIntensity": 120,
+              "carbonIntensityUnit": "gCO2/kWh"
             },
             "beckn:timeWindow": {
               "start": "2025-11-17T10:00:00Z",
-              "end": "2025-11-17T14:00:00Z"
+              "end": "2025-11-17T14:00:00Z",
+              "duration": "PT4H"
+            },
+            "beckn:pricingParameters": {
+              "spotPrice": 0.102,
+              "currency": "GBP",
+              "unit": "per_kWh",
+              "priceStability": "stable"
+            },
+            "beckn:capacityParameters": {
+              "availableCapacity": 5.0,
+              "capacityUnit": "MW"
             }
           }
         }
-      ]
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-ce-cambridge-001",
+        "beckn:mode": "GRID-BASED",
+        "beckn:status": "QUOTED"
+      }
     }
   }
 }
@@ -1653,27 +1723,38 @@ Compute Agent responds to grid stress by shifting workload to another region.
   },
   "message": {
     "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
       "beckn:id": "order-ce-cambridge-morning-001",
       "beckn:orderStatus": "IN_PROGRESS",
+      "beckn:seller": "provider-gridflex-001",
+      "beckn:buyer": "buyer-compflex-001",
       "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-ce-cambridge-001",
         "beckn:mode": "GRID-BASED",
         "beckn:status": "IN_PROGRESS",
         "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+          "@type": "beckn:ComputeEnergyFulfillment",
           "beckn:flexibilityAction": {
             "actionType": "workload_shift",
             "actionReason": "grid_stress_response",
+            "actionTimestamp": "2025-11-17T14:00:30Z",
             "shiftDetails": {
               "shiftedLoad": 0.3,
               "shiftedLoadUnit": "MW",
               "sourceLocation": "Cambridge",
               "targetLocation": "Manchester",
-              "targetOrder": "order-ce-manchester-afternoon-001"
+              "targetOrder": "order-ce-manchester-afternoon-001",
+              "estimatedShiftTime": "PT5M"
             },
             "batterySupportDetails": {
               "batterySupportActivated": true,
               "batteryDischarge": 0.15,
-              "batteryDischargeUnit": "MW"
+              "batteryDischargeUnit": "MW",
+              "batteryDuration": "PT10M"
             },
             "loadReductionCommitment": {
               "loadReduction": 0.3,
@@ -1684,9 +1765,18 @@ Compute Agent responds to grid stress by shifting workload to another region.
           "beckn:workloadMetadata": {
             "workloadType": "AI_TRAINING",
             "workloadId": "batch-a-001",
-            "workloadStatus": "migrating"
+            "workloadStatus": "migrating",
+            "checkpointCreated": true,
+            "checkpointTimestamp": "2025-11-17T14:00:25Z"
           }
         }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+        "@type": "beckn:ComputeEnergyOrder",
+        "beckn:updateType": "flexibility_response",
+        "beckn:responseToEvent": "grid-event-cambridge-20251117-001",
+        "beckn:updateTimestamp": "2025-11-17T14:00:30Z"
       }
     }
   }
@@ -1919,41 +2009,69 @@ Compute Agent acknowledges carbon spike alert and decides to continue with monit
   },
   "message": {
     "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
       "beckn:id": "order-ce-cambridge-morning-001",
       "beckn:orderStatus": "IN_PROGRESS",
+      "beckn:seller": "provider-gridflex-001",
+      "beckn:buyer": "buyer-compflex-001",
       "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
         "beckn:id": "fulfillment-ce-cambridge-001",
+        "beckn:mode": "GRID-BASED",
+        "beckn:status": "IN_PROGRESS",
         "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+          "@type": "beckn:ComputeEnergyFulfillment",
           "beckn:flexibilityAction": {
             "actionType": "continue_with_acknowledgement",
             "actionReason": "acceptable_carbon_cost_tradeoff",
+            "actionTimestamp": "2025-11-17T15:16:15Z",
             "decision": {
               "decisionType": "continue_execution",
-              "decisionRationale": "Carbon intensity spike within acceptable threshold",
+              "decisionRationale": "Carbon intensity spike within acceptable threshold; workload priority justifies increased cost",
               "acceptedCarbonIntensity": 320,
+              "acceptedCarbonIntensityUnit": "gCO2/kWh",
               "acceptedSpotPrice": 0.156,
+              "acceptedSpotPriceUnit": "GBP_per_kWh",
               "carbonBudgetImpact": {
                 "originalBudget": 432,
                 "projectedEmissions": 576,
                 "budgetExceeded": 144,
-                "budgetExceededUnit": "kgCO2"
+                "budgetExceededUnit": "kgCO2",
+                "acceptanceJustification": "Critical training deadline; carbon offset planned"
               }
             },
             "monitoringParameters": {
               "alertThreshold": {
                 "maxCarbonIntensity": 400,
-                "maxSpotPrice": 0.20
+                "maxCarbonIntensityUnit": "gCO2/kWh",
+                "maxSpotPrice": 0.20,
+                "maxSpotPriceUnit": "GBP_per_kWh"
               },
-              "autoShutdownEnabled": true
+              "autoShutdownEnabled": true,
+              "autoShutdownThreshold": {
+                "carbonIntensity": 450,
+                "spotPrice": 0.25
+              }
             }
           },
           "beckn:workloadMetadata": {
             "workloadType": "AI_TRAINING",
             "workloadId": "batch-a-001",
             "workloadStatus": "continuing",
-            "workloadPriority": "high"
+            "workloadPriority": "high",
+            "estimatedCompletion": "2025-11-17T17:30:00Z"
           }
         }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+        "@type": "beckn:ComputeEnergyOrder",
+        "beckn:updateType": "alert_acknowledgement",
+        "beckn:responseToEvent": "grid-event-cambridge-carbon-spike-002",
+        "beckn:updateTimestamp": "2025-11-17T15:16:15Z"
       }
     }
   }
