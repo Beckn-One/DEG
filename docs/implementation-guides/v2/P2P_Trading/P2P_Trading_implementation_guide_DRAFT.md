@@ -9,7 +9,6 @@ This implementation guide provides comprehensive instructions for implementing P
 - [1. Introduction](#1-introduction)
   - [1.1. What is P2P Energy Trading?](#11-what-is-p2p-energy-trading)
   - [1.2. Beckn Protocol v2 for Energy Trading](#12-beckn-protocol-v2-for-energy-trading)
-- [2. Introduction](#2-introduction)
 - [3. Scope](#3-scope)
 - [4. Intended Audience](#4-intended-audience)
 - [5. Conventions and Terminology](#5-conventions-and-terminology)
@@ -44,8 +43,8 @@ This implementation guide provides comprehensive instructions for implementing P
       - [8.1.3.4. Step 4 :  Share details of the registry created with the Beckn One team](#8134-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
   - [8.2. Setting up the Protocol Endpoints](#82-setting-up-the-protocol-endpoints)
     - [8.2.1. Installing Beckn ONIX](#821-installing-beckn-onix)
-    - [8.2.2. Configuring Beckn ONIX for EV Charging Transactions](#822-configuring-beckn-onix-for-ev-charging-transactions)
-    - [8.2.3. 10.2.3 Performing a test EV charging transaction](#823-1023-performing-a-test-ev-charging-transaction)
+    - [8.2.2. Configuring Beckn ONIX for Peer to Peer Energy Trading](#822-configuring-beckn-onix-for-peer-to-peer-energy-trading)
+    - [8.2.3. 10.2.3 Performing a test transaction](#823-1023-performing-a-test-transaction)
 - [10. Transaction Flows](#10-transaction-flows)
   - [10.1. Discover Flow](#101-discover-flow)
   - [10.2. Select Flow](#102-select-flow)
@@ -90,6 +89,8 @@ Example jsons were imported directly from source of truth elsewhere in this repo
 
 # 1. Introduction
 
+This document provides an implementation guidance for deploying peer to peer energy trading services using the Beckn Protocol ecosystem. 
+
 ## 1.1. What is P2P Energy Trading?
 
 Peer-to-Peer (P2P) energy trading enables energy producers (prosumers) to directly sell excess energy to consumers without going through traditional utility intermediaries. This enables:
@@ -108,10 +109,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - **Flexible Discovery**: Meter-based discovery and filtering
 
 ---
-
-# 2. Introduction
-
-This document provides an implementation guidance for deploying EV charging services using the Beckn Protocol ecosystem. It specifically addresses how consumer applications can provide unified access to charging infrastructure across multiple Charge Point Operators while maintaining technical compatibility with existing OCPI-based systems.
 
 # 3. Scope
 
@@ -596,18 +593,18 @@ This section contains instructions to set up and test the protocol stack for EV 
 
 All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#automated-setup-recommended)) to learn how to set up Beckn ONIX.
 
-### 8.2.2. Configuring Beckn ONIX for EV Charging Transactions
+### 8.2.2. Configuring Beckn ONIX for Peer to Peer Energy Trading
 
 A detailed Configuration Guide is available [here](https://github.com/Beckn-One/beckn-onix/blob/main/CONFIG.md). A quick read of key concepts from the link is recommended.
 
-Specifically, for EV Charging, please use the following configuration:
+Specifically, please use the following configuration:
 1. Configure dediregistry plugin instead of registry plugin. Read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/dediregistry).
 2. Start with using Simplekeymanager plugin during development, read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/simplekeymanager). For production deployment, you may setup vault.
 3. For routing calls to Catalog Discovery Service, refer to routing configuration [here](https://github.com/Beckn-One/beckn-onix/blob/main/config/local-simple-routing-BAPCaller.yaml).
 
-### 8.2.3. 10.2.3 Performing a test EV charging transaction
+### 8.2.3. 10.2.3 Performing a test transaction
 
-Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2).
+Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2/P2P_Trading).
 
 Step 2 : Run API calls
 
@@ -631,7 +628,7 @@ If you are a BPP
 
 **Purpose**: Search for available energy resources
 
-**Endpoint**: `GET /beckn/discover`
+**Endpoint**: `POST /discover`
 
 **v1 to v2 Mapping**:
 - v1 `message.intent.item.quantity.selected.measure` → v2 `message.filters.expression` (JSONPath filter on `availableQuantity`)
@@ -805,7 +802,7 @@ If you are a BPP
 
 **Purpose**: Select items and offers to build an order
 
-**Endpoint**: `POST /beckn/select`
+**Endpoint**: `POST /select`
 
 <details>
 <summary><a href="./examples/select-request.json">Request Example</a></summary>
@@ -941,7 +938,7 @@ If you are a BPP
 
 **Purpose**: Initialize order with fulfillment and payment details
 
-**Endpoint**: `POST /beckn/init`
+**Endpoint**: `POST /init`
 
 **v1 to v2 Mapping**:
 - v1 `Order.fulfillments[].stops[].time.range` → v2 `Order.fulfillments[].stops[].time.range` (same structure)
@@ -1164,7 +1161,7 @@ If you are a BPP
 
 **Purpose**: Confirm and activate the order
 
-**Endpoint**: `POST /beckn/confirm`
+**Endpoint**: `POST /confirm`
 
 <details>
 <summary><a href="./examples/confirm-request.json">Request Example</a></summary>
@@ -1338,7 +1335,7 @@ If you are a BPP
 
 **Purpose**: Query order and delivery status
 
-**Endpoint**: `POST /beckn/status`
+**Endpoint**: `POST /status`
 
 <details>
 <summary><a href="./examples/status-request.json">Request Example</a></summary>

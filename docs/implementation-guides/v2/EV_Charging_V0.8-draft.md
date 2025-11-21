@@ -95,7 +95,7 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
           - [13.2.1.14.0.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#13211402-b-overcharge-charger-offline-to-cms-keeps-dispensing)
       - [13.2.1.15. Asynchronous `action: on_update` (stop charging)](#132115-asynchronous-action-on_update-stop-charging)
       - [13.2.1.16. Synchronous/Asynchronous on\_update (stop charging)](#132116-synchronousasynchronous-on_update-stop-charging)
-      - [13.2.1.17. `atcion: cancel`](#132117-atcion-cancel)
+      - [13.2.1.17. `action: cancel`](#132117-action-cancel)
       - [13.2.1.18. `action: on_cancel`](#132118-action-on_cancel)
       - [13.2.1.19. `action: rating`](#132119-action-rating)
       - [13.2.1.20. `action: on_rating`](#132120-action-on_rating)
@@ -302,7 +302,7 @@ Specifically, for EV Charging, please use the following configuration:
 
 ### 11.2.3. 10.2.3 Performing a test EV charging transaction
 
-Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2).
+Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2/EV_Charging/).
 
 Step 2 : Run API calls
 
@@ -7047,7 +7047,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### 13.2.1.17. `atcion: cancel`
+#### 13.2.1.17. `action: cancel`
 
 It’s like when a client calls to cancel an appointment — maybe something came up, or their plans have changed. When they request to cancel, it’s about freeing up that slot and keeping things organized.
 
