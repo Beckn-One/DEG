@@ -1,0 +1,106 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T14:45:00Z",
+    "message_id": "msg-confirm-activation-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityActivation",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:requestedReduction": 800,
+            "beckn:requestedReductionUnit": "kW",
+            "beckn:activationTime": "2025-11-17T18:00:00Z",
+            "beckn:duration": "PT2H",
+            "beckn:eventDetails": {
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "severity": "high",
+              "gridFrequency": 49.85,
+              "gridFrequencyUnit": "Hz"
+            }
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityActivation",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:requestedReduction": 1500,
+            "beckn:requestedReductionUnit": "kW",
+            "beckn:activationTime": "2025-11-17T18:00:00Z",
+            "beckn:duration": "PT2H",
+            "beckn:eventDetails": {
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "severity": "high",
+              "gridFrequency": 49.85,
+              "gridFrequencyUnit": "Hz"
+            }
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "PENDING",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityEvent",
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:eventType": "peak_demand_surge",
+          "beckn:eventSeverity": "high",
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:totalRequestedReduction": 2.3,
+          "beckn:totalRequestedReductionUnit": "MW",
+          "beckn:gridConditions": {
+            "frequency": 49.85,
+            "frequencyUnit": "Hz",
+            "loadForecast": 5200,
+            "loadForecastUnit": "MW",
+            "availableGeneration": 4900,
+            "availableGenerationUnit": "MW",
+            "deficit": 300,
+            "deficitUnit": "MW"
+          },
+          "beckn:notificationTimestamp": "2025-11-17T14:45:00Z",
+          "beckn:responseDeadline": "2025-11-17T17:30:00Z"
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T14:45:00Z"
+      }
+    }
+  }
+}
+

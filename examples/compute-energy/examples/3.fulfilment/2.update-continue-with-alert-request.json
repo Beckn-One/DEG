@@ -1,0 +1,84 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "update",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T15:16:15Z",
+    "message_id": "msg-update-continue-alert-002",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-ce-cambridge-morning-001",
+      "beckn:orderStatus": "IN_PROGRESS",
+      "beckn:seller": "provider-gridflex-001",
+      "beckn:buyer": "buyer-compflex-001",
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-ce-cambridge-001",
+        "beckn:mode": "GRID-BASED",
+        "beckn:status": "IN_PROGRESS",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+          "@type": "beckn:ComputeEnergyFulfillment",
+          "beckn:flexibilityAction": {
+            "actionType": "continue_with_acknowledgement",
+            "actionReason": "acceptable_carbon_cost_tradeoff",
+            "actionTimestamp": "2025-11-17T15:16:15Z",
+            "decision": {
+              "decisionType": "continue_execution",
+              "decisionRationale": "Carbon intensity spike within acceptable threshold; workload priority justifies increased cost",
+              "acceptedCarbonIntensity": 320,
+              "acceptedCarbonIntensityUnit": "gCO2/kWh",
+              "acceptedSpotPrice": 0.156,
+              "acceptedSpotPriceUnit": "GBP_per_kWh",
+              "carbonBudgetImpact": {
+                "originalBudget": 432,
+                "projectedEmissions": 576,
+                "budgetExceeded": 144,
+                "budgetExceededUnit": "kgCO2",
+                "acceptanceJustification": "Critical training deadline; carbon offset planned"
+              }
+            },
+            "monitoringParameters": {
+              "alertThreshold": {
+                "maxCarbonIntensity": 400,
+                "maxCarbonIntensityUnit": "gCO2/kWh",
+                "maxSpotPrice": 0.20,
+                "maxSpotPriceUnit": "GBP_per_kWh"
+              },
+              "autoShutdownEnabled": true,
+              "autoShutdownThreshold": {
+                "carbonIntensity": 450,
+                "spotPrice": 0.25
+              }
+            }
+          },
+          "beckn:workloadMetadata": {
+            "workloadType": "AI_TRAINING",
+            "workloadId": "batch-a-001",
+            "workloadStatus": "continuing",
+            "workloadPriority": "high",
+            "estimatedCompletion": "2025-11-17T17:30:00Z"
+          }
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+        "@type": "beckn:ComputeEnergyOrder",
+        "beckn:updateType": "alert_acknowledgement",
+        "beckn:responseToEvent": "grid-event-cambridge-carbon-spike-002",
+        "beckn:updateTimestamp": "2025-11-17T15:16:15Z"
+      }
+    }
+  }
+}
+

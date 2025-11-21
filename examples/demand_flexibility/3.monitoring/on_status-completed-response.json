@@ -1,0 +1,222 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_status",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T20:15:00Z",
+    "message_id": "msg-on-status-settlement-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "df-event-order-001",
+      "beckn:orderStatus": "COMPLETED",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemStatus": "COMPLETED",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilitySettlement",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:consumerName": "Cambridge Shopping Centre",
+            "beckn:eventDetails": {
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "eventStartTime": "2025-11-17T18:00:00Z",
+              "eventEndTime": "2025-11-17T20:00:00Z",
+              "eventDuration": "PT2H"
+            },
+            "beckn:commitmentParameters": {
+              "baselineLoad": 1200,
+              "baselineLoadUnit": "kW",
+              "targetLoad": 450,
+              "targetLoadUnit": "kW",
+              "committedReduction": 750,
+              "committedReductionUnit": "kW",
+              "baselineMethod": "10_of_10"
+            },
+            "beckn:performanceMetrics": {
+              "actualAverageLoad": 415,
+              "actualAverageLoadUnit": "kW",
+              "actualReduction": 785,
+              "actualReductionUnit": "kW",
+              "performancePercentage": 104.7,
+              "totalEnergyReduced": 1.57,
+              "totalEnergyReducedUnit": "MWh",
+              "performanceStatus": "exceeded_commitment",
+              "meteringData": {
+                "meterId": "meter-mall-cambridge-001",
+                "intervalData": [
+                  {"timestamp": "2025-11-17T18:00:00Z", "load": 1180},
+                  {"timestamp": "2025-11-17T18:15:00Z", "load": 520},
+                  {"timestamp": "2025-11-17T18:30:00Z", "load": 420},
+                  {"timestamp": "2025-11-17T18:45:00Z", "load": 380},
+                  {"timestamp": "2025-11-17T19:00:00Z", "load": 390},
+                  {"timestamp": "2025-11-17T19:15:00Z", "load": 410},
+                  {"timestamp": "2025-11-17T19:30:00Z", "load": 425},
+                  {"timestamp": "2025-11-17T19:45:00Z", "load": 445},
+                  {"timestamp": "2025-11-17T20:00:00Z", "load": 1150}
+                ],
+                "intervalUnit": "kW"
+              }
+            },
+            "beckn:settlementDetails": {
+              "incentiveRate": 6.00,
+              "incentiveCurrency": "GBP",
+              "incentiveType": "per_kWh_reduced",
+              "totalIncentive": 9420.00,
+              "bonusIncentive": 471.00,
+              "bonusReason": "exceeded_commitment_by_5_percent",
+              "totalPayable": 9891.00,
+              "settlementStatus": "APPROVED",
+              "settlementMethod": "bank_transfer",
+              "expectedPaymentDate": "2025-09-05",
+              "paymentCycle": "monthly"
+            }
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemStatus": "COMPLETED",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilitySettlement",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:consumerName": "Manchester Manufacturing Plant",
+            "beckn:eventDetails": {
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "eventStartTime": "2025-11-17T18:00:00Z",
+              "eventEndTime": "2025-11-17T20:00:00Z",
+              "eventDuration": "PT2H"
+            },
+            "beckn:commitmentParameters": {
+              "baselineLoad": 2000,
+              "baselineLoadUnit": "kW",
+              "targetLoad": 600,
+              "targetLoadUnit": "kW",
+              "committedReduction": 1400,
+              "committedReductionUnit": "kW",
+              "baselineMethod": "5_of_10"
+            },
+            "beckn:performanceMetrics": {
+              "actualAverageLoad": 655,
+              "actualAverageLoadUnit": "kW",
+              "actualReduction": 1345,
+              "actualReductionUnit": "kW",
+              "performancePercentage": 96.1,
+              "totalEnergyReduced": 2.69,
+              "totalEnergyReducedUnit": "MWh",
+              "performanceStatus": "met_commitment",
+              "meteringData": {
+                "meterId": "meter-factory-manchester-002",
+                "intervalData": [
+                  {"timestamp": "2025-11-17T18:00:00Z", "load": 1950},
+                  {"timestamp": "2025-11-17T18:15:00Z", "load": 700},
+                  {"timestamp": "2025-11-17T18:30:00Z", "load": 650},
+                  {"timestamp": "2025-11-17T18:45:00Z", "load": 640},
+                  {"timestamp": "2025-11-17T19:00:00Z", "load": 650},
+                  {"timestamp": "2025-11-17T19:15:00Z", "load": 660},
+                  {"timestamp": "2025-11-17T19:30:00Z", "load": 670},
+                  {"timestamp": "2025-11-17T19:45:00Z", "load": 680},
+                  {"timestamp": "2025-11-17T20:00:00Z", "load": 1920}
+                ],
+                "intervalUnit": "kW"
+              }
+            },
+            "beckn:settlementDetails": {
+              "incentiveRate": 8.00,
+              "incentiveCurrency": "GBP",
+              "incentiveType": "per_kWh_reduced",
+              "totalIncentive": 21520.00,
+              "bonusIncentive": 0.00,
+              "bonusReason": null,
+              "totalPayable": 21520.00,
+              "settlementStatus": "APPROVED",
+              "settlementMethod": "bank_transfer",
+              "expectedPaymentDate": "2025-09-05",
+              "paymentCycle": "monthly"
+            }
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "COMPLETED",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityEvent",
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:eventStatus": "completed",
+          "beckn:eventCompletionTimestamp": "2025-11-17T20:00:00Z",
+          "beckn:aggregatedPerformance": {
+            "totalCommittedReduction": 2.15,
+            "totalCommittedReductionUnit": "MW",
+            "totalActualReduction": 2.13,
+            "totalActualReductionUnit": "MW",
+            "overallPerformancePercentage": 99.1,
+            "totalEnergyReduced": 4.26,
+            "totalEnergyReducedUnit": "MWh",
+            "numberOfResources": 2,
+            "resourcesExceeded": 1,
+            "resourcesMet": 1,
+            "resourcesUnderperformed": 0
+          },
+          "beckn:gridImpact": {
+            "initialFrequency": 49.85,
+            "finalFrequency": 50.02,
+            "frequencyImprovement": 0.17,
+            "frequencyUnit": "Hz",
+            "peakLoadReduction": 2.7,
+            "peakLoadReductionUnit": "MW",
+            "gridStabilized": true
+          }
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-df-event-001",
+        "beckn:status": "APPROVED",
+        "beckn:paymentAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityIncentive",
+          "beckn:totalIncentive": 30920.00,
+          "beckn:totalBonus": 471.00,
+          "beckn:totalPayable": 31391.00,
+          "beckn:currency": "GBP",
+          "beckn:paymentMethod": "bank_transfer",
+          "beckn:settlementFrequency": "monthly",
+          "beckn:expectedPaymentDate": "2025-09-05",
+          "beckn:paymentCycle": "2025-09",
+          "beckn:settlementStatus": "APPROVED",
+          "beckn:approvalTimestamp": "2025-11-17T20:15:00Z"
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:settlementTimestamp": "2025-11-17T20:15:00Z"
+      }
+    }
+  }
+}

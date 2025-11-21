@@ -1,0 +1,350 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T14:30:04Z",
+    "message_id": "msg-on-discover-consumers-003",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "powershift-aggregator.example.com",
+    "bpp_uri": "https://powershift-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-subscribed-consumers-powershift-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "Available Subscribed Consumers - PowerShift Network",
+          "beckn:shortDesc": "Active DF program subscribers from PowerShift Aggregator"
+        },
+        "beckn:validity": {
+          "@type": "beckn:TimePeriod",
+          "schema:startDate": "2025-11-17T14:30:04Z",
+          "schema:endDate": "2025-11-17T18:00:00Z"
+        },
+        "beckn:items": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-airport-009",
+            "beckn:provider": "PowerShift Network",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Liverpool Airport Terminal - HVAC & Lighting",
+              "beckn:shortDesc": "Airport terminal with 1.8 MW flexible load capacity"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "commercial",
+              "schema:name": "Transportation Hub"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-2.8497, 53.3336]
+                },
+                "address": {
+                  "streetAddress": "Liverpool John Lennon Airport",
+                  "addressLocality": "Liverpool",
+                  "addressRegion": "Merseyside",
+                  "postalCode": "L24 1YD",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-airport-liverpool-009",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-transport-hub-001",
+                "programName": "PowerShift Transport Hub Program",
+                "subscriptionDate": "2025-05-15T09:00:00Z",
+                "subscriptionId": "sub-airport-009"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial"],
+                "deviceTypes": ["HVAC", "lighting", "escalators", "moving_walkways"],
+                "loadCapacity": {
+                  "min": 1200,
+                  "max": 2500,
+                  "unit": "kW",
+                  "currentAvailable": 1800
+                },
+                "controlType": "automated",
+                "responseTime": "PT7M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T23:00:00Z",
+                "maxDuration": "PT5H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT30M",
+                  "maxEventsPerDay": 3,
+                  "passengerSafetyPriority": true,
+                  "securitySystemsExcluded": true
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "5_of_10",
+                "typicalLoad": 2200,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 24,
+                  "averageReduction": 1700,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.95
+                }
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-brewery-010",
+            "beckn:provider": "PowerShift Network",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Sheffield Brewery - Process Control",
+              "beckn:shortDesc": "Industrial brewery with 1.3 MW flexible production load"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "industrial",
+              "schema:name": "Food & Beverage Production"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-1.4659, 53.3811]
+                },
+                "address": {
+                  "streetAddress": "Kelham Island Industrial Estate",
+                  "addressLocality": "Sheffield",
+                  "addressRegion": "South Yorkshire",
+                  "postalCode": "S3 8RY",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-brewery-sheffield-010",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-industrial-production-001",
+                "programName": "PowerShift Industrial Production Program",
+                "subscriptionDate": "2025-06-18T08:00:00Z",
+                "subscriptionId": "sub-brewery-010"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["industrial"],
+                "deviceTypes": ["brewing_equipment", "cooling_system", "pumps", "compressors"],
+                "loadCapacity": {
+                  "min": 900,
+                  "max": 1800,
+                  "unit": "kW",
+                  "currentAvailable": 1300
+                },
+                "controlType": "automated",
+                "responseTime": "PT6M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T21:00:00Z",
+                "maxDuration": "PT3H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT20M",
+                  "maxEventsPerDay": 2,
+                  "productionScheduleFlexible": true,
+                  "batchProcessInterruptible": true
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "5_of_10",
+                "typicalLoad": 1600,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 19,
+                  "averageReduction": 1250,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.93
+                }
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-retail-011",
+            "beckn:provider": "PowerShift Network",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Newcastle Metro Centre - Retail Complex",
+              "beckn:shortDesc": "Large retail center with 1.1 MW HVAC and refrigeration flexibility"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "commercial",
+              "schema:name": "Retail Complex"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-1.6578, 54.9600]
+                },
+                "address": {
+                  "streetAddress": "MetroCentre Gateshead",
+                  "addressLocality": "Newcastle upon Tyne",
+                  "addressRegion": "Tyne and Wear",
+                  "postalCode": "NE11 9YG",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-retail-newcastle-011",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-retail-flex-001",
+                "programName": "PowerShift Retail Flex Program",
+                "subscriptionDate": "2025-07-12T10:00:00Z",
+                "subscriptionId": "sub-retail-011"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial"],
+                "deviceTypes": ["HVAC", "refrigeration", "lighting", "escalators"],
+                "loadCapacity": {
+                  "min": 700,
+                  "max": 1500,
+                  "unit": "kW",
+                  "currentAvailable": 1100
+                },
+                "controlType": "hybrid",
+                "responseTime": "PT12M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T22:00:00Z",
+                "maxDuration": "PT4H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT35M",
+                  "maxEventsPerDay": 2,
+                  "customerExperienceMaintained": true,
+                  "foodSafetyProtected": true
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "10_of_10",
+                "typicalLoad": 1400,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 13,
+                  "averageReduction": 1000,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.90
+                }
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-watertreatment-012",
+            "beckn:provider": "PowerShift Network",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Cardiff Water Treatment Plant - Pumping Station",
+              "beckn:shortDesc": "Water treatment facility with 2.2 MW pump flexibility"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "industrial",
+              "schema:name": "Water Infrastructure"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-3.1791, 51.4816]
+                },
+                "address": {
+                  "streetAddress": "Cardiff Bay Water Treatment Works",
+                  "addressLocality": "Cardiff",
+                  "addressRegion": "Wales",
+                  "postalCode": "CF10 4PA",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-waterplant-cardiff-012",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-critical-infrastructure-001",
+                "programName": "PowerShift Critical Infrastructure Program",
+                "subscriptionDate": "2025-04-25T07:00:00Z",
+                "subscriptionId": "sub-waterplant-012"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["industrial"],
+                "deviceTypes": ["water_pumps", "treatment_systems", "backup_systems"],
+                "loadCapacity": {
+                  "min": 1500,
+                  "max": 3000,
+                  "unit": "kW",
+                  "currentAvailable": 2200
+                },
+                "controlType": "automated",
+                "responseTime": "PT4M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T23:00:00Z",
+                "maxDuration": "PT5H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT15M",
+                  "maxEventsPerDay": 3,
+                  "reservoirLevelMonitored": true,
+                  "waterQualityProtected": true,
+                  "emergencyOverrideAvailable": true
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "5_of_10",
+                "typicalLoad": 2800,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 32,
+                  "averageReduction": 2100,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.98
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+

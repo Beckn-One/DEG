@@ -1,0 +1,271 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T14:30:03Z",
+    "message_id": "msg-on-discover-consumers-002",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "greenflow-aggregator.example.com",
+    "bpp_uri": "https://greenflow-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-subscribed-consumers-greenflow-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "Available Subscribed Consumers - GreenFlow Portfolio",
+          "beckn:shortDesc": "Active DF program subscribers from GreenFlow Aggregator"
+        },
+        "beckn:validity": {
+          "@type": "beckn:TimePeriod",
+          "schema:startDate": "2025-11-17T14:30:03Z",
+          "schema:endDate": "2025-11-17T18:00:00Z"
+        },
+        "beckn:items": [
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-warehouse-006",
+            "beckn:provider": "GreenFlow Energy",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Leeds Cold Storage Facility",
+              "beckn:shortDesc": "Cold storage with 1.2 MW flexible refrigeration load"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "industrial",
+              "schema:name": "Cold Storage"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-1.5491, 53.8008]
+                },
+                "address": {
+                  "streetAddress": "White Rose Business Park",
+                  "addressLocality": "Leeds",
+                  "addressRegion": "Yorkshire",
+                  "postalCode": "LS11 8LU",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-warehouse-leeds-006",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-industrial-optimizer-002",
+                "programName": "GreenFlow Industrial Program",
+                "subscriptionDate": "2025-05-20T08:00:00Z",
+                "subscriptionId": "sub-warehouse-006"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["industrial"],
+                "deviceTypes": ["refrigeration_system", "compressors", "freezers"],
+                "loadCapacity": {
+                  "min": 800,
+                  "max": 1500,
+                  "unit": "kW",
+                  "currentAvailable": 1200
+                },
+                "controlType": "automated",
+                "responseTime": "PT8M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T21:00:00Z",
+                "maxDuration": "PT3H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT25M",
+                  "maxEventsPerDay": 2,
+                  "temperatureThreshold": -18,
+                  "productSafetyProtection": true
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "5_of_10",
+                "typicalLoad": 1400,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 18,
+                  "averageReduction": 1100,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.94
+                }
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-university-007",
+            "beckn:provider": "GreenFlow Energy",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Oxford University Campus - Building Management",
+              "beckn:shortDesc": "University campus with 900 kW HVAC and lighting flexibility"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "commercial",
+              "schema:name": "Educational Facility"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-1.2577, 51.7520]
+                },
+                "address": {
+                  "streetAddress": "University Science Area",
+                  "addressLocality": "Oxford",
+                  "addressRegion": "South East England",
+                  "postalCode": "OX1 3PH",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-university-oxford-007",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-commercial-flex-002",
+                "programName": "GreenFlow Commercial Program",
+                "subscriptionDate": "2025-06-10T10:00:00Z",
+                "subscriptionId": "sub-university-007"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial"],
+                "deviceTypes": ["HVAC", "lighting", "lab_equipment"],
+                "loadCapacity": {
+                  "min": 500,
+                  "max": 1200,
+                  "unit": "kW",
+                  "currentAvailable": 900
+                },
+                "controlType": "hybrid",
+                "responseTime": "PT12M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T22:00:00Z",
+                "maxDuration": "PT4H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT30M",
+                  "maxEventsPerDay": 2,
+                  "academicSchedule": "after_hours",
+                  "criticalResearchExcluded": true
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "10_of_10",
+                "typicalLoad": 1100,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 14,
+                  "averageReduction": 850,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.91
+                }
+              }
+            }
+          },
+          {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Item",
+            "beckn:id": "consumer-resource-hotel-008",
+            "beckn:provider": "GreenFlow Energy",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Edinburgh Grand Hotel - HVAC & Pumps",
+              "beckn:shortDesc": "Large hotel with 700 kW HVAC and water heating flexibility"
+            },
+            "beckn:category": {
+              "@type": "schema:CategoryCode",
+              "schema:codeValue": "commercial",
+              "schema:name": "Hospitality"
+            },
+            "beckn:availableAt": [
+              {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [-3.1883, 55.9533]
+                },
+                "address": {
+                  "streetAddress": "Princes Street",
+                  "addressLocality": "Edinburgh",
+                  "addressRegion": "Scotland",
+                  "postalCode": "EH2 2BY",
+                  "addressCountry": "GB"
+                }
+              }
+            ],
+            "beckn:itemAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+              "@type": "beckn:DemandFlexibilityResource",
+              "beckn:consumerId": "consumer-hotel-edinburgh-008",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-commercial-flex-002",
+                "programName": "GreenFlow Commercial Program",
+                "subscriptionDate": "2025-07-05T11:00:00Z",
+                "subscriptionId": "sub-hotel-008"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial"],
+                "deviceTypes": ["HVAC", "water_heating", "kitchen_equipment"],
+                "loadCapacity": {
+                  "min": 400,
+                  "max": 900,
+                  "unit": "kW",
+                  "currentAvailable": 700
+                },
+                "controlType": "automated",
+                "responseTime": "PT10M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T20:00:00Z",
+                "maxDuration": "PT2H",
+                "operationalConstraints": {
+                  "minimumNotice": "PT20M",
+                  "maxEventsPerDay": 2,
+                  "guestComfortMaintained": true,
+                  "occupancyLevel": "moderate"
+                }
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "10_of_10",
+                "typicalLoad": 900,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 16,
+                  "averageReduction": 650,
+                  "reductionUnit": "kW",
+                  "reliabilityScore": 0.93
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+

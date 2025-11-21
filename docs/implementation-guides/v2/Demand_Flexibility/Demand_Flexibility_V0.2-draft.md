@@ -35,12 +35,10 @@
   - [11. Implementing Demand Flexibility semantics with Beckn Protocol](#11-implementing-demand-flexibility-semantics-with-beckn-protocol)
     - [11.1 Overview](#111-overview)
     - [11.2 Step-by-Step Implementation](#112-step-by-step-implementation)
-      - [11.2.1 Step 1: Program Discovery](#1121-step-1-program-discovery)
-      - [11.2.2 Step 2: Program Subscription](#1122-step-2-program-subscription)
-      - [11.2.3 Step 3: DF Event Notification](#1123-step-3-df-event-notification)
-      - [11.2.4 Step 4: Event Participation Confirmation](#1124-step-4-event-participation-confirmation)
-      - [11.2.5 Step 5: Performance Verification](#1125-step-5-performance-verification)
-      - [11.2.6 Step 6: Incentive Settlement](#1126-step-6-incentive-settlement)
+      - [11.2.1 Step 1: Consumer Resource Discovery](#1121-step-1-consumer-resource-discovery)
+      - [11.2.2 Step 2: Resource Activation Request](#1122-step-2-resource-activation-request)
+      - [11.2.3 Step 3: Participation Confirmation](#1123-step-3-participation-confirmation)
+      - [11.2.4 Step 4: Real-time Monitoring](#1124-step-4-real-time-monitoring)
     - [11.3 Testing](#113-testing)
       - [11.3.1 Test Scenarios](#1131-test-scenarios)
       - [11.3.2 Validation Checklist](#1132-validation-checklist)
@@ -60,26 +58,17 @@
     - [12.6 Security Considerations](#126-security-considerations)
   - [13. IANA Considerations](#13-iana-considerations)
   - [14. Examples](#14-examples)
-    - [14.1 Discovery Examples](#141-discovery-examples)
-      - [14.1.1 Program Discovery (discover API)](#1411-program-discovery-discover-api)
-      - [14.1.2 A catalog of DF programs (on\_discover API)](#1412-a-catalog-of-df-programs-on_discover-api)
-    - [14.2 DF program subscription Examples](#142-df-program-subscription-examples)
-      - [14.2.1 DF program Subscription Request (confirm API)](#1421-df-program-subscription-request-confirm-api)
-      - [14.2.2 DF program Subscription confirmation (on\_confirm API)](#1422-df-program-subscription-confirmation-on_confirm-api)
-    - [14.3 DF Event Management Examples](#143-df-event-management-examples)
-      - [14.3.1 DF Event Notification (on\_init API)](#1431-df-event-notification-on_init-api)
-      - [14.3.2 DF Event Participation Confirmation (confirm API)](#1432-df-event-participation-confirmation-confirm-api)
-      - [14.3.3 DF Event Participation Acknowledgement (on\_confirm API)](#1433-df-event-participation-acknowledgement-on_confirm-api)
-    - [14.4 Settlement and Monitoring Examples](#144-settlement-and-monitoring-examples)
-      - [14.4.1 Settlement and Incentive Calculation against participation in a DF event (on\_status API)](#1441-settlement-and-incentive-calculation-against-participation-in-a-df-event-on_status-api)
-    - [14.5 Post-Fulfillment Examples](#145-post-fulfillment-examples)
-      - [14.5.1 Cancellation (cancel API)](#1451-cancellation-cancel-api)
-      - [14.5.2 Cancellation Acknowledgement (on\_cancel API)](#1452-cancellation-acknowledgement-on_cancel-api)
-      - [14.5.3 Support Request (support API)](#1453-support-request-support-api)
-      - [14.5.4 Support Response (on\_support API)](#1454-support-response-on_support-api)
-      - [14.5.5 Rating (rating API)](#1455-rating-rating-api)
-      - [14.5.6 Rating Acknowledgement (on\_rating API)](#1456-rating-acknowledgement-on_rating-api)
-    - [14.6 Future Reference Implementations](#146-future-reference-implementations)
+    - [14.1 Resource Discovery Examples](#141-resource-discovery-examples)
+      - [14.1.1 Consumer Resource Discovery (discover API)](#1411-consumer-resource-discovery-discover-api)
+      - [14.1.2 Available Consumer Resources Catalog (on\_discover API)](#1412-available-consumer-resources-catalog-on_discover-api)
+    - [14.2 Resource Activation Examples](#142-resource-activation-examples)
+      - [14.2.1 Activate FlexiGrid Resources (confirm API)](#1421-activate-flexigrid-resources-confirm-api)
+      - [14.2.2 FlexiGrid Participation Confirmation (on\_confirm API)](#1422-flexigrid-participation-confirmation-on_confirm-api)
+      - [14.2.3 Activate SmartEnergy Resources (confirm API)](#1423-activate-smartenergy-resources-confirm-api)
+      - [14.2.4 SmartEnergy Participation Confirmation (on\_confirm API)](#1424-smartenergy-participation-confirmation-on_confirm-api)
+    - [14.3 Monitoring Examples](#143-monitoring-examples)
+      - [14.3.1 Check Event Progress (status API)](#1431-check-event-progress-status-api)
+      - [14.3.2 Real-time Performance Data (on\_status API)](#1432-real-time-performance-data-on_status-api)
   - [15. References](#15-references)
     - [15.1 Normative References](#151-normative-references)
     - [15.2 Informative References](#152-informative-references)
@@ -350,193 +339,138 @@ If you are a BPP:
 This implementation guide demonstrates how to harness the **Beckn open source protocol** as the unified communication backbone for Demand Flexibility programs. We leverage Beckn's proven distributed commerce architecture to create seamless interactions between utilities and their diverse consumer base.
 
 The Beckn Protocol serves as our **digital lingua franca**, enabling standardized communication for:
-- **Program discovery and subscription**: Utilities publishing available DF programs and consumers discovering and enrolling in suitable offerings
-- **Demand signals**: Utilities broadcasting grid needs and flexibility requirements
-- **Response coordination**: Consumers communicating availability, capacity, and participation decisions  
-- **Event notifications**: Real-time grid event dispatch and status updates
-- **Incentive flows**: Transparent performance verification and compensation processing
+- **Resource discovery**: Utilities discovering available subscribed consumer resources ready for activation
+- **Activation coordination**: Utilities sending activation requests and consumers confirming participation
+- **Real-time monitoring**: Tracking actual performance during demand flexibility events
+- **Settlement processing**: Transparent performance verification and incentive calculation
 
 This approach transforms complex utility-consumer interactions into **standardized API conversations** that any participant can understand and implement, whether they're managing a single household or coordinating thousands of industrial facilities.
 
-**Implementation Architecture: Four-Phase Orchestration**
+**Implementation Architecture: Three-Phase Orchestration**
 
-An implementation follows a **discovery-first marketplace approach** where each phase builds upon standardized Beckn API interactions:
+An implementation follows a **utility-initiated activation approach** where consumers are pre-subscribed to DF programs, and the utility activates them when needed:
 
-1. **Discovery Phase**: Consumers discover available DF programs through search APIs, finding opportunities matched to their capabilities
-2. **Subscription Phase**: Enrollment in suitable programs using confirm APIs, establishing clear terms and commitments  
-3. **Event Phase**: Real-time coordination of DF events via on_init (BPP to BAP) and confirm (BAP to BPP) APIs, enabling dynamic grid response
-4. **Settlement Phase**: Performance verification and incentive distribution through status APIs, ensuring transparent compensation
+1. **Resource Discovery Phase**: Utility discovers available subscribed consumer resources through discover APIs, finding participants ready for activation based on location, capacity, and availability
+2. **Activation Phase**: Utility activates selected consumer resources using confirm APIs; consumers respond with participation commitment via on_confirm APIs
+3. **Monitoring Phase**: Real-time performance tracking through status APIs during event execution
 
-Each phase leverages **native Beckn Protocol capabilities**—search, select, init, confirm, status, update, support, cancel, rating-adapted specifically for the energy domain while maintaining full protocol compliance and interoperability.
+This approach assumes **pre-existing subscriptions** where consumers have already enrolled in DF programs. Each phase leverages **native Beckn Protocol capabilities**—discover, confirm, status—adapted specifically for the energy domain while maintaining full protocol compliance and interoperability.
 
 **Demand Flexibility Transaction Flow (Current Implementation):**
 
 ```mermaid
 sequenceDiagram
-    participant C as Consumer (BAP)
+    participant U as Utility/Grid (BAP)
     participant CDS as Catalog Discovery Service
-    participant D as DISCOM/Utility (BPP)
+    participant A1 as FlexiGrid Aggregator (BPP)
+    participant A2 as SmartEnergy Aggregator (BPP)
     
-    Note over C,D: Phase 1: Discovery & Subscription
-    C->>CDS: discover (location, load capacity, segment)
-    CDS-->>C: on_discover (available DF programs, incentive rates)
+    Note over U,A2: Prerequisite: Consumers Pre-Subscribed to DF Programs
     
-    C->>D: confirm (subscribe to DF program)
-    D-->>C: on_confirm (subscription confirmed, active)
+    Note over U,A2: Phase 1: Resource Discovery
+    U->>CDS: discover (location, capacity, availability)
+    CDS-->>U: on_discover (5 consumer resources from 2 aggregators)
     
-    Note over C,D: Phase 2: DF Event Execution
+    Note over U,A2: Phase 2: Resource Activation
     rect rgb(255, 245, 230)
-        D-->>C: on_init (DF event notification, grid conditions)
-        Note over C: Evaluate Event Against Operations
-        C->>D: confirm (participation commitment, load reduction)
-        D-->>C: on_confirm (event confirmed, baseline set)
-    end
-    
-    Note over C,D: Phase 3: Settlement
-    D-->>C: on_status (performance verification, incentive settlement)
-    
-    opt Post-Fulfillment
-        C->>D: rating (rate DF program)
-        D-->>C: on_rating (rating acknowledged)
+        U->>A1: confirm (activate 2/3 resources: Cambridge + Manchester)
+        A1-->>U: on_confirm (2.15 MW committed)
         
-        C->>D: support (if issues arise)
-        D-->>C: on_support (support response)
+        U->>A2: confirm (activate 1/2 resources: Bristol Data Center)
+        A2-->>U: on_confirm (1.9 MW committed)
     end
-```
-
-**Future Extension: Real-time Monitoring & Flexibility:**
-
-```mermaid
-sequenceDiagram
-    participant C as Consumer (BAP)
-    participant D as DISCOM/Utility (BPP)
     
-    Note over C,D: Enhanced Phase: Real-time Monitoring & Dynamic Flexibility
-    rect rgb(230, 245, 255)
-        Note over C: Load Reduction Execution
-        C->>D: status (check event status)
-        D-->>C: on_status (real-time performance tracking)
-        
-        opt Grid Event Update
-            D-->>C: on_update (event extension/modification)
-            C->>D: update (updated commitment)
-            D-->>C: on_update (acknowledgement)
-        end
-    end
+    Note over U,A2: Phase 3: Monitoring
+    U->>A1: status (check progress)
+    A1-->>U: on_status (real-time performance)
+    
+    U->>A2: status (check progress)
+    A2-->>U: on_status (real-time performance)
 ```
 
 ### 11.2 Step-by-Step Implementation
 
-#### 11.2.1 Step 1: Program Discovery
+#### 11.2.1 Step 1: Consumer Resource Discovery
 
-Consumers (residential, commercial, or through aggregators) discover available DF programs using search APIs.
-
-**Process:**
-- Consumer entity (household, business, or aggregator) sends search request to find available DF programs
-- Search criteria include location, load capacity, participant type, and consumer segment
-- CDS responds with available programs matching the criteria and consumer characteristics
-
-**Key Information Exchanged:**
-- Geographic location and coverage area
-- Load capacity and flexibility capabilities (individual or aggregated)
-- Consumer segment (residential, commercial, industrial)
-- Program types and incentive structures tailored to consumer size
-- Participation requirements, terms, and minimum commitment levels
-
-#### 11.2.2 Step 2: Program Subscription
-
-Consumer subscribes to selected DF program (directly or through aggregator).
+Utility discovers available subscribed consumer resources using discover APIs.
 
 **Process:**
-- Consumer entity selects a DF program from search results based on their capacity and preferences
-- Submits subscription request with commitment details, capabilities, and participation constraints
-- Utility reviews application, validates technical requirements, and confirms subscription
-- Subscription becomes active with defined terms, conditions, and consumer-specific parameters
+- Utility sends discover request to find available subscribed consumers ready for activation
+- Search criteria include location (geographic area), load capacity requirements, participant type, and current availability
+- CDS responds with catalog of available consumer resources from multiple aggregators
+- Response includes consumer capabilities, historical performance, and availability windows
 
 **Key Information Exchanged:**
-- Maximum load reduction capacity commitment (individual household or aggregated portfolio)
-- Available flexibility timeframes, notice periods, and seasonal variations
-- Incentive rates and payment terms appropriate to consumer segment
-- Program duration, renewal options, and opt-out procedures
-- Performance requirements, penalties, and consumer protection measures
+- Consumer resource IDs and aggregator/provider information
+- Load capacity ranges (min/max) and currently available capacity
+- Control type (automated/hybrid/manual) and response time capabilities
+- Current availability status and time windows
+- Historical performance metrics (reliability score, past participation)
+- Baseline data and typical load patterns
 
-#### 11.2.3 Step 3: DF Event Notification
+**Example:** Utility discovers 5 consumer resources across 2 aggregators (FlexiGrid: 3 resources, SmartEnergy: 2 resources) in UK region with combined 5.3 MW capacity.
 
-**The Moment of Truth: When the Grid Calls for Help**
+#### 11.2.2 Step 2: Resource Activation Request
 
-This step represents the convergence of sophisticated grid engineering and market dynamics. Unlike traditional power plant dispatch (where utilities own and control generation resources), DF events require **negotiating with independent actors** who have their own business priorities and technical constraints.
-
-**The Grid Operator's Decision Matrix:**
-When system stress is detected, grid operators must make rapid decisions balancing multiple factors:
-- **Technical Requirements**: How much load reduction is needed, where on the grid, and for how long?
-- **Economic Optimization**: Which participants can deliver flexibility most cost-effectively?
-- **Reliability Assurance**: What's the confidence level that participants will actually perform?
-- **System Impact**: How will reduced consumption affect voltage profiles and power flows?
+Utility activates selected consumer resources using confirm APIs.
 
 **Process:**
-- **Grid Condition Assessment**: Operators analyze real-time data from thousands of sensors across the transmission and distribution network, identifying stress patterns that may lead to equipment overloads or frequency deviations
-- **Optimization Algorithm Execution**: Advanced algorithms simultaneously solve for optimal participant selection, event timing, and incentive levels while respecting grid constraints and participant availability
-- **Multi-Participant Coordination**: The system constructs event notifications for potentially hundreds of participants, each receiving customized requests based on their location, capacity, and contract terms
-- **Real-time Validation**: Before sending notifications, the system validates that the proposed DF event will actually resolve the grid constraint without creating new problems elsewhere
+- Utility evaluates discovered resources and selects participants based on location, capacity, and reliability
+- Sends confirm request to activate specific consumer resources for a DF event
+- Activation request includes event details, requested load reduction, timing, and grid conditions
+- Multiple activation requests can be sent to different aggregators simultaneously
 
 **Key Information Exchanged:**
-- **Grid Context**: Current frequency (e.g., "49.8 Hz, declining"), transmission loading percentages, and projected stress duration
-- **Locational Signals**: Specific grid areas where load reduction is most valuable (transmission constraints are highly location-dependent)
-- **Economic Signals**: Real-time pricing that reflects both grid need and participant availability
-- **Technical Requirements**: Precise timing (including required ramp rates), duration, and any operational constraints
+- Event ID, type (peak_demand_surge, emergency), and severity level
+- Requested load reduction amount per consumer resource
+- Event start time, end time, and duration
+- Grid conditions (frequency, load forecast, deficit)
+- Notification timestamp and response deadline
 
-#### 11.2.4 Step 4: Event Participation Confirmation
+**Example:** Utility sends two activation requests - one to FlexiGrid for 2/3 resources (2.3 MW), another to SmartEnergy for 1/2 resources (2.0 MW).
 
-Commercial consumer confirms participation in DF event.
+#### 11.2.3 Step 3: Participation Confirmation
+
+Consumer aggregators confirm participation commitment using on_confirm APIs.
 
 **Process:**
-- Commercial facility evaluates event requirements against operational constraints
-- Determines available load reduction capacity for the event timeframe
-- Commits to specific load reduction amount with confidence level
-- Confirms participation with baseline and target consumption details
+- Aggregator receives activation request and coordinates with underlying consumers
+- Evaluates consumer operational constraints and available capacity
+- Determines committed load reduction amount with confidence level
+- Responds with participation confirmation including baseline and target loads
+- Prepares devices and systems for event execution
 
 **Key Information Exchanged:**
-- Committed load reduction amount and confidence level
-- Baseline consumption and target consumption during event
-- Confirmation of participation timing and constraints
-- Equipment and systems to be controlled during event
-- Emergency override and safety procedures
+- Committed load reduction per consumer resource
+- Confidence level for achieving the commitment (e.g., 95%, 97%)
+- Baseline load and target load during event
+- Control mode (automated/hybrid) and devices to be activated
+- Estimated incentive amount (preliminary)
 
-#### 11.2.5 Step 5: Performance Verification
+**Example:** FlexiGrid confirms 2.15 MW commitment (Cambridge: 750 kW, Manchester: 1,400 kW) with 96.5% confidence. SmartEnergy confirms 1.9 MW from Bristol Data Center with 97% confidence.
 
-Utility verifies actual load reduction delivered during the DF event.
+#### 11.2.4 Step 4: Real-time Monitoring
+
+Utility monitors performance during event execution using status APIs.
 
 **Process:**
-- Utility collects real-time meter data during event period
-- Compares actual consumption against calculated baseline
-- Validates load reduction against commitment
-- Assesses any deviations or operational constraints reported
-- Calculates final performance metrics
+- Utility sends status request during event to check real-time performance
+- Aggregators collect meter data from participating consumers
+- Response includes current load, actual reduction achieved, and performance metrics
+- Metering data provided at regular intervals (e.g., every 15 minutes)
+- Performance percentage calculated against commitment
+- Grid frequency and impact assessment tracked in real-time
 
 **Key Information Exchanged:**
-- Actual consumption data with timestamps
-- Baseline consumption for comparison
-- Load reduction achieved (kW and duration)
-- Performance percentage against commitment
-- Any qualifying events or exceptions
+- Current load per consumer resource with timestamps
+- Actual load reduction achieved vs. committed
+- Performance percentage (e.g., 104%, 96.4%)
+- Accumulated reduction energy (kWh)
+- Metering data with interval readings
+- Current grid frequency and impact assessment
 
-#### 11.2.6 Step 6: Incentive Settlement
-
-Utility processes incentive payments based on verified performance.
-
-**Process:**
-- Utility calculates incentive amount based on verified performance
-- Applies any adjustments for partial performance or exceptions
-- Sends settlement notification with performance details
-- Processes payment according to program terms
-- Updates participant performance history
-
-**Key Information Exchanged:**
-- Performance verification results
-- Incentive calculation breakdown
-- Payment amount and timing
-- Settlement status and confirmation
-- Updated performance metrics for future events
+**Example:** 
+At 30 minutes into event, Cambridge shows 104% performance (785 kW vs. 750 kW committed), Manchester shows 96.4% (1,350 kW vs. 1,400 kW). Total actual reduction: 2,135 kW with accumulated energy of 1.07 MWh.
 
 ### 11.3 Testing
 
@@ -740,16 +674,18 @@ This document has no IANA actions.
 
 This section provides comprehensive JSON examples for all Demand Flexibility API interactions. These examples follow the Beckn Protocol specification and demonstrate production-ready message formats.
 
-### 14.1 Discovery Examples
+**Note:** These examples assume consumers are pre-subscribed to DF programs. The utility discovers and activates available consumer resources when grid conditions require demand flexibility.
 
-#### 14.1.1 Program Discovery (discover API)
+### 14.1 Resource Discovery Examples
 
-- Consumers (residential, commercial, retail, industrial) search for available DF programs for subscription
-- The example below demonstrates a comprehensive parameter set; consumers MAY use a subset of these parameters as per their requirements
-- This API call is required only when consumers need to discover available DF programs for subscription
-- BAPs that do not implement DF program subscription functionality MAY omit this API
+#### 14.1.1 Consumer Resource Discovery (discover API)
 
-Consumer searches for available DF programs:
+- Utility searches for available subscribed consumer resources ready for activation
+- The example below demonstrates discovery criteria including location, capacity, participant type, and availability
+- This API call is required for core DF functionality when utilities need to find available consumer resources
+- BAPs (utilities) MUST implement this API
+
+Utility discovers available subscribed consumers:
 
 <details>
 <summary><a href="../../../../examples/demand_flexibility/1.discover/discover-request.json">Example json :rocket:</a></summary>
@@ -760,338 +696,78 @@ Consumer searches for available DF programs:
     "version": "2.0.0",
     "action": "discover",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-20T14:30:00+05:30",
-    "message_id": "msg-search-df-001",
-    "transaction_id": "txn-df-program-search-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
+    "timestamp": "2025-11-17T14:30:00Z",
+    "message_id": "msg-discover-consumers-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
     "ttl": "PT30S",
     "schema_context": [
       "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld"
     ]
   },
   "message": {
-    "text_search": "Demand flexibility Programs",
+    "text_search": "Available subscribed consumers for DF event",
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.beckn:itemAttributes.beckn:participantCapabilities.participantType =~ /commercial/ && @.beckn:itemAttributes.beckn:participantCapabilities.loadCapacity.min <= 500 && @.beckn:itemAttributes.beckn:participantCapabilities.loadCapacity.max >= 500 && @.beckn:itemAttributes.beckn:participantCapabilities.controlType == 'automated' && @.beckn:itemAttributes.beckn:participantCapabilities.responseTime == 'PT5M' && @.beckn:itemAttributes.beckn:eventParameters.notificationType == 'instant' && @.beckn:itemAttributes.beckn:incentiveParameters.rate >= 5.00)]"
+      "expression": "$[?(@.beckn:itemAttributes.beckn:subscriptionStatus == 'active' && @.beckn:itemAttributes.beckn:participantCapabilities.participantType =~ /commercial|industrial/ && @.beckn:itemAttributes.beckn:participantCapabilities.loadCapacity.min >= 200 && @.beckn:itemAttributes.beckn:participantCapabilities.controlType =~ /automated|hybrid/ && @.beckn:itemAttributes.beckn:availabilityParameters.currentAvailability == true)]"
     },
     "spatial": [
       {
         "targets": "$['beckn:availableAt'][*]['geo']",
         "geometry": {
-          "type": "Point",
-          "coordinates": [77.209010, 28.613901]
+          "type": "Polygon",
+          "coordinates": [[
+            [-2.5, 51.0],
+            [1.0, 51.0],
+            [1.0, 54.0],
+            [-2.5, 54.0],
+            [-2.5, 51.0]
+          ]]
         }
       }
     ]
   }
 }
-
-
 ```
 </details>
 
-#### 14.1.2 A catalog of DF programs (on_discover API)
+#### 14.1.2 Available Consumer Resources Catalog (on_discover API)
 
-- Consumers receive a catalog of available DF programs for subscription
-- The example below demonstrates a comprehensive catalog response
-- This API call is required only when consumers need to discover available DF programs for subscription
-- BPPs that do not implement DF program subscription functionality MAY omit this API
+- Aggregators respond with catalog of available subscribed consumer resources
+- The example below demonstrates a catalog with 5 consumer resources from 2 aggregators (FlexiGrid: 3, SmartEnergy: 2)
+- This API call is required for core DF functionality when aggregators need to provide available consumer resources
+- BPPs (aggregators) MUST implement this API
 
-DISCOM returns catalog of available DF programs:
+Aggregators return catalog of available subscribed consumers:
 
 <details>
 <summary><a href="../../../../examples/demand_flexibility/1.discover/on_discover-response.json">Example json :rocket:</a></summary>
 
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "on_discover",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-20T14:30:02+05:30",
-    "message_id": "msg-on-search-df-001",
-    "transaction_id": "txn-df-program-search-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "catalogs": [
-      {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Catalog",
-        "beckn:id": "catalog-df-programs-gp-001",
-        "beckn:descriptor": {
-          "@type": "beckn:Descriptor",
-          "schema:name": "GreenPower Demand Flexibility Programs",
-          "beckn:shortDesc": "Available demand flexibility programs for Delhi NCR region"
-        },
-        "beckn:validity": {
-          "@type": "beckn:TimePeriod",
-          "schema:startDate": "2025-08-01T00:00:00Z",
-          "schema:endDate": "2026-07-31T23:59:59Z"
-        },
-        "beckn:provider": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-          "@type": "beckn:Provider",
-          "beckn:id": "provider-gp-df-001",
-          "beckn:descriptor": {
-            "@type": "beckn:Descriptor",
-            "schema:name": "GreenPower Utility",
-            "beckn:shortDesc": "GreenPower Demand Flexibility Programs for Delhi NCR",
-            "schema:image": [
-              "https://greenpower-utility.example.com/assets/logo.png"
-            ]
-          },
-          "beckn:rateable": true,
-          "beckn:rating": {
-            "@type": "beckn:Rating",
-            "beckn:ratingValue": 4.5,
-            "beckn:ratingCount": 1247
-          }
-        },
-        "beckn:items": [
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Item",
-            "beckn:id": "item-df-peak-saver-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Evening Peak Saver Program",
-              "beckn:shortDesc": "₹5/kWh for 2-5 PM reductions (manual acceptance)",
-              "beckn:longDesc": "Users will receive app notifications during afternoon peak hours (2–5 PM). Upon manual acceptance, they can reduce usage and earn ₹5 for every kWh saved during the window."
-            },
-            "beckn:category": {
-              "@type": "schema:CategoryCode",
-              "schema:codeValue": "seasonal_programs",
-              "schema:name": "Seasonal Programs (Summer/Winter)"
-            },
-            "beckn:availableAt": [
-              {
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [77.209010, 28.613901]
-                },
-                "address": {
-                  "streetAddress": "GreenPower Service Area",
-                  "addressLocality": "New Delhi",
-                  "addressRegion": "Delhi",
-                  "postalCode": "110001",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
-            "beckn:rateable": true,
-            "beckn:rating": {
-              "@type": "beckn:Rating",
-              "beckn:ratingValue": 4.7,
-              "beckn:ratingCount": 523
-            },
-            "beckn:provider": {
-              "beckn:id": "provider-gp-df-001",
-              "beckn:descriptor": {
-                "@type": "beckn:Descriptor",
-                "schema:name": "GreenPower Utility",
-                "beckn:shortDesc": "GreenPower Demand Flexibility Programs for Delhi NCR"
-              }
-            },
-            "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-              "@type": "beckn:DemandFlexibilityProgram",
-              "beckn:programType": "voluntary",
-              "beckn:participantCapabilities": {
-                "participantType": ["commercial", "residential"],
-                "loadCapacity": {
-                  "min": 100,
-                  "max": 1000,
-                  "unit": "kW"
-                },
-                "controlType": "manual",
-                "responseTime": "PT30M"
-              },
-              "beckn:availabilityParameters": {
-                "hours": {
-                  "start": "14:00",
-                  "end": "17:00"
-                },
-                "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
-                "seasonal": ["summer", "monsoon"]
-              },
-              "beckn:eventParameters": {
-                "duration": {
-                  "min": "PT60M",
-                  "max": "PT180M"
-                },
-                "notificationType": "day_ahead",
-                "priority": "medium",
-                "gridConditionTrigger": "peak_demand"
-              },
-              "beckn:incentiveParameters": {
-                "rate": 5.00,
-                "currency": "INR",
-                "type": "per_kWh_reduced",
-                "settlementFrequency": "monthly"
-              },
-              "beckn:priorityParameters": {
-                "eventPriority": ["high", "medium"],
-                "participationMode": "voluntary"
-              }
-            }
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Item",
-            "beckn:id": "item-df-emergency-response-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Emergency Grid Response Program",
-              "beckn:shortDesc": "₹10/kWh for emergency load reductions",
-              "beckn:longDesc": "Critical grid emergency program requiring immediate load reduction. Premium compensation for rapid response during grid stress events."
-            },
-            "beckn:category": {
-              "@type": "schema:CategoryCode",
-              "schema:codeValue": "emergency_only",
-              "schema:name": "Emergency-Only Programs"
-            },
-            "beckn:availableAt": [
-              {
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [77.209010, 28.613901]
-                },
-                "address": {
-                  "streetAddress": "GreenPower Service Area",
-                  "addressLocality": "New Delhi",
-                  "addressRegion": "Delhi",
-                  "postalCode": "110001",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
-            "beckn:rateable": true,
-            "beckn:rating": {
-              "@type": "beckn:Rating",
-              "beckn:ratingValue": 4.9,
-              "beckn:ratingCount": 187
-            },
-            "beckn:provider": {
-              "beckn:id": "provider-gp-df-001",
-              "beckn:descriptor": {
-                "@type": "beckn:Descriptor",
-                "schema:name": "GreenPower Utility",
-                "beckn:shortDesc": "GreenPower Demand Flexibility Programs for Delhi NCR"
-              }
-            },
-            "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-              "@type": "beckn:DemandFlexibilityProgram",
-              "beckn:programType": "mandatory",
-              "beckn:participantCapabilities": {
-                "participantType": ["commercial", "industrial"],
-                "loadCapacity": {
-                  "min": 500,
-                  "max": 5000,
-                  "unit": "kW"
-                },
-                "controlType": "automated",
-                "responseTime": "PT5M"
-              },
-              "beckn:availabilityParameters": {
-                "hours": {
-                  "start": "00:00",
-                  "end": "23:59"
-                },
-                "days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
-                "seasonal": ["all"]
-              },
-              "beckn:eventParameters": {
-                "duration": {
-                  "min": "PT30M",
-                  "max": "PT240M"
-                },
-                "notificationType": "instant",
-                "priority": "high",
-                "gridConditionTrigger": "emergency"
-              },
-              "beckn:incentiveParameters": {
-                "rate": 10.00,
-                "currency": "INR",
-                "type": "per_kWh_reduced",
-                "settlementFrequency": "weekly"
-              },
-              "beckn:priorityParameters": {
-                "eventPriority": ["high"],
-                "participationMode": "mandatory"
-              }
-            }
-          }
-        ],
-        "beckn:offers": [
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "offer-df-peak-saver-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Evening Peak Saver Program - Incentive"
-            },
-            "beckn:items": [
-              "item-df-peak-saver-001"
-            ],
-            "beckn:validity": {
-              "@type": "beckn:TimePeriod",
-              "schema:startDate": "2025-08-01T00:00:00Z",
-              "schema:endDate": "2026-07-31T23:59:59Z"
-            },
-            "beckn:provider": "provider-gp-df-001"
-          },
-          {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "offer-df-emergency-response-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Emergency Grid Response Program - Premium Incentive"
-            },
-            "beckn:items": [
-              "item-df-emergency-response-001"
-            ],
-            "beckn:validity": {
-              "@type": "beckn:TimePeriod",
-              "schema:startDate": "2025-08-01T00:00:00Z",
-              "schema:endDate": "2026-07-31T23:59:59Z"
-            },
-            "beckn:provider": "provider-gp-df-001"
-          }
-        ]
-      }
-    ]
-  }
-}
-
-
-```
 </details>
 
-This catalog structure allows consumers to evaluate and select DF programs that match their capabilities and preferences.
+**Key Features of Response:**
+- 5 consumer resources across 2 aggregators (FlexiGrid Aggregator: 3 resources, SmartEnergy Solutions: 2 resources)
+- Combined capacity: 5.3 MW (Cambridge: 800 kW, Manchester: 1,500 kW, London: 600 kW, Bristol: 2,000 kW, Birmingham: 400 kW)
+- All consumers pre-subscribed with active status
+- Historical performance metrics included (reliability scores, past participation)
+- Current availability windows and operational constraints
+- UK locations with UTC timestamps
 
-### 14.2 DF program subscription Examples
+### 14.2 Resource Activation Examples
 
-#### 14.2.1 DF program Subscription Request (confirm API)
 
-- Consumers send a subscription confirmation for a selected DF program using order.type = "program_subscription"
-- The example below demonstrates the subscription request structure
-- This API call is required only when consumers need to subscribe to DF programs
-- BAPs that do not implement DF program subscription functionality MAY omit this API
+#### 14.2.1 Activate FlexiGrid Resources (confirm API)
 
-Consumer confirms subscription to a DF program:
+- Utility sends activation request to FlexiGrid Aggregator to activate 2 out of 3 available consumer resources
+- The example below demonstrates activation of Cambridge Shopping Centre and Manchester Manufacturing Plant (total 2.3 MW requested)
+- This API call is required for core DF functionality when utilities need to activate consumer resources
+- BAPs (utilities) MUST implement this API
+
+Utility activates FlexiGrid consumer resources:
 
 <details>
-<summary><a href="../../../../examples/demand_flexibility/2.subscription/confirm-request.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/demand_flexibility/2.activation/confirm-activation-flexigrid.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1099,98 +775,120 @@ Consumer confirms subscription to a DF program:
     "version": "2.0.0",
     "action": "confirm",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-20T14:45:00+05:30",
-    "message_id": "msg-confirm-subscription-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld"
-    ]
+    "timestamp": "2025-11-17T14:45:00Z",
+    "message_id": "msg-confirm-activation-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-df-subscription-001",
-      "beckn:orderStatus": "SUBSCRIPTION_INITIATED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
       "beckn:orderItems": [
         {
           "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-subscription-001",
-          "beckn:orderedItem": "item-df-peak-saver-001",
-          "beckn:quantity": 1,
-          "beckn:acceptedOffer": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "offer-df-peak-saver-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Evening Peak Saver Program - Incentive"
-            },
-            "beckn:provider": "provider-gp-df-001",
-            "beckn:items": [
-              "item-df-peak-saver-001"
-            ]
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityActivation",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:requestedReduction": 800,
+            "beckn:requestedReductionUnit": "kW",
+            "beckn:activationTime": "2025-11-17T18:00:00Z",
+            "beckn:duration": "PT2H",
+            "beckn:eventDetails": {
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "severity": "high",
+              "gridFrequency": 49.85,
+              "gridFrequencyUnit": "Hz"
+            }
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityActivation",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:requestedReduction": 1500,
+            "beckn:requestedReductionUnit": "kW",
+            "beckn:activationTime": "2025-11-17T18:00:00Z",
+            "beckn:duration": "PT2H",
+            "beckn:eventDetails": {
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "severity": "high",
+              "gridFrequency": 49.85,
+              "gridFrequencyUnit": "Hz"
+            }
           }
         }
       ],
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-subscription-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "SUBSCRIPTION_INITIATED",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-          "@type": "beckn:DemandFlexibilitySubscription",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
+          "@type": "beckn:DemandFlexibilityEvent",
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:eventType": "peak_demand_surge",
+          "beckn:eventSeverity": "high",
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:totalRequestedReduction": 2.3,
+          "beckn:totalRequestedReductionUnit": "MW",
+          "beckn:gridConditions": {
+            "frequency": 49.85,
+            "frequencyUnit": "Hz",
+            "loadForecast": 5200,
+            "loadForecastUnit": "MW",
+            "availableGeneration": 4900,
+            "availableGenerationUnit": "MW",
+            "deficit": 300,
+            "deficitUnit": "MW"
           },
-          "beckn:startDate": "2025-08-26T00:00:00+05:30"
+          "beckn:notificationTimestamp": "2025-11-17T14:45:00Z",
+          "beckn:responseDeadline": "2025-11-17T17:30:00Z"
         }
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilitySubscription",
-        "beckn:requestType": "program_subscription"
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T14:45:00Z"
       }
     }
   }
 }
-
-
 ```
 </details>
 
-#### 14.2.2 DF program Subscription confirmation (on_confirm API)
+#### 14.2.2 FlexiGrid Participation Confirmation (on_confirm API)
 
-- BPPs send subscription acknowledgment to confirm consumer enrollment in the DF program
-- The example below demonstrates the confirmation response structure
-- This API call is required only when BPPs need to acknowledge DF program subscriptions
-- BPPs that do not implement DF program subscription functionality MAY omit this API
+- FlexiGrid Aggregator confirms consumer participation with committed load reductions
+- The example below demonstrates participation commitment from 2 consumer resources
+- This API call is required for core DF functionality when aggregators need to confirm consumer participation
+- BPPs (aggregators) MUST implement this API
 
-DISCOM confirms consumer subscription to DF program:
+FlexiGrid confirms consumer participation:
 
 <details>
-<summary><a href="../../../../examples/demand_flexibility/2.subscription/on_confirm-response.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/demand_flexibility/2.activation/on_confirm-participation-flexigrid.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1198,251 +896,138 @@ DISCOM confirms consumer subscription to DF program:
     "version": "2.0.0",
     "action": "on_confirm",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-20T14:46:00+05:30",
-    "message_id": "msg-on-confirm-subscription-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-df-subscription-001",
-      "beckn:orderStatus": "SUBSCRIPTION_CONFIRMED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
-      "beckn:orderItems": [
-        {
-          "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-subscription-001",
-          "beckn:orderedItem": "item-df-peak-saver-001",
-          "beckn:quantity": 1,
-          "beckn:acceptedOffer": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "offer-df-peak-saver-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Evening Peak Saver Program - Incentive"
-            },
-            "beckn:provider": "provider-gp-df-001",
-            "beckn:items": [
-              "item-df-peak-saver-001"
-            ]
-          },
-          "beckn:orderItemAttributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-            "@type": "beckn:DemandFlexibilitySubscription",
-            "beckn:subscriptionId": "sub-df-peak-saver-001",
-            "beckn:participantCapabilities": {
-              "participantType": ["commercial"],
-              "loadCapacity": {
-                "min": 100,
-                "max": 200,
-                "unit": "kW"
-              },
-              "controlType": "manual",
-              "responseTime": "PT30M"
-            },
-            "beckn:availabilityParameters": {
-              "hours": {
-                "start": "14:00",
-                "end": "17:00"
-              },
-              "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
-              "seasonal": ["summer", "monsoon"]
-            },
-            "beckn:eventParameters": {
-              "duration": {
-                "min": "PT60M",
-                "max": "PT180M"
-              },
-              "notificationType": "day_ahead",
-              "priority": "medium",
-              "gridConditionTrigger": "peak_demand"
-            },
-            "beckn:incentiveParameters": {
-              "rate": 5.00,
-              "currency": "INR",
-              "type": "per_kWh_reduced",
-              "settlementFrequency": "monthly"
-            },
-            "beckn:priorityParameters": {
-              "eventPriority": ["high", "medium"],
-              "participationMode": "voluntary"
-            }
-          }
-        }
-      ],
-      "beckn:fulfillment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-subscription-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "SUBSCRIPTION_CONFIRMED",
-        "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-          "@type": "beckn:DemandFlexibilitySubscription",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
-          },
-          "beckn:startDate": "2025-08-26T00:00:00+05:30"
-        }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilitySubscription",
-        "beckn:requestType": "program_subscription"
-      }
-    }
-  }
-}
-
-
-```
-</details>
-
-### 14.3 DF Event Management Examples
-
-#### 14.3.1 DF Event Notification (on_init API)
-
-- BPPs initiate DF events when grid conditions require demand reduction using order.type = "event_participation"
-- The example below demonstrates the event notification structure
-- This API call is required for core DF functionality when BPPs need to notify consumers of DF events
-- BAPs MUST implement this API
-
-DISCOM notifies consumer of a DF event:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/3.event/1.on_init-event-notification.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "on_init",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-26T13:45:00+05:30",
-    "message_id": "msg-on-init-event-001",
+    "timestamp": "2025-11-17T14:46:15Z",
+    "message_id": "msg-on-confirm-participation-001",
     "transaction_id": "txn-df-event-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
     "ttl": "PT30S"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-df-event-20250826-001",
-      "beckn:orderStatus": "EVENT_PARTICIPATION_REQUESTED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
+      "beckn:id": "df-event-order-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
       "beckn:orderItems": [
         {
           "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-event-001",
-          "beckn:orderedItem": "item-df-event-peak-saver-001",
-          "beckn:quantity": 1,
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemStatus": "CONFIRMED",
           "beckn:orderItemAttributes": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-            "@type": "beckn:DemandFlexibilityEvent",
-            "beckn:eventDetails": {
-              "subscriptionId": "sub-df-peak-saver-001",
-              "programId": "item-df-peak-saver-001",
-              "eventId": "event-20250826-001",
-              "priority": "high",
-              "responseDeadline": "2025-08-26T14:00:00+05:30"
-            },
-            "beckn:gridConditions": {
-              "frequency": "49.7Hz"
-            },
-            "beckn:baselineParameters": {
-              "baselineLoad": 400,
-              "baselineUnit": "kW",
-              "baselineMethod": "3-of-5_average"
-            },
-            "beckn:reductionRequest": {
-              "requestedReduction": 150,
-              "reductionUnit": "kW"
-            },
-            "beckn:incentiveParameters": {
-              "rate": 5.00,
-              "currency": "INR",
-              "type": "per_kWh_reduced"
-            }
+            "@type": "beckn:DemandFlexibilityParticipation",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:consumerName": "Cambridge Shopping Centre",
+            "beckn:committedReduction": 750,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:confidenceLevel": 0.95,
+            "beckn:baselineLoad": 1200,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:targetLoad": 450,
+            "beckn:targetLoadUnit": "kW",
+            "beckn:baselineMethod": "10_of_10",
+            "beckn:participationStatus": "confirmed",
+            "beckn:devicesPrepared": ["HVAC_Zone1", "HVAC_Zone2", "HVAC_Zone3"],
+            "beckn:controlMode": "automated",
+            "beckn:estimatedIncentive": 4500.00,
+            "beckn:estimatedIncentiveCurrency": "GBP"
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemStatus": "CONFIRMED",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityParticipation",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:consumerName": "Manchester Manufacturing Plant",
+            "beckn:committedReduction": 1400,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:confidenceLevel": 0.98,
+            "beckn:baselineLoad": 2000,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:targetLoad": 600,
+            "beckn:targetLoadUnit": "kW",
+            "beckn:baselineMethod": "5_of_10",
+            "beckn:participationStatus": "confirmed",
+            "beckn:devicesPrepared": ["ProductionLine2_Motor1", "ProductionLine2_Motor2", "Compressor_Unit3"],
+            "beckn:controlMode": "automated",
+            "beckn:estimatedIncentive": 11200.00,
+            "beckn:estimatedIncentiveCurrency": "GBP"
           }
         }
       ],
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-event-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "EVENT_PARTICIPATION_REQUESTED",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "CONFIRMED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
           "@type": "beckn:DemandFlexibilityEvent",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:startTime": "2025-08-26T14:00:00+05:30",
-          "beckn:endTime": "2025-08-26T17:00:00+05:30",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
-          }
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:totalCommittedReduction": 2.15,
+          "beckn:totalCommittedReductionUnit": "MW",
+          "beckn:participationSummary": {
+            "totalResources": 2,
+            "confirmedResources": 2,
+            "partiallyConfirmedResources": 0,
+            "declinedResources": 0,
+            "aggregatedConfidenceLevel": 0.965
+          },
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:confirmationTimestamp": "2025-11-17T14:46:15Z"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-df-event-001",
+        "beckn:status": "PENDING",
+        "beckn:paymentAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityIncentive",
+          "beckn:totalEstimatedIncentive": 15700.00,
+          "beckn:currency": "GBP",
+          "beckn:paymentMethod": "monthly_billing_adjustment",
+          "beckn:settlementFrequency": "monthly",
+          "beckn:expectedSettlementDate": "2025-12-05"
         }
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilityEvent",
-        "beckn:requestType": "event_participation"
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T14:46:15Z"
       }
     }
   }
 }
-
-
 ```
 </details>
 
-#### 14.3.2 DF Event Participation Confirmation (confirm API)
+#### 14.2.3 Activate SmartEnergy Resources (confirm API)
 
-- Consumers respond to DF event notifications by confirming their participation decision using order.type = "event_participation"
-- The example below demonstrates the participation confirmation structure
-- This API call is required for core DF functionality when consumers respond to DF event notifications
-- BPPs MUST implement this API
+- Utility sends activation request to SmartEnergy Aggregator to activate 1 out of 2 available consumer resources
+- The example below demonstrates activation of Bristol Data Center (2.0 MW requested)
+- This API call is required for core DF functionality when utilities need to activate consumer resources
+- BAPs (utilities) MUST implement this API
 
-Consumer confirms participation in DF event:
+Utility activates SmartEnergy consumer resource:
 
 <details>
-<summary><a href="../../../../examples/demand_flexibility/3.event/confirm-event-participation.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/demand_flexibility/2.activation/confirm-activation-smartenergy.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1450,46 +1035,41 @@ Consumer confirms participation in DF event:
     "version": "2.0.0",
     "action": "confirm",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-26T13:50:00+05:30",
-    "message_id": "msg-confirm-event-001",
-    "transaction_id": "txn-df-event-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld"
-    ]
+    "timestamp": "2025-11-17T15:00:00Z",
+    "message_id": "msg-confirm-activation-002",
+    "transaction_id": "txn-df-event-002",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "smartenergy-aggregator.example.com",
+    "bpp_uri": "https://smartenergy-aggregator.example.com",
+    "ttl": "PT30S"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-df-event-20250826-001",
-      "beckn:orderStatus": "EVENT_PARTICIPATION_COMMITTED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "provider-smartenergy-001",
+      "beckn:buyer": "gridpower-utility",
       "beckn:orderItems": [
         {
           "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-event-001",
-          "beckn:orderedItem": "item-df-event-peak-saver-001",
-          "beckn:quantity": 1,
+          "beckn:lineId": "activation-datacenter-004",
+          "beckn:orderedItem": "consumer-resource-datacenter-004",
           "beckn:orderItemAttributes": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-            "@type": "beckn:DemandFlexibilityEvent",
+            "@type": "beckn:DemandFlexibilityActivation",
+            "beckn:consumerId": "consumer-datacenter-bristol-004",
+            "beckn:requestedReduction": 2000,
+            "beckn:requestedReductionUnit": "kW",
+            "beckn:activationTime": "2025-11-17T18:00:00Z",
+            "beckn:duration": "PT2H",
             "beckn:eventDetails": {
-              "subscriptionId": "sub-df-peak-saver-001",
-              "programId": "item-df-peak-saver-001",
-              "eventId": "event-20250826-001"
-            },
-            "beckn:commitmentParameters": {
-              "commitmentConfidence": "high",
-              "baselineLoad": 400,
-              "targetLoad": 280,
-              "committedReduction": 120,
-              "reductionUnit": "kW"
+              "eventId": "df-event-peak-20251117-001",
+              "eventType": "peak_demand_surge",
+              "severity": "high",
+              "gridFrequency": 49.85,
+              "gridFrequencyUnit": "Hz"
             }
           }
         }
@@ -1497,55 +1077,57 @@ Consumer confirms participation in DF event:
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-event-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "EVENT_PARTICIPATION_COMMITTED",
+        "beckn:id": "fulfillment-df-event-002",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "PENDING",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
           "@type": "beckn:DemandFlexibilityEvent",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:startTime": "2025-08-26T14:00:00+05:30",
-          "beckn:endTime": "2025-08-26T17:00:00+05:30",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
-          }
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:eventType": "peak_demand_surge",
+          "beckn:eventSeverity": "high",
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:totalRequestedReduction": 2.0,
+          "beckn:totalRequestedReductionUnit": "MW",
+          "beckn:gridConditions": {
+            "frequency": 49.85,
+            "frequencyUnit": "Hz",
+            "loadForecast": 5200,
+            "loadForecastUnit": "MW",
+            "availableGeneration": 4900,
+            "availableGenerationUnit": "MW",
+            "deficit": 300,
+            "deficitUnit": "MW"
+          },
+          "beckn:notificationTimestamp": "2025-11-17T15:00:00Z",
+          "beckn:responseDeadline": "2025-11-17T17:30:00Z"
         }
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilityEvent",
-        "beckn:requestType": "event_participation"
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T15:00:00Z"
       }
     }
   }
 }
-
-
 ```
 </details>
 
-#### 14.3.3 DF Event Participation Acknowledgement (on_confirm API)
+#### 14.2.4 SmartEnergy Participation Confirmation (on_confirm API)
 
-- BPPs acknowledge consumer participation commitment and provide incentive estimates
-- The example below demonstrates the acknowledgment response structure
-- This API call is required for core DF functionality when BPPs need to acknowledge consumer participation decisions
-- BAPs MUST implement this API
+- SmartEnergy Aggregator confirms consumer participation with committed load reduction
+- The example below demonstrates participation commitment from Bristol Data Center
+- This API call is required for core DF functionality when aggregators need to confirm consumer participation
+- BPPs (aggregators) MUST implement this API
 
-DISCOM acknowledges consumer participation in DF event:
+SmartEnergy confirms consumer participation:
 
 <details>
-<summary><a href="../../../../examples/demand_flexibility/3.event/on_confirm-event-acknowledgement.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/demand_flexibility/2.activation/on_confirm-participation-smartenergy.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1553,107 +1135,156 @@ DISCOM acknowledges consumer participation in DF event:
     "version": "2.0.0",
     "action": "on_confirm",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-26T13:51:00+05:30",
-    "message_id": "msg-on-confirm-event-001",
-    "transaction_id": "txn-df-event-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
+    "timestamp": "2025-11-17T15:00:15Z",
+    "message_id": "msg-on-confirm-participation-002",
+    "transaction_id": "txn-df-event-002",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "smartenergy-aggregator.example.com",
+    "bpp_uri": "https://smartenergy-aggregator.example.com",
     "ttl": "PT30S"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-df-event-20250826-001",
-      "beckn:orderStatus": "EVENT_PARTICIPATION_CONFIRMED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
+      "beckn:id": "df-event-order-002",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "provider-smartenergy-001",
+      "beckn:buyer": "gridpower-utility",
       "beckn:orderItems": [
         {
           "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-event-001",
-          "beckn:orderedItem": "item-df-event-peak-saver-001",
-          "beckn:quantity": 1,
+          "beckn:lineId": "activation-datacenter-004",
+          "beckn:orderedItem": "consumer-resource-datacenter-004",
+          "beckn:orderItemStatus": "CONFIRMED",
           "beckn:orderItemAttributes": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-            "@type": "beckn:DemandFlexibilityEvent",
-            "beckn:eventDetails": {
-              "subscriptionId": "sub-df-peak-saver-001",
-              "programId": "item-df-peak-saver-001",
-              "eventId": "event-20250826-001"
-            },
-            "beckn:commitmentParameters": {
-              "commitmentConfidence": "high",
-              "baselineLoad": 400,
-              "targetLoad": 280,
-              "committedReduction": 120,
-              "reductionUnit": "kW"
-            },
-            "beckn:incentiveParameters": {
-              "rate": 5.00,
-              "currency": "INR",
-              "type": "per_kWh_reduced",
-              "estimatedIncentive": 1800.00
-            }
+            "@type": "beckn:DemandFlexibilityParticipation",
+            "beckn:consumerId": "consumer-datacenter-bristol-004",
+            "beckn:consumerName": "Bristol Data Center",
+            "beckn:committedReduction": 1900,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:confidenceLevel": 0.97,
+            "beckn:baselineLoad": 2500,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:targetLoad": 600,
+            "beckn:targetLoadUnit": "kW",
+            "beckn:baselineMethod": "5_of_10",
+            "beckn:participationStatus": "confirmed",
+            "beckn:devicesPrepared": ["Cooling_System_A", "Cooling_System_B", "HVAC_Unit_1", "HVAC_Unit_2"],
+            "beckn:controlMode": "automated",
+            "beckn:estimatedIncentive": 15200.00,
+            "beckn:estimatedIncentiveCurrency": "GBP"
           }
         }
       ],
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-event-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "EVENT_PARTICIPATION_CONFIRMED",
+        "beckn:id": "fulfillment-df-event-002",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "CONFIRMED",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
           "@type": "beckn:DemandFlexibilityEvent",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:startTime": "2025-08-26T14:00:00+05:30",
-          "beckn:endTime": "2025-08-26T17:00:00+05:30",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
-          }
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:totalCommittedReduction": 1.9,
+          "beckn:totalCommittedReductionUnit": "MW",
+          "beckn:participationSummary": {
+            "totalResources": 1,
+            "confirmedResources": 1,
+            "partiallyConfirmedResources": 0,
+            "declinedResources": 0,
+            "aggregatedConfidenceLevel": 0.97
+          },
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:confirmationTimestamp": "2025-11-17T15:00:15Z"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-df-event-002",
+        "beckn:status": "PENDING",
+        "beckn:paymentAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityIncentive",
+          "beckn:totalEstimatedIncentive": 15200.00,
+          "beckn:currency": "GBP",
+          "beckn:paymentMethod": "monthly_billing_adjustment",
+          "beckn:settlementFrequency": "monthly",
+          "beckn:expectedSettlementDate": "2025-12-05"
         }
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilityEvent",
-        "beckn:requestType": "event_participation"
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T15:00:15Z"
       }
     }
   }
 }
-
-
 ```
 </details>
 
-### 14.4 Settlement and Monitoring Examples
+**Combined Activation Summary:**
+- Total resources activated: 3 (from 5 available)
+- Total committed capacity: 4.05 MW (2.15 MW from FlexiGrid + 1.9 MW from SmartEnergy)
+- Total estimated incentives: £30,900
+- 2 aggregators coordinating different consumer portfolios
 
-#### 14.4.1 Settlement and Incentive Calculation against participation in a DF event (on_status API)
+### 14.3 Monitoring Examples
 
-- BPPs provide performance metrics and final incentive calculations after DF event completion
-- The example below demonstrates the settlement response structure
-- This API call is required for core DF functionality when BPPs need to provide settlement information
-- BAPs MUST implement this API
 
-DISCOM provides settlement details and incentive calculation:
+#### 14.3.1 Check Event Progress (status API)
+
+- Utility sends status request to check real-time performance during DF event execution
+- The example below demonstrates a status request for monitoring consumer resource performance
+- This API call is required for core DF functionality when utilities need to monitor event progress
+- BAPs (utilities) MUST implement this API
+
+Utility checks event progress:
 
 <details>
-<summary><a href="../../../../examples/demand_flexibility/4.settlement/on_status-settlement.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/demand_flexibility/3.monitoring/status-request.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "status",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T18:30:00Z",
+    "message_id": "msg-status-monitoring-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order_id": "df-event-order-001"
+  }
+}
+```
+</details>
+
+#### 14.3.2 Real-time Performance Data (on_status API)
+
+- Aggregators respond with real-time performance metrics during DF event execution
+- The example below demonstrates performance data from 2 active consumer resources
+- This API call is required for core DF functionality when aggregators need to provide performance updates
+- BPPs (aggregators) MUST implement this API
+
+Aggregator provides real-time performance data:
+
+<details>
+<summary><a href="../../../../examples/demand_flexibility/3.monitoring/on_status-progress-response.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1661,465 +1292,133 @@ DISCOM provides settlement details and incentive calculation:
     "version": "2.0.0",
     "action": "on_status",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-26T17:30:00+05:30",
-    "message_id": "msg-on-status-settlement-001",
+    "timestamp": "2025-11-17T18:30:05Z",
+    "message_id": "msg-on-status-progress-001",
     "transaction_id": "txn-df-event-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
     "ttl": "PT30S"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-df-event-20250826-001",
-      "beckn:orderStatus": "EVENT_COMPLETED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
+      "beckn:id": "df-event-order-001",
+      "beckn:orderStatus": "IN_PROGRESS",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
       "beckn:orderItems": [
         {
           "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-event-001",
-          "beckn:orderedItem": "item-df-event-peak-saver-001",
-          "beckn:quantity": 1,
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemStatus": "IN_PROGRESS",
           "beckn:orderItemAttributes": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-            "@type": "beckn:DemandFlexibilityEvent",
-            "beckn:eventDetails": {
-              "subscriptionId": "sub-df-peak-saver-001",
-              "programId": "item-df-peak-saver-001",
-              "eventId": "event-20250826-001"
+            "@type": "beckn:DemandFlexibilityPerformance",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:consumerName": "Cambridge Shopping Centre",
+            "beckn:committedReduction": 750,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:actualReduction": 780,
+            "beckn:actualReductionUnit": "kW",
+            "beckn:performancePercentage": 104.0,
+            "beckn:currentLoad": 420,
+            "beckn:currentLoadUnit": "kW",
+            "beckn:baselineLoad": 1200,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:meteringData": {
+              "meterReadingTimestamp": "2025-11-17T18:30:00Z",
+              "intervalData": [
+                {"timestamp": "2025-11-17T18:00:00Z", "load": 1180},
+                {"timestamp": "2025-11-17T18:15:00Z", "load": 520},
+                {"timestamp": "2025-11-17T18:30:00Z", "load": 420}
+              ],
+              "intervalUnit": "kW"
             },
-            "beckn:commitmentParameters": {
-              "baselineLoad": 400,
-              "targetLoad": 280,
-              "committedReduction": 120,
-              "reductionUnit": "kW"
+            "beckn:performanceStatus": "exceeding_commitment",
+            "beckn:accumulatedReduction": 0.39,
+            "beckn:accumulatedReductionUnit": "MWh"
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemStatus": "IN_PROGRESS",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityPerformance",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:consumerName": "Manchester Manufacturing Plant",
+            "beckn:committedReduction": 1400,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:actualReduction": 1350,
+            "beckn:actualReductionUnit": "kW",
+            "beckn:performancePercentage": 96.4,
+            "beckn:currentLoad": 650,
+            "beckn:currentLoadUnit": "kW",
+            "beckn:baselineLoad": 2000,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:meteringData": {
+              "meterReadingTimestamp": "2025-11-17T18:30:00Z",
+              "intervalData": [
+                {"timestamp": "2025-11-17T18:00:00Z", "load": 1950},
+                {"timestamp": "2025-11-17T18:15:00Z", "load": 700},
+                {"timestamp": "2025-11-17T18:30:00Z", "load": 650}
+              ],
+              "intervalUnit": "kW"
             },
-            "beckn:performanceMetrics": {
-              "actualAverageLoad": 288,
-              "loadReductionAchieved": 112,
-              "performancePercentage": 93.33,
-              "totalReductionEnergy": 336,
-              "energyUnit": "kWh"
-            },
-            "beckn:settlementDetails": {
-              "incentiveRate": 5.00,
-              "incentiveCurrency": "INR",
-              "incentiveType": "per_kWh_reduced",
-              "totalIncentive": 1680.00,
-              "settlementStatus": "PROCESSING",
-              "settlementMethod": "monthly_bill_credit",
-              "expectedSettlementCycle": "2025-09"
-            }
+            "beckn:performanceStatus": "meeting_commitment",
+            "beckn:accumulatedReduction": 0.675,
+            "beckn:accumulatedReductionUnit": "MWh"
           }
         }
       ],
       "beckn:fulfillment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-event-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "EVENT_COMPLETED",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "IN_PROGRESS",
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
           "@type": "beckn:DemandFlexibilityEvent",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:startTime": "2025-08-26T14:00:00+05:30",
-          "beckn:endTime": "2025-08-26T17:00:00+05:30",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:eventStatus": "active",
+          "beckn:totalCommittedReduction": 2.15,
+          "beckn:totalCommittedReductionUnit": "MW",
+          "beckn:totalActualReduction": 2.13,
+          "beckn:totalActualReductionUnit": "MW",
+          "beckn:aggregatedPerformance": 99.1,
+          "beckn:totalAccumulatedReduction": 1.065,
+          "beckn:totalAccumulatedReductionUnit": "MWh",
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:elapsedTime": "PT30M",
+          "beckn:remainingTime": "PT90M",
+          "beckn:gridImpact": {
+            "frequencyImprovement": 0.10,
+            "frequencyImprovementUnit": "Hz",
+            "currentFrequency": 49.95,
+            "loadReductionVerified": true
           }
         }
       },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilityEvent",
-        "beckn:requestType": "event_participation"
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:statusTimestamp": "2025-11-17T18:30:05Z"
       }
     }
   }
 }
-
-
 ```
 </details>
-
-### 14.5 Post-Fulfillment Examples
-
-#### 14.5.1 Cancellation (cancel API)
-
-- Consumers can cancel their subscription to a DF program
-- The example below demonstrates the cancellation request structure
-- This API call is OPTIONAL for DF implementations
-
-Consumer cancels subscription to DF program:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/5.post-fulfillment/1.cancel-request.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "cancel",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-09-15T10:30:00+05:30",
-    "message_id": "msg-cancel-subscription-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S",
-    "schema_context": [
-      "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld"
-    ]
-  },
-  "message": {
-    "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-df-subscription-001",
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilitySubscription",
-        "beckn:subscriptionId": "sub-df-peak-saver-001",
-        "beckn:cancellationReason": "No longer required"
-      }
-    }
-  }
-}
-
-
-```
-</details>
-
-#### 14.5.2 Cancellation Acknowledgement (on_cancel API)
-
-- BPPs acknowledge the cancellation request and provide status
-- The example below demonstrates the cancellation response structure
-- This API call is OPTIONAL for DF implementations
-
-DISCOM acknowledges cancellation request:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/5.post-fulfillment/2.on_cancel-response.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "on_cancel",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-09-15T10:31:00+05:30",
-    "message_id": "msg-on-cancel-subscription-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-df-subscription-001",
-      "beckn:orderStatus": "SUBSCRIPTION_CANCELLED",
-      "beckn:seller": "provider-gp-df-001",
-      "beckn:buyer": "buyer-dtc-001",
-      "beckn:orderItems": [
-        {
-          "@type": "beckn:OrderItem",
-          "beckn:lineId": "order-item-subscription-001",
-          "beckn:orderedItem": "item-df-peak-saver-001",
-          "beckn:quantity": 1,
-          "beckn:acceptedOffer": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-            "@type": "beckn:Offer",
-            "beckn:id": "offer-df-peak-saver-001",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "Evening Peak Saver Program - Incentive"
-            },
-            "beckn:provider": "provider-gp-df-001",
-            "beckn:items": [
-              "item-df-peak-saver-001"
-            ]
-          },
-          "beckn:orderItemAttributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-            "@type": "beckn:DemandFlexibilitySubscription",
-            "beckn:subscriptionId": "sub-df-peak-saver-001",
-            "beckn:participantCapabilities": {
-              "participantType": ["commercial"],
-              "loadCapacity": {
-                "min": 100,
-                "max": 200,
-                "unit": "kW"
-              },
-              "controlType": "manual",
-              "responseTime": "PT30M"
-            },
-            "beckn:availabilityParameters": {
-              "hours": {
-                "start": "14:00",
-                "end": "17:00"
-              },
-              "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
-              "seasonal": ["summer", "monsoon"]
-            },
-            "beckn:eventParameters": {
-              "duration": {
-                "min": "PT60M",
-                "max": "PT180M"
-              },
-              "notificationType": "day_ahead",
-              "priority": "medium",
-              "gridConditionTrigger": "peak_demand"
-            },
-            "beckn:incentiveParameters": {
-              "rate": 5.00,
-              "currency": "INR",
-              "type": "per_kWh_reduced",
-              "settlementFrequency": "monthly"
-            },
-            "beckn:priorityParameters": {
-              "eventPriority": ["high", "medium"],
-              "participationMode": "voluntary"
-            }
-          }
-        }
-      ],
-      "beckn:fulfillment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-subscription-001",
-        "beckn:mode": "GRID-BASED",
-        "beckn:status": "SUBSCRIPTION_CANCELLED",
-        "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-          "@type": "beckn:DemandFlexibilitySubscription",
-          "beckn:meterId": "meter://abc/98765456",
-          "beckn:location": {
-            "@type": "beckn:Location",
-            "geo": {
-              "type": "Point",
-              "coordinates": [77.209010, 28.613901]
-            },
-            "address": {
-              "streetAddress": "Gov Bus Depot, Anand Vihar",
-              "addressLocality": "New Delhi",
-              "addressRegion": "Delhi",
-              "postalCode": "110001",
-              "addressCountry": "IN"
-            }
-          },
-          "beckn:startDate": "2025-08-26T00:00:00+05:30",
-          "beckn:endDate": "2025-09-15T10:31:00+05:30"
-        }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
-        "@type": "beckn:DemandFlexibilitySubscription",
-        "beckn:requestType": "program_subscription",
-        "beckn:cancellationReason": "No longer required",
-        "beckn:cancelledBy": "user",
-        "beckn:cancellationDate": "2025-09-15T10:31:00+05:30"
-      }
-    }
-  }
-}
-
-
-```
-</details>
-
-#### 14.5.3 Support Request (support API)
-
-- Consumers can request support for issues related to DF programs
-- The example below demonstrates the support request structure
-- This API call is OPTIONAL for DF implementations
-
-Consumer requests support:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/5.post-fulfillment/3.support-request.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "support",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-28T10:00:00+05:30",
-    "message_id": "msg-support-df-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "ref_id": "order-df-subscription-001",
-    "ref_type": "order"
-  }
-}
-
-
-```
-</details>
-
-#### 14.5.4 Support Response (on_support API)
-
-- BPPs provide support contact information and assistance
-- The example below demonstrates the support response structure
-- This API call is OPTIONAL for DF implementations
-
-DISCOM provides support information:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/5.post-fulfillment/4.on_support-response.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "on_support",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-28T10:00:02+05:30",
-    "message_id": "msg-on-support-df-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "support": {
-      "name": "GreenPower Demand Flexibility Support",
-      "phone": "+91-11-1234-5678",
-      "email": "df-support@greenpower-utility.example.com",
-      "url": "https://support.greenpower-utility.example.com/demand-flexibility",
-      "hours": "Monday-Saturday, 9:00 AM - 6:00 PM IST",
-      "channels": ["phone", "email", "web", "chat"]
-    }
-  }
-}
-
-
-```
-</details>
-
-#### 14.5.5 Rating (rating API)
-
-- Consumers can rate their experience with DF programs
-- The example below demonstrates the rating request structure
-- This API call is OPTIONAL for DF implementations
-
-Consumer rates DF program experience:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/5.post-fulfillment/5.rating-request.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "rating",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-09-20T15:30:00+05:30",
-    "message_id": "msg-rating-df-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "id": "order-df-subscription-001",
-    "value": 5,
-    "best": 5,
-    "worst": 1,
-    "category": "program",
-    "feedback": {
-      "comments": "Excellent demand flexibility program! The event notifications were timely, incentive calculations were transparent, and the overall experience was smooth. The program helped us optimize our energy costs significantly.",
-      "tags": ["timely-notifications", "transparent-incentives", "easy-participation", "cost-savings", "reliable-service"]
-    }
-  }
-}
-
-
-```
-</details>
-
-#### 14.5.6 Rating Acknowledgement (on_rating API)
-
-- BPPs acknowledge the rating submission
-- The example below demonstrates the rating response structure
-- This API call is OPTIONAL for DF implementations
-
-DISCOM acknowledges rating:
-
-<details>
-<summary><a href="../../../../examples/demand_flexibility/5.post-fulfillment/6.on_rating-response.json">Example json :rocket:</a></summary>
-
-```json
-{
-  "context": {
-    "version": "2.0.0",
-    "action": "on_rating",
-    "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-09-20T15:30:02+05:30",
-    "message_id": "msg-on-rating-df-001",
-    "transaction_id": "txn-df-subscription-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
-    "bpp_id": "greenpower-utility.example.com",
-    "bpp_uri": "https://greenpower-utility.example.com",
-    "ttl": "PT30S"
-  },
-  "message": {
-    "received": true,
-    "aggregate": {
-      "count": 127,
-      "value": 4.65,
-      "best": 5,
-      "worst": 1
-    },
-    "feedbackForm": {
-      "id": "df-detailed-feedback-form-001",
-      "name": "Demand Flexibility Program Detailed Feedback",
-      "url": "https://feedback.greenpower-utility.example.com/df/order-df-subscription-001",
-      "mime_type": "text/html"
-    }
-  }
-}
-
-
-```
-</details>
-
-### 14.6 Future Reference Implementations
-
-Reference implementations will be developed as part of pilot programs and early adopter deployments. These implementations will be added to this section once validated in production environments.
 
 ## 15. References
 

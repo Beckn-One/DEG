@@ -3,28 +3,34 @@
     "version": "2.0.0",
     "action": "discover",
     "domain": "beckn.one:DEG:demand-flexibility:1.0",
-    "timestamp": "2025-08-20T14:30:00+05:30",
-    "message_id": "msg-search-df-001",
-    "transaction_id": "txn-df-program-search-001",
-    "bap_id": "consumer-app.example.com",
-    "bap_uri": "https://consumer-app.example.com",
+    "timestamp": "2025-11-17T14:30:00Z",
+    "message_id": "msg-discover-consumers-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
     "ttl": "PT30S",
     "schema_context": [
       "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld"
     ]
   },
   "message": {
-    "text_search": "Demand flexibility Programs",
+    "text_search": "Available subscribed consumers for DF event",
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.beckn:itemAttributes.beckn:participantCapabilities.participantType =~ /commercial/ && @.beckn:itemAttributes.beckn:participantCapabilities.loadCapacity.min <= 500 && @.beckn:itemAttributes.beckn:participantCapabilities.loadCapacity.max >= 500 && @.beckn:itemAttributes.beckn:participantCapabilities.controlType == 'automated' && @.beckn:itemAttributes.beckn:participantCapabilities.responseTime == 'PT5M' && @.beckn:itemAttributes.beckn:eventParameters.notificationType == 'instant' && @.beckn:itemAttributes.beckn:incentiveParameters.rate >= 5.00)]"
+      "expression": "$[?(@.beckn:itemAttributes.beckn:subscriptionStatus == 'active' && @.beckn:itemAttributes.beckn:participantCapabilities.participantType =~ /commercial|industrial/ && @.beckn:itemAttributes.beckn:participantCapabilities.loadCapacity.min >= 200 && @.beckn:itemAttributes.beckn:participantCapabilities.controlType =~ /automated|hybrid/ && @.beckn:itemAttributes.beckn:availabilityParameters.currentAvailability == true)]"
     },
     "spatial": [
       {
         "targets": "$['beckn:availableAt'][*]['geo']",
         "geometry": {
-          "type": "Point",
-          "coordinates": [77.209010, 28.613901]
+          "type": "Polygon",
+          "coordinates": [[
+            [-2.5, 51.0],
+            [1.0, 51.0],
+            [1.0, 54.0],
+            [-2.5, 54.0],
+            [-2.5, 51.0]
+          ]]
         }
       }
     ]

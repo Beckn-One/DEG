@@ -1,0 +1,75 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "update",
+    "domain": "beckn.one:DEG:compute-energy:1.0",
+    "timestamp": "2025-11-17T14:00:30Z",
+    "message_id": "msg-update-workload-shift-001",
+    "transaction_id": "txn-ce-order1-001",
+    "bap_id": "compflex-agent.computecloud.ai",
+    "bap_uri": "https://compflex-agent.computecloud.ai",
+    "bpp_id": "gridflex-agent.example.com",
+    "bpp_uri": "https://gridflex-agent.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-ce-cambridge-morning-001",
+      "beckn:orderStatus": "IN_PROGRESS",
+      "beckn:seller": "provider-gridflex-001",
+      "beckn:buyer": "buyer-compflex-001",
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-ce-cambridge-001",
+        "beckn:mode": "GRID-BASED",
+        "beckn:status": "IN_PROGRESS",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+          "@type": "beckn:ComputeEnergyFulfillment",
+          "beckn:flexibilityAction": {
+            "actionType": "workload_shift",
+            "actionReason": "grid_stress_response",
+            "actionTimestamp": "2025-11-17T14:00:30Z",
+            "shiftDetails": {
+              "shiftedLoad": 0.3,
+              "shiftedLoadUnit": "MW",
+              "sourceLocation": "Cambridge",
+              "targetLocation": "Manchester",
+              "targetOrder": "order-ce-manchester-afternoon-001",
+              "estimatedShiftTime": "PT5M"
+            },
+            "batterySupportDetails": {
+              "batterySupportActivated": true,
+              "batteryDischarge": 0.15,
+              "batteryDischargeUnit": "MW",
+              "batteryDuration": "PT10M"
+            },
+            "loadReductionCommitment": {
+              "loadReduction": 0.3,
+              "reductionUnit": "MW",
+              "responseTime": "PT2M"
+            }
+          },
+          "beckn:workloadMetadata": {
+            "workloadType": "AI_TRAINING",
+            "workloadId": "batch-a-001",
+            "workloadStatus": "migrating",
+            "checkpointCreated": true,
+            "checkpointTimestamp": "2025-11-17T14:00:25Z"
+          }
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/ComputeEnergy/v1/context.jsonld",
+        "@type": "beckn:ComputeEnergyOrder",
+        "beckn:updateType": "flexibility_response",
+        "beckn:responseToEvent": "grid-event-cambridge-20251117-001",
+        "beckn:updateTimestamp": "2025-11-17T14:00:30Z"
+      }
+    }
+  }
+}
+

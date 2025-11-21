@@ -1,0 +1,124 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T14:46:15Z",
+    "message_id": "msg-on-confirm-participation-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "df-event-order-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemStatus": "CONFIRMED",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityParticipation",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:consumerName": "Cambridge Shopping Centre",
+            "beckn:committedReduction": 750,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:confidenceLevel": 0.95,
+            "beckn:baselineLoad": 1200,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:targetLoad": 450,
+            "beckn:targetLoadUnit": "kW",
+            "beckn:baselineMethod": "10_of_10",
+            "beckn:participationStatus": "confirmed",
+            "beckn:devicesPrepared": ["HVAC_Zone1", "HVAC_Zone2", "HVAC_Zone3"],
+            "beckn:controlMode": "automated",
+            "beckn:estimatedIncentive": 4500.00,
+            "beckn:estimatedIncentiveCurrency": "GBP"
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemStatus": "CONFIRMED",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityParticipation",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:consumerName": "Manchester Manufacturing Plant",
+            "beckn:committedReduction": 1400,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:confidenceLevel": 0.98,
+            "beckn:baselineLoad": 2000,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:targetLoad": 600,
+            "beckn:targetLoadUnit": "kW",
+            "beckn:baselineMethod": "5_of_10",
+            "beckn:participationStatus": "confirmed",
+            "beckn:devicesPrepared": ["ProductionLine2_Motor1", "ProductionLine2_Motor2", "Compressor_Unit3"],
+            "beckn:controlMode": "automated",
+            "beckn:estimatedIncentive": 11200.00,
+            "beckn:estimatedIncentiveCurrency": "GBP"
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "CONFIRMED",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityEvent",
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:totalCommittedReduction": 2.15,
+          "beckn:totalCommittedReductionUnit": "MW",
+          "beckn:participationSummary": {
+            "totalResources": 2,
+            "confirmedResources": 2,
+            "partiallyConfirmedResources": 0,
+            "declinedResources": 0,
+            "aggregatedConfidenceLevel": 0.965
+          },
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:confirmationTimestamp": "2025-11-17T14:46:15Z"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-df-event-001",
+        "beckn:status": "PENDING",
+        "beckn:paymentAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityIncentive",
+          "beckn:totalEstimatedIncentive": 15700.00,
+          "beckn:currency": "GBP",
+          "beckn:paymentMethod": "monthly_billing_adjustment",
+          "beckn:settlementFrequency": "monthly",
+          "beckn:expectedSettlementDate": "2025-12-05"
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T14:46:15Z"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,131 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_status",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T18:30:05Z",
+    "message_id": "msg-on-status-progress-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "df-event-order-001",
+      "beckn:orderStatus": "IN_PROGRESS",
+      "beckn:seller": "provider-consumer-agg-001",
+      "beckn:buyer": "gridpower-utility",
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-mall-001",
+          "beckn:orderedItem": "consumer-resource-mall-001",
+          "beckn:orderItemStatus": "IN_PROGRESS",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityPerformance",
+            "beckn:consumerId": "consumer-mall-cambridge-001",
+            "beckn:consumerName": "Cambridge Shopping Centre",
+            "beckn:committedReduction": 750,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:actualReduction": 780,
+            "beckn:actualReductionUnit": "kW",
+            "beckn:performancePercentage": 104.0,
+            "beckn:currentLoad": 420,
+            "beckn:currentLoadUnit": "kW",
+            "beckn:baselineLoad": 1200,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:meteringData": {
+              "meterReadingTimestamp": "2025-11-17T18:30:00Z",
+              "intervalData": [
+                {"timestamp": "2025-11-17T18:00:00Z", "load": 1180},
+                {"timestamp": "2025-11-17T18:15:00Z", "load": 520},
+                {"timestamp": "2025-11-17T18:30:00Z", "load": 420}
+              ],
+              "intervalUnit": "kW"
+            },
+            "beckn:performanceStatus": "exceeding_commitment",
+            "beckn:accumulatedReduction": 0.39,
+            "beckn:accumulatedReductionUnit": "MWh"
+          }
+        },
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-factory-002",
+          "beckn:orderedItem": "consumer-resource-factory-002",
+          "beckn:orderItemStatus": "IN_PROGRESS",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityPerformance",
+            "beckn:consumerId": "consumer-factory-manchester-002",
+            "beckn:consumerName": "Manchester Manufacturing Plant",
+            "beckn:committedReduction": 1400,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:actualReduction": 1350,
+            "beckn:actualReductionUnit": "kW",
+            "beckn:performancePercentage": 96.4,
+            "beckn:currentLoad": 650,
+            "beckn:currentLoadUnit": "kW",
+            "beckn:baselineLoad": 2000,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:meteringData": {
+              "meterReadingTimestamp": "2025-11-17T18:30:00Z",
+              "intervalData": [
+                {"timestamp": "2025-11-17T18:00:00Z", "load": 1950},
+                {"timestamp": "2025-11-17T18:15:00Z", "load": 700},
+                {"timestamp": "2025-11-17T18:30:00Z", "load": 650}
+              ],
+              "intervalUnit": "kW"
+            },
+            "beckn:performanceStatus": "meeting_commitment",
+            "beckn:accumulatedReduction": 0.675,
+            "beckn:accumulatedReductionUnit": "MWh"
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-df-event-001",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "IN_PROGRESS",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityEvent",
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:eventStatus": "active",
+          "beckn:totalCommittedReduction": 2.15,
+          "beckn:totalCommittedReductionUnit": "MW",
+          "beckn:totalActualReduction": 2.13,
+          "beckn:totalActualReductionUnit": "MW",
+          "beckn:aggregatedPerformance": 99.1,
+          "beckn:totalAccumulatedReduction": 1.065,
+          "beckn:totalAccumulatedReductionUnit": "MWh",
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:elapsedTime": "PT30M",
+          "beckn:remainingTime": "PT90M",
+          "beckn:gridImpact": {
+            "frequencyImprovement": 0.10,
+            "frequencyImprovementUnit": "Hz",
+            "currentFrequency": 49.95,
+            "loadReductionVerified": true
+          }
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:statusTimestamp": "2025-11-17T18:30:05Z"
+      }
+    }
+  }
+}
+

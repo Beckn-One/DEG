@@ -1,0 +1,99 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T15:00:15Z",
+    "message_id": "msg-on-confirm-participation-002",
+    "transaction_id": "txn-df-event-002",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "smartenergy-aggregator.example.com",
+    "bpp_uri": "https://smartenergy-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "df-event-order-002",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "provider-smartenergy-001",
+      "beckn:buyer": "gridpower-utility",
+      "beckn:orderItems": [
+        {
+          "@type": "beckn:OrderItem",
+          "beckn:lineId": "activation-datacenter-004",
+          "beckn:orderedItem": "consumer-resource-datacenter-004",
+          "beckn:orderItemStatus": "CONFIRMED",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+            "@type": "beckn:DemandFlexibilityParticipation",
+            "beckn:consumerId": "consumer-datacenter-bristol-004",
+            "beckn:consumerName": "Bristol Data Center",
+            "beckn:committedReduction": 1900,
+            "beckn:committedReductionUnit": "kW",
+            "beckn:confidenceLevel": 0.97,
+            "beckn:baselineLoad": 2500,
+            "beckn:baselineLoadUnit": "kW",
+            "beckn:targetLoad": 600,
+            "beckn:targetLoadUnit": "kW",
+            "beckn:baselineMethod": "5_of_10",
+            "beckn:participationStatus": "confirmed",
+            "beckn:devicesPrepared": ["Cooling_System_A", "Cooling_System_B", "HVAC_Unit_1", "HVAC_Unit_2"],
+            "beckn:controlMode": "automated",
+            "beckn:estimatedIncentive": 15200.00,
+            "beckn:estimatedIncentiveCurrency": "GBP"
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-df-event-002",
+        "beckn:mode": "DEMAND_RESPONSE",
+        "beckn:status": "CONFIRMED",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityEvent",
+          "beckn:eventId": "df-event-peak-20251117-001",
+          "beckn:totalCommittedReduction": 1.9,
+          "beckn:totalCommittedReductionUnit": "MW",
+          "beckn:participationSummary": {
+            "totalResources": 1,
+            "confirmedResources": 1,
+            "partiallyConfirmedResources": 0,
+            "declinedResources": 0,
+            "aggregatedConfidenceLevel": 0.97
+          },
+          "beckn:eventStartTime": "2025-11-17T18:00:00Z",
+          "beckn:eventEndTime": "2025-11-17T20:00:00Z",
+          "beckn:confirmationTimestamp": "2025-11-17T15:00:15Z"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-df-event-002",
+        "beckn:status": "PENDING",
+        "beckn:paymentAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+          "@type": "beckn:DemandFlexibilityIncentive",
+          "beckn:totalEstimatedIncentive": 15200.00,
+          "beckn:currency": "GBP",
+          "beckn:paymentMethod": "monthly_billing_adjustment",
+          "beckn:settlementFrequency": "monthly",
+          "beckn:expectedSettlementDate": "2025-12-05"
+        }
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/DemandFlexibility/v1/context.jsonld",
+        "@type": "beckn:DemandFlexibilityOrder",
+        "beckn:orderType": "resource_activation",
+        "beckn:priority": "high",
+        "beckn:confirmationTimestamp": "2025-11-17T15:00:15Z"
+      }
+    }
+  }
+}
+
