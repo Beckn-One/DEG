@@ -149,10 +149,6 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | BPP | Beckn Provider Platform | Service provider platform that responds to BAP requests. Mapped to CPOs.  |
 | NFO | Network Facilitator Organization | Organization responsible for the adoption and growth of the network. Usually the custodian of the network’s registry. |
 | CDS | Catalog Discovery Service | Enables discovery of charging services from BPPs in the network. |
-| eMSP | e-Mobility Service Provider | Service provider that aggregates multiple CPOs. Generally onboarded by BAPs.  |
-| CPO | Charge Point Operator | Entity that owns and operates charging infrastructure. Generally onboarded by BPPs.  |
-| EVSE | Electric Vehicle Supply Equipment | Individual charging station unit. Owned and operated by CPOs |
-| OCPI | Open Charge Point Interface | Protocol for communication between eMSPs and CPOs. |
 
 > Note:
 > This document does not detail the mapping between Beckn Protocol and OCPI. Please refer to [this](../../../docs/implementation-guides/v1-EOS/DEG00x_Mapping-OCPI-and-Beckn-Protocol-for-EV-Charging-Interoperability.md) document for the same.
@@ -165,7 +161,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 
 ## 7.1. Architecture Diagram
 
-![](./assets/beckn-one-deg-arch.png)
+![](../assets/beckn-one-deg-arch.png)
 
 ## 7.2. Actors
 
@@ -173,7 +169,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 2. Beckn One Catalog Discovery Service  
 3. Beckn Application Platforms  
 4. Beckn Provider Platforms  
-5. EV Charging Registry
+5. Peer to Peer trading Registry
 
 ## 7.3. Schema Overview
 
@@ -587,7 +583,7 @@ Once the registry is created and details are published, the namespace and the re
 
 ## 8.2. Setting up the Protocol Endpoints
 
-This section contains instructions to set up and test the protocol stack for EV charging transactions. 
+This section contains instructions to set up and test the protocol stack for transactions. 
 
 ### 8.2.1. Installing Beckn ONIX
 
@@ -612,7 +608,7 @@ If you are a BAP
 
 1. Configure the collection/environment variables to the newly installed Beckn ONIX adapter URL and other variables in the collection.
 2. Select the discover example and hit send
-3. You should see the EV charging service catalog response
+3. You should see the service catalog response
 
 If you are a BPP
 
