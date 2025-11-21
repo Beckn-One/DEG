@@ -744,15 +744,94 @@ Aggregators return catalog of available subscribed consumers:
 <details>
 <summary><a href="../../../../examples/demand_flexibility/1.discover/on_discover-response.json">Example json :rocket:</a></summary>
 
-</details>
+*Note: Full JSON example contains 5 consumer resources (430 lines). See linked file for complete catalog. Below shows the structure with first consumer resource:*
 
-**Key Features of Response:**
-- 5 consumer resources across 2 aggregators (FlexiGrid Aggregator: 3 resources, SmartEnergy Solutions: 2 resources)
-- Combined capacity: 5.3 MW (Cambridge: 800 kW, Manchester: 1,500 kW, London: 600 kW, Bristol: 2,000 kW, Birmingham: 400 kW)
-- All consumers pre-subscribed with active status
-- Historical performance metrics included (reliability scores, past participation)
-- Current availability windows and operational constraints
-- UK locations with UTC timestamps
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:DEG:demand-flexibility:1.0",
+    "timestamp": "2025-11-17T14:30:02Z",
+    "message_id": "msg-on-discover-consumers-001",
+    "transaction_id": "txn-df-event-001",
+    "bap_id": "gridpower-utility.example.com",
+    "bap_uri": "https://gridpower-utility.example.com",
+    "bpp_id": "consumer-aggregator.example.com",
+    "bpp_uri": "https://consumer-aggregator.example.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [
+      {
+        "@type": "beckn:Catalog",
+        "beckn:id": "catalog-subscribed-consumers-001",
+        "beckn:descriptor": {
+          "schema:name": "Available Subscribed Consumers - UK East",
+          "beckn:shortDesc": "Active DF program subscribers available for event participation"
+        },
+        "beckn:items": [
+          {
+            "beckn:id": "consumer-resource-mall-001",
+            "beckn:provider": "FlexiGrid Aggregator",
+            "beckn:descriptor": {
+              "schema:name": "Cambridge Shopping Centre - HVAC System",
+              "beckn:shortDesc": "Commercial mall HVAC with 800 kW load reduction capacity"
+            },
+            "beckn:itemAttributes": {
+              "beckn:consumerId": "consumer-mall-cambridge-001",
+              "beckn:subscriptionStatus": "active",
+              "beckn:subscribedProgram": {
+                "programId": "item-df-commercial-flex-001",
+                "programName": "Commercial Flex Program",
+                "subscriptionDate": "2025-07-15T10:00:00Z"
+              },
+              "beckn:participantCapabilities": {
+                "participantType": ["commercial"],
+                "deviceTypes": ["HVAC", "lighting"],
+                "loadCapacity": {
+                  "min": 500,
+                  "max": 1200,
+                  "unit": "kW",
+                  "currentAvailable": 800
+                },
+                "controlType": "automated",
+                "responseTime": "PT10M"
+              },
+              "beckn:availabilityParameters": {
+                "currentAvailability": true,
+                "availableFrom": "2025-11-17T18:00:00Z",
+                "availableUntil": "2025-11-17T22:00:00Z"
+              },
+              "beckn:baselineData": {
+                "baselineMethod": "10_of_10",
+                "typicalLoad": 1200,
+                "typicalLoadUnit": "kW",
+                "historicalPerformance": {
+                  "eventsParticipated": 15,
+                  "averageReduction": 750,
+                  "reliabilityScore": 0.93
+                }
+              }
+            }
+          }
+          // ... 4 more consumer resources
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Catalog Contains 5 Consumer Resources:**
+1. Cambridge Shopping Centre (FlexiGrid) - 800 kW
+2. Manchester Manufacturing (FlexiGrid) - 1,500 kW  
+3. London Office Complex (FlexiGrid) - 600 kW
+4. Bristol Data Center (SmartEnergy) - 2,000 kW
+5. Birmingham Hospital (SmartEnergy) - 400 kW
+
+**Total Combined Capacity:** 5.3 MW
+</details>
 
 ### 14.2 Resource Activation Examples
 

@@ -42,7 +42,6 @@
       - [11.2.4 Step 4: Order Confirmation](#1124-step-4-order-confirmation)
       - [11.2.5 Step 5: Workload Execution](#1125-step-5-workload-execution)
       - [11.2.6 Step 6: Dynamic Flexibility Response](#1126-step-6-dynamic-flexibility-response)
-      - [11.2.7 Step 7: Settlement and Verification](#1127-step-7-settlement-and-verification)
     - [11.3 Testing](#113-testing)
       - [11.3.1 Test Scenarios](#1131-test-scenarios)
       - [11.3.2 Validation Checklist](#1132-validation-checklist)
@@ -78,11 +77,10 @@
       - [14.3.3 Status Request (status API)](#1433-status-request-status-api)
       - [14.3.4 Status Response (on\_status API)](#1434-status-response-on_status-api)
     - [14.4 Post-Fulfillment Examples](#144-post-fulfillment-examples)
-      - [14.4.1 Settlement Details (on\_status API)](#1441-settlement-details-on_status-api)
-      - [14.4.2 Rating Request (rating API)](#1442-rating-request-rating-api)
-      - [14.4.3 Rating Response (on\_rating API)](#1443-rating-response-on_rating-api)
-      - [14.4.4 Support Request (support API)](#1444-support-request-support-api)
-      - [14.4.5 Support Response (on\_support API)](#1445-support-response-on_support-api)
+      - [14.4.1 Rating Request (rating API)](#1441-rating-request-rating-api)
+      - [14.4.2 Rating Response (on\_rating API)](#1442-rating-response-on_rating-api)
+      - [14.4.3 Support Request (support API)](#1443-support-request-support-api)
+      - [14.4.4 Support Response (on\_support API)](#1444-support-response-on_support-api)
     - [14.5 Future Reference Implementations](#145-future-reference-implementations)
   - [15. References](#15-references)
     - [15.1 Normative References](#151-normative-references)
@@ -136,7 +134,7 @@ This document covers:
 - Discovery mechanisms for grid flexibility windows and carbon intensity signals
 - Workload scheduling and ordering mechanisms aligned with grid conditions
 - Dynamic workload migration in response to real-time grid events
-- Carbon accounting and cost settlement for compute workloads
+- Carbon accounting for compute workloads
 - Integration with data center orchestration and grid monitoring systems
 
 This document does not cover:
@@ -372,11 +370,10 @@ The Beckn Protocol serves as our **digital coordination fabric**, enabling stand
 - **Workload ordering**: Reserving compute slots aligned with specific grid conditions and pricing
 - **Dynamic coordination**: Real-time workload migration in response to grid stress events
 - **Carbon accounting**: Transparent tracking of carbon emissions and energy costs per workload
-- **Settlement flows**: Verification and settlement of energy consumption and carbon impact
 
 This approach transforms data center operations from **static resource allocation** to **dynamic, grid-aware compute orchestration** that any participant can implement through standardized APIs.
 
-**Implementation Architecture: Seven-Phase Orchestration**
+**Implementation Architecture: Six-Phase Orchestration**
 
 An implementation follows a **discovery-first coordination approach** where each phase builds upon standardized Beckn API interactions:
 
@@ -386,7 +383,6 @@ An implementation follows a **discovery-first coordination approach** where each
 4. **Confirmation Phase**: Confirm workload reservations against selected grid windows
 5. **Execution Phase**: Execute workloads during reserved grid windows with real-time monitoring
 6. **Flexibility Phase**: Dynamically respond to grid events through workload migration or adjustment
-7. **Settlement Phase**: Verify energy consumption, carbon emissions, and cost settlement
 
 Each phase leverages **native Beckn Protocol capabilities**—discover, select, init, confirm, update, status, support, rating—adapted specifically for the compute-energy domain while maintaining full protocol compliance and interoperability.
 
@@ -429,8 +425,6 @@ sequenceDiagram
         GA-->>CA: on_update (action acknowledged)
     end
     
-    Note over CA,GA: Phase 7: Settlement
-    GA-->>CA: on_status (final settlement, carbon emissions)
     CA->>GA: rating (rate grid service)
     GA-->>CA: on_rating (rating acknowledged)
 ```
@@ -545,28 +539,6 @@ System responds dynamically to grid stress events through workload migration or 
 - Flexibility incentives or cost adjustments
 - Updated carbon and cost tracking
 
-#### 11.2.7 Step 7: Settlement and Verification
-
-Final settlement with verified energy consumption, carbon emissions, and cost calculation.
-
-**Process:**
-- Grid Agent collects metering data for the execution period
-- Calculates actual energy consumption and carbon emissions
-- Compares against initial order and any flexibility actions
-- Computes final costs including any flexibility incentives
-- Sends on_status with settlement details
-- Compute Agent verifies and accepts settlement
-- Payment processed according to agreed terms
-
-**Key Information Exchanged:**
-- Total energy consumed (kWh)
-- Average carbon intensity during execution
-- Total carbon emissions (kgCO2)
-- Final energy cost calculation
-- Flexibility incentives earned (if applicable)
-- Carbon savings achieved vs. baseline
-- Settlement status and payment confirmation
-
 ### 11.3 Testing
 
 #### 11.3.1 Test Scenarios
@@ -593,10 +565,6 @@ Key validation scenarios for Compute-Energy implementation:
    - **Test Case:** Verify carbon emissions calculation for completed workload
    - **Expected Result:** Accurate carbon accounting matching metered consumption
 
-6. **Settlement Verification Test**
-   - **Test Case:** Verify final settlement with all cost and carbon components
-   - **Expected Result:** Accurate settlement matching actual execution data
-
 #### 11.3.2 Validation Checklist
 
 - [ ] API endpoints respond within timeout limits
@@ -605,7 +573,6 @@ Key validation scenarios for Compute-Energy implementation:
 - [ ] Carbon intensity data matches third-party sources
 - [ ] Power consumption measurements are accurate
 - [ ] Cost calculations match pricing agreements
-- [ ] Settlement data is auditable and verifiable
 - [ ] Grid event responses occur within required timeframes
 
 ## 12. Best Practices
@@ -698,10 +665,10 @@ Grid conditions change in real-time:
 - Restore workload from checkpoint in destination
 - Resume execution in new location
 
-**Step 5: Verification and Settlement**
+**Step 5: Verification**
 - Verify successful migration and resumed execution
 - Update carbon and cost tracking for both locations
-- Report flexibility action to Grid Agent for potential incentives
+- Report flexibility action to Grid Agent
 
 **When to Use This Pattern:** When you have workloads that support checkpointing, operate in multiple regions, and grid events create significant carbon or cost differentials.
 
@@ -962,17 +929,7 @@ Grid Agent provides current execution status.
 
 ### 14.4 Post-Fulfillment Examples
 
-#### 14.4.1 Settlement Details (on_status API)
-
-Grid Agent provides final settlement with carbon and cost details.
-
-<details>
-<summary><a href="../../../../examples/compute-energy/examples/4.post-fulfilment/on_status-settlement.json">Example json :rocket:</a></summary>
-
-*[Full JSON content from the file would be embedded here]*
-</details>
-
-#### 14.4.2 Rating Request (rating API)
+#### 14.4.1 Rating Request (rating API)
 
 Compute Agent rates the grid service experience.
 
@@ -982,7 +939,7 @@ Compute Agent rates the grid service experience.
 *[Full JSON content from the file would be embedded here]*
 </details>
 
-#### 14.4.3 Rating Response (on_rating API)
+#### 14.4.2 Rating Response (on_rating API)
 
 Grid Agent acknowledges rating.
 
@@ -992,7 +949,7 @@ Grid Agent acknowledges rating.
 *[Full JSON content from the file would be embedded here]*
 </details>
 
-#### 14.4.4 Support Request (support API)
+#### 14.4.3 Support Request (support API)
 
 Compute Agent requests support.
 
@@ -1002,7 +959,7 @@ Compute Agent requests support.
 *[Full JSON content from the file would be embedded here]*
 </details>
 
-#### 14.4.5 Support Response (on_support API)
+#### 14.4.4 Support Response (on_support API)
 
 Grid Agent provides support information.
 
