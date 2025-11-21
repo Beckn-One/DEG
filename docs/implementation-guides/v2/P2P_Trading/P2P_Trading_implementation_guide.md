@@ -117,28 +117,25 @@ This document provides an implementation guidance for deploying EV charging serv
 
 This document covers:
 
-* Architecture patterns for EV charging marketplace implementation using Beckn Protocol  
-* Discovery and charging mechanisms for charging EVs across multiple CPOs  
-* Some recommendations for BAPs, BPPs and NFOs on how to map protocol API calls to internal systems (or vice-versa).  
-* Real-time availability and pricing integration with OCPI-based systems  
-* Session management and billing coordination between Beckn and OCPI protocols
+* Architecture patterns for a P2P marketplace implementation
+* Discovery, reconciliation, and fulfillment mechanisms for trading energy across multiple consumers and prosumers  
+* Some recommendations for prosumer platforms to communicate with DERs behind the meter (or vice-versa)
+* Real-time availability and pricing integration with DER management systems
 
 This document does NOT cover:
 
-* Detailed OCPI protocol specifications (refer to OCPI 2.2.1 documentation)  
-* Physical charging infrastructure requirements and standards  
+* Details on inverter communication protocols like Modbus, Sunspec Modbus, CAN, etc.   
+* Physical DER infrastructure requirements and standards  
 * Regulatory compliance beyond technical implementation (varies by jurisdiction)  
 * Smart grid integration and load management systems
 
 # 4. Intended Audience
 
-* Consumer Application Developers (BAPs): Building EV driver-facing charging applications with unified cross-network access  
-* e-Mobility Service Providers (eMSPs/BPPs): Implementing charging service aggregation platforms across multiple CPO networks  
-* Charge Point Operators (CPOs): Understanding integration requirements for Beckn-enabled marketplace participation  
-* Technology Integrators: Building bridges between existing OCPI infrastructure and new Beckn-based marketplaces  
-* System Architects: Designing scalable, interoperable EV charging ecosystems  
-* Business Stakeholders: Understanding technical capabilities and implementation requirements for EV charging marketplace strategies  
-* Standards Organizations: Evaluating interoperability approaches for future EV charging standards development
+* Energy Trading Platforms: Platforms that want to participate in P2P trading on behalf of prosumers and consumers   
+* Technology Integrators: Technology providers building adaptors between existing DERs and applications
+* System Architects: Designing scalable, interoperable P2P trading ecosystems  
+* Business Stakeholders: Understanding technical capabilities and implementation requirements for P2P marketplace strategies  
+* Standards Organizations: Evaluating interoperability approaches for future P2P standards development
 
 # 5. Conventions and Terminology
 
