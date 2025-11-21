@@ -1,17 +1,23 @@
 # Digital Energy Grid 
-A Digital Energy Grid is an implementation of [beckn protocol](https://github.com/beckn/protocol-specifications) for energy transactions anchored on the Beckn One infrastructure. 
+The **Digital Energy Grid (DEG)** represents a paradigm shift toward a unified, interoperable, and intelligent digital infrastructure for the global energy ecosystem. It envisions a world where the flow of **energy**, **information**, and **transactions** are seamlessly synchronized across distributed systems—transforming today’s fragmented landscape into a dynamic, transparent, and equitable grid of the future.
+
+This initiative emerges at the intersection of **energy transition and digital transformation**, where decentralization, electrification, and data-driven intelligence converge. Conceived by the **Foundation for Interoperability in Digital Economy (FIDE)** in collaboration with the **International Energy Agency (IEA)**, DEG aims to establish a common digital backbone for the energy sector—one that enables cross-domain interoperability, fosters innovation, and scales inclusively across geographies.
 
 # Current Version
 Version 0.4.0
 
 ## Working Group Members
 
-| Name              | Role                           | Github Username |
-|-------------------|--------------------------------|-----------------|
-| Ravi Prakash      | Maintainer, Protocol Architect | @ravi-prakash-v |
-| Pramod Varma      | Maintainer, Reviewer           | @pramodkvarma   |
-| Sujith Nair       | Reviewer                       | @sjthnrk        |
-
+| Name                    | Role                           | Github Username  |
+|-------------------------|--------------------------------|------------------|
+| Ravi Prakash            | Maintainer, Protocol Architect | @ravi-prakash-v  |
+| Pramod Varma            | Maintainer, Reviewer           | @pramodkvarma    |
+| Sujith Nair             | Reviewer                       | @sjthnrk         |
+| Ameet Deshpande         | Subject Matter Expert          | @ameetdesh       |
+| Vish Ganti              | Subject Matter Expert          | @vganti1         |
+| Anusree Jayakrishnan    | Reviewer                       | @Anusree-J       |
+| Anirban Sinha           | Implementation Specialist      | @i-am-anirban-95 |
+| Tanmoy Adhikary         | Implementation Specialist      | @TANMOYDADA      |
 
 ## Introduction
 A DEG is a decentralized / federated digital ecosystem that enables transactions that result in the transfer of energy from a energy producer to an energy provider. The energy producer isn't necessarily the energy generator, rather an entity that represents the energy supply. Similarly, an energy consumer isn't necessarily an appliance or a household, but more like a consumer that represents the energy demand. For example, an energy producer can be an EV charging station while a consumer can be an EV. Likewise, an energy producer can be a Solar Plant owner that supplies energy to the Grid, or a Distribution Company that supplies energy to homes. Similarly, an energy consumer can be a vehicle that needs charging; a home appliance that needs electricity to run; or even the distribution company than needs energy from the power generation companies (like power plants). 
