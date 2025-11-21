@@ -143,21 +143,102 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # 6. Terminology
 
-| Acronym | Full Form/Description | Description |
-| ----- | ----- | ----- |
-| BAP | Beckn Application Platform | Consumer-facing application that initiates transactions. Mapped to EV users and eMSPs. |
-| BPP | Beckn Provider Platform | Service provider platform that responds to BAP requests. Mapped to CPOs.  |
-| NFO | Network Facilitator Organization | Organization responsible for the adoption and growth of the network. Usually the custodian of the network’s registry. |
-| CDS | Catalog Discovery Service | Enables discovery of charging services from BPPs in the network. |
-| eMSP | e-Mobility Service Provider | Service provider that aggregates multiple CPOs. Generally onboarded by BAPs.  |
-| CPO | Charge Point Operator | Entity that owns and operates charging infrastructure. Generally onboarded by BPPs.  |
-| EVSE | Electric Vehicle Supply Equipment | Individual charging station unit. Owned and operated by CPOs |
-| OCPI | Open Charge Point Interface | Protocol for communication between eMSPs and CPOs. |
+## 6.1. Beckn Protocol Terms
 
-> Note:
-> This document does not detail the mapping between Beckn Protocol and OCPI. Please refer to [this](../../../docs/implementation-guides/v1-EOS/DEG00x_Mapping-OCPI-and-Beckn-Protocol-for-EV-Charging-Interoperability.md) document for the same.
-> BPPs are NOT aggregators. Any CPO that has implemented a Beckn Protocol endpoint is a BPP. 
-> For all sense and purposes, CPOs are essentially BPPs and eMSPs are essentially BAPs.
+| Acronym/Term | Full Form/Description | Description |
+| ----- | ----- | ----- |
+| BAP | Beckn Application Platform | Consumer-facing application that initiates transactions. In P2P energy trading, represents energy consumers or aggregator platforms. |
+| BPP | Beckn Provider Platform | Service provider platform that responds to BAP requests. In P2P energy trading, represents prosumers or energy provider platforms. |
+| NFO | Network Facilitator Organization | Organization responsible for the adoption and growth of the network. Usually the custodian of the network's registry. |
+| CDS | Catalog Discovery Service | Enables discovery of energy trading services from BPPs in the network. |
+| JSON-LD | JSON for Linked Data | JSON-based format for linked data that enables semantic interoperability through context definitions and type specifications. |
+| mRID | Master Resource Identifier | IEEE 2030.5 standard identifier format for uniquely identifying energy resources, meters, and devices in smart grid systems. |
+
+## 6.2. P2P Energy Trading Terms
+
+| Term | Description |
+| ----- | ----- |
+| P2P Energy Trading | Peer-to-Peer energy trading enables direct energy transactions between producers and consumers without traditional utility intermediaries. |
+| Prosumer | An energy consumer who also produces energy (typically from renewable sources like solar panels) and can sell excess energy back to the grid or other consumers. |
+| DER | Distributed Energy Resources - Small-scale power generation or storage technologies (solar panels, batteries, wind turbines) connected to the distribution grid. |
+| Grid Injection | The process of feeding excess energy produced by prosumers back into the electrical grid for consumption by others. |
+| V2G | Vehicle-to-Grid - Technology that enables electric vehicles to return power to the grid, allowing EVs to act as mobile energy storage units. |
+| Wheeling Charges | Transmission and distribution charges levied by utilities for using their grid infrastructure to transport energy from producer to consumer. |
+| Settlement Cycle | The time period over which energy transactions are reconciled and payments are processed (e.g., real-time, hourly, daily, weekly, monthly). |
+| Billing Cycle | The recurring period for which energy consumption and production are calculated and invoiced. |
+| Meter Reading | Measurement data from smart meters showing energy production, consumption, or flow at a specific point in time. |
+| Energy Flow | The quantity of energy transferred from source to target, typically measured in kilowatt-hours (kWh). |
+| Telemetry | Real-time monitoring data for energy systems including metrics like power, voltage, current, frequency, and energy consumption. |
+
+## 6.3. Energy Resource Terms
+
+| Term | Description |
+| ----- | ----- |
+| EnergyResource | Schema describing tradable energy resources including source type, delivery mode, availability, and verification status. |
+| Source Type | Classification of energy origin: SOLAR (photovoltaic), BATTERY (stored energy), GRID (utility power), HYBRID (multiple sources), RENEWABLE (certified clean energy). |
+| Delivery Mode | Method of energy transfer: EV_CHARGING (electric vehicle charging), BATTERY_SWAP (battery exchange), V2G (vehicle-to-grid), GRID_INJECTION (feed into grid). |
+| Available Quantity | Amount of energy available for trading, typically measured in kilowatt-hours (kWh). |
+| Production Window | Time period during which energy is available for production or delivery. |
+| Carbon Offset | Certification indicating that renewable energy production compensates for carbon emissions, often used for green energy verification. |
+
+## 6.4. Trading & Contract Terms
+
+| Term | Description |
+| ----- | ----- |
+| EnergyTradeOffer | Schema defining pricing models, settlement terms, and commercial conditions for energy trades. |
+| Pricing Model | Method for calculating energy costs: PER_KWH (per kilowatt-hour), TIME_OF_DAY (variable rates based on time), SUBSCRIPTION (fixed periodic rate), FIXED (flat rate). |
+| Settlement Type | Frequency of transaction reconciliation: REAL_TIME (immediate), HOURLY, DAILY, WEEKLY, MONTHLY. |
+| EnergyTradeContract | Schema tracking commercial agreements, contract lifecycle, meter IDs, and settlement/billing cycles. |
+| Contract Status | State of energy trade agreement: PENDING (awaiting confirmation), ACTIVE (currently executing), COMPLETED (finished), TERMINATED (cancelled). |
+| Trade Time Window | Start and end times defining when energy transfer will occur under the contract. |
+
+## 6.5. Delivery & Fulfillment Terms
+
+| Term | Description |
+| ----- | ----- |
+| EnergyTradeDelivery | Schema tracking physical energy transfer including delivery status, meter readings, and telemetry data. |
+| Delivery Status | Current state of energy transfer: PENDING (not started), IN_PROGRESS (actively delivering), COMPLETED (finished), FAILED (unsuccessful). |
+| Source Meter | The meter measuring energy production or output at the energy source (prosumer). |
+| Target Meter | The meter measuring energy consumption or input at the consumer endpoint. |
+| Delivered Quantity | Actual amount of energy transferred, measured in kilowatt-hours (kWh). |
+| Settlement Cycle ID | Unique identifier linking energy deliveries to specific settlement periods for billing and reconciliation. |
+
+## 6.6. Technical & Industry Standards
+
+| Term | Description |
+| ----- | ----- |
+| IEEE 2030.5 | Smart Energy Profile standard defining interoperability requirements for smart grid communications and device identification (mRID format). |
+| OCPP | Open Charge Point Protocol - Standard for communication between EV charging stations and central management systems. |
+| OCPI | Open Charge Point Interface - Protocol for roaming and interoperability between EV charging networks. |
+| Modbus | Communication protocol commonly used for connecting industrial electronic devices, including inverters and energy management systems. |
+| Sunspec Modbus | Standardized Modbus data models specifically designed for solar and energy storage systems. |
+| CAN | Controller Area Network - Communication protocol used in vehicles and increasingly in energy storage systems. |
+| Inverter | Device that converts DC electricity (from solar panels or batteries) to AC electricity for grid injection or consumption. |
+| Smart Meter | Advanced digital meter that records energy consumption/production and communicates data for monitoring and billing. |
+
+## 6.7. Energy Units & Metrics
+
+| Unit | Description |
+| ----- | ----- |
+| kWh | Kilowatt-hour - Unit of energy representing one kilowatt of power sustained for one hour. Standard unit for measuring electricity consumption and production. |
+| kW | Kilowatt - Unit of power representing 1,000 watts. Measures the rate of energy transfer or consumption at a given moment. |
+| W | Watt - Base unit of power in the International System of Units (SI). |
+| V or VLT | Volt - Unit of electrical potential or voltage. |
+| A or AMP | Ampere - Unit of electrical current. |
+| Hz | Hertz - Unit of frequency, typically 50 Hz or 60 Hz for grid electricity. |
+| MWh | Megawatt-hour - Unit of energy equal to 1,000 kilowatt-hours, used for large-scale energy measurements. |
+
+## 6.8. Composable Schema Terms
+
+| Term | Description |
+| ----- | ----- |
+| Attribute Bundle | Modular schema component that attaches domain-specific attributes to core Beckn objects (Item, Offer, Order, Fulfillment). |
+| itemAttributes | Extension point on Item object for attaching EnergyResource attributes. |
+| offerAttributes | Extension point on Offer object for attaching EnergyTradeOffer attributes. |
+| orderAttributes | Extension point on Order object for attaching EnergyTradeContract attributes. |
+| Fulfillment.attributes | Extension point on Fulfillment object for attaching EnergyTradeDelivery attributes. |
+| JSONPath Filter | Query syntax used in v2 discover API to filter energy resources by attributes (replaces v1 intent object). |
+| Context.jsonld | JSON-LD context file that defines semantic mappings and namespaces for attribute bundles. |
 
 # 7. Reference Architecture
 
@@ -1780,4 +1861,3 @@ For questions or issues:
 - Review the examples in `schema/EnergyResource/v0.2/examples/`
 - Check the schema definitions in `schema/Energy*/v0.2/attributes.yaml`
 - Refer to the Beckn Protocol v2 documentation
-
