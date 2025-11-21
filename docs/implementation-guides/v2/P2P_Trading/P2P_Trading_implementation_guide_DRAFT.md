@@ -192,7 +192,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
   "@type": "EnergyResource",
   "sourceType": "SOLAR",
   "deliveryMode": "GRID_INJECTION",
@@ -220,7 +220,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
   "@type": "EnergyTradeOffer",
   "pricingModel": "PER_KWH",
   "settlementType": "DAILY",
@@ -250,7 +250,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
   "@type": "EnergyTradeContract",
   "contractStatus": "ACTIVE",
   "sourceMeterId": "100200300",
@@ -276,7 +276,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
   "@type": "EnergyTradeDelivery",
   "deliveryStatus": "IN_PROGRESS",
   "deliveryMode": "GRID_INJECTION",
@@ -409,7 +409,7 @@ For developers familiar with v1, here's a quick mapping guide:
 {
   "@type": "beckn:Item",
   "beckn:itemAttributes": {
-    "@context": "./context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "meterId": "100200300",
@@ -443,7 +443,7 @@ For developers familiar with v1, here's a quick mapping guide:
 {
   "@type": "beckn:Order",
   "beckn:orderAttributes": {
-    "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
     "@type": "EnergyTradeContract",
     "sourceMeterId": "100200300",
     "targetMeterId": "98765456",
@@ -637,7 +637,7 @@ If you are a BPP
 - **Note**: v2 does not support `intent` object. All search parameters are expressed via JSONPath filters.
 
 <details>
-<summary><a href="./examples/discover-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/discover-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -678,7 +678,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/discover-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/discover-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -721,7 +721,7 @@ If you are a BPP
               "beckn:id": "provider-solar-farm-001"
             },
             "beckn:itemAttributes": {
-              "@context": "./context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
               "@type": "EnergyResource",
               "sourceType": "SOLAR",
               "deliveryMode": "GRID_INJECTION",
@@ -762,7 +762,7 @@ If you are a BPP
               "schema:unitText": "kWh"
             },
             "beckn:offerAttributes": {
-              "@context": "../EnergyTradeOffer/v0.2/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
@@ -805,7 +805,7 @@ If you are a BPP
 **Endpoint**: `POST /select`
 
 <details>
-<summary><a href="./examples/select-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/select-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -853,7 +853,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/select-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/select-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -946,7 +946,7 @@ If you are a BPP
 - v1 `Order.attributes.*` → v2 `Order.orderAttributes.*` (path change)
 
 <details>
-<summary><a href="./examples/init-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/init-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1050,7 +1050,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/init-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/init-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1126,7 +1126,7 @@ If you are a BPP
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "PENDING",
         "sourceMeterId": "100200300",
@@ -1164,7 +1164,7 @@ If you are a BPP
 **Endpoint**: `POST /confirm`
 
 <details>
-<summary><a href="./examples/confirm-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/confirm-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1228,7 +1228,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/confirm-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/confirm-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1291,7 +1291,7 @@ If you are a BPP
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
@@ -1338,7 +1338,7 @@ If you are a BPP
 **Endpoint**: `POST /status`
 
 <details>
-<summary><a href="./examples/status-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/status-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1369,7 +1369,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/status-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/status-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1421,7 +1421,7 @@ If you are a BPP
             }
           },
           "beckn:attributes": {
-            "@context": "../EnergyTradeDelivery/v0.2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
             "@type": "EnergyTradeDelivery",
             "deliveryStatus": "IN_PROGRESS",
             "deliveryMode": "GRID_INJECTION",
@@ -1485,7 +1485,7 @@ If you are a BPP
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
@@ -1567,7 +1567,7 @@ If you are a BPP
     "schema:name": "Solar Energy - 30.5 kWh"
   },
   "beckn:itemAttributes": {
-    "@context": "./context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "deliveryMode": "GRID_INJECTION",
@@ -1582,7 +1582,7 @@ If you are a BPP
   "@type": "beckn:Offer",
   "beckn:id": "offer-energy-001",
   "beckn:offerAttributes": {
-    "@context": "../EnergyTradeOffer/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
     "@type": "EnergyTradeOffer",
     "pricingModel": "PER_KWH",
     "settlementType": "DAILY"
@@ -1596,7 +1596,7 @@ If you are a BPP
   "@type": "beckn:Order",
   "beckn:id": "order-energy-001",
   "beckn:orderAttributes": {
-    "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
     "@type": "EnergyTradeContract",
     "contractStatus": "ACTIVE",
     "sourceMeterId": "100200300",
@@ -1611,7 +1611,7 @@ If you are a BPP
   "@type": "beckn:Fulfillment",
   "beckn:id": "fulfillment-energy-001",
   "beckn:attributes": {
-    "@context": "../EnergyTradeDelivery/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
     "@type": "EnergyTradeDelivery",
     "deliveryStatus": "IN_PROGRESS",
     "meterReadings": [...]
@@ -1726,7 +1726,7 @@ Use JSONPath filters to search by energy attributes:
 {
   "@type": "beckn:Item",
   "beckn:itemAttributes": {
-    "@context": "./context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "meterId": "100200300"

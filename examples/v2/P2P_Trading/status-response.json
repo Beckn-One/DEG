@@ -47,7 +47,7 @@
             }
           },
           "beckn:attributes": {
-            "@context": "../EnergyTradeDelivery/v0.2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
             "@type": "EnergyTradeDelivery",
             "deliveryStatus": "IN_PROGRESS",
             "deliveryMode": "GRID_INJECTION",
@@ -111,7 +111,7 @@
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
