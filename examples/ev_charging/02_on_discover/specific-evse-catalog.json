@@ -6,8 +6,8 @@
     "timestamp": "2024-01-15T10:30:05Z",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
-    "bpp_id": "bpp.example.com",
-    "bpp_uri": "https://bpp.example.com",
+    "bap_id": "app.example.com",
+    "bap_uri": "https://app.example.com/bap",
     "ttl": "PT30S"
   },
   "message": {
@@ -107,9 +107,9 @@
                 }
               },
               "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "WiFi"
+                "RESTAURANT",
+                "RESTROOM",
+                "WI-FI"
               ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",
@@ -203,9 +203,9 @@
                 }
               },
               "amenityFeature": [
-                "Restaurant",
-                "Restroom",
-                "WiFi"
+                "RESTAURANT",
+                "RESTROOM",
+                "WI-FI"
               ],
               "ocppId": "IN-ECO-BTM-01",
               "evseId": "IN*ECO*BTM*01*CCS2*A",

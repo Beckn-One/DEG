@@ -161,7 +161,7 @@ EV-specific attributes in `beckn:itemAttributes` (ChargingService schema).
 | `beckn:itemAttributes.reservationSupported` | Reservation | Boolean | ✅ | Advance booking | `true` |
 | `beckn:itemAttributes.acceptedPaymentMethod` | Payment Methods | Array[String] | ✅ | Accepted payments | `["schema:UPI", "schema:CreditCard", "schema:Wallet"]` |
 | `beckn:itemAttributes.serviceLocation` | Service Location | Object | ✅ | Location details | `{geo, address}` |
-| `beckn:itemAttributes.amenityFeature` | Amenities | Array[String] | ❌ | Available facilities | `["Restaurant", "Restroom", "Wi-Fi"]` |
+| `beckn:itemAttributes.amenityFeature` | Amenities | Array[String] | ❌ | Available facilities | `["RESTAURANT", "RESTROOM", "WI-FI"]` |
 | `beckn:itemAttributes.ocppId` | OCPP ID | String | ❌ | OCPP station ID | `IN-ECO-BTM-01` |
 | `beckn:itemAttributes.evseId` | EVSE ID | String | ❌ | EVSE identifier | `IN*ECO*BTM*01*CCS2*A` |
 | `beckn:itemAttributes.roamingNetwork` | Roaming Network | String | ❌ | Network name | `GreenRoam` |
