@@ -7,13 +7,11 @@ This implementation guide provides comprehensive instructions for implementing P
 ## Table of Contents  <!-- omit from toc -->
 
 - [1. Introduction](#1-introduction)
-  - [1.1. What is P2P Energy Trading?](#11-what-is-p2p-energy-trading)
 - [2. Scope](#2-scope)
 - [3. Intended Audience](#3-intended-audience)
 - [4. Conventions and Terminology](#4-conventions-and-terminology)
 - [5. Terminology](#5-terminology)
-- [6. End-to-End Walkthrough](#6-end-to-end-walkthrough)
-  - [6.1. Step-by-Step Flow](#61-step-by-step-flow)
+- [6. Mechanics of a P2P energy transaction flow](#6-mechanics-of-a-p2p-energy-transaction-flow)
 - [7. Reference Architecture](#7-reference-architecture)
   - [7.1. Architecture Diagram](#71-architecture-diagram)
   - [7.2. Actors](#72-actors)
@@ -93,34 +91,61 @@ Example jsons were imported directly from source of truth elsewhere in this repo
 
 # 1. Introduction
 
-This document provides an implementation guidance for deploying peer to peer energy trading services using the Beckn Protocol ecosystem. 
+This document provides an implementation guidance for deploying peer to peer (P2P) energy trading
+services using the Beckn Protocol ecosystem. Peer to peer energy trading enables energy producers 
+(prosumers) to directly sell excess energy to consumers. 
 
-## 1.1. What is P2P Energy Trading?
-
-Peer-to-Peer (P2P) energy trading enables energy producers (prosumers) to directly sell excess energy to consumers without going through traditional utility intermediaries. This enables:
-
-- **Decentralized Energy Markets**: Direct trading between producers and consumers
-- **Grid Optimization**: Better utilization of distributed energy resources (DERs)
-- **Renewable Energy Promotion**: Incentivizes green energy production
-- **Cost Efficiency**: Reduces transmission losses and intermediary costs
+- Utilities enable such decentralized energy exchange in order to encourage local balancing of 
+  supply & demand, reduce transmission losses, congestion and promote the green energy. 
+- It can boost the demand when the supply is abundent, say during mid-day solar or nightly wind,
+  because consumers may find a lower price in a marketplace than the price of importing from utility.
+- It could also boost renewable energy supply if producers discover a higher price for it than the utility
+  export price.
+- It can reduce losses for the grid operator if they are obligated to buy back the surplus energy
+  at a fixed rate which could be higher than the spot price, during solar hours. It also unlocks 
+  new revenue streams for the grid operator as they have full visibility to and can charge 
+  wheeling charges for any peer to peer energy trade happening on their transmission lines.
+- Finally, it can increase the cash in-flows for a large prosumer who has accumulated large 
+  credit with the utility due to net-metering policies, but cannot redeem it for cash.
+- This achieves beneficial outcomes for producer, consumer and the utility (and in turn redces bills 
+  for other consumers not participating in the trade.)
+- Such P2P trade is virtual (non-binding) in the sense that it is made before the delivery hour and is 
+  based on best estimate of load & generation, but the real energy flows may deviate
+  from the trade contract. But the incentive of a better revenue by
+  adhereing to the contracted energy flows as well as the cost of deviation cited in contract, 
+  naturally aligns incentives of consumers & producers to deliver the contracted energy flows.
+- Each P2P trade contract references a real or a virtual meter, against which the deviations are measured post-facto.
+  Utility may keep track of the sanctioned (maximum allowed) load or generation at each meter and can limit
+  the amount of energy trades via a network policy. Physical meters belong to prosumers. 
+  Virtual meters may belong to aggregators and have zero power flows during delivery. 
+  Such aggregators can establish peer to peer relationship 
+  with many producers and consumers and balance pre-delivery supply & demand, since any deviation of net trade
+  flow away from zero (real power flowing through virtual meter) will be penalized.
 
 ---
 
 # 2. Scope
 
-This document covers:
-
-TODO
+* Architecture patterns for peer-to-peer energy marketplace implementation using Beckn Protocol  
+* Discovery of energy trading partners.
+* Some recommendations for BAPs, BPPs and NFOs on how to map protocol API calls to 
+  internal systems (or vice-versa).  
+* Session management and billing coordination between Beckn and OCPI protocols
 
 This document does NOT cover:
 
-TODO
+* Processes for customer onboarding, meter validation and settlement.
+* Fraud prevention: e.g. if a producer strikes a deal with two consumers, 
+  settlement mechanics should be aware of total commited trade flows at a meter
+  and apportion the shortfall against it.
+* Cyber-security and best practices to ensure privacy of market participants by 
+  guarding of personally identifiable information data.
+* Escrow services to cover the cost trade participant reneging or defaulting on payment.
 
 # 3. Intended Audience
 
-* Consumer Application Developers (BAPs): TODO
-* Technology Integrators: Building bridges between existing OCPI infrastructure and new Beckn-based marketplaces  
-* System Architects: TODO
+* Consumer Application Developers (BAPs).
+* Technology Integrators: Building bridges between existing beckn v1 P2P trading infrastructure and new Beckn v2 based marketplaces  
 * Business Stakeholders: Understanding technical capabilities and implementation requirements for peer to pee trading strategies  
 * Standards Organizations: Evaluating interoperability approaches for future energy trading standards development
 
@@ -142,9 +167,10 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 > BPPs are NOT aggregators. Any CPO that has implemented a Beckn Protocol endpoint is a BPP. 
 > For all sense and purposes, CPOs are essentially BPPs and eMSPs are essentially BAPs.
 
-# 6. End-to-End Walkthrough
+# 6. Mechanics of a P2P energy transaction flow
 
-This walkthrough demonstrates a complete P2P energy trading transaction: a consumer purchases 10 kWh of solar energy from a producer for grid injection delivery.
+This walkthrough demonstrates a complete P2P energy trading transaction: a consumer purchases 
+10 kWh of solar energy from a producer for grid injection delivery. 
 
 **Scenario**: Consumer (BAP: `bap.energy-consumer.com`) buys 10 kWh from Producer (BPP: `bpp.energy-provider.com`) on Oct 4, 2024, 10:00 AM - 6:00 PM. Source meter: `100200300`, Target meter: `98765456`. Transaction ID: `txn-energy-001`.
 
@@ -167,8 +193,6 @@ sequenceDiagram
     BAP->>BPP: 6. /status (Final check)
     BPP-->>BAP: Delivery COMPLETED, 10.0 kWh, SETTLED
 ```
-
-## 6.1. Step-by-Step Flow
 
 **1. Discover** - Consumer searches for solar energy with JSONPath filters (`sourceType == 'SOLAR'`, `deliveryMode == 'GRID_INJECTION'`, `availableQuantity >= 10.0`).  
 Request: [discover-request.json](../../../../examples/v2/P2P_Trading/discover-request.json) | Response: [discover-response.json](../../../../examples/v2/P2P_Trading/discover-response.json)  
