@@ -11,17 +11,13 @@
     "ttl": "PT30S"
   },
   "message": {
-    "order": [
-      {
-        "@type": "beckn:Order",
-        "beckn:id": "b989c9a9-f603-4d44-b38d-26fd72286b38",
-        "beckn:orderStatus": "CONFIRMED",
-        "beckn:orderItems": [
-          {
-            "beckn:orderedItem": "pe-charging-01"
-          }
-        ]
-      }
-    ]
+    "order": {
+      "beckn:id": "b989c9a9-f603-4d44-b38d-26fd72286b38",
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "pe-charging-01"
+        }
+      ]
+    }
   }
 }
