@@ -12,7 +12,7 @@ This implementation guide provides comprehensive instructions for implementing P
 - [4. Conventions and Terminology](#4-conventions-and-terminology)
 - [5. Terminology](#5-terminology)
 - [6. User Journey](#6-user-journey)
-  - [Sequence diagram of a P2P transaction](#sequence-diagram-of-a-p2p-transaction)
+  - [6.1. Sequence diagram of a P2P transaction](#61-sequence-diagram-of-a-p2p-transaction)
 - [7. Reference Architecture](#7-reference-architecture)
   - [7.1. Architecture Diagram](#71-architecture-diagram)
   - [7.2. Actors](#72-actors)
@@ -32,27 +32,27 @@ This implementation guide provides comprehensive instructions for implementing P
     - [8.2.1. Installing Beckn ONIX](#821-installing-beckn-onix)
     - [8.2.2. Configuring Beckn ONIX for Peer to Peer Energy Trading](#822-configuring-beckn-onix-for-peer-to-peer-energy-trading)
     - [8.2.3. 10.2.3 Performing a test transaction](#823-1023-performing-a-test-transaction)
-- [10. Schema overview](#10-schema-overview)
-  - [10.1. v2 Composable Schema Architecture](#101-v2-composable-schema-architecture)
-  - [10.2. Schema Composition Points](#102-schema-composition-points)
-  - [10.3. EnergyResource (Item.itemAttributes)](#103-energyresource-itemitemattributes)
-  - [10.4. EnergyTradeOffer (Offer.offerAttributes)](#104-energytradeoffer-offerofferattributes)
-  - [10.5. EnergyTradeContract (Order.orderAttributes)](#105-energytradecontract-orderorderattributes)
-  - [10.6. EnergyTradeDelivery (Fulfillment.attributes)](#106-energytradedelivery-fulfillmentattributes)
-- [11. API Reference \& examples](#11-api-reference--examples)
-  - [11.1. Discover flow](#111-discover-flow)
-  - [11.2. Select Flow](#112-select-flow)
-  - [11.3. Init Flow](#113-init-flow)
-  - [11.4. Confirm Flow](#114-confirm-flow)
-    - [11.4.1. Cascaded Init Example (Utility Registration)](#1141-cascaded-init-example-utility-registration)
-  - [11.5. Confirm Flow](#115-confirm-flow)
-  - [11.6. Status Flow](#116-status-flow)
-- [12. Additional Resources](#12-additional-resources)
-    - [12.0.1. **Integrating with your software**](#1201-integrating-with-your-software)
-      - [12.0.1.1. **Integrating the BAP**](#12011-integrating-the-bap)
-      - [12.0.1.2. **Integrating the BPP**](#12012-integrating-the-bpp)
-  - [12.1. FAQs](#121-faqs)
-  - [12.2. References](#122-references)
+- [9. Schema overview](#9-schema-overview)
+  - [9.1. v2 Composable Schema Architecture](#91-v2-composable-schema-architecture)
+  - [9.2. Schema Composition Points](#92-schema-composition-points)
+  - [9.3. EnergyResource (Item.itemAttributes)](#93-energyresource-itemitemattributes)
+  - [9.4. EnergyTradeOffer (Offer.offerAttributes)](#94-energytradeoffer-offerofferattributes)
+  - [9.5. EnergyTradeContract (Order.orderAttributes)](#95-energytradecontract-orderorderattributes)
+  - [9.6. EnergyTradeDelivery (Fulfillment.attributes)](#96-energytradedelivery-fulfillmentattributes)
+- [10. API Reference \& examples](#10-api-reference--examples)
+  - [10.1. Discover flow](#101-discover-flow)
+  - [10.2. Select Flow](#102-select-flow)
+  - [10.3. Init Flow](#103-init-flow)
+  - [10.4. Confirm Flow](#104-confirm-flow)
+    - [10.4.1. Cascaded Init Example (Utility Registration)](#1041-cascaded-init-example-utility-registration)
+  - [10.5. Confirm Flow](#105-confirm-flow)
+  - [10.6. Status Flow](#106-status-flow)
+- [11. Additional Resources](#11-additional-resources)
+    - [11.0.1. **Integrating with your software**](#1101-integrating-with-your-software)
+      - [11.0.1.1. **Integrating the BAP**](#11011-integrating-the-bap)
+      - [11.0.1.2. **Integrating the BPP**](#11012-integrating-the-bpp)
+  - [11.1. FAQs](#111-faqs)
+  - [11.2. References](#112-references)
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
@@ -119,19 +119,19 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # 6. User Journey
 
-This walkthrough demonstrates a complete P2P energy trading transaction: Swati runs a flour mill business and has a sanctioned load of 20kw. As the festival season is approaching, anticipating large demand, she is looking to purchase cheaper energy than the utility import price of of 10 INR per kwh between 10am to 6pm for next week. 
+This walkthrough demonstrates a complete P2P energy trading transaction: Swati runs a flour mill business and has a sanctioned load of 20kw. As the festival season is approaching, anticipating large demand, she is looking to purchase cheaper energy than the utility import price of of 10 INR/kwh between 10am to 6pm for next week. 
 A nearby solar farm is hoping to get better returns than 3 INR/kwh for its exports, and has published an offer
 to sell energy at 7 INR/kwh.
 
 Swati is already enrolled on a peer to peer energy trading app (BAP), and searches with above price and time of day filters. To her delight, she **discovers** a local solar farm is offering renewable energy at 6 INR/kwh between 12am to 4pm on all days in that week. With wheeling charges of 1 INR/kwh, the total 8 INR/kwh is still 20% cheaper than importing from utility. 
 
-She **initiates** in an order of 20kw. The (BAP) app knows and shares her meter number with the seller's app (BPP), which in turn shares both with the utility BPP which knows the sanctioned import & export for each meter and existing trades, applies a 50% cap policy, and replies back saying that upto 10kw of trade is allowed and adds wheeling charges to the quote, and any underconsumption by Swati will be treated as a spot export by her reimbursed at 3 INR/kwh and any underproduction by solar farm by the farm is treated as a spot import at 10$/kwh. After this Swati **confirms** the 8 INR/kwh final order with her BAP, solar farm BPP in turn cascaded it to utility BPP and utility BPP acknowledges, logs the trade and deducts it from the further trading allowance in those hours for both Swati & the solar farm. 
+She **initiates** in an order of 20kw. The (BAP) app knows and shares her meter number with the seller's app (BPP), which in turn shares both with the utility BPP which knows the sanctioned import & export for each meter and existing trades. Utility BPP applies a 50% cap policy and replies back saying that upto 10kw of trade is allowed and adds wheeling charges to the quote. It also adds terms & conditions that specify that any underconsumption by Swati will be treated as a spot export by her reimbursed at 3 INR/kwh and any underproduction by solar farm by the farm is treated as a spot import at 10$/kwh. After this Swati **confirms** the 8 INR/kwh final order with her BAP, solar farm BPP in turn cascaded it to utility BPP and utility BPP acknowledges, logs the trade and deducts it from the further trading allowance in those hours for both Swati & the solar farm. 
 
-On the delivery day, the floor mill is busy and consumes 400 kwh from the solar farm and saves a 400*2=800 INR 
-in energy costs. The solar farm gains additional 400*(7-3) = 1600 INR revenue, and utility gets 400*1 = 400 INR of revenue for the upkeep of transmission & to cover the administration cost. Utility BPP sends the final settlement including the wheeling and deviation charges to Swati & the solar farm. Swati pays the solar farm BPP 
+On the delivery day, the floor mill is busy and consumes 400 kwh from the solar farm and saves a `400 *2=800` INR 
+in energy costs. The solar farm gains additional 400*(7-3) = 1600 INR revenue, and utility gets `400*1 = 400` INR of revenue for the upkeep of transmission & to cover the administration cost. Utility BPP sends the final settlement including the wheeling and deviation charges to Swati & the solar farm. Swati pays the solar farm BPP 
 for the trade itself via her BAP.
 
-## Sequence diagram of a P2P transaction
+## 6.1. Sequence diagram of a P2P transaction
 
 **Scenario**: Consumer (BAP: `bap.energy-consumer.com`) buys 10 kWh from Producer (BPP: `bpp.energy-provider.com`) on Oct 4, 2025, 10:00 AM - 6:00 PM. Source meter: `100200300`, Target meter: `98765456`. Transaction ID: `txn-energy-001`.
 
@@ -339,7 +339,7 @@ If you are a BPP
 3. You should see the response in your console
 
 
-# 10. Schema overview
+# 9. Schema overview
 
 Beckn Protocol v2 provides a composable schema architecture that enables:
 - **Modular Attribute Bundles**: Energy-specific attributes attached to core Beckn objects
@@ -347,7 +347,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - **Standards Alignment**: Integration with IEEE 2030.5 (mRID), OCPP, OCPI
 - **Flexible Discovery**: Meter-based discovery and filtering
 
-## 10.1. v2 Composable Schema Architecture
+## 9.1. v2 Composable Schema Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -364,7 +364,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 └─────────────────────────────────────────────────────────┘
 ```
 
-## 10.2. Schema Composition Points
+## 9.2. Schema Composition Points
 
 | Attribute Bundle        | Attach To                | Purpose                                                                            |
 | ----------------------- | ------------------------ | ---------------------------------------------------------------------------------- |
@@ -374,7 +374,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 | **EnergyTradeDelivery** | `Fulfillment.attributes` | Delivery status, meter readings, telemetry, settlement linkage                     |
 
 
-## 10.3. EnergyResource (Item.itemAttributes)
+## 9.3. EnergyResource (Item.itemAttributes)
 
 **Purpose**: Describes tradable energy resources
 
@@ -402,7 +402,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 }
 ```
 
-## 10.4. EnergyTradeOffer (Offer.offerAttributes)
+## 9.4. EnergyTradeOffer (Offer.offerAttributes)
 
 **Purpose**: Defines pricing and settlement terms for energy trades
 
@@ -431,7 +431,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 }
 ```
 
-## 10.5. EnergyTradeContract (Order.orderAttributes)
+## 9.5. EnergyTradeContract (Order.orderAttributes)
 
 **Purpose**: Tracks commercial agreements and contract lifecycle
 
@@ -458,7 +458,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 }
 ```
 
-## 10.6. EnergyTradeDelivery (Fulfillment.attributes)
+## 9.6. EnergyTradeDelivery (Fulfillment.attributes)
 
 **Purpose**: Tracks physical energy transfer and delivery status
 
@@ -491,9 +491,9 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 ```
 
 
-# 11. API Reference & examples
+# 10. API Reference & examples
 
-## 11.1. Discover flow
+## 10.1. Discover flow
 
 **Purpose**: Search for available energy resources
 
@@ -678,7 +678,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - **JSONPath Filters**: Use JSONPath filters to search by `itemAttributes.sourceType`, `itemAttributes.deliveryMode`, `itemAttributes.availableQuantity`, and `itemAttributes.productionWindow`
 - **Response**: Includes full Item with EnergyResource attributes and Offer with EnergyTradeOffer attributes
 
-## 11.2. Select Flow
+## 10.2. Select Flow
 
 **Purpose**: Select items and offers to build an order
 
@@ -824,7 +824,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - Select offers by `beckn:id`
 - Response includes priced quote with breakup
 
-## 11.3. Init Flow
+## 10.3. Init Flow
 
 **Purpose**: Initialize order with fulfillment and payment details
 
@@ -1057,13 +1057,13 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - **Meter IDs**: Use IEEE mRID format (`"100200300"`) instead of v1's `der://` format (`"der://pge.meter/100200300"`)
 - **Response**: Includes EnergyTradeContract attributes with PENDING status
 
-## 11.4. Confirm Flow
+## 10.4. Confirm Flow
 
 **Purpose**: Confirm and activate the order
 
 **Endpoint**: `POST /confirm`
 
-### 11.4.1. Cascaded Init Example (Utility Registration)
+### 10.4.1. Cascaded Init Example (Utility Registration)
 
 This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the Utility Company (Transmission BPP) to register the trade and calculate wheeling charges.
 
@@ -1290,7 +1290,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 ```
 </details>
 
-## 11.5. Confirm Flow
+## 10.5. Confirm Flow
 
 **Purpose**: Confirm and activate the order
 
@@ -1474,7 +1474,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 - Settlement cycle is initialized
 - Order is now active and ready for fulfillment
 
-## 11.6. Status Flow
+## 10.6. Status Flow
 
 **Purpose**: Query order and delivery status
 
@@ -1681,7 +1681,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 - Telemetry provides real-time energy metrics
 
 
-# 12. Additional Resources
+# 11. Additional Resources
 
 - **Beckn 1.0 to 2.0 field mapping**: See `./v1_to_v2_field_mapping.md`
 - **Taxonomy Reference**: See `./taxonomy.md`
@@ -1689,13 +1689,13 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 - **Context Files**: See `schema/Energy*/v0.2/context.jsonld`
 - **Profile Configuration**: See `schema/EnergyResource/v0.2/profile.json`
 
-### 12.0.1. **Integrating with your software**
+### 11.0.1. **Integrating with your software**
 
 This section gives a general walkthrough of how you would integrate your software with the Beckn network (say the sandbox environment). Refer to the starter kit for details on how to register with the sandbox and get credentials.
 
 Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at [Beckn-ONIX repository](https://github.com/beckn/beckn-onix). The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.
 
-#### 12.0.1.1. **Integrating the BAP**
+#### 11.0.1.1. **Integrating the BAP**
 
 If you are writing the seeker platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -1707,7 +1707,7 @@ If you are writing the seeker platform software, the following are the steps you
 
 TODO
 
-#### 12.0.1.2. **Integrating the BPP**
+#### 11.0.1.2. **Integrating the BPP**
 
 If you are writing the provider platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -1719,9 +1719,9 @@ If you are writing the provider platform software, the following are the steps y
 
 TODO
 
-## 12.1. FAQs
+## 11.1. FAQs
 
-## 12.2. References
+## 11.2. References
 
 * [Postman collection for EV Charging](/testnet/postman-collections/v2/EV_Charging/)  
 * [Beckn 1.0 (legacy) Layer2 config for peer to peer trading](TODO)
