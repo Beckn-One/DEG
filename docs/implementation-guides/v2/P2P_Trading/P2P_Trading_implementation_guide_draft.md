@@ -1,9 +1,5 @@
 # P2P Energy Trading Implementation Guide <!-- omit from toc -->
 
-## Overview <!-- omit from toc -->
-
-This implementation guide provides comprehensive instructions for implementing Peer-to-Peer (P2P) Energy Trading using Beckn Protocol v2 with composable schemas. This guide covers all transaction flows, field mappings, best practices, and migration from v1.
-
 ## Table of Contents  <!-- omit from toc -->
 
 - [1. Introduction](#1-introduction)
