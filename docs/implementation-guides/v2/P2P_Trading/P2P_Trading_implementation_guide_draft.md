@@ -84,7 +84,7 @@ P2P trades are executed virtually before the delivery hour based on estimated lo
 * Discovery of energy trading partners.
 * Some recommendations for BAPs, BPPs and NFOs on how to map protocol API calls to 
   internal systems (or vice-versa).  
-* Session management and billing coordination between Beckn and OCPI protocols
+* Session management and billing coordination between BAP, BPP and the utility BPP.
 
 This document does NOT cover:
 
@@ -1724,7 +1724,7 @@ TODO
 ## 11.2. References
 
 * [Postman collection for EV Charging](/testnet/postman-collections/v2/EV_Charging/)  
-* [Beckn 1.0 (legacy) Layer2 config for peer to peer trading](TODO)
+* [Beckn 1.0 (legacy) Layer2 config for peer to peer trading](https://github.com/beckn/missions/blob/main/DEG2.0/layer2/P2P/trade_1.1.0.yaml)
 
 
 
