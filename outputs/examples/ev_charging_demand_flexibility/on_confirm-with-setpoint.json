@@ -1,0 +1,44 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "timestamp": "2024-12-15T10:15:05Z",
+    "message_id": "msg-on-confirm-ev-flex-001",
+    "transaction_id": "txn-ev-flex-001",
+    "bap_id": "bap.ev-user-app.com",
+    "bap_uri": "https://bap.ev-user-app.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-ev-flex-789012",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:orderNumber": "ORD-EV-FLEX-2025-001",
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 180.0
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/context.jsonld",
+        "@type": "EnergyOrder",
+        "setpointKW": -8.0,
+        "clearingPrice": 0.09,
+        "objectives": {
+          "targetChargeKWh": 20,
+          "deadline": "2024-12-15T18:00:00Z",
+          "maxPricePerKWh": 0.12
+        }
+      },
+      "beckn:fulfillment": {
+        "beckn:status": "PENDING",
+        "beckn:mode": "RESERVATION"
+      }
+    }
+  }
+}
+

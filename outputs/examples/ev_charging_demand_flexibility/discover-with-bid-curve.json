@@ -1,0 +1,53 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "discover",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "timestamp": "2024-12-15T10:00:00Z",
+    "message_id": "msg-discover-ev-flex-001",
+    "transaction_id": "txn-ev-flex-001",
+    "bap_id": "bap.ev-user-app.com",
+    "bap_uri": "https://bap.ev-user-app.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "intent": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/context.jsonld",
+      "@type": "EnergyIntent",
+      "objectives": {
+        "targetChargeKWh": 20,
+        "deadline": "2024-12-15T18:00:00Z",
+        "maxPricePerKWh": 0.12,
+        "preferredSource": "SOLAR",
+        "objectiveConstraints": {
+          "minChargeKWh": 10,
+          "maxChargeKWh": 60
+        }
+      },
+      "bidCurve": [
+        { "price": 0.08, "powerKW": -11 },
+        { "price": 0.10, "powerKW": -5 },
+        { "price": 0.12, "powerKW": 0 }
+      ],
+      "constraints": {
+        "minPowerKW": -11,
+        "maxPowerKW": 0,
+        "rampRateKWPerMin": 1.0
+      }
+    },
+    "spatial": [{
+      "op": "s_dwithin",
+      "targets": "$['beckn:availableAt'][*]['geo']",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.5946, 12.9716]
+      },
+      "distanceMeters": 10000
+    }],
+    "filters": {
+      "type": "jsonpath",
+      "expression": "$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:itemAttributes.maxPowerKW >= 50)]"
+    }
+  }
+}
+

@@ -1,0 +1,79 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "aggregate",
+    "domain": "beckn.one:deg:energy-coordination:*",
+    "timestamp": "2024-12-15T14:00:00Z",
+    "message_id": "msg-aggregate-001",
+    "transaction_id": "txn-aggregate-001",
+    "bap_id": "bap.market-clearing-agent.com",
+    "bap_uri": "https://bap.market-clearing-agent.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "aggregationRequest": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/context.jsonld",
+      "@type": "AggregationRequest",
+      "participants": [
+        {
+          "era": "solar-panel-001",
+          "bidCurve": [
+            { "price": 0.05, "powerKW": 0 },
+            { "price": 0.06, "powerKW": 2 },
+            { "price": 0.07, "powerKW": 5 }
+          ],
+          "constraints": {
+            "minPowerKW": 0,
+            "maxPowerKW": 5,
+            "rampRateKWPerMin": 0.5
+          }
+        },
+        {
+          "era": "solar-panel-002",
+          "bidCurve": [
+            { "price": 0.05, "powerKW": 0 },
+            { "price": 0.06, "powerKW": 2 },
+            { "price": 0.07, "powerKW": 5 }
+          ],
+          "constraints": {
+            "minPowerKW": 0,
+            "maxPowerKW": 5,
+            "rampRateKWPerMin": 0.5
+          }
+        },
+        {
+          "era": "ev-battery-001",
+          "bidCurve": [
+            { "price": 0.08, "powerKW": -11 },
+            { "price": 0.10, "powerKW": -5 },
+            { "price": 0.12, "powerKW": 0 }
+          ],
+          "constraints": {
+            "minPowerKW": -11,
+            "maxPowerKW": 0,
+            "rampRateKWPerMin": 1.0
+          }
+        },
+        {
+          "era": "transformer-zone-5",
+          "locationalPriceAdder": {
+            "basePrice": 0.10,
+            "congestionMultiplier": 1.0,
+            "currentLoadPercent": 75,
+            "priceAdderPerPercent": 0.001,
+            "currentPrice": 0.175,
+            "formula": "basePrice + (currentLoadPercent * priceAdderPerPercent)"
+          }
+        }
+      ],
+      "aggregationType": "MARKET_CLEARING",
+      "timeWindow": {
+        "start": "2024-12-15T14:00:00Z",
+        "end": "2024-12-15T16:00:00Z"
+      }
+    }
+  }
+}
+

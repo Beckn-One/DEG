@@ -1,0 +1,40 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "timestamp": "2024-12-15T10:15:00Z",
+    "message_id": "msg-confirm-ev-flex-001",
+    "transaction_id": "txn-ev-flex-001",
+    "bap_id": "bap.ev-user-app.com",
+    "bap_uri": "https://bap.ev-user-app.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-ev-charging-flex-001",
+      "beckn:orderItems": [{
+        "beckn:orderedItem": "ev-charger-ccs2-001",
+        "beckn:quantity": 20.0
+      }],
+      "beckn:acceptedOffer": {
+        "beckn:id": "offer-ev-charging-flex-001",
+        "beckn:price": {
+          "value": 0.09,
+          "currency": "INR",
+          "applicableQuantity": {
+            "unitCode": "KWH"
+          }
+        }
+      },
+      "beckn:payment": {
+        "beckn:paymentMethod": "UPI"
+      }
+    }
+  }
+}
+

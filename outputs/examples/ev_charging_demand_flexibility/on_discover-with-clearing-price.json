@@ -1,0 +1,62 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_discover",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "timestamp": "2024-12-15T10:00:05Z",
+    "message_id": "msg-on-discover-ev-flex-001",
+    "transaction_id": "txn-ev-flex-001",
+    "bap_id": "bap.ev-user-app.com",
+    "bap_uri": "https://bap.ev-user-app.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "catalogs": [{
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Catalog",
+      "beckn:id": "catalog-ev-charging-flex-001",
+      "beckn:descriptor": {
+        "@type": "beckn:Descriptor",
+        "schema:name": "EV Charging with Market Clearing"
+      },
+      "beckn:items": [{
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Item",
+        "beckn:id": "ev-charger-ccs2-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "DC Fast Charger - CCS2 (60kW)"
+        },
+        "beckn:itemAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
+          "@type": "ChargingService",
+          "connectorType": "CCS2",
+          "maxPowerKW": 60,
+          "minPowerKW": 5
+        }
+      }],
+      "beckn:offers": [{
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Offer",
+        "beckn:id": "offer-ev-charging-flex-001",
+        "beckn:items": ["ev-charger-ccs2-001"],
+        "beckn:price": {
+          "@type": "schema:PriceSpecification",
+          "schema:price": 0.09,
+          "schema:priceCurrency": "INR",
+          "schema:unitText": "kWh"
+        },
+        "beckn:offerAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/context.jsonld",
+          "@type": "EnergyOffer",
+          "clearingPrice": 0.09,
+          "setpointKW": -8.0,
+          "locationalPrice": 0.09
+        }
+      }]
+    }]
+  }
+}
+
