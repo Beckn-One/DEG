@@ -233,8 +233,12 @@ sequenceDiagram
 5. Beckn Provider Platforms  
 6. Peer to Peer trading Registry
 
+TODO: Explain the role of each entity in detail for P2P trading, and whether they are required or optional and API interface to them.
+
 
 # 8. Creating an Open Network for Peer to Peer Energy Trading
+
+TODO: move this section into a seperate `../core_spec/` folder, and reference from there in implementation guides of EV charging, P2P tradig etc. 
 
 To create an open network for energy trading requires all the producers, prosumers and consumers BAPs, BPPs, to be able to discover each other and become part of a common club. This club is manifested in the form of a Registry maintained by an NFO. 
 
