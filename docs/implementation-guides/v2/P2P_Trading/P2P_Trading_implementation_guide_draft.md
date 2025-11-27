@@ -45,13 +45,10 @@
   - [10.6. Status Flow](#106-status-flow)
 - [11. Additional Resources](#11-additional-resources)
     - [11.0.1. **Integrating with your software**](#1101-integrating-with-your-software)
-- [Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at Beckn-ONIX repository. The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.](#beckn-onix-is-an-initiative-to-promote-easy-installation-and-maintenance-of-a-beckn-network-apart-from-the-registry-and-gateway-components-that-are-required-for-a-network-facilitator-beckn-onix-provides-a-beckn-adapter-a-reference-implementation-of-the-beckn-onix-specification-is-available-at-beckn-onix-repository-the-reference-implementation-of-the-beckn-adapter-is-called-the-protocol-server-based-on-whether-we-are-writing-the-seeker-platform-or-the-provider-platform-we-will-be-installing-the-bap-protocol-server-or-the-bpp-protocol-server-respectively)
-- [\<\<\<\<\<\<\< HEAD:docs/implementation-guides/v2/P2P\_Trading/P2P\_Trading\_implementation\_guide.md](#-headdocsimplementation-guidesv2p2p_tradingp2p_trading_implementation_guidemd)
-      - [11.0.1.1. **Integrating the BAP**](#11011-integrating-the-bap)
-      - [11.0.1.2. **Integrating the BPP**](#11012-integrating-the-bpp)
-  - [11.1. FAQs](#111-faqs)
-  - [11.2. References](#112-references)
-- [\<\<\<\<\<\<\< HEAD:docs/implementation-guides/v2/P2P\_Trading/P2P\_Trading\_implementation\_guide\_draft.md](#-headdocsimplementation-guidesv2p2p_tradingp2p_trading_implementation_guide_draftmd)
+      - [13.0.0.1. **Integrating the BAP**](#13001-integrating-the-bap)
+      - [13.0.0.2. **Integrating the BPP**](#13002-integrating-the-bpp)
+  - [13.1. FAQs](#131-faqs)
+  - [13.2. References](#132-references)
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
@@ -1711,17 +1708,17 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 This section gives a general walkthrough of how you would integrate your software with the Beckn network (say the sandbox environment). Refer to the starter kit for details on how to register with the sandbox and get credentials.
 
 <<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_draft.md
-Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at [Beckn-ONIX repository](https://github.com/beckn/beckn-onix). The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.
+12. Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at [Beckn-ONIX repository](https://github.com/beckn/beckn-onix). The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.
 =======
 For questions or issues:
 - Review the examples in `schema/EnergyResource/v0.2/examples/`
 - Check the schema definitions in `schema/Energy*/v0.2/attributes.yaml`
 - Refer to the Beckn Protocol v2 documentation
-<<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide.md
+13. <<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide.md
 =======
 >>>>>>> p2p-trading:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_DRAFT.md
 
-#### 11.0.1.1. **Integrating the BAP**
+#### 13.0.0.1. **Integrating the BAP**
 
 If you are writing the seeker platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -1733,7 +1730,7 @@ If you are writing the seeker platform software, the following are the steps you
 
 TODO
 
-#### 11.0.1.2. **Integrating the BPP**
+#### 13.0.0.2. **Integrating the BPP**
 
 If you are writing the provider platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -1745,15 +1742,15 @@ If you are writing the provider platform software, the following are the steps y
 
 TODO
 
-## 11.1. FAQs
+## 13.1. FAQs
 
-## 11.2. References
+## 13.2. References
 
 * [Postman collection for EV Charging](/testnet/postman-collections/v2/EV_Charging/)  
 * [Beckn 1.0 (legacy) Layer2 config for peer to peer trading](https://github.com/beckn/missions/blob/main/DEG2.0/layer2/P2P/trade_1.1.0.yaml)
 
 
-<<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_draft.md
+14. <<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_draft.md
 =======
 
 >>>>>>> draft:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_DRAFT.md
