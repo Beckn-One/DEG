@@ -80,15 +80,7 @@
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }

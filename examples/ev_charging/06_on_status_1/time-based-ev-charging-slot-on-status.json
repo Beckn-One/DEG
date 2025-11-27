@@ -148,27 +148,11 @@
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
