@@ -490,6 +490,8 @@ Note: Users can discover the charging station through off-network channels (such
           "schema:name": "EV Charging Services Network",
           "beckn:shortDesc": "Comprehensive network of fast charging stations across Bengaluru"
         },
+        "beckn:bppId": "bpp.ev-network.example.com",
+        "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:validity": {
           "@type": "beckn:TimePeriod",
           "schema:startDate": "2024-10-01T00:00:00Z",
@@ -886,15 +888,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }
@@ -1272,19 +1266,6 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        }
       }
     }
   }
@@ -1450,9 +1431,7 @@ EV user requests final quote with payment terms by providing billing details: [E
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -1475,20 +1454,6 @@ EV user requests final quote with payment terms by providing billing details: [E
           "WALLET"
         ],
         "beckn:paymentStatus": "INITIATED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1672,27 +1637,11 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1845,6 +1794,8 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -1867,22 +1818,6 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -2047,6 +1982,8 @@ EV user confirms reservation of a slot at a particular charging station at a par
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -2070,22 +2007,6 @@ EV user confirms reservation of a slot at a particular charging station at a par
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -2252,6 +2173,7 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -2274,21 +2196,6 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2454,6 +2361,7 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -2476,21 +2384,6 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2808,6 +2701,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -2830,21 +2724,6 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3011,6 +2890,7 @@ EV user reveives a notification in case of any error occuring during charging se
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -3033,21 +2913,6 @@ EV user reveives a notification in case of any error occuring during charging se
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3211,6 +3076,7 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -3233,21 +3099,6 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3861,6 +3712,8 @@ Discovering chargers in a specific circular area, a specific connector type and 
           "schema:name": "EV Charging Services Network",
           "beckn:shortDesc": "Comprehensive network of fast charging stations across Bengaluru"
         },
+        "beckn:bppId": "bpp.ev-network.example.com",
+        "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:validity": {
           "@type": "beckn:TimePeriod",
           "schema:startDate": "2024-10-01T00:00:00Z",
@@ -4504,15 +4357,7 @@ Offer schema in the catalog:
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }
@@ -4991,19 +4836,6 @@ Recommendations for BAP:
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        }
       }
     }
   }
@@ -5186,9 +5018,7 @@ Recommendations for BAP:
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -5211,20 +5041,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "INITIATED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5465,6 +5281,8 @@ Recommendations for BAP:
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -5487,22 +5305,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5678,6 +5480,8 @@ Recommendations for BAP:
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -5701,22 +5505,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5904,6 +5692,7 @@ Once these physical steps are completed, the charging session can be initiated t
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -5926,21 +5715,6 @@ Once these physical steps are completed, the charging session can be initiated t
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6110,6 +5884,7 @@ Once these physical steps are completed, the charging session can be initiated t
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6132,21 +5907,6 @@ Once these physical steps are completed, the charging session can be initiated t
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6552,6 +6312,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6574,21 +6335,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6761,6 +6507,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6783,21 +6530,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6962,6 +6694,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6984,21 +6717,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }

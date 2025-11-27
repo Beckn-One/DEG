@@ -20,6 +20,8 @@
           "schema:name": "EV Charging Services Network",
           "beckn:shortDesc": "Comprehensive network of fast charging stations across Bengaluru"
         },
+        "beckn:bppId": "bpp.ev-network.example.com",
+        "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:validity": {
           "@type": "beckn:TimePeriod",
           "schema:startDate": "2024-10-01T00:00:00Z",
