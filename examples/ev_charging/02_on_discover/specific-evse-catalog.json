@@ -45,7 +45,6 @@
             },
             "beckn:availableAt": [
               {
-                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [
@@ -142,7 +141,6 @@
             },
             "beckn:availableAt": [
               {
-                "@type": "beckn:Location",
                 "geo": {
                   "type": "Point",
                   "coordinates": [

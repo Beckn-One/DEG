@@ -7037,17 +7037,38 @@ Beckn-ONIX is an initiative to promote easy installation and maintenance of a Be
 
 If you are writing the seeker platform software, the following are the steps you can follow to build and integrate your application.
 
-TODO
+1. Identify the use cases from the above section that are close to the functionality you plan for your application.  
+2. Design and develop the UI that implements the flow you need. Typically you will have an API server that this UI talks to and it is called the Seeker Platform in the diagram below.  
+3. The API server should construct the required JSON message packets required for the different endpoints shown in the API section above.  
+4. Install the BAP Protocol Server using the reference implementation of Beckn-ONIX. During the installation, you will need the address of the registry of the environment, a URL where the Beckn responses will arrive (called Subscriber URL) and a subscriber\_id (typically the same as subscriber URL without the "https://" prefix)  
+5. Install the layer 2 file for the domain (Link is in the last section of this document)  
+6. Check with your network tech support to enable your BAP Protocol Server in the registry.  
+7. Once enabled, you can transact on the Beckn Network. Typically the sandbox environment will have the rest of the components you need to test your software. In the diagram below,  
+   * you write the Seeker Platform(dark blue)  
+   * install the BAP Protocol Server (light blue)  
+   * the remaining components are provided by the sandbox environment  
+8. Once the application is working on the Sandbox, refer to the Starter kit for instructions to take it to pre-production and production.
 
 #### 13.2.2.2. **Integrating the BPP**
 
 If you are writing the provider platform software, the following are the steps you can follow to build and integrate your application.
 
-TODO
+1. Identify the use cases from the above section that are close to the functionality you plan for your application.  
+2. Design and develop the component that accepts the Beckn requests and interacts with your software to do transactions. It has to be an endpoint(it is called as webhook\_url in the description below) which receives all the Beckn requests (search, select etc). This endpoint can either exist outside of your marketplace/shop software or within it. That is a design decision that will have to be taken by you based on the design of your existing marketplace/shop software. This component is also responsible for sending back the responses to the Beckn Adaptor.  
+3. Install the BPP Protocol Server using the reference implementation of Beckn-ONIX. During the installation, you will need the address of the registry of the environment, a URL where the Beckn responses will arrive (called Subscriber URL), a subscriber\_id (typically the same as subscriber URL without the "https://" prefix) and the webhook\_url that you configured in the step above. Also the address of the BPP Protocol Server Client will have to be configured in your component above. This address hosts all the response endpoints (on\_search,on\_select etc)  
+Comment view4. Install the layer 2 file for the domain (Link is in the last section of this document)  
+5. Check with your network tech support to enable your BPP Protocol Server in the registry.  
+6. Once enabled, you can transact on the Beckn Network. Typically the sandbox environment will have the rest of the components you need to test your software. In the diagram below,  
+   * you write the Provider Platform(dark blue) \- Here the component you wrote above in point 2 as well as your marketplace/shop software is together shown as Provider Platform  
+   * install the BPP Protocol Server (light blue)  
+   * the remaining components are provided by the sandbox environment  
+   * Use the postman collection to test your Provider Platform  
+7. Once the application is working on the Sandbox, refer to the Starter kit for instructions to take it to pre-production and production.
 
 ## 13.3. FAQs
 
 ## 13.4. References
 
-* [Postman collection for EV Charging](/testnet/postman-collections/v2/EV_Charging/)  
-* [Beckn 1.0 (legacy) Layer2 config for UEI EV Charging](https://github.com/beckn/missions/blob/main/UEI/layer2/EV-charging/3.1/energy_EV_1.1.0_openapi_3.1.yaml)
+* [Postman collection for UEI EV Charging](https://github.com/beckn/missions/blob/main/UEI/postman/ev-charging_uei_postman_collection.json)  
+* [Layer2 config for UEI EV Charging](https://github.com/beckn/missions/blob/main/UEI/layer2/EV-charging/3.1/energy_EV_1.1.0_openapi_3.1.yaml)  
+* When installing layer2 using Beckn-ONIX use this web address ([https://raw.githubusercontent.com/beckn/missions/refs/heads/main/UEI/layer2/EV-charging/3.1/energy\_EV\_1.1.0\_openapi\_3.1.yaml](https://raw.githubusercontent.com/beckn/missions/refs/heads/main/UEI/layer2/EV-charging/3.1/energy_EV_1.1.0_openapi_3.1.yaml))  
