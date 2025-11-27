@@ -7,29 +7,36 @@ This implementation guide provides comprehensive instructions for implementing P
 ## Table of Contents  <!-- omit from toc -->
 
 - [1. Introduction](#1-introduction)
-  - [1.1. What is P2P Energy Trading?](#11-what-is-p2p-energy-trading)
-  - [1.2. Beckn Protocol v2 for Energy Trading](#12-beckn-protocol-v2-for-energy-trading)
-- [2. Introduction](#2-introduction)
-- [3. Scope](#3-scope)
-- [4. Intended Audience](#4-intended-audience)
-- [5. Conventions and Terminology](#5-conventions-and-terminology)
-- [6. Terminology](#6-terminology)
+- [2. Scope](#2-scope)
+- [3. Intended Audience](#3-intended-audience)
+- [4. Conventions and Terminology](#4-conventions-and-terminology)
+- [5. Terminology](#5-terminology)
+  - [6.1. Beckn Protocol Terms](#61-beckn-protocol-terms)
+  - [6.2. P2P Energy Trading Terms](#62-p2p-energy-trading-terms)
+  - [6.3. Energy Resource Terms](#63-energy-resource-terms)
+  - [6.4. Trading \& Contract Terms](#64-trading--contract-terms)
+  - [6.5. Delivery \& Fulfillment Terms](#65-delivery--fulfillment-terms)
+  - [6.6. Technical \& Industry Standards](#66-technical--industry-standards)
+  - [6.7. Energy Units \& Metrics](#67-energy-units--metrics)
+  - [6.8. Composable Schema Terms](#68-composable-schema-terms)
+- [6. Mechanics of a P2P energy transaction flow](#6-mechanics-of-a-p2p-energy-transaction-flow)
 - [7. Reference Architecture](#7-reference-architecture)
   - [7.1. Architecture Diagram](#71-architecture-diagram)
   - [7.2. Actors](#72-actors)
-  - [7.3. Schema Overview](#73-schema-overview)
-    - [7.3.1. EnergyResource (Item.itemAttributes)](#731-energyresource-itemitemattributes)
-    - [7.3.2. EnergyTradeOffer (Offer.offerAttributes)](#732-energytradeoffer-offerofferattributes)
-    - [7.3.3. EnergyTradeContract (Order.orderAttributes)](#733-energytradecontract-orderorderattributes)
-    - [7.3.4. EnergyTradeDelivery (Fulfillment.attributes)](#734-energytradedelivery-fulfillmentattributes)
-  - [7.4. v2 Composable Schema Architecture](#74-v2-composable-schema-architecture)
-    - [7.4.1. Schema Composition Points](#741-schema-composition-points)
-    - [7.4.2. Key Differences from v1](#742-key-differences-from-v1)
-    - [7.4.3. v1 to v2 Quick Reference](#743-v1-to-v2-quick-reference)
-      - [7.4.3.1. Discover/Search Request](#7431-discoversearch-request)
-      - [7.4.3.2. Item Attributes](#7432-item-attributes)
-      - [7.4.3.3. Order Attributes](#7433-order-attributes)
-      - [7.4.3.4. Fulfillment Stops](#7434-fulfillment-stops)
+  - [7.3. Beckn Protocol v2 for Energy Trading](#73-beckn-protocol-v2-for-energy-trading)
+  - [7.4. Schema Overview](#74-schema-overview)
+    - [7.4.1. EnergyResource (Item.itemAttributes)](#741-energyresource-itemitemattributes)
+    - [7.4.2. EnergyTradeOffer (Offer.offerAttributes)](#742-energytradeoffer-offerofferattributes)
+    - [7.4.3. EnergyTradeContract (Order.orderAttributes)](#743-energytradecontract-orderorderattributes)
+    - [7.4.4. EnergyTradeDelivery (Fulfillment.attributes)](#744-energytradedelivery-fulfillmentattributes)
+  - [7.5. v2 Composable Schema Architecture](#75-v2-composable-schema-architecture)
+    - [7.5.1. Schema Composition Points](#751-schema-composition-points)
+  - [7.6. Implementation Notes](#76-implementation-notes)
+    - [7.6.1. Key Differences from v1](#761-key-differences-from-v1)
+      - [7.6.1.1. Discover/Search Request](#7611-discoversearch-request)
+      - [7.6.1.2. Item Attributes](#7612-item-attributes)
+      - [7.6.1.3. Order Attributes](#7613-order-attributes)
+      - [7.6.1.4. Fulfillment Stops](#7614-fulfillment-stops)
 - [8. Creating an Open Network for Peer to Peer Energy Trading](#8-creating-an-open-network-for-peer-to-peer-energy-trading)
   - [8.1. Setting up a Registry](#81-setting-up-a-registry)
     - [8.1.1. For a Network Participant](#811-for-a-network-participant)
@@ -44,37 +51,40 @@ This implementation guide provides comprehensive instructions for implementing P
       - [8.1.3.4. Step 4 :  Share details of the registry created with the Beckn One team](#8134-step-4---share-details-of-the-registry-created-with-the-beckn-one-team)
   - [8.2. Setting up the Protocol Endpoints](#82-setting-up-the-protocol-endpoints)
     - [8.2.1. Installing Beckn ONIX](#821-installing-beckn-onix)
-    - [8.2.2. Configuring Beckn ONIX for EV Charging Transactions](#822-configuring-beckn-onix-for-ev-charging-transactions)
-    - [8.2.3. 10.2.3 Performing a test EV charging transaction](#823-1023-performing-a-test-ev-charging-transaction)
-- [10. Transaction Flows](#10-transaction-flows)
-  - [10.1. Discover Flow](#101-discover-flow)
-  - [10.2. Select Flow](#102-select-flow)
-  - [10.3. Init Flow](#103-init-flow)
-  - [10.4. Confirm Flow](#104-confirm-flow)
-  - [10.5. Status Flow](#105-status-flow)
-- [11. Field Mapping Reference](#11-field-mapping-reference)
-  - [11.1. v1 to v2 Field Mapping](#111-v1-to-v2-field-mapping)
-  - [11.2. Meter ID Format Migration](#112-meter-id-format-migration)
-- [12. Integration Patterns](#12-integration-patterns)
-  - [12.1. Attaching Attributes to Core Objects](#121-attaching-attributes-to-core-objects)
-  - [12.2. JSON-LD Context Usage](#122-json-ld-context-usage)
-  - [12.3. Discovery Filtering](#123-discovery-filtering)
-- [13. Best Practices](#13-best-practices)
-  - [13.1. Discovery Optimization](#131-discovery-optimization)
-  - [13.2. Meter ID Handling](#132-meter-id-handling)
-  - [13.3. Settlement Cycle Management](#133-settlement-cycle-management)
-  - [13.4. Meter Readings](#134-meter-readings)
-  - [13.5. Telemetry Data](#135-telemetry-data)
-  - [13.6. Error Handling](#136-error-handling)
-- [14. Migration from v1](#14-migration-from-v1)
-  - [14.1. Key Changes](#141-key-changes)
-  - [14.2. Migration Checklist](#142-migration-checklist)
-  - [14.3. Example Migration](#143-example-migration)
-- [15. Examples](#15-examples)
-  - [15.1. Complete Examples](#151-complete-examples)
-  - [15.2. Example Scenarios](#152-example-scenarios)
-- [16. Additional Resources](#16-additional-resources)
-- [17. Support](#17-support)
+    - [8.2.2. Configuring Beckn ONIX for Peer to Peer Energy Trading](#822-configuring-beckn-onix-for-peer-to-peer-energy-trading)
+    - [8.2.3. 10.2.3 Performing a test transaction](#823-1023-performing-a-test-transaction)
+- [9. Transaction Flows](#9-transaction-flows)
+  - [9.1. Discover Flow](#91-discover-flow)
+  - [9.2. Select Flow](#92-select-flow)
+  - [9.3. Init Flow](#93-init-flow)
+  - [9.4. Confirm Flow](#94-confirm-flow)
+    - [9.4.1. Cascaded Init Example (Utility Registration)](#941-cascaded-init-example-utility-registration)
+  - [9.5. Confirm Flow](#95-confirm-flow)
+  - [9.6. Status Flow](#96-status-flow)
+- [10. Field Mapping Reference](#10-field-mapping-reference)
+  - [10.1. v1 to v2 Field Mapping](#101-v1-to-v2-field-mapping)
+  - [10.2. Meter ID Format Migration](#102-meter-id-format-migration)
+- [11. Integration Patterns](#11-integration-patterns)
+  - [11.1. Attaching Attributes to Core Objects](#111-attaching-attributes-to-core-objects)
+  - [11.2. JSON-LD Context Usage](#112-json-ld-context-usage)
+  - [11.3. Discovery Filtering](#113-discovery-filtering)
+- [12. Best Practices](#12-best-practices)
+  - [12.1. Discovery Optimization](#121-discovery-optimization)
+  - [12.2. Meter ID Handling](#122-meter-id-handling)
+  - [12.3. Settlement Cycle Management](#123-settlement-cycle-management)
+  - [12.4. Meter Readings](#124-meter-readings)
+  - [12.5. Telemetry Data](#125-telemetry-data)
+  - [12.6. Error Handling](#126-error-handling)
+- [13. Migration from v1](#13-migration-from-v1)
+  - [13.1. Key Changes](#131-key-changes)
+  - [13.2. Migration Checklist](#132-migration-checklist)
+  - [13.3. Example Migration](#133-example-migration)
+- [14. Examples](#14-examples)
+  - [14.1. Complete Examples](#141-complete-examples)
+  - [14.2. Example Scenarios](#142-example-scenarios)
+- [15. Additional Resources](#15-additional-resources)
+- [16. Support](#16-support)
+- [\<\<\<\<\<\<\< HEAD:docs/implementation-guides/v2/P2P\_Trading/P2P\_Trading\_implementation\_guide.md](#-headdocsimplementation-guidesv2p2p_tradingp2p_trading_implementation_guidemd)
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
@@ -90,46 +100,58 @@ Example jsons were imported directly from source of truth elsewhere in this repo
 
 # 1. Introduction
 
-## 1.1. What is P2P Energy Trading?
+This document provides an implementation guidance for deploying peer to peer (P2P) energy trading
+services using the Beckn Protocol ecosystem. Peer to peer energy trading enables energy producers 
+(prosumers) to directly sell excess energy to consumers. 
 
-Peer-to-Peer (P2P) energy trading enables energy producers (prosumers) to directly sell excess energy to consumers without going through traditional utility intermediaries. This enables:
-
-- **Decentralized Energy Markets**: Direct trading between producers and consumers
-- **Grid Optimization**: Better utilization of distributed energy resources (DERs)
-- **Renewable Energy Promotion**: Incentivizes green energy production
-- **Cost Efficiency**: Reduces transmission losses and intermediary costs
-
-## 1.2. Beckn Protocol v2 for Energy Trading
-
-Beckn Protocol v2 provides a composable schema architecture that enables:
-- **Modular Attribute Bundles**: Energy-specific attributes attached to core Beckn objects
-- **JSON-LD Semantics**: Full semantic interoperability
-- **Standards Alignment**: Integration with IEEE 2030.5 (mRID), OCPP, OCPI
-- **Flexible Discovery**: Meter-based discovery and filtering
+- Utilities enable such decentralized energy exchange in order to encourage local balancing of 
+  supply & demand, reduce transmission losses, congestion and promote the green energy. 
+- It can boost the demand when the supply is abundent, say during mid-day solar or nightly wind,
+  because consumers may find a lower price in a marketplace than the price of importing from utility.
+- It could also boost renewable energy supply if producers discover a higher price for it than the utility
+  export price.
+- It can reduce losses for the grid operator if they are obligated to buy back the surplus energy
+  at a fixed rate which could be higher than the spot price, during solar hours. It also unlocks 
+  new revenue streams for the grid operator as they have full visibility to and can charge 
+  wheeling charges for any peer to peer energy trade happening on their transmission lines.
+- Finally, it can increase the cash in-flows for a large prosumer who has accumulated large 
+  credit with the utility due to net-metering policies, but cannot redeem it for cash.
+- This achieves beneficial outcomes for producer, consumer and the utility (and in turn redces bills 
+  for other consumers not participating in the trade.)
+- Such P2P trade is virtual (non-binding) in the sense that it is made before the delivery hour and is 
+  based on best estimate of load & generation, but the real energy flows may deviate
+  from the trade contract. But the incentive of a better revenue by
+  adhereing to the contracted energy flows as well as the cost of deviation cited in contract, 
+  naturally aligns incentives of consumers & producers to deliver the contracted energy flows.
+- Each P2P trade contract references a real or a virtual meter, against which the deviations are measured post-facto.
+  Utility may keep track of the sanctioned (maximum allowed) load or generation at each meter and can limit
+  the amount of energy trades via a network policy. Physical meters belong to prosumers. 
+  Virtual meters may belong to aggregators and have zero power flows during delivery. 
+  Such aggregators can establish peer to peer relationship 
+  with many producers and consumers and balance pre-delivery supply & demand, since any deviation of net trade
+  flow away from zero (real power flowing through virtual meter) will be penalized.
 
 ---
 
-# 2. Introduction
+# 2. Scope
 
-This document provides an implementation guidance for deploying EV charging services using the Beckn Protocol ecosystem. It specifically addresses how consumer applications can provide unified access to charging infrastructure across multiple Charge Point Operators while maintaining technical compatibility with existing OCPI-based systems.
-
-# 3. Scope
-
-This document covers:
-
-* Architecture patterns for a P2P marketplace implementation
-* Discovery, reconciliation, and fulfillment mechanisms for trading energy across multiple consumers and prosumers  
-* Some recommendations for prosumer platforms to communicate with DERs behind the meter (or vice-versa)
-* Real-time availability and pricing integration with DER management systems
+* Architecture patterns for peer-to-peer energy marketplace implementation using Beckn Protocol  
+* Discovery of energy trading partners.
+* Some recommendations for BAPs, BPPs and NFOs on how to map protocol API calls to 
+  internal systems (or vice-versa).  
+* Session management and billing coordination between Beckn and OCPI protocols
 
 This document does NOT cover:
 
-* Details on inverter communication protocols like Modbus, Sunspec Modbus, CAN, etc.   
-* Physical DER infrastructure requirements and standards  
-* Regulatory compliance beyond technical implementation (varies by jurisdiction)  
-* Smart grid integration and load management systems
+* Processes for customer onboarding, meter validation and settlement.
+* Fraud prevention: e.g. if a producer strikes a deal with two consumers, 
+  settlement mechanics should be aware of total commited trade flows at a meter
+  and apportion the shortfall against it.
+* Cyber-security and best practices to ensure privacy of market participants by 
+  guarding of personally identifiable information data.
+* Escrow services to cover the cost trade participant reneging or defaulting on payment.
 
-# 4. Intended Audience
+# 3. Intended Audience
 
 * Energy Trading Platforms: Platforms that want to participate in P2P trading on behalf of prosumers and consumers   
 * Technology Integrators: Technology providers building adaptors between existing DERs and applications
@@ -137,11 +159,11 @@ This document does NOT cover:
 * Business Stakeholders: Understanding technical capabilities and implementation requirements for P2P marketplace strategies  
 * Standards Organizations: Evaluating interoperability approaches for future P2P standards development
 
-# 5. Conventions and Terminology
+# 4. Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described [here](https://github.com/beckn/protocol-specifications/blob/draft/docs/BECKN-010-Keyword-Definitions-for-Technical-Specifications.md).
 
-# 6. Terminology
+# 5. Terminology
 
 ## 6.1. Beckn Protocol Terms
 
@@ -240,13 +262,68 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | JSONPath Filter | Query syntax used in v2 discover API to filter energy resources by attributes (replaces v1 intent object). |
 | Context.jsonld | JSON-LD context file that defines semantic mappings and namespaces for attribute bundles. |
 
+# 6. Mechanics of a P2P energy transaction flow
+
+This walkthrough demonstrates a complete P2P energy trading transaction: a consumer purchases 
+10 kWh of solar energy from a producer for grid injection delivery. 
+
+**Scenario**: Consumer (BAP: `bap.energy-consumer.com`) buys 10 kWh from Producer (BPP: `bpp.energy-provider.com`) on Oct 4, 2024, 10:00 AM - 6:00 PM. Source meter: `100200300`, Target meter: `98765456`. Transaction ID: `txn-energy-001`.
+
+```mermaid
+sequenceDiagram
+    participant BAP as P2P Trading BAP
+    participant BPP as P2P Trading BPP
+    participant Utility as Transmission BPP (Utility)
+
+    Note over BAP, BPP: Standard Init Flow
+    BAP->>BPP: /init (Initialize Order)
+    
+    Note over BPP, Utility: Cascaded Init to Utility
+    BPP->>Utility: /init (Register Trade & Check Load)
+    
+    Note right of Utility: 1. Verify Sanctioned Load<br/>2. Calculate Wheeling Charges
+    
+    Utility->>BPP: /on_init (Quote with Wheeling Charges)
+    
+    BAP->>BPP: 6. /status (Final check)
+    BPP-->>BAP: Delivery COMPLETED, 10.0 kWh, SETTLED
+```
+
+**1. Discover** - Consumer searches for solar energy with JSONPath filters (`sourceType == 'SOLAR'`, `deliveryMode == 'GRID_INJECTION'`, `availableQuantity >= 10.0`).  
+Request: [discover-request.json](../../../../examples/v2/P2P_Trading/discover-request.json) | Response: [discover-response.json](../../../../examples/v2/P2P_Trading/discover-response.json)  
+*Result: Found `energy-resource-solar-001` at $0.15/kWh, 30.5 kWh available*
+
+**2. Select** - Consumer selects item and receives quote breakdown.  
+Request: [select-request.json](../../../../examples/v2/P2P_Trading/select-request.json) | Response: [select-response.json](../../../../examples/v2/P2P_Trading/select-response.json)  
+*Result: Quote $4.00 ($1.50 energy + $2.50 wheeling)*
+
+**3. Init** - Consumer provides meter IDs (`100200300` → `98765456`), time window, and payment details. BPP may cascade to Utility for load verification and wheeling charges.  
+Request: [init-request.json](../../../../examples/v2/P2P_Trading/init-request.json) | Response: [init-response.json](../../../../examples/v2/P2P_Trading/init-response.json)  
+Cascaded Flow: [cascaded-init-request.json](../../../../examples/v2/P2P_Trading/cascaded-init-request.json) | [cascaded-on-init-response.json](../../../../examples/v2/P2P_Trading/cascaded-on-init-response.json)  
+*Result: Order initialized, contract PENDING*
+
+**4. Confirm** - Consumer confirms order to activate contract.  
+Request: [confirm-request.json](../../../../examples/v2/P2P_Trading/confirm-request.json) | Response: [confirm-response.json](../../../../examples/v2/P2P_Trading/confirm-response.json)  
+*Result: Contract ACTIVE, settlement cycle `settle-2024-10-04-001` created*
+
+**5. Status (In Progress)** - Consumer monitors delivery progress. BPP updates meter readings and telemetry every 15-30 minutes.  
+Request: [status-request.json](../../../../examples/v2/P2P_Trading/status-request.json) | Response: [status-response.json](../../../../examples/v2/P2P_Trading/status-response.json)  
+*Result: Delivery IN_PROGRESS, 9.8 kWh delivered (98%), real-time telemetry*
+
+**6. Status (Completed)** - Consumer checks final status after delivery completion.  
+Response: [status-response-completed.json](../../../../examples/v2/P2P_Trading/status-response-completed.json)  
+*Result: Delivery COMPLETED, 10.0 kWh delivered, settlement SETTLED ($4.00)*
+
+**Summary**: Transaction completed in ~8.5 hours. 10.0 kWh delivered. Total cost $4.00. Daily settlement cycle processed.
+
+
 # 7. Reference Architecture
 
 The section defines the reference ecosystem architecture that is used for building this implementation guide. 
 
 ## 7.1. Architecture Diagram
 
-![](./assets/beckn-one-deg-arch.png)
+![](../assets/beckn-one-deg-arch.png)
 
 ## 7.2. Actors
 
@@ -254,11 +331,22 @@ The section defines the reference ecosystem architecture that is used for buildi
 2. Beckn One Catalog Discovery Service  
 3. Beckn Application Platforms  
 4. Beckn Provider Platforms  
-5. EV Charging Registry
+5. Peer to Peer trading Registry
 
-## 7.3. Schema Overview
+----
 
-### 7.3.1. EnergyResource (Item.itemAttributes)
+
+## 7.3. Beckn Protocol v2 for Energy Trading
+
+Beckn Protocol v2 provides a composable schema architecture that enables:
+- **Modular Attribute Bundles**: Energy-specific attributes attached to core Beckn objects
+- **JSON-LD Semantics**: Full semantic interoperability
+- **Standards Alignment**: Integration with IEEE 2030.5 (mRID), OCPP, OCPI
+- **Flexible Discovery**: Meter-based discovery and filtering
+
+## 7.4. Schema Overview
+
+### 7.4.1. EnergyResource (Item.itemAttributes)
 
 **Purpose**: Describes tradable energy resources
 
@@ -273,7 +361,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
   "@type": "EnergyResource",
   "sourceType": "SOLAR",
   "deliveryMode": "GRID_INJECTION",
@@ -286,7 +374,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 }
 ```
 
-### 7.3.2. EnergyTradeOffer (Offer.offerAttributes)
+### 7.4.2. EnergyTradeOffer (Offer.offerAttributes)
 
 **Purpose**: Defines pricing and settlement terms for energy trades
 
@@ -301,7 +389,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
   "@type": "EnergyTradeOffer",
   "pricingModel": "PER_KWH",
   "settlementType": "DAILY",
@@ -315,7 +403,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 }
 ```
 
-### 7.3.3. EnergyTradeContract (Order.orderAttributes)
+### 7.4.3. EnergyTradeContract (Order.orderAttributes)
 
 **Purpose**: Tracks commercial agreements and contract lifecycle
 
@@ -331,7 +419,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
   "@type": "EnergyTradeContract",
   "contractStatus": "ACTIVE",
   "sourceMeterId": "100200300",
@@ -342,7 +430,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 }
 ```
 
-### 7.3.4. EnergyTradeDelivery (Fulfillment.attributes)
+### 7.4.4. EnergyTradeDelivery (Fulfillment.attributes)
 
 **Purpose**: Tracks physical energy transfer and delivery status
 
@@ -357,7 +445,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 **Example**:
 ```json
 {
-  "@context": "./context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
   "@type": "EnergyTradeDelivery",
   "deliveryStatus": "IN_PROGRESS",
   "deliveryMode": "GRID_INJECTION",
@@ -375,7 +463,7 @@ The section defines the reference ecosystem architecture that is used for buildi
 ```
 
 
-## 7.4. v2 Composable Schema Architecture
+## 7.5. v2 Composable Schema Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -392,30 +480,52 @@ The section defines the reference ecosystem architecture that is used for buildi
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 7.4.1. Schema Composition Points
+### 7.5.1. Schema Composition Points
 
-| Attribute Bundle | Attach To | Purpose |
-|------------------|-----------|---------|
-| **EnergyResource** | `Item.itemAttributes` | Energy source characteristics (source type, delivery mode, meter ID, availability) |
-| **EnergyTradeOffer** | `Offer.offerAttributes` | Pricing models, settlement types, wheeling charges, validity windows |
-| **EnergyTradeContract** | `Order.orderAttributes` | Contract status, meter IDs, settlement cycles, billing cycles |
-| **EnergyTradeDelivery** | `Fulfillment.attributes` | Delivery status, meter readings, telemetry, settlement linkage |
+| Attribute Bundle        | Attach To                | Purpose                                                                            |
+| ----------------------- | ------------------------ | ---------------------------------------------------------------------------------- |
+| **EnergyResource**      | `Item.itemAttributes`    | Energy source characteristics (source type, delivery mode, meter ID, availability) |
+| **EnergyTradeOffer**    | `Offer.offerAttributes`  | Pricing models, settlement types, wheeling charges, validity windows               |
+| **EnergyTradeContract** | `Order.orderAttributes`  | Contract status, meter IDs, settlement cycles, billing cycles                      |
+| **EnergyTradeDelivery** | `Fulfillment.attributes` | Delivery status, meter readings, telemetry, settlement linkage                     |
 
-### 7.4.2. Key Differences from v1
+## 7.6. Implementation Notes
 
-| Aspect | v1 (Layer2) | v2 (Composable) |
-|--------|-------------|-----------------|
-| **Schema Extension** | `allOf` in paths | Composable attribute bundles |
-| **Attribute Location** | `Item.attributes.*` | `Item.itemAttributes.*` |
-| **Meter Format** | `der://meter/{id}` | IEEE 2030.5 mRID `{id}` |
-| **JSON-LD** | Not used | Full JSON-LD support |
-| **Modularity** | Monolithic | Modular bundles |
+**For BAP Implementers**:
+1. **Discovery**: Use JSONPath filters to search by energy attributes (sourceType, deliveryMode, availableQuantity, productionWindow)
+2. **Order Management**: Track order state through PENDING → ACTIVE → COMPLETED
+3. **Status Polling**: Poll status endpoint every 15-30 minutes during active delivery
+4. **Error Handling**: Handle cases where delivery fails or quantities don't match
+5. **Settlement**: Monitor settlement cycle status for payment processing
 
-### 7.4.3. v1 to v2 Quick Reference
+**For BPP Implementers**:
+1. **Catalog Management**: Keep catalog updated with available energy and accurate production windows
+2. **Meter Readings**: Update meter readings regularly during delivery (every 15-30 minutes)
+3. **Telemetry**: Provide real-time telemetry data for monitoring
+4. **Settlement**: Calculate settlement amounts based on delivered quantity and pricing model
+5. **State Management**: Properly transition contract and delivery statuses
+
+**Common Patterns**:
+- **Idempotency**: Use transaction_id consistently across all requests
+- **Time Windows**: Validate production windows and trade time windows
+- **Meter IDs**: Always use IEEE mRID format (plain numeric ID, not `der://` format)
+- **Quantity Validation**: Ensure delivered quantity matches contracted quantity (within tolerance)
+
+
+### 7.6.1. Key Differences from v1
+
+| Aspect                 | v1 (Layer2)         | v2 (Composable)              |
+| ---------------------- | ------------------- | ---------------------------- |
+| **Schema Extension**   | `allOf` in paths    | Composable attribute bundles |
+| **Attribute Location** | `Item.attributes.*` | `Item.itemAttributes.*`      |
+| **Meter Format**       | `der://meter/{id}`  | IEEE 2030.5 mRID `{id}`      |
+| **JSON-LD**            | Not used            | Full JSON-LD support         |
+| **Modularity**         | Monolithic          | Modular bundles              |
+
 
 For developers familiar with v1, here's a quick mapping guide:
 
-#### 7.4.3.1. Discover/Search Request
+#### 7.6.1.1. Discover/Search Request
 
 **v1 Format**:
 ```json
@@ -470,7 +580,7 @@ For developers familiar with v1, here's a quick mapping guide:
 - ✅ **Time Range**: v1 `intent.fulfillment.stops[].time.range` → v2 `filters.expression` with `productionWindow.start <= '...' && productionWindow.end >= '...'`
 - ✅ **All Parameters**: Expressed via JSONPath filters in v2
 
-#### 7.4.3.2. Item Attributes
+#### 7.6.1.2. Item Attributes
 
 **v1 Format**:
 ```json
@@ -490,7 +600,7 @@ For developers familiar with v1, here's a quick mapping guide:
 {
   "@type": "beckn:Item",
   "beckn:itemAttributes": {
-    "@context": "./context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "meterId": "100200300",
@@ -504,7 +614,7 @@ For developers familiar with v1, here's a quick mapping guide:
 - ⚠️ Meter format: `der://meter/100200300` → `100200300`
 - ➕ Add `@context` and `@type` for JSON-LD
 
-#### 7.4.3.3. Order Attributes
+#### 7.6.1.3. Order Attributes
 
 **v1 Format**:
 ```json
@@ -524,7 +634,7 @@ For developers familiar with v1, here's a quick mapping guide:
 {
   "@type": "beckn:Order",
   "beckn:orderAttributes": {
-    "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
     "@type": "EnergyTradeContract",
     "sourceMeterId": "100200300",
     "targetMeterId": "98765456",
@@ -538,7 +648,7 @@ For developers familiar with v1, here's a quick mapping guide:
 - ⚠️ Meter format: `der://pge.meter/100200300` → `100200300`
 - ➕ Add `@context` and `@type` for JSON-LD
 
-#### 7.4.3.4. Fulfillment Stops
+#### 7.6.1.4. Fulfillment Stops
 
 **v1 Format**:
 ```json
@@ -668,24 +778,24 @@ Once the registry is created and details are published, the namespace and the re
 
 ## 8.2. Setting up the Protocol Endpoints
 
-This section contains instructions to set up and test the protocol stack for EV charging transactions. 
+This section contains instructions to set up and test the protocol stack for transactions. 
 
 ### 8.2.1. Installing Beckn ONIX
 
 All NPs SHOULD install the Beckn ONIX adapter to quickly get set up and become Beckn Protocol compliant. Click [here](https://github.com/Beckn-One/beckn-onix?tab=readme-ov-file#automated-setup-recommended)) to learn how to set up Beckn ONIX.
 
-### 8.2.2. Configuring Beckn ONIX for EV Charging Transactions
+### 8.2.2. Configuring Beckn ONIX for Peer to Peer Energy Trading
 
 A detailed Configuration Guide is available [here](https://github.com/Beckn-One/beckn-onix/blob/main/CONFIG.md). A quick read of key concepts from the link is recommended.
 
-Specifically, for EV Charging, please use the following configuration:
+Specifically, please use the following configuration:
 1. Configure dediregistry plugin instead of registry plugin. Read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/dediregistry).
 2. Start with using Simplekeymanager plugin during development, read more [here](https://github.com/Beckn-One/beckn-onix/tree/main/pkg/plugin/implementation/simplekeymanager). For production deployment, you may setup vault.
 3. For routing calls to Catalog Discovery Service, refer to routing configuration [here](https://github.com/Beckn-One/beckn-onix/blob/main/config/local-simple-routing-BAPCaller.yaml).
 
-### 8.2.3. 10.2.3 Performing a test EV charging transaction
+### 8.2.3. 10.2.3 Performing a test transaction
 
-Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2).
+Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2/P2P_Trading).
 
 Step 2 : Run API calls
 
@@ -693,7 +803,7 @@ If you are a BAP
 
 1. Configure the collection/environment variables to the newly installed Beckn ONIX adapter URL and other variables in the collection.
 2. Select the discover example and hit send
-3. You should see the EV charging service catalog response
+3. You should see the service catalog response
 
 If you are a BPP
 
@@ -703,13 +813,13 @@ If you are a BPP
 
 ---
 
-# 10. Transaction Flows
+# 9. Transaction Flows
 
-## 10.1. Discover Flow
+## 9.1. Discover Flow
 
 **Purpose**: Search for available energy resources
 
-**Endpoint**: `GET /beckn/discover`
+**Endpoint**: `POST /discover`
 
 **v1 to v2 Mapping**:
 - v1 `message.intent.item.quantity.selected.measure` → v2 `message.filters.expression` (JSONPath filter on `availableQuantity`)
@@ -718,7 +828,7 @@ If you are a BPP
 - **Note**: v2 does not support `intent` object. All search parameters are expressed via JSONPath filters.
 
 <details>
-<summary><a href="./examples/discover-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/discover-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -759,7 +869,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/discover-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/discover-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -802,7 +912,7 @@ If you are a BPP
               "beckn:id": "provider-solar-farm-001"
             },
             "beckn:itemAttributes": {
-              "@context": "./context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
               "@type": "EnergyResource",
               "sourceType": "SOLAR",
               "deliveryMode": "GRID_INJECTION",
@@ -843,7 +953,7 @@ If you are a BPP
               "schema:unitText": "kWh"
             },
             "beckn:offerAttributes": {
-              "@context": "../EnergyTradeOffer/v0.2/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
@@ -879,14 +989,14 @@ If you are a BPP
 - **JSONPath Filters**: Use JSONPath filters to search by `itemAttributes.sourceType`, `itemAttributes.deliveryMode`, `itemAttributes.availableQuantity`, and `itemAttributes.productionWindow`
 - **Response**: Includes full Item with EnergyResource attributes and Offer with EnergyTradeOffer attributes
 
-## 10.2. Select Flow
+## 9.2. Select Flow
 
 **Purpose**: Select items and offers to build an order
 
-**Endpoint**: `POST /beckn/select`
+**Endpoint**: `POST /select`
 
 <details>
-<summary><a href="./examples/select-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/select-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -934,7 +1044,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/select-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/select-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1015,11 +1125,11 @@ If you are a BPP
 - Select offers by `beckn:id`
 - Response includes priced quote with breakup
 
-## 10.3. Init Flow
+## 9.3. Init Flow
 
 **Purpose**: Initialize order with fulfillment and payment details
 
-**Endpoint**: `POST /beckn/init`
+**Endpoint**: `POST /init`
 
 **v1 to v2 Mapping**:
 - v1 `Order.fulfillments[].stops[].time.range` → v2 `Order.fulfillments[].stops[].time.range` (same structure)
@@ -1027,7 +1137,7 @@ If you are a BPP
 - v1 `Order.attributes.*` → v2 `Order.orderAttributes.*` (path change)
 
 <details>
-<summary><a href="./examples/init-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/init-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1131,7 +1241,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/init-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/init-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1207,7 +1317,7 @@ If you are a BPP
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "PENDING",
         "sourceMeterId": "100200300",
@@ -1238,14 +1348,237 @@ If you are a BPP
 - **Meter IDs**: Use IEEE mRID format (`"100200300"`) instead of v1's `der://` format (`"der://pge.meter/100200300"`)
 - **Response**: Includes EnergyTradeContract attributes with PENDING status
 
-## 10.4. Confirm Flow
+## 9.4. Confirm Flow
 
 **Purpose**: Confirm and activate the order
 
-**Endpoint**: `POST /beckn/confirm`
+**Endpoint**: `POST /confirm`
+
+### 9.4.1. Cascaded Init Example (Utility Registration)
+
+This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the Utility Company (Transmission BPP) to register the trade and calculate wheeling charges.
 
 <details>
-<summary><a href="./examples/confirm-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-init-request.json">Cascaded Request Example</a></summary>
+
+```json
+{
+    "context": {
+        "domain": "energy",
+        "action": "init",
+        "location": {
+            "country": {
+                "name": "India",
+                "code": "IND"
+            },
+            "city": {
+                "name": "Lucknow",
+                "code": "std:522"
+            }
+        },
+        "version": "1.1.0",
+        "bap_id": "p2pTrading-bpp.com",
+        "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v1",
+        "bpp_id": "example-transmission-bpp.com",
+        "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
+        "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+        "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+        "timestamp": "2023-07-16T04:41:16Z"
+    },
+    "message": {
+        "order": {
+            "provider": {
+                "descriptor": {
+                    "name": "UPPCL"
+                }
+            },
+            "fulfillments": [
+                {
+                    "customer": {
+                        "person": {
+                            "name": "Raj"
+                        },
+                        "contact": {
+                            "phone": "+91-1276522222"
+                        }
+                    },
+                    "stops": [
+                        {
+                            "type": "start",
+                            "location": {
+                                "address": "der://uppcl.meter/92982739"
+                            },
+                            "time": {
+                                "range": {
+                                    "start": "2024-10-04T10:00:00",
+                                    "end": "2024-10-04T18:00:00"
+                                }
+                            }
+                        },
+                        {
+                            "type": "end",
+                            "location": {
+                                "address": "der://uppcl.meter/98765456"
+                            },
+                            "time": {
+                                "range": {
+                                    "start": "2024-10-04T10:00:00",
+                                    "end": "2024-10-04T18:00:00"
+                                }
+                            }
+                        }
+                    ],
+                    "tags": [
+                        {
+                            "descriptor": {
+                                "name": "P2P-Trade-Draft-Contract"
+                            },
+                            "list": [
+                                {
+                                    "Value": "https://https://dhiway.com/vc/energy/3894434.json"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "billing": {
+                "name": "p2p-Trading-BPP",
+                "email": "p2tbpp@example.com",
+                "phone": "+91-1276522222"
+            }
+        }
+    }
+}
+```
+</details>
+
+<details>
+<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-on-init-response.json">Cascaded Response Example</a></summary>
+
+```json
+{
+    "context": {
+        "domain": "energy",
+        "action": "on_init",
+        "location": {
+            "country": {
+                "name": "India",
+                "code": "IND"
+            },
+            "city": {
+                "name": "Lucknow",
+                "code": "std:522"
+            }
+        },
+        "version": "1.1.0",
+        "bap_id": "p2pTrading-bpp.com",
+        "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v1",
+        "bpp_id": "example-transmission-bpp.com",
+        "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
+        "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+        "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
+        "timestamp": "2023-07-16T04:41:16Z"
+    },
+    "message": {
+        "order": {
+            "provider": {
+                "descriptor": {
+                    "name": "UPPCL"
+                }
+            },
+            "fulfillments": [
+                {
+                    "customer": {
+                        "person": {
+                            "name": "Raj"
+                        },
+                        "contact": {
+                            "phone": "+91-1276522222"
+                        }
+                    },
+                    "stops": [
+                        {
+                            "type": "start",
+                            "location": {
+                                "address": "der://uppcl.meter/92982739"
+                            },
+                            "time": {
+                                "range": {
+                                    "start": "2024-10-04T10:00:00",
+                                    "end": "2024-10-04T18:00:00"
+                                }
+                            }
+                        },
+                        {
+                            "type": "end",
+                            "location": {
+                                "address": "der://uppcl.meter/98765456"
+                            },
+                            "time": {
+                                "range": {
+                                    "start": "2024-10-04T10:00:00",
+                                    "end": "2024-10-04T18:00:00"
+                                }
+                            }
+                        }
+                    ],
+                    "tags": [
+                        {
+                            "descriptor": {
+                                "name": "P2P-Trade-Draft-Contract"
+                            },
+                            "list": [
+                                {
+                                    "Value": "https://https://dhiway.com/vc/energy/3894434.json"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "quote": {
+                "price": {
+                    "value": "2.5",
+                    "currency": "INR"
+                },
+                "breakup": [
+                    {
+                        "title": "wheeling charge",
+                        "price": {
+                            "value": "2.5",
+                            "currency": "INR"
+                        }
+                    }
+                ]
+            },
+            "billing": {
+                "name": "p2p-Trading-BPP",
+                "email": "p2ptbpp@example.com",
+                "phone": "+91-1276522222"
+            },
+            "cancellation_terms": [
+                {
+                    "external_ref": {
+                        "mimetype": "text/html",
+                        "url": "https://mvvnl.in/cancellation_terms.html"
+                    }
+                }
+            ]
+        }
+    }
+}
+```
+</details>
+
+## 9.5. Confirm Flow
+
+**Purpose**: Confirm and activate the order
+
+**Endpoint**: `POST /confirm`
+
+<details>
+<summary><a href="../../../../examples/v2/P2P_Trading/confirm-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1309,7 +1642,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/confirm-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/confirm-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1372,7 +1705,7 @@ If you are a BPP
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
@@ -1412,14 +1745,14 @@ If you are a BPP
 - Settlement cycle is initialized
 - Order is now active and ready for fulfillment
 
-## 10.5. Status Flow
+## 9.6. Status Flow
 
 **Purpose**: Query order and delivery status
 
-**Endpoint**: `POST /beckn/status`
+**Endpoint**: `POST /status`
 
 <details>
-<summary><a href="./examples/status-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/status-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1450,7 +1783,7 @@ If you are a BPP
 </details>
 
 <details>
-<summary><a href="./examples/status-response.json">Response Example</a></summary>
+<summary><a href="../../../../examples/v2/P2P_Trading/status-response.json">Response Example</a></summary>
 
 ```json
 {
@@ -1502,7 +1835,7 @@ If you are a BPP
             }
           },
           "beckn:attributes": {
-            "@context": "../EnergyTradeDelivery/v0.2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
             "@type": "EnergyTradeDelivery",
             "deliveryStatus": "IN_PROGRESS",
             "deliveryMode": "GRID_INJECTION",
@@ -1566,7 +1899,7 @@ If you are a BPP
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
@@ -1610,21 +1943,23 @@ If you are a BPP
 
 ---
 
-# 11. Field Mapping Reference
 
-## 11.1. v1 to v2 Field Mapping
 
-| v1 Location | v2 Location | Notes |
-|-------------|-------------|-------|
-| `Item.attributes.*` | `Item.itemAttributes.*` | Attribute path change |
-| `Offer.attributes.*` | `Offer.offerAttributes.*` | Attribute path change |
-| `Order.attributes.*` | `Order.orderAttributes.*` | Attribute path change |
-| `Fulfillment.attributes.*` | `Fulfillment.attributes.*` | No change |
-| `der://meter/{id}` | `{id}` (IEEE mRID) | Format change |
-| `Tag.value` (energy source) | `itemAttributes.sourceType` | Direct attribute |
-| `Tag.value` (settlement) | `offerAttributes.settlementType` | Direct attribute |
+# 10. Field Mapping Reference
 
-## 11.2. Meter ID Format Migration
+## 10.1. v1 to v2 Field Mapping
+
+| v1 Location                 | v2 Location                      | Notes                 |
+| --------------------------- | -------------------------------- | --------------------- |
+| `Item.attributes.*`         | `Item.itemAttributes.*`          | Attribute path change |
+| `Offer.attributes.*`        | `Offer.offerAttributes.*`        | Attribute path change |
+| `Order.attributes.*`        | `Order.orderAttributes.*`        | Attribute path change |
+| `Fulfillment.attributes.*`  | `Fulfillment.attributes.*`       | No change             |
+| `der://meter/{id}`          | `{id}` (IEEE mRID)               | Format change         |
+| `Tag.value` (energy source) | `itemAttributes.sourceType`      | Direct attribute      |
+| `Tag.value` (settlement)    | `offerAttributes.settlementType` | Direct attribute      |
+
+## 10.2. Meter ID Format Migration
 
 **v1 Format**: `der://pge.meter/100200300`  
 **v2 Format**: `100200300` (IEEE 2030.5 mRID)
@@ -1633,9 +1968,9 @@ If you are a BPP
 
 ---
 
-# 12. Integration Patterns
+# 11. Integration Patterns
 
-## 12.1. Attaching Attributes to Core Objects
+## 11.1. Attaching Attributes to Core Objects
 
 **Item with EnergyResource**:
 ```json
@@ -1648,7 +1983,7 @@ If you are a BPP
     "schema:name": "Solar Energy - 30.5 kWh"
   },
   "beckn:itemAttributes": {
-    "@context": "./context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "deliveryMode": "GRID_INJECTION",
@@ -1663,7 +1998,7 @@ If you are a BPP
   "@type": "beckn:Offer",
   "beckn:id": "offer-energy-001",
   "beckn:offerAttributes": {
-    "@context": "../EnergyTradeOffer/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
     "@type": "EnergyTradeOffer",
     "pricingModel": "PER_KWH",
     "settlementType": "DAILY"
@@ -1677,7 +2012,7 @@ If you are a BPP
   "@type": "beckn:Order",
   "beckn:id": "order-energy-001",
   "beckn:orderAttributes": {
-    "@context": "../EnergyTradeContract/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
     "@type": "EnergyTradeContract",
     "contractStatus": "ACTIVE",
     "sourceMeterId": "100200300",
@@ -1692,7 +2027,7 @@ If you are a BPP
   "@type": "beckn:Fulfillment",
   "beckn:id": "fulfillment-energy-001",
   "beckn:attributes": {
-    "@context": "../EnergyTradeDelivery/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
     "@type": "EnergyTradeDelivery",
     "deliveryStatus": "IN_PROGRESS",
     "meterReadings": [...]
@@ -1700,13 +2035,13 @@ If you are a BPP
 }
 ```
 
-## 12.2. JSON-LD Context Usage
+## 11.2. JSON-LD Context Usage
 
 All attribute bundles include `@context` and `@type`:
 - `@context`: Points to the context.jsonld file for the attribute bundle
 - `@type`: The schema type (EnergyResource, EnergyTradeOffer, etc.)
 
-## 12.3. Discovery Filtering
+## 11.3. Discovery Filtering
 
 Use JSONPath filters to search by energy attributes:
 
@@ -1721,42 +2056,42 @@ Use JSONPath filters to search by energy attributes:
 
 ---
 
-# 13. Best Practices
+# 12. Best Practices
 
-## 13.1. Discovery Optimization
+## 12.1. Discovery Optimization
 
 - **Index Key Fields**: Index `itemAttributes.sourceType`, `itemAttributes.deliveryMode`, `itemAttributes.meterId`, `itemAttributes.availableQuantity`
 - **Use JSONPath Filters**: Leverage JSONPath for complex filtering
 - **Minimal Fields**: Return minimal fields in list/search APIs (see profile.json)
 
-## 13.2. Meter ID Handling
+## 12.2. Meter ID Handling
 
 - **Use IEEE mRID Format**: Always use plain identifier (e.g., `"100200300"`), not `der://` format
 - **PII Treatment**: Treat meter IDs as PII - do not index, redact in logs, encrypt at rest
 - **Discovery**: Meter IDs enable meter-based discovery (provider names not required)
 
-## 13.3. Settlement Cycle Management
+## 12.3. Settlement Cycle Management
 
 - **Initialize on Confirm**: Create settlement cycle when order is confirmed
 - **Update on Delivery**: Link deliveries to settlement cycles via `settlementCycleId`
 - **Status Tracking**: Track settlement cycle status (PENDING → SETTLED → FAILED)
 - **Amount Calculation**: Calculate settlement amount based on delivered quantity and pricing
 
-## 13.4. Meter Readings
+## 12.4. Meter Readings
 
 - **Regular Updates**: Update meter readings during delivery (every 15-30 minutes)
 - **Energy Flow Calculation**: Calculate `energyFlow` as difference between readings
 - **Source and Target**: Track both source and target meter readings
 - **Timestamp Accuracy**: Use accurate timestamps (ISO 8601 format)
 
-## 13.5. Telemetry Data
+## 12.5. Telemetry Data
 
 - **Metric Selection**: Include relevant metrics (ENERGY, POWER, VOLTAGE, CURRENT, FREQUENCY)
 - **Unit Codes**: Use correct unit codes (KWH, KW, VLT, AMP, HZ)
 - **Update Frequency**: Update telemetry every 5-15 minutes during active delivery
 - **Data Retention**: Retain telemetry data for billing and audit purposes
 
-## 13.6. Error Handling
+## 12.6. Error Handling
 
 - **Validation Errors**: Validate all required fields before processing
 - **Meter ID Format**: Validate meter IDs are IEEE mRID format
@@ -1765,16 +2100,16 @@ Use JSONPath filters to search by energy attributes:
 
 ---
 
-# 14. Migration from v1
+# 13. Migration from v1
 
-## 14.1. Key Changes
+## 13.1. Key Changes
 
 1. **Attribute Paths**: Change `attributes.*` to `itemAttributes.*`, `offerAttributes.*`, `orderAttributes.*`
 2. **Meter Format**: Convert `der://meter/{id}` to `{id}` (IEEE mRID)
 3. **Tag Values**: Convert `Tag.value` to direct attribute fields
 4. **JSON-LD**: Add `@context` and `@type` to all attribute objects
 
-## 14.2. Migration Checklist
+## 13.2. Migration Checklist
 
 - Update attribute paths (`attributes.*` → `itemAttributes.*`, etc.)
 - Convert meter IDs from `der://` format to IEEE mRID
@@ -1785,7 +2120,7 @@ Use JSONPath filters to search by energy attributes:
 - Test all transaction flows
 - Update documentation
 
-## 14.3. Example Migration
+## 13.3. Example Migration
 
 **v1 Format**:
 ```json
@@ -1807,7 +2142,7 @@ Use JSONPath filters to search by energy attributes:
 {
   "@type": "beckn:Item",
   "beckn:itemAttributes": {
-    "@context": "./context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "meterId": "100200300"
@@ -1817,9 +2152,9 @@ Use JSONPath filters to search by energy attributes:
 
 ---
 
-# 15. Examples
+# 14. Examples
 
-## 15.1. Complete Examples
+## 14.1. Complete Examples
 
 All examples are available in:
 - **Schema Examples**: `schema/EnergyResource/v0.2/examples/schema/`
@@ -1831,12 +2166,12 @@ All examples are available in:
 - **Transaction Flow Examples**: [`/examples/v2/P2P_Trading/`](../examples)
   - [`discover-request.json`](/examples/v2/P2P_Trading/discover-request.json) / [`discover-response.json`](/examples/v2/P2P_Trading/discover-response.json)
   - [`select-request.json`](/examples/v2/P2P_Trading/select-request.json) / [`select-response.json`](/examples/v2/P2P_Trading/select-response.json)
-  - [`init-request.json`](/examples/v2/P2P_Trading/`init-request.json) / [`init-response.json`](/examples/v2/P2P_Trading/init-response.json)
+  - [`init-request.json`](/examples/v2/P2P_Trading/init-request.json) / [`init-response.json`](/examples/v2/P2P_Trading/init-response.json)
   - [`confirm-request.json`](/examples/v2/P2P_Trading/confirm-request.json) / [`confirm-response.json`](/examples/v2/P2P_Trading/confirm-response.json)
   - [`status-request.json`](/examples/v2/P2P_Trading/status-request.json) / [`status-response.json`](/examples/v2/P2P_Trading/status-response.json)
 
 
-## 15.2. Example Scenarios
+## 14.2. Example Scenarios
 
 1. **Solar Energy Discovery**: Search for solar energy with grid injection delivery
 2. **Daily Settlement**: Contract with daily settlement cycle
@@ -1845,7 +2180,7 @@ All examples are available in:
 
 ---
 
-# 16. Additional Resources
+# 15. Additional Resources
 
 - **Field Mapping**: See `docs/v1_to_v2_field_mapping.md`
 - **Taxonomy Reference**: See `docs/TAXONOMY.md`
@@ -1855,9 +2190,17 @@ All examples are available in:
 
 ---
 
-# 17. Support
+# 16. Support
 
 For questions or issues:
 - Review the examples in `schema/EnergyResource/v0.2/examples/`
 - Check the schema definitions in `schema/Energy*/v0.2/attributes.yaml`
 - Refer to the Beckn Protocol v2 documentation
+<<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide.md
+=======
+
+---
+
+
+
+>>>>>>> draft:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_DRAFT.md

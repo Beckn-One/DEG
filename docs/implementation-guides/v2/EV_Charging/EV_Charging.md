@@ -95,7 +95,7 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
           - [13.2.1.14.0.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#13211402-b-overcharge-charger-offline-to-cms-keeps-dispensing)
       - [13.2.1.15. Asynchronous `action: on_update` (stop charging)](#132115-asynchronous-action-on_update-stop-charging)
       - [13.2.1.16. Synchronous/Asynchronous on\_update (stop charging)](#132116-synchronousasynchronous-on_update-stop-charging)
-      - [13.2.1.17. `atcion: cancel`](#132117-atcion-cancel)
+      - [13.2.1.17. `action: cancel`](#132117-action-cancel)
       - [13.2.1.18. `action: on_cancel`](#132118-action-on_cancel)
       - [13.2.1.19. `action: rating`](#132119-action-rating)
       - [13.2.1.20. `action: on_rating`](#132120-action-on_rating)
@@ -302,7 +302,7 @@ Specifically, for EV Charging, please use the following configuration:
 
 ### 11.2.3. 10.2.3 Performing a test EV charging transaction
 
-Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2).
+Step 1 : Download the postman collection, from [here](/testnet/postman-collections/v2/EV_Charging/).
 
 Step 2 : Run API calls
 
@@ -490,6 +490,8 @@ Note: Users can discover the charging station through off-network channels (such
           "schema:name": "EV Charging Services Network",
           "beckn:shortDesc": "Comprehensive network of fast charging stations across Bengaluru"
         },
+        "beckn:bppId": "bpp.ev-network.example.com",
+        "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:validity": {
           "@type": "beckn:TimePeriod",
           "schema:startDate": "2024-10-01T00:00:00Z",
@@ -823,6 +825,14 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
       "beckn:orderValue": {
         "currency": "INR",
         "value": 100.0
@@ -847,6 +857,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
             "beckn:items": [
               "ev-charger-ccs2-001"
             ],
+            "beckn:provider": "ecopower-charging",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -877,15 +888,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }
@@ -936,6 +939,14 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "PENDING",
       "beckn:seller": "ecopower-charging",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-001",
@@ -956,6 +967,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
             "beckn:items": [
               "ev-charger-ccs2-001"
             ],
+            "beckn:provider": "ecopower-charging",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -1125,16 +1137,8 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -1145,9 +1149,14 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -1257,19 +1266,6 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        }
       }
     }
   }
@@ -1328,16 +1324,8 @@ EV user requests final quote with payment terms by providing billing details: [E
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -1348,9 +1336,14 @@ EV user requests final quote with payment terms by providing billing details: [E
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -1438,9 +1431,7 @@ EV user requests final quote with payment terms by providing billing details: [E
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -1463,20 +1454,6 @@ EV user requests final quote with payment terms by providing billing details: [E
           "WALLET"
         ],
         "beckn:paymentStatus": "INITIATED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1535,16 +1512,8 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -1555,9 +1524,14 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -1663,27 +1637,11 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1729,16 +1687,8 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -1749,9 +1699,14 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -1839,6 +1794,8 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -1861,22 +1818,6 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1934,16 +1875,8 @@ EV user confirms reservation of a slot at a particular charging station at a par
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -1954,9 +1887,14 @@ EV user confirms reservation of a slot at a particular charging station at a par
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -2044,6 +1982,8 @@ EV user confirms reservation of a slot at a particular charging station at a par
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -2067,22 +2007,6 @@ EV user confirms reservation of a slot at a particular charging station at a par
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -2140,16 +2064,8 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -2160,9 +2076,14 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -2252,6 +2173,7 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -2274,21 +2196,6 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2345,16 +2252,8 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -2365,9 +2264,14 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -2457,6 +2361,7 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -2479,21 +2384,6 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2540,10 +2430,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "INPROGRESS"
+      "beckn:id": "order-bpp-789012"
     }
   }
 }
@@ -2696,16 +2583,8 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -2716,9 +2595,14 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -2817,6 +2701,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -2839,21 +2724,6 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2911,16 +2781,8 @@ EV user reveives a notification in case of any error occuring during charging se
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -2931,9 +2793,14 @@ EV user reveives a notification in case of any error occuring during charging se
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -3023,6 +2890,7 @@ EV user reveives a notification in case of any error occuring during charging se
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -3045,21 +2913,6 @@ EV user reveives a notification in case of any error occuring during charging se
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3105,16 +2958,8 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -3125,9 +2970,14 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -3226,6 +3076,7 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -3248,21 +3099,6 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3876,6 +3712,8 @@ Discovering chargers in a specific circular area, a specific connector type and 
           "schema:name": "EV Charging Services Network",
           "beckn:shortDesc": "Comprehensive network of fast charging stations across Bengaluru"
         },
+        "beckn:bppId": "bpp.ev-network.example.com",
+        "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:validity": {
           "@type": "beckn:TimePeriod",
           "schema:startDate": "2024-10-01T00:00:00Z",
@@ -4456,6 +4294,14 @@ Offer schema in the catalog:
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
       "beckn:orderValue": {
         "currency": "INR",
         "value": 100.0
@@ -4480,6 +4326,7 @@ Offer schema in the catalog:
             "beckn:items": [
               "ev-charger-ccs2-001"
             ],
+            "beckn:provider": "ecopower-charging",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -4510,15 +4357,7 @@ Offer schema in the catalog:
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }
@@ -4583,6 +4422,14 @@ Recommendations for BPP:
       "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "PENDING",
       "beckn:seller": "ecopower-charging",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-001",
@@ -4603,6 +4450,7 @@ Recommendations for BPP:
             "beckn:items": [
               "ev-charger-ccs2-001"
             ],
+            "beckn:provider": "ecopower-charging",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -4859,16 +4707,8 @@ Recommendations for BAP:
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -4879,9 +4719,14 @@ Recommendations for BAP:
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -4991,19 +4836,6 @@ Recommendations for BAP:
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        }
       }
     }
   }
@@ -5079,16 +4911,8 @@ Recommendations for BAP:
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -5099,9 +4923,14 @@ Recommendations for BAP:
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -5189,9 +5018,7 @@ Recommendations for BAP:
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
-          "authorization": {
-            "type": "OTP"
-          },
+          "authorizationMode": "OTP",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -5214,20 +5041,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "INITIATED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5361,16 +5174,8 @@ Recommendations for BAP:
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -5381,9 +5186,14 @@ Recommendations for BAP:
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -5471,6 +5281,8 @@ Recommendations for BAP:
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -5493,22 +5305,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5577,16 +5373,8 @@ Recommendations for BAP:
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -5597,9 +5385,14 @@ Recommendations for BAP:
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -5687,6 +5480,8 @@ Recommendations for BAP:
           "@type": "ChargingSession",
           "connectorType": "CCS2",
           "maxPowerKW": 50,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
@@ -5710,22 +5505,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5804,16 +5583,8 @@ Once these physical steps are completed, the charging session can be initiated t
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -5824,9 +5595,14 @@ Once these physical steps are completed, the charging session can be initiated t
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -5916,6 +5692,7 @@ Once these physical steps are completed, the charging session can be initiated t
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -5938,21 +5715,6 @@ Once these physical steps are completed, the charging session can be initiated t
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6013,16 +5775,8 @@ Once these physical steps are completed, the charging session can be initiated t
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -6033,9 +5787,14 @@ Once these physical steps are completed, the charging session can be initiated t
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -6125,6 +5884,7 @@ Once these physical steps are completed, the charging session can be initiated t
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6147,21 +5907,6 @@ Once these physical steps are completed, the charging session can be initiated t
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6213,10 +5958,7 @@ Once these physical steps are completed, the charging session can be initiated t
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "INPROGRESS"
+      "beckn:id": "order-bpp-789012"
     }
   }
 }
@@ -6452,16 +6194,8 @@ API Implementation: The above under and overcharge scenarios are supported throu
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -6472,9 +6206,14 @@ API Implementation: The above under and overcharge scenarios are supported throu
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -6573,6 +6312,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6595,21 +6335,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6673,16 +6398,8 @@ API Implementation: The above under and overcharge scenarios are supported throu
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -6693,9 +6410,14 @@ API Implementation: The above under and overcharge scenarios are supported throu
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -6785,6 +6507,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -6807,21 +6530,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6868,16 +6576,8 @@ API Implementation: The above under and overcharge scenarios are supported throu
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -6888,9 +6588,14 @@ API Implementation: The above under and overcharge scenarios are supported throu
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -6989,6 +6694,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -7011,21 +6717,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -7047,7 +6738,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 ```
 </details>
 
-#### 13.2.1.17. `atcion: cancel`
+#### 13.2.1.17. `action: cancel`
 
 It’s like when a client calls to cancel an appointment — maybe something came up, or their plans have changed. When they request to cancel, it’s about freeing up that slot and keeping things organized.
 

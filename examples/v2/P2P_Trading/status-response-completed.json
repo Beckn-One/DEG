@@ -2,8 +2,8 @@
   "context": {
     "version": "2.0.0",
     "action": "on_status",
-    "timestamp": "2024-10-04T15:00:05Z",
-    "message_id": "msg-on-status-001",
+    "timestamp": "2024-10-04T18:30:00Z",
+    "message_id": "msg-on-status-completed-001",
     "transaction_id": "txn-energy-001",
     "bap_id": "bap.energy-consumer.com",
     "bap_uri": "https://bap.energy-consumer.com",
@@ -43,49 +43,61 @@
             "@type": "beckn:State",
             "beckn:descriptor": {
               "@type": "beckn:Descriptor",
-              "schema:name": "IN_PROGRESS"
+              "schema:name": "COMPLETED"
             }
           },
           "beckn:attributes": {
             "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
             "@type": "EnergyTradeDelivery",
-            "deliveryStatus": "IN_PROGRESS",
+            "deliveryStatus": "COMPLETED",
             "deliveryMode": "GRID_INJECTION",
-            "deliveredQuantity": 9.8,
+            "deliveredQuantity": 10.0,
             "deliveryStartTime": "2024-10-04T10:00:00Z",
-            "deliveryEndTime": null,
+            "deliveryEndTime": "2024-10-04T18:00:00Z",
             "meterReadings": [
               {
                 "timestamp": "2024-10-04T10:00:00Z",
                 "sourceReading": 1000.0,
                 "targetReading": 990.0,
-                "energyFlow": 10.0
+                "energyFlow": 0.0
               },
               {
                 "timestamp": "2024-10-04T12:00:00Z",
                 "sourceReading": 1000.5,
                 "targetReading": 990.3,
-                "energyFlow": 10.2
+                "energyFlow": 0.3
               },
               {
                 "timestamp": "2024-10-04T14:00:00Z",
                 "sourceReading": 1001.0,
                 "targetReading": 990.8,
-                "energyFlow": 10.2
+                "energyFlow": 0.5
+              },
+              {
+                "timestamp": "2024-10-04T16:00:00Z",
+                "sourceReading": 1002.0,
+                "targetReading": 991.5,
+                "energyFlow": 0.7
+              },
+              {
+                "timestamp": "2024-10-04T18:00:00Z",
+                "sourceReading": 1010.0,
+                "targetReading": 1000.0,
+                "energyFlow": 10.0
               }
             ],
             "telemetry": [
               {
-                "eventTime": "2024-10-04T12:00:00Z",
+                "eventTime": "2024-10-04T18:00:00Z",
                 "metrics": [
                   {
                     "name": "ENERGY",
-                    "value": 5.8,
+                    "value": 10.0,
                     "unitCode": "KWH"
                   },
                   {
                     "name": "POWER",
-                    "value": 2.5,
+                    "value": 0.0,
                     "unitCode": "KW"
                   },
                   {
@@ -97,7 +109,7 @@
               }
             ],
             "settlementCycleId": "settle-2024-10-04-001",
-            "lastUpdated": "2024-10-04T15:30:00Z"
+            "lastUpdated": "2024-10-04T18:30:00Z"
           }
         }
       ],
@@ -113,7 +125,7 @@
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
-        "contractStatus": "ACTIVE",
+        "contractStatus": "COMPLETED",
         "sourceMeterId": "100200300",
         "targetMeterId": "98765456",
         "inverterId": "inv-12345",
@@ -132,12 +144,16 @@
             "cycleId": "settle-2024-10-04-001",
             "startTime": "2024-10-04T00:00:00Z",
             "endTime": "2024-10-04T23:59:59Z",
-            "status": "PENDING",
-            "amount": 0.0,
-            "currency": "USD"
+            "status": "SETTLED",
+            "amount": 4.0,
+            "currency": "USD",
+            "breakdown": {
+              "energyCost": 1.5,
+              "wheelingCharges": 2.5
+            }
           }
         ],
-        "lastUpdated": "2024-10-04T15:30:00Z"
+        "lastUpdated": "2024-10-04T18:30:00Z"
       }
     }
   }
