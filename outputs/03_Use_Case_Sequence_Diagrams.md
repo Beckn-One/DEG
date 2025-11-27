@@ -16,6 +16,8 @@ This document contains Mermaid sequence diagrams for all energy exchange use cas
 - Bid curve flows (where applicable)
 - Market clearing patterns (where applicable)
 
+> **Pay-as-clear note**: For market-based flows (Sections 2, 4, 5, 6, 7) `select/on_select` is intentionally skipped. Participants confirm “pay-as-clear” bids, and `on_confirm` returns the binding clearing outcome once the market clears.
+
 ---
 
 ## Table of Contents
@@ -147,13 +149,6 @@ sequenceDiagram
     Note over User,EVSE: Catalogue Response with Clearing Price
     MCA-->>BAP: on_discover(catalog with clearing price)
     Note right of BAP: offerAttributes:<br/>{clearingPrice: 0.09,<br/>setpointKW: -8.0}
-
-    Note over User,EVSE: Selection Phase
-    User->>BAP: Review clearing price
-    BAP->>MCA: select(item, accepted clearing price)
-    MCA->>MCA: Validate selection
-    MCA-->>BAP: on_select(quote with setpoint)
-    BAP-->>User: Show quote (₹0.09/kWh, 8 kW)
 
     Note over User,EVSE: Initialization Phase
     User->>BAP: Provide payment details
@@ -331,13 +326,6 @@ sequenceDiagram
     MCA-->>BAP: on_discover(catalog with clearing price)
     Note right of BAP: offerAttributes:<br/>{clearingPrice: 0.0625,<br/>aggregateQuantity: 50 kWh}
 
-    Note over Consumer,Meter2: Selection Phase
-    Consumer->>BAP: Review clearing price
-    BAP->>MCA: select(item, accepted clearing price)
-    MCA->>MCA: Validate selection
-    MCA-->>BAP: on_select(quote: ₹3.125 total)
-    BAP-->>Consumer: Show quote
-
     Note over Consumer,Meter2: Initialization Phase
     Consumer->>BAP: Provide meter ID
     BAP->>MCA: init(order, meterId: 98765456)
@@ -440,14 +428,6 @@ sequenceDiagram
     MCA-->>Device2: on_discover(catalog with clearing price)
     MCA-->>Device3: on_discover(catalog with clearing price)
     Note right of MCA: offerAttributes:<br/>{clearingPrice: 0.13,<br/>setpointKW: -3.5}
-
-    Note over GridOp,Protocol: Selection Phase
-    Device1->>MCA: select(item, accepted clearing price)
-    Device2->>MCA: select(item, accepted clearing price)
-    Device3->>MCA: select(item, accepted clearing price)
-    MCA-->>Device1: on_select(quote: ₹0.13/kWh, -3.5 kW)
-    MCA-->>Device2: on_select(quote: ₹0.13/kWh, -5.0 kW)
-    MCA-->>Device3: on_select(quote: ₹0.13/kWh, -2.0 kW)
 
     Note over GridOp,Protocol: Initialization Phase
     Device1->>MCA: init(order)
@@ -556,18 +536,6 @@ sequenceDiagram
     MCA-->>EV2: on_discover(catalog with clearing price)
     MCA-->>Battery1: on_discover(catalog with clearing price)
     Note right of MCA: offerAttributes:<br/>{clearingPrice: 0.075,<br/>locationalPrice: 0.175,<br/>setpointKW: varies}
-
-    Note over VPPCoord,Protocol: Selection Phase
-    Solar1->>MCA: select(item, accepted clearing price)
-    Solar2->>MCA: select(item, accepted clearing price)
-    EV1->>MCA: select(item, accepted clearing price)
-    EV2->>MCA: select(item, accepted clearing price)
-    Battery1->>MCA: select(item, accepted clearing price)
-    MCA-->>Solar1: on_select(quote: ₹0.075/kWh, 3.5 kW)
-    MCA-->>Solar2: on_select(quote: ₹0.075/kWh, 3.5 kW)
-    MCA-->>EV1: on_select(quote: ₹0.175/kWh, -8.0 kW)
-    MCA-->>EV2: on_select(quote: ₹0.175/kWh, -8.0 kW)
-    MCA-->>Battery1: on_select(quote: ₹0.175/kWh, -2.0 kW)
 
     Note over VPPCoord,Protocol: Initialization Phase
     Solar1->>MCA: init(order)
@@ -684,14 +652,6 @@ sequenceDiagram
     MCA-->>Battery2: on_discover(catalog with clearing price)
     MCA-->>Inverter1: on_discover(catalog with clearing price)
     Note right of MCA: offerAttributes:<br/>{clearingPrice: 0.085,<br/>locationalPrice: 0.17,<br/>setpointKW: varies}
-
-    Note over GridOp,Protocol: Selection Phase
-    Battery1->>MCA: select(item, accepted clearing price)
-    Battery2->>MCA: select(item, accepted clearing price)
-    Inverter1->>MCA: select(item, accepted clearing price)
-    MCA-->>Battery1: on_select(quote: ₹0.17/kWh, 8.5 kW)
-    MCA-->>Battery2: on_select(quote: ₹0.17/kWh, 8.5 kW)
-    MCA-->>Inverter1: on_select(quote: ₹0.17/kWh, 6.0 kW)
 
     Note over GridOp,Protocol: Initialization Phase
     Battery1->>MCA: init(order)

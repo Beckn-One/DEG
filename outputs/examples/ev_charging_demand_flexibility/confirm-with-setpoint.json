@@ -31,6 +31,16 @@
           }
         }
       },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/context.jsonld",
+        "@type": "EnergyOrder",
+        "clearingPrice": "PAY_AS_CLEAR",
+        "objectives": {
+          "targetChargeKWh": 20,
+          "deadline": "2024-12-15T18:00:00Z",
+          "maxPricePerKWh": 0.12
+        }
+      },
       "beckn:payment": {
         "beckn:paymentMethod": "UPI"
       }
