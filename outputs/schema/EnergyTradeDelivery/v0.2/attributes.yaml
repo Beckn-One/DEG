@@ -1,0 +1,172 @@
+openapi: 3.1.1
+info:
+  title: Energy Trade — Trade Delivery Attributes (v0.2)
+  version: 0.2.0
+  x-profile-id: profiles/energy-trade/energy_trade/v0.2/trade-delivery
+  description: >
+    Attribute schemas for energy trade deliveries (Fulfillment.attributes).
+    These attributes are attached to Fulfillment.attributes to track physical transfer
+    of energy between source and target, including delivery status, meter readings,
+    telemetry data, and fulfillment cycles tied to a single contract.
+
+components:
+  schemas:
+    ########################################################################
+    # FULFILLMENT.ATTRIBUTES — EnergyTradeDelivery (P2P Energy Trading)
+    ########################################################################
+    EnergyTradeDelivery:
+      type: object
+      additionalProperties: false
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": EnergyTradeDelivery
+      properties:
+
+        deliveryStatus:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, FAILED]
+          description: Delivery status for the energy transfer. Handles recurring or continuous fulfillment scenarios.
+          example: "IN_PROGRESS"
+          x-jsonld: { "@id": deliveryStatus }
+
+        deliveryMode:
+          type: string
+          enum: [EV_CHARGING, BATTERY_SWAP, V2G, GRID_INJECTION]
+          description: Mode of energy delivery for this fulfillment cycle.
+          example: "GRID_INJECTION"
+          x-jsonld: { "@id": deliveryMode }
+
+        deliveredQuantity:
+          type: number
+          minimum: 0
+          description: Quantity delivered in this fulfillment cycle in kilowatt-hours (kWh).
+          example: 9.8
+          x-jsonld: { "@id": deliveredQuantity }
+
+        deliveryStartTime:
+          type: string
+          format: date-time
+          description: Delivery start timestamp (ISO 8601).
+          example: "2024-10-04T10:00:00Z"
+          x-jsonld: { "@id": "schema:startTime" }
+
+        deliveryEndTime:
+          type: [string, "null"]
+          format: date-time
+          nullable: true
+          description: Delivery end timestamp (ISO 8601). Null if delivery is in progress.
+          example: "2024-10-04T18:00:00Z"
+          x-jsonld: { "@id": "schema:endTime" }
+
+        meterReadings:
+          type: array
+          description: Array of meter readings during delivery. Tracks energy flow from source to target.
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                description: Meter reading timestamp (ISO 8601).
+                example: "2024-10-04T12:00:00Z"
+                x-jsonld: { "@id": "schema:startTime" }
+              sourceReading:
+                type: number
+                minimum: 0
+                description: Source meter reading at this timestamp (kWh).
+                example: 1000.5
+                x-jsonld: { "@id": sourceReading }
+              targetReading:
+                type: number
+                minimum: 0
+                description: Target meter reading at this timestamp (kWh).
+                example: 990.3
+                x-jsonld: { "@id": targetReading }
+              energyFlow:
+                type: number
+                description: Calculated energy flow between readings (kWh). Positive indicates delivery to target.
+                example: 10.2
+                x-jsonld: { "@id": energyFlow }
+          x-jsonld: { "@id": meterReadings }
+
+        telemetry:
+          type: array
+          description: Energy flow telemetry data during delivery. Similar to charging telemetry for EV sessions.
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              eventTime:
+                type: string
+                format: date-time
+                description: Telemetry event timestamp (UTC).
+                x-jsonld: { "@id": "schema:startTime" }
+              metrics:
+                type: array
+                description: Array of telemetry metrics using schema.org QuantitativeValue.
+                items:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    name:
+                      type: string
+                      enum: [ENERGY, POWER, FLOW_RATE, VOLTAGE, CURRENT, FREQUENCY, POWER_QUALITY]
+                      description: Name of the telemetry metric for energy trading. ENERGY (kWh), POWER (kW), FLOW_RATE (kW), VOLTAGE (V), CURRENT (A), FREQUENCY (Hz), POWER_QUALITY (dimensionless).
+                      example: "ENERGY"
+                      x-jsonld: { "@id": "schema:name" }
+                    value:
+                      type: number
+                      description: Numeric value of the metric.
+                      example: 5.8
+                      x-jsonld: { "@id": "schema:value" }
+                    unitCode:
+                      type: string
+                      description: Unit code for the metric value. Valid codes - ENERGY uses KWH, POWER uses KW, FLOW_RATE uses KW, VOLTAGE uses VLT, CURRENT uses AMP, FREQUENCY uses HZ, POWER_QUALITY uses dimensionless.
+                      example: "KWH"
+                      x-jsonld: { "@id": "schema:unitCode" }
+                  required: [name, value, unitCode]
+                  x-jsonld: { "@id": "schema:QuantitativeValue" }
+          x-jsonld: { "@id": telemetry }
+
+        settlementCycleId:
+          type: string
+          description: Associated settlement cycle identifier. Links delivery to settlement for billing.
+          example: "settle-2024-10-04-001"
+          x-jsonld: { "@id": settlementCycleId }
+
+        lastUpdated:
+          type: string
+          format: date-time
+          description: Last delivery update timestamp (UTC). Updated as meter readings arrive.
+          example: "2024-10-04T15:30:00Z"
+          x-jsonld: { "@id": "schema:dateModified" }
+
+        # Coordination Extensions
+        offsetCommand:
+          $ref: '#/components/schemas/OffsetCommand'
+          description: Grid operator offset command applied during fulfillment. Used to break flat bid curve plateaus.
+
+        deviationPenalty:
+          type: number
+          minimum: 0
+          description: Penalty for net imbalance (promised vs actual trade). Used by market clearing agent with virtual meter.
+          example: 0.0
+          x-jsonld: { "@id": "energyCoordination:deviationPenalty" }
+
+    OffsetCommand:
+      type: object
+      description: Grid operator command to apply offset for flat bid curve plateaus.
+      additionalProperties: false
+      properties:
+        enabled:
+          type: boolean
+          description: Whether the offset command is enabled.
+          example: true
+          x-jsonld: { "@id": "schema:enabled" }
+        offsetKW:
+          type: number
+          description: Power offset in kilowatts to apply. Negative values reduce setpoint, positive values increase setpoint.
+          example: -2.0
+          x-jsonld: { "@id": "energyCoordination:offsetKW" }
+

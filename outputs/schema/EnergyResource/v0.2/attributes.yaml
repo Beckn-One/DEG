@@ -1,0 +1,340 @@
+openapi: 3.1.1
+info:
+  title: Energy Trade — Energy Resource Attributes (v0.2) with Coordination Extensions
+  version: 0.2.0
+  x-profile-id: profiles/energy-trade/energy_trade/v0.2/energy-resource
+  description: >
+    Attribute schemas for energy resources (Item.itemAttributes).
+    These attributes are attached to Item.itemAttributes to provide energy-specific 
+    characteristics including source type, delivery mode, certification status, 
+    meter identifiers, availability details for P2P energy trading, and coordination
+    extensions (bid curves, objectives, locational pricing).
+
+components:
+  schemas:
+    ########################################################################
+    # ITEM.ITEMATTRIBUTES — EnergyResource (P2P Energy Trading + Coordination)
+    ########################################################################
+    EnergyResource:
+      type: object
+      additionalProperties: false
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": EnergyResource
+      properties:
+
+        # Core Energy Resource Properties
+        sourceType:
+          type: string
+          enum: [SOLAR, BATTERY, GRID, HYBRID, RENEWABLE]
+          description: Type of energy source. Source verification occurs at onboarding but can change post-onboarding (e.g., switching from solar to diesel). Source type influences price but not workflow.
+          example: "SOLAR"
+          x-jsonld: { "@id": sourceType }
+
+        deliveryMode:
+          type: string
+          enum: [EV_CHARGING, BATTERY_SWAP, V2G, GRID_INJECTION]
+          description: Mode of energy delivery. Used as discovery filter to match consumer requirements.
+          example: "GRID_INJECTION"
+          x-jsonld: { "@id": deliveryMode }
+
+        certificationStatus:
+          type: string
+          description: Carbon offset or green energy certification status (e.g., "Carbon Offset Certified", "Green Energy Certified").
+          example: "Carbon Offset Certified"
+          x-jsonld: { "@id": certificationStatus }
+
+        meterId:
+          type: string
+          description: Source meter identifier using IEEE 2030.5 mRID (meter Resource ID). Used for discovery and fulfillment tracking.
+          example: "100200300"
+          x-jsonld: { "@id": "ieee:mRID" }
+
+        inverterId:
+          type: string
+          description: Inverter identifier serving as consistent interface between source and grid. Remains constant even if source changes.
+          example: "inv-12345"
+          x-jsonld: { "@id": inverterId }
+
+        availableQuantity:
+          type: number
+          minimum: 0
+          description: Available energy quantity in kilowatt-hours (kWh).
+          example: 30.5
+          x-jsonld: { "@id": availableQuantity }
+
+        productionWindow:
+          type: object
+          description: Time window when energy is produced or available for trading.
+          x-jsonld: { "@id": productionWindow }
+          additionalProperties: false
+          properties:
+            start:
+              type: string
+              format: date-time
+              description: Start time of production/availability window (ISO 8601).
+              example: "2024-10-04T10:00:00Z"
+              x-jsonld: { "@id": "schema:startTime" }
+            end:
+              type: string
+              format: date-time
+              description: End time of production/availability window (ISO 8601).
+              example: "2024-10-04T18:00:00Z"
+              x-jsonld: { "@id": "schema:endTime" }
+
+        sourceVerification:
+          type: object
+          description: Source verification details including certificates and verification status.
+          x-jsonld: { "@id": sourceVerification }
+          additionalProperties: false
+          properties:
+            verified:
+              type: boolean
+              description: Whether the source has been verified.
+              example: true
+              x-jsonld: { "@id": verified }
+            verificationDate:
+              type: string
+              format: date-time
+              description: Date when source was last verified.
+              example: "2024-09-01T00:00:00Z"
+              x-jsonld: { "@id": verificationDate }
+            certificates:
+              type: array
+              description: Array of certificate references (URLs or identifiers).
+              items:
+                type: string
+                format: uri
+              example: ["https://example.com/certs/solar-panel-cert.pdf"]
+              x-jsonld: { "@id": certificates }
+
+        productionAsynchronous:
+          type: boolean
+          description: Whether production and trade may be asynchronous (before, during, or after the transaction).
+          example: true
+          default: false
+          x-jsonld: { "@id": productionAsynchronous }
+
+        # Coordination Extensions
+        bidCurve:
+          type: array
+          description: Array of price/power pairs expressing resource opportunity cost or willingness to transact. Used for market-based coordination and economic disaggregation.
+          items:
+            $ref: '#/components/schemas/BidCurvePoint'
+          x-jsonld: { "@id": "energyCoordination:bidCurve" }
+          example:
+            - price: 0.05
+              powerKW: 0
+            - price: 0.06
+              powerKW: 2
+            - price: 0.07
+              powerKW: 5
+
+        constraints:
+          $ref: '#/components/schemas/BidCurveConstraints'
+          description: Operational constraints for bid curve execution.
+
+        objectives:
+          $ref: '#/components/schemas/EnergyObjectives'
+          description: Resource objectives expressing goals, constraints, and preferences for energy transactions.
+
+        locationalPriceAdder:
+          $ref: '#/components/schemas/LocationalPriceAdder'
+          description: Price adder based on grid location and congestion. Used by grid nodes (transformers, substations).
+
+        gridConstraints:
+          $ref: '#/components/schemas/GridConstraints'
+          description: Grid operational constraints (for grid nodes). Includes reverse flow limits, capacity, current load.
+
+    BidCurvePoint:
+      type: object
+      description: A single price/power pair in a bid curve.
+      additionalProperties: false
+      required: [price, powerKW]
+      properties:
+        price:
+          type: number
+          minimum: 0
+          description: Price per kilowatt-hour at this power level.
+          example: 0.06
+          x-jsonld: { "@id": "schema:price" }
+        powerKW:
+          type: number
+          description: Power level in kilowatts. Negative values indicate consumption (charging, load), positive values indicate generation (discharge, export), zero indicates no participation.
+          example: 2.0
+          x-jsonld: { "@id": "energyCoordination:powerKW" }
+
+    BidCurveConstraints:
+      type: object
+      description: Operational constraints for bid curve execution.
+      additionalProperties: false
+      properties:
+        minPowerKW:
+          type: number
+          description: Minimum power level in kilowatts.
+          example: 0
+          x-jsonld: { "@id": "energyCoordination:minPowerKW" }
+        maxPowerKW:
+          type: number
+          description: Maximum power level in kilowatts.
+          example: 5
+          x-jsonld: { "@id": "energyCoordination:maxPowerKW" }
+        rampRateKWPerMin:
+          type: number
+          minimum: 0
+          description: Maximum rate of power change in kilowatts per minute.
+          example: 0.5
+          x-jsonld: { "@id": "energyCoordination:rampRateKWPerMin" }
+
+    EnergyObjectives:
+      type: object
+      description: Structured objectives for energy resources expressing goals, constraints, and preferences.
+      additionalProperties: false
+      properties:
+        targetChargeKWh:
+          type: number
+          minimum: 0
+          description: Target energy to charge (for batteries, EVs).
+          example: 20
+          x-jsonld: { "@id": "energyCoordination:targetChargeKWh" }
+        targetGenerationKWh:
+          type: number
+          minimum: 0
+          description: Target energy to generate (for solar, wind).
+          example: 30
+          x-jsonld: { "@id": "energyCoordination:targetGenerationKWh" }
+        targetReductionKW:
+          type: number
+          maximum: 0
+          description: Target demand reduction (for demand flexibility).
+          example: -50
+          x-jsonld: { "@id": "energyCoordination:targetReductionKW" }
+        deadline:
+          type: string
+          format: date-time
+          description: Deadline for achieving the objective (ISO 8601).
+          example: "2024-12-15T18:00:00Z"
+          x-jsonld: { "@id": "schema:endTime" }
+        maxPricePerKWh:
+          type: number
+          minimum: 0
+          description: Maximum acceptable price per kilowatt-hour.
+          example: 0.12
+          x-jsonld: { "@id": "energyCoordination:maxPricePerKWh" }
+        minPricePerKWh:
+          type: number
+          minimum: 0
+          description: Minimum acceptable price per kilowatt-hour (for generators).
+          example: 0.05
+          x-jsonld: { "@id": "energyCoordination:minPricePerKWh" }
+        preferredSource:
+          type: string
+          enum: [SOLAR, BATTERY, GRID, HYBRID, RENEWABLE]
+          description: Preferred energy source type.
+          example: "SOLAR"
+          x-jsonld: { "@id": "energyCoordination:preferredSource" }
+        objectiveConstraints:
+          $ref: '#/components/schemas/ObjectiveConstraints'
+
+    ObjectiveConstraints:
+      type: object
+      description: Constraints for objective fulfillment.
+      additionalProperties: false
+      properties:
+        minChargeKWh:
+          type: number
+          minimum: 0
+          description: Minimum acceptable charge level.
+          example: 10
+          x-jsonld: { "@id": "energyCoordination:minChargeKWh" }
+        maxChargeKWh:
+          type: number
+          minimum: 0
+          description: Maximum acceptable charge level.
+          example: 60
+          x-jsonld: { "@id": "energyCoordination:maxChargeKWh" }
+        minGenerationKWh:
+          type: number
+          minimum: 0
+          description: Minimum acceptable generation level.
+          example: 5
+          x-jsonld: { "@id": "energyCoordination:minGenerationKWh" }
+        maxGenerationKWh:
+          type: number
+          minimum: 0
+          description: Maximum acceptable generation level.
+          example: 100
+          x-jsonld: { "@id": "energyCoordination:maxGenerationKWh" }
+
+    LocationalPriceAdder:
+      type: object
+      description: Price adder based on grid location and congestion. Used by grid nodes (transformers, substations) to signal congestion risk.
+      additionalProperties: false
+      properties:
+        basePrice:
+          type: number
+          minimum: 0
+          description: Base price per kilowatt-hour before locational adder.
+          example: 0.10
+          x-jsonld: { "@id": "energyCoordination:basePrice" }
+        congestionMultiplier:
+          type: number
+          minimum: 0
+          description: Multiplier for congestion calculation (typically 1.0).
+          example: 1.0
+          x-jsonld: { "@id": "energyCoordination:congestionMultiplier" }
+        currentLoadPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Current load as percentage of capacity.
+          example: 75
+          x-jsonld: { "@id": "energyCoordination:currentLoadPercent" }
+        priceAdderPerPercent:
+          type: number
+          minimum: 0
+          description: Price adder per percentage point of load.
+          example: 0.001
+          x-jsonld: { "@id": "energyCoordination:priceAdderPerPercent" }
+        currentPrice:
+          type: number
+          minimum: 0
+          description: Current price including locational adder (calculated). Formula: basePrice + (currentLoadPercent * priceAdderPerPercent).
+          example: 0.175
+          x-jsonld: { "@id": "energyCoordination:currentPrice" }
+        formula:
+          type: string
+          description: Formula for calculating locational price (human-readable).
+          example: "basePrice + (currentLoadPercent * priceAdderPerPercent)"
+          x-jsonld: { "@id": "energyCoordination:formula" }
+
+    GridConstraints:
+      type: object
+      description: Operational constraints for grid nodes (transformers, substations).
+      additionalProperties: false
+      properties:
+        maxReverseFlowKW:
+          type: number
+          minimum: 0
+          description: Maximum reverse power flow (from distribution to transmission) in kilowatts.
+          example: 50
+          x-jsonld: { "@id": "energyCoordination:maxReverseFlowKW" }
+        maxForwardFlowKW:
+          type: number
+          minimum: 0
+          description: Maximum forward power flow (from transmission to distribution) in kilowatts.
+          example: 200
+          x-jsonld: { "@id": "energyCoordination:maxForwardFlowKW" }
+        currentLoadKW:
+          type: number
+          minimum: 0
+          description: Current load in kilowatts.
+          example: 150
+          x-jsonld: { "@id": "energyCoordination:currentLoadKW" }
+        capacityKW:
+          type: number
+          minimum: 0
+          description: Total capacity in kilowatts.
+          example: 200
+          x-jsonld: { "@id": "energyCoordination:capacityKW" }
+

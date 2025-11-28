@@ -1,0 +1,258 @@
+openapi: 3.1.1
+info:
+  title: Energy Trade — Trade Offer Attributes (v0.2) with Coordination Extensions
+  version: 0.2.0
+  x-profile-id: profiles/energy-trade/energy_trade/v0.2/trade-offer
+  description: >
+    Attribute schemas for energy trade offers (Offer.offerAttributes).
+    These attributes are attached to Offer.offerAttributes to provide pricing models,
+    settlement types, wheeling charges, availability details for P2P energy trading offers,
+    and coordination extensions (bid curves, locational pricing, clearing prices).
+
+components:
+  schemas:
+    ########################################################################
+    # OFFER.OFFERATTRIBUTES — EnergyTradeOffer (P2P Energy Trading + Coordination)
+    ########################################################################
+    EnergyTradeOffer:
+      type: object
+      additionalProperties: false
+      required: [pricingModel]
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": EnergyTradeOffer
+      properties:
+
+        # Core Energy Trade Offer Properties
+        pricingModel:
+          type: string
+          enum: [PER_KWH, TIME_OF_DAY, SUBSCRIPTION, FIXED, PAY_AS_CLEAR]
+          description: Pricing model classification used for the energy trade offer. PAY_AS_CLEAR indicates market clearing pricing.
+          example: "PER_KWH"
+          x-jsonld: { "@id": pricingModel }
+
+        settlementType:
+          type: string
+          enum: [REAL_TIME, HOURLY, DAILY, WEEKLY, MONTHLY]
+          description: Settlement frequency for the energy trade. Determines when payments are processed.
+          example: "DAILY"
+          x-jsonld: { "@id": settlementType }
+
+        wheelingCharges:
+          type: object
+          description: Utility wheeling charges (fixed charges for delivery intermediaries like PG&E). Reflected as billing line item.
+          x-jsonld: { "@id": wheelingCharges }
+          additionalProperties: false
+          properties:
+            amount:
+              type: number
+              minimum: 0
+              description: Wheeling charge amount.
+              example: 2.5
+              x-jsonld: { "@id": "schema:amount" }
+            currency:
+              type: string
+              description: Currency code (ISO 4217).
+              example: "USD"
+              x-jsonld: { "@id": "schema:currency" }
+            description:
+              type: string
+              description: Description of the wheeling charge.
+              example: "PG&E Grid Services wheeling charge"
+              x-jsonld: { "@id": "schema:description" }
+
+        minimumQuantity:
+          type: number
+          minimum: 0
+          description: Minimum tradable energy quantity in kilowatt-hours (kWh).
+          example: 1.0
+          x-jsonld: { "@id": minimumQuantity }
+
+        maximumQuantity:
+          type: number
+          minimum: 0
+          description: Maximum tradable energy quantity in kilowatt-hours (kWh).
+          example: 100.0
+          x-jsonld: { "@id": maximumQuantity }
+
+        validityWindow:
+          type: object
+          description: Time window when the offer is valid.
+          x-jsonld: { "@id": validityWindow }
+          additionalProperties: false
+          properties:
+            start:
+              type: string
+              format: date-time
+              description: Offer validity start time (ISO 8601).
+              example: "2024-10-04T00:00:00Z"
+              x-jsonld: { "@id": "schema:startTime" }
+            end:
+              type: string
+              format: date-time
+              description: Offer validity end time (ISO 8601).
+              example: "2024-10-04T23:59:59Z"
+              x-jsonld: { "@id": "schema:endTime" }
+
+        timeOfDayRates:
+          type: array
+          description: Time-of-day pricing rates (applicable when pricingModel is TIME_OF_DAY).
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              timeRange:
+                type: object
+                description: Time range for this rate.
+                additionalProperties: false
+                properties:
+                  start:
+                    type: string
+                    format: time
+                    description: Start time (HH:MM format).
+                    example: "09:00"
+                    x-jsonld: { "@id": "schema:startTime" }
+                  end:
+                    type: string
+                    format: time
+                    description: End time (HH:MM format).
+                    example: "17:00"
+                    x-jsonld: { "@id": "schema:endTime" }
+              rate:
+                type: number
+                minimum: 0
+                description: Price per kWh for this time range.
+                example: 0.15
+                x-jsonld: { "@id": "schema:price" }
+              currency:
+                type: string
+                description: Currency code (ISO 4217).
+                example: "USD"
+                x-jsonld: { "@id": "schema:priceCurrency" }
+          x-jsonld: { "@id": timeOfDayRates }
+
+        # Coordination Extensions
+        bidCurve:
+          type: array
+          description: Array of price/power pairs expressing offer price/power preferences. Used for market-based coordination.
+          items:
+            $ref: '#/components/schemas/BidCurvePoint'
+          x-jsonld: { "@id": "energyCoordination:bidCurve" }
+          example:
+            - price: 0.05
+              powerKW: 0
+            - price: 0.06
+              powerKW: 2
+            - price: 0.07
+              powerKW: 5
+
+        constraints:
+          $ref: '#/components/schemas/BidCurveConstraints'
+          description: Operational constraints for bid curve execution.
+
+        clearingPrice:
+          type: number
+          minimum: 0
+          description: Market-cleared price per kilowatt-hour. Set by market clearing agent after aggregation. Used in PAY_AS_CLEAR pricing model.
+          example: 0.075
+          x-jsonld: { "@id": "energyCoordination:clearingPrice" }
+
+        setpointKW:
+          type: number
+          description: Optimal power setpoint in kilowatts determined by market clearing. Negative for consumption, positive for generation.
+          example: 3.5
+          x-jsonld: { "@id": "energyCoordination:setpointKW" }
+
+        locationalPriceAdder:
+          $ref: '#/components/schemas/LocationalPriceAdder'
+          description: Price adder based on grid location and congestion. Applied to offers in congested areas.
+
+        locationalPrice:
+          type: number
+          minimum: 0
+          description: Final price including locational adder. Formula: clearingPrice + locationalPriceAdder.currentPrice.
+          example: 0.175
+          x-jsonld: { "@id": "energyCoordination:locationalPrice" }
+
+    BidCurvePoint:
+      type: object
+      description: A single price/power pair in a bid curve.
+      additionalProperties: false
+      required: [price, powerKW]
+      properties:
+        price:
+          type: number
+          minimum: 0
+          description: Price per kilowatt-hour at this power level.
+          example: 0.06
+          x-jsonld: { "@id": "schema:price" }
+        powerKW:
+          type: number
+          description: Power level in kilowatts. Negative values indicate consumption, positive values indicate generation.
+          example: 2.0
+          x-jsonld: { "@id": "energyCoordination:powerKW" }
+
+    BidCurveConstraints:
+      type: object
+      description: Operational constraints for bid curve execution.
+      additionalProperties: false
+      properties:
+        minPowerKW:
+          type: number
+          description: Minimum power level in kilowatts.
+          example: 0
+          x-jsonld: { "@id": "energyCoordination:minPowerKW" }
+        maxPowerKW:
+          type: number
+          description: Maximum power level in kilowatts.
+          example: 5
+          x-jsonld: { "@id": "energyCoordination:maxPowerKW" }
+        rampRateKWPerMin:
+          type: number
+          minimum: 0
+          description: Maximum rate of power change in kilowatts per minute.
+          example: 0.5
+          x-jsonld: { "@id": "energyCoordination:rampRateKWPerMin" }
+
+    LocationalPriceAdder:
+      type: object
+      description: Price adder based on grid location and congestion.
+      additionalProperties: false
+      properties:
+        basePrice:
+          type: number
+          minimum: 0
+          description: Base price per kilowatt-hour before locational adder.
+          example: 0.10
+          x-jsonld: { "@id": "energyCoordination:basePrice" }
+        congestionMultiplier:
+          type: number
+          minimum: 0
+          description: Multiplier for congestion calculation (typically 1.0).
+          example: 1.0
+          x-jsonld: { "@id": "energyCoordination:congestionMultiplier" }
+        currentLoadPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Current load as percentage of capacity.
+          example: 75
+          x-jsonld: { "@id": "energyCoordination:currentLoadPercent" }
+        priceAdderPerPercent:
+          type: number
+          minimum: 0
+          description: Price adder per percentage point of load.
+          example: 0.001
+          x-jsonld: { "@id": "energyCoordination:priceAdderPerPercent" }
+        currentPrice:
+          type: number
+          minimum: 0
+          description: Current price including locational adder (calculated).
+          example: 0.175
+          x-jsonld: { "@id": "energyCoordination:currentPrice" }
+        formula:
+          type: string
+          description: Formula for calculating locational price (human-readable).
+          example: "basePrice + (currentLoadPercent * priceAdderPerPercent)"
+          x-jsonld: { "@id": "energyCoordination:formula" }
+

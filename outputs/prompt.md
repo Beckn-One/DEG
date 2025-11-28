@@ -47,5 +47,26 @@ Thanks! some answers to open questions:
 
 With those, please proceed with pahse 1 or ask more questions.
 
+-------
 
+For market based P2P trade, after the market clears user doesn't really have an option to select, since the clearing outcome is binding. So select would be skipped and on_confirm would be generated.. Does that make sense or is there a logical error?
 
+-------
+
+Can you please check ../protocol-specifications-new again?  There were recent commits that may have changes how the objects are composed at runtime.. (something like `item.Attributes` instead of `item.itemAttributes` etc.) Can you confirm if that is correct? Just explain to me for now.
+ 
+ _____
+
+got it. Good to know it has not changed. Thanks for checking. 
+
+On other note, regarding EV Charging (Demand Flexibility) sequence diagram.. I was hoping market clearing agent would be a special peer to all suppliers & consumers,  can form peer to peer trades with many suppliers & consumers. Clearing agent has no physical meter (virtual meter: which means real net power flow is 0), because any net imbalance (net_promised_trade - real_trade) is charged a deviation penalty. Thus it is incetivized to balance supply & demand, and publish prices at on_confirm time instead of on_discover.
+
+Thus I was hoping it will receive bidcurves from both consumers & suppliers (negative bids), as part of init step. It will cascade those inits to utility which can  answer back with approved max trade volume relative to the sanction load for a meter, and reply with on_init. Thus I was expecting the discover call to be very simple.. with clearing agent BPP replying this is my ID and I will pay you "PAY_AS_CLEAR" price. Init call, confirms that all clearing fees and approved loads with utility, and confirm call finalizes the bid. On_confirm is issued when the market clears and returns final clearing price & cleared powers.
+
+That is a lot.. any chance you could update sequence diagram to portray it? 
+
+---
+
+Nice improvement! This example may become simpler, if we drop User & EV app, charging station entirely as actors, and only assume that CPO, Solar prosumer are interacting with Market clearing Agent (and cascaded to Utility BPP). What do you think? Peer to peer trades between EV user & CPO can be a different flow not covered here for the sake for simplicity of illustration.
+
+----

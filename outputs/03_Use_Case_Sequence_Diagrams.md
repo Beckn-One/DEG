@@ -117,91 +117,119 @@ sequenceDiagram
 
 ## 2. EV Charging (Demand Flexibility)
 
-**Use Case**: EV expresses bid curve, market clears at confirmation time, EV receives optimal setpoint
+**Use Case**: Market clearing agent coordinates multiple participants (CPO representing EV charging demand, solar prosumers representing supply) with utility load approval, clears market at confirmation time
 
 **Key Features**:
-- Bid curve expression
-- Market clearing at confirmation
-- Dynamic setpoint assignment
+- Simple discover (returns clearing agent ID + "PAY_AS_CLEAR")
+- Bid curves submitted during init
+- Utility load approval via cascaded init
+- Market clearing at confirmation (synchronous)
+- Virtual meter balancing (net = 0, deviation penalties)
+
+**Note**: This diagram focuses on market clearing coordination. The peer-to-peer trade between EV user and CPO is a separate flow not shown here.
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant BAP as EV App (BAP)
-    participant MCA as Market Clearing Agent (BPP)
-    participant BPP as CPO Platform (BPP)
-    participant EVSE as Charging Station
+    participant CPO as CPO Platform (BPP)<br/>(Represents EV Charging Demand)
+    participant MCA as Market Clearing Agent (BPP)<br/>(Virtual Meter: Net = 0)
+    participant Utility as Utility BPP
+    participant Solar as Solar Prosumer (BPP)
 
-    Note over User,EVSE: Intent Expression with Bid Curve
-    User->>BAP: Set charging goal (20 kWh by 6 PM)
-    BAP->>BAP: Construct bid curve from objectives
-    Note right of BAP: bidCurve:<br/>[{price: 0.08, powerKW: -11},<br/>{price: 0.10, powerKW: -5}]
-    BAP->>MCA: discover(intent with bidCurve, objectives)
-    Note right of MCA: objectives:<br/>{targetChargeKWh: 20,<br/>deadline: "18:00",<br/>maxPrice: 0.12}
-
-    Note over User,EVSE: Market Clearing
-    MCA->>MCA: Collect bid curves from all participants
-    MCA->>MCA: aggregate(bidCurves)
-    Note right of MCA: Aggregate supply/demand<br/>Find clearing price
-    MCA->>MCA: Calculate clearing price: ₹0.09/kWh
-    MCA->>MCA: Economic disaggregation:<br/>EV setpoint: -8 kW
-
-    Note over User,EVSE: Catalogue Response with Clearing Price
-    MCA-->>BAP: on_discover(catalog with clearing price)
-    Note right of BAP: offerAttributes:<br/>{clearingPrice: 0.09,<br/>setpointKW: -8.0}
-
-    Note over User,EVSE: Initialization Phase
-    User->>BAP: Provide payment details
-    BAP->>MCA: init(order, payment)
-    MCA->>BPP: Route to CPO
-    BPP-->>MCA: on_init(terms)
-    MCA-->>BAP: on_init(terms)
-    BAP-->>User: Show terms
-
-    Note over User,EVSE: Synchronous Confirmation (Market Clearing)
-    User->>BAP: Confirm order
-    BAP->>MCA: confirm(order with accepted clearing price)
-    Note right of MCA: Synchronous confirmation:<br/>Price locked at ₹0.09/kWh
-    MCA->>MCA: Lock clearing price
-    MCA->>BPP: confirm(order with setpoint)
-    BPP->>EVSE: OCPP: SetChargingProfile(8 kW)
-    EVSE-->>BPP: OCPP: Profile accepted
-    BPP-->>MCA: on_confirm(setpoint applied)
-    MCA-->>BAP: on_confirm(order confirmed, setpoint: -8 kW)
-    Note right of BAP: orderAttributes:<br/>{setpointKW: -8.0,<br/>clearingPrice: 0.09}
-    BAP-->>User: Order confirmed (8 kW charging)
-
-    Note over User,EVSE: Fulfillment Phase
-    User->>EVSE: Plug in vehicle
-    BAP->>BPP: update(start charging)
-    BPP->>EVSE: OCPP: StartTransaction
-    EVSE->>EVSE: Charge at 8 kW (setpoint)
-    EVSE-->>BPP: OCPP: Transaction started
+    Note over CPO,Solar: Discovery Phase (Simple)
+    CPO->>MCA: discover(location, timeWindow)
+    Note right of CPO: Simple discover:<br/>No bid curve yet
+    MCA-->>CPO: on_discover(catalog: clearing agent)
+    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}
     
-    loop Every 30 seconds
-        BAP->>BPP: track(order_id)
-        BPP->>EVSE: OCPP: GetMeterValues
-        EVSE-->>BPP: OCPP: MeterValues (8 kW actual)
-        BPP-->>BAP: on_track(energy, power, cost at ₹0.09/kWh)
-        BAP-->>User: Show progress
-    end
+    Solar->>MCA: discover(location, timeWindow)
+    MCA-->>Solar: on_discover(catalog: clearing agent)
 
-    User->>EVSE: Unplug vehicle (20 kWh reached)
-    EVSE->>BPP: OCPP: StopTransaction
-    BPP->>BPP: Calculate final cost (20 kWh × ₹0.09)
-    BPP->>BAP: on_update(session ended, final_cost)
-    BAP-->>User: Show final bill
+    Note over CPO,Solar: Initialization Phase (Bid Curve Submission)
+    CPO->>CPO: Construct bid curve from EV objectives
+    Note right of CPO: bidCurve:<br/>[{price: 0.08, powerKW: -11},<br/>{price: 0.10, powerKW: -5},<br/>{price: 0.12, powerKW: 0}]
+    CPO->>MCA: init(order with bidCurve, meterId, objectives)
+    Note right of CPO: orderAttributes:<br/>{bidCurve: [...],<br/>objectives: {targetChargeKWh: 20,<br/>deadline: "18:00",<br/>maxPrice: 0.12},<br/>meterId: "98765456"}
+
+    Note over CPO,Solar: Utility Load Approval (Cascaded)
+    MCA->>Utility: cascaded init(verify meter,<br/>calculate approved max trade volume)
+    Note right of Utility: Check sanctioned load<br/>for meter 98765456
+    Utility->>Utility: Verify sanctioned load: 50 kW<br/>Calculate available capacity: 30 kW
+    Utility-->>MCA: cascaded_on_init(approvedMaxTradeKW: 30,<br/>wheelingCharges: ₹1/kWh)
+    Note right of Utility: Approved max trade:<br/>30 kW (relative to<br/>sanctioned load)
+
+    Note over CPO,Solar: Clearing Agent Confirms Init
+    MCA->>MCA: Store bid curve & approved limits
+    MCA-->>CPO: on_init(terms confirmed,<br/>approvedMaxTradeKW: 30,<br/>clearingFees: ₹0.5/kWh)
+    Note right of MCA: Bid curve stored<br/>Approved limits confirmed<br/>Ready for market clearing
+
+    Note over CPO,Solar: Solar Prosumer Submits Bid
+    Solar->>Solar: Construct bid curve from generation forecast
+    Note right of Solar: bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
+    Solar->>MCA: init(order with bidCurve, meterId)
+    MCA->>Utility: cascaded init(verify solar meter)
+    Utility->>Utility: Verify sanctioned load: 10 kW<br/>Calculate available capacity: 5 kW
+    Utility-->>MCA: cascaded_on_init(approvedMaxTradeKW: 5)
+    MCA-->>Solar: on_init(terms confirmed,<br/>approvedMaxTradeKW: 5)
+
+    Note over CPO,Solar: Confirmation Phase (Bid Commitment)
+    CPO->>MCA: confirm(order, bid commitment)
+    Note right of CPO: Commits to bid curve<br/>Accepts PAY_AS_CLEAR pricing
+    Solar->>MCA: confirm(order, bid commitment)
+    Note right of Solar: Commits to bid curve
+    Note right of MCA: All participants have<br/>committed their bids
+
+    Note over CPO,Solar: Market Clearing (After Confirmation)
+    MCA->>MCA: Collect all confirmed bids
+    Note right of MCA: Aggregate all bid curves:<br/>- CPO (EV demand): [-11, -5, 0] kW @ [0.08, 0.10, 0.12]<br/>- Solar (supply): [0, 2, 5] kW @ [0.05, 0.06, 0.07]<br/>- Other participants...
+    MCA->>MCA: aggregate(all bidCurves)
+    MCA->>MCA: Find clearing price: ₹0.075/kWh
+    MCA->>MCA: Economic disaggregation:<br/>CPO setpoint: -8.0 kW<br/>Solar setpoint: 3.5 kW
+    MCA->>MCA: Verify virtual meter balance:<br/>Net = -8.0 + 3.5 + ... = 0 ✓
+    Note right of MCA: Virtual meter constraint:<br/>Net power flow = 0<br/>(any imbalance = deviation penalty)
+
+    Note over CPO,Solar: Lock Trade & Deduct Sanctioned Load
+    MCA->>Utility: cascaded confirm(lock trade,<br/>deduct from sanctioned load)
+    Note right of MCA: Trade details:<br/>- CPO meter 98765456: -8.0 kW<br/>- Solar meter 100200300: +3.5 kW<br/>- Clearing price: ₹0.075/kWh
+    Utility->>Utility: Deduct from sanctioned load:<br/>- Meter 98765456: 30 kW → 22 kW remaining<br/>- Meter 100200300: 5 kW → 1.5 kW remaining
+    Note right of Utility: Prevents double dipping:<br/>Same sanctioned load capacity<br/>cannot be used for multiple trades
+    Utility-->>MCA: cascaded_on_confirm(trade locked,<br/>sanctioned load deducted)
+    Note right of Utility: Remaining capacity:<br/>- Meter 98765456: 22 kW<br/>- Meter 100200300: 1.5 kW
+
+    Note over CPO,Solar: Clearing Agent Sends on_confirm (After Clearing)
+    MCA-->>CPO: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: -8.0)
+    Note right of CPO: orderAttributes:<br/>{setpointKW: -8.0,<br/>clearingPrice: 0.075,<br/>locationalPrice: 0.075}
+    MCA-->>Solar: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: 3.5)
+    Note right of Solar: orderAttributes:<br/>{setpointKW: 3.5,<br/>clearingPrice: 0.075}
+
+    Note over CPO,Solar: Settlement & Deviation Penalty
+    CPO->>CPO: Calculate actual delivery: 20 kWh
+    CPO->>Utility: Report actual trade
+    Solar->>Utility: Report actual trade: 3.5 kWh
+    Utility->>Utility: Calculate net imbalance:<br/>Promised: -8.0 + 3.5 = -4.5 kW<br/>Actual: -8.0 + 3.5 = -4.5 kW<br/>Deviation: 0 kW ✓
+    Utility->>MCA: on_update(settlement: 20 kWh,<br/>deviationPenalty: ₹0)
+    MCA->>MCA: Calculate revenue flows:<br/>- CPO pays: 20 × ₹0.075 = ₹1.50<br/>- Solar receives: 3.5 × ₹0.075 = ₹0.2625<br/>- Clearing fee: ₹0.5/kWh
+    MCA->>CPO: on_update(settlement complete,<br/>finalCost: ₹1.50)
+    MCA->>Solar: on_update(settlement complete,<br/>revenue: ₹0.2625)
 ```
 
 **Attribute Slots Used**:
-- `itemAttributes.bidCurve`: EV's price/power preferences
-- `itemAttributes.objectives`: Charging goals and constraints
-- `offerAttributes.clearingPrice`: Market-cleared price
-- `offerAttributes.setpointKW`: Optimal charging rate
-- `orderAttributes.setpointKW`: Confirmed setpoint
-- `orderAttributes.clearingPrice`: Locked clearing price
+- `offerAttributes.pricingModel`: "PAY_AS_CLEAR" pricing model
+- `orderAttributes.bidCurve`: Bid curve submitted during init
+- `orderAttributes.objectives`: Charging goals and constraints (for CPO)
+- `orderAttributes.approvedMaxTradeKW`: Utility-approved trade limit
+- `orderAttributes.clearingPrice`: Market-cleared price (from on_confirm)
+- `orderAttributes.setpointKW`: Confirmed setpoint (from on_confirm)
+- `fulfillmentAttributes.deviationPenalty`: Penalty for net imbalance
 
-**Key Innovation**: Prices discovered at confirmation time, not at offer time.
+**Key Innovation**: 
+- Market clearing agent is a special peer with virtual meter (net = 0)
+- Simple discover returns clearing agent ID and pricing model
+- Bid curves submitted during init (not discover)
+- Utility load approval via cascaded init
+- Prices discovered at confirmation time (synchronous market clearing)
+- Trade locking and sanctioned load deduction prevents double dipping
+- Deviation penalties incentivize balancing
+- Focus on coordination pattern, not end-to-end user flow
 
 ---
 
@@ -304,55 +332,60 @@ sequenceDiagram
     participant Meter1 as Meter 1
     participant Meter2 as Meter 2
 
-    Note over Consumer,Meter2: Prosumers Publish Catalogues with Bid Curves
-    Prosumer1->>MCA: Publish catalogue
-    Note right of Prosumer1: offerAttributes.bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
-    Prosumer2->>MCA: Publish catalogue
-    Note right of Prosumer2: offerAttributes.bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
-
-    Note over Consumer,Meter2: Consumer Expresses Intent
+    Note over Consumer,Meter2: Discovery Phase (Simple)
     Consumer->>BAP: Buy 50 kWh, max ₹6/kWh
     BAP->>MCA: discover(intent: 50 kWh, maxPrice: 0.06)
-    Note right of BAP: Intent with quantity<br/>and price constraint
+    Note right of BAP: Simple discover:<br/>No bid curve yet
+    MCA-->>BAP: on_discover(catalog: clearing agent)
+    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}
 
-    Note over Consumer,Meter2: Market Clearing Agent Aggregates
-    MCA->>MCA: Collect all bid curves
-    MCA->>MCA: aggregate(bidCurves from 10 prosumers)
-    Note right of MCA: Aggregate Supply Curve:<br/>Price 0.06 → 20 kW<br/>Price 0.07 → 50 kW
+    Note over Consumer,Meter2: Initialization Phase (Bid Curve Submission)
+    Consumer->>BAP: Confirm participation
+    BAP->>BAP: Construct bid curve from intent
+    Note right of BAP: bidCurve:<br/>[{price: 0.06, powerKW: -50},<br/>{price: 0.07, powerKW: 0}]
+    BAP->>MCA: init(order with bidCurve, meterId: 98765456)
+    
+    Prosumer1->>MCA: init(order with bidCurve, meterId: 100200300)
+    Note right of Prosumer1: bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
+    Prosumer2->>MCA: init(order with bidCurve, meterId: 100200301)
+    Note right of Prosumer2: bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
+
+    Note over Consumer,Meter2: Utility Load Approval (Cascaded)
+    MCA->>Utility: cascaded init(verify meters,<br/>calculate approved max trade volumes)
+    Utility->>Utility: Verify sanctioned loads<br/>for all meters
+    Utility-->>MCA: cascaded_on_init(approvedMaxTradeKW per meter,<br/>wheeling: ₹1/kWh)
+    MCA-->>BAP: on_init(terms confirmed,<br/>approvedMaxTradeKW, wheeling)
+    MCA-->>Prosumer1: on_init(terms confirmed,<br/>approvedMaxTradeKW)
+    MCA-->>Prosumer2: on_init(terms confirmed,<br/>approvedMaxTradeKW)
+    BAP-->>Consumer: Terms confirmed (PAY_AS_CLEAR)
+
+    Note over Consumer,Meter2: Confirmation Phase (Bid Commitment)
+    Consumer->>BAP: Confirm bid participation
+    BAP->>MCA: confirm(order, bid commitment)
+    Note right of BAP: Commits to bid curve<br/>Accepts PAY_AS_CLEAR pricing
+    Prosumer1->>MCA: confirm(order, bid commitment)
+    Prosumer2->>MCA: confirm(order, bid commitment)
+    Note right of MCA: All participants have<br/>committed their bids
+
+    Note over Consumer,Meter2: Market Clearing (After Confirmation)
+    MCA->>MCA: Collect all confirmed bids
+    Note right of MCA: Aggregate all bid curves:<br/>- Consumer: [-50, 0] kW @ [0.06, 0.07]<br/>- Prosumer1: [0, 2, 5] kW @ [0.05, 0.06, 0.07]<br/>- Prosumer2: [0, 2, 5] kW @ [0.05, 0.06, 0.07]<br/>- Other prosumers...
+    MCA->>MCA: aggregate(all bidCurves)
     MCA->>MCA: Find clearing price: ₹0.0625/kWh
-    MCA->>MCA: Economic disaggregation:<br/>Each prosumer: ~5 kWh
+    MCA->>MCA: Economic disaggregation:<br/>Prosumer1: 5 kWh<br/>Prosumer2: 5 kWh<br/>... (10 prosumers, ~5 kWh each)
 
-    Note over Consumer,Meter2: Market Clearing Agent Responds
-    MCA-->>BAP: on_discover(catalog with clearing price)
-    Note right of BAP: offerAttributes:<br/>{clearingPrice: 0.0625,<br/>aggregateQuantity: 50 kWh}
+    Note over Consumer,Meter2: Lock Trade & Deduct Sanctioned Load
+    MCA->>Utility: cascaded confirm(lock trades,<br/>deduct from sanctioned loads)
+    Note right of MCA: Trade details for all meters:<br/>- Consumer meter: -50 kW<br/>- Prosumer meters: +5 kW each
+    Utility->>Utility: Deduct from sanctioned loads<br/>for all meters
+    Note right of Utility: Prevents double dipping:<br/>Same sanctioned load capacity<br/>cannot be used for multiple trades
+    Utility-->>MCA: cascaded_on_confirm(trades locked,<br/>sanctioned loads deducted)
 
-    Note over Consumer,Meter2: Initialization Phase
-    Consumer->>BAP: Provide meter ID
-    BAP->>MCA: init(order, meterId: 98765456)
-    MCA->>Utility: cascaded init(verify meter, calculate wheeling)
-    Utility->>Utility: Verify sanctioned load
-    Utility-->>MCA: on_init(wheeling: ₹1/kWh)
-    MCA-->>BAP: on_init(terms with wheeling)
-    BAP-->>Consumer: Show final quote
-
-    Note over Consumer,Meter2: Synchronous Confirmation (Market Clearing)
-    Consumer->>BAP: Confirm order
-    BAP->>MCA: confirm(order with accepted clearing price)
-    Note right of MCA: Synchronous confirmation:<br/>Price locked at ₹0.0625/kWh
-    MCA->>MCA: Lock clearing price
-    MCA->>MCA: Economic disaggregation:<br/>Prosumer1: 5 kWh<br/>Prosumer2: 5 kWh<br/>... (10 prosumers)
-    
-    loop For each prosumer
-        MCA->>Prosumer1: confirm(order with setpoint: 5 kWh)
-        Prosumer1->>Prosumer1: Apply setpoint
-        Prosumer1-->>MCA: on_confirm(setpoint applied)
-    end
-    
-    MCA->>Utility: cascaded confirm(log trades)
-    Utility->>Utility: Log all trades
-    Utility-->>MCA: on_confirm(trades logged)
-    MCA-->>BAP: on_confirm(contract ACTIVE, setpoints distributed)
+    Note over Consumer,Meter2: Clearing Agent Sends on_confirm (After Clearing)
+    MCA-->>BAP: on_confirm(order confirmed,<br/>clearingPrice: ₹0.0625/kWh,<br/>aggregateQuantity: 50 kWh)
     Note right of BAP: orderAttributes:<br/>{clearingPrice: 0.0625,<br/>setpoints: [{era: "prosumer1", quantity: 5}, ...]}
+    MCA-->>Prosumer1: on_confirm(order confirmed,<br/>clearingPrice: ₹0.0625/kWh,<br/>setpointKW: 5.0)
+    MCA-->>Prosumer2: on_confirm(order confirmed,<br/>clearingPrice: ₹0.0625/kWh,<br/>setpointKW: 5.0)
     BAP-->>Consumer: Order confirmed
 
     Note over Consumer,Meter2: Fulfillment Phase
@@ -408,53 +441,55 @@ sequenceDiagram
     GridOp->>MCA: Publish objective
     Note right of GridOp: objectives:<br/>{targetReductionKW: 50,<br/>timeWindow: "14:00-16:00",<br/>maxPrice: 0.15}
 
-    Note over GridOp,Protocol: Devices Express Bid Curves
-    Device1->>MCA: discover(intent with bidCurve)
-    Note right of Device1: bidCurve:<br/>[{price: 0.10, powerKW: 0},<br/>{price: 0.12, powerKW: -2},<br/>{price: 0.15, powerKW: -5}]
-    Device2->>MCA: discover(intent with bidCurve)
-    Note right of Device2: bidCurve:<br/>[{price: 0.10, powerKW: 0},<br/>{price: 0.12, powerKW: -3},<br/>{price: 0.15, powerKW: -7}]
-    Device3->>MCA: discover(intent with bidCurve)
-    Note right of Device3: bidCurve:<br/>[{price: 0.10, powerKW: 0},<br/>{price: 0.12, powerKW: -1},<br/>{price: 0.15, powerKW: -3}]
+    Note over GridOp,Protocol: Discovery Phase (Simple)
+    Device1->>MCA: discover(location, timeWindow)
+    Device2->>MCA: discover(location, timeWindow)
+    Device3->>MCA: discover(location, timeWindow)
+    Note right of Device1: Simple discover:<br/>No bid curve yet
+    MCA-->>Device1: on_discover(catalog: clearing agent)
+    MCA-->>Device2: on_discover(catalog: clearing agent)
+    MCA-->>Device3: on_discover(catalog: clearing agent)
+    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}
 
-    Note over GridOp,Protocol: Market Clearing Agent Aggregates
-    MCA->>MCA: Collect all bid curves (20 devices)
-    MCA->>MCA: aggregate(bidCurves)
+    Note over GridOp,Protocol: Initialization Phase (Bid Curve Submission)
+    Device1->>Device1: Construct bid curve from objectives
+    Note right of Device1: bidCurve:<br/>[{price: 0.10, powerKW: 0},<br/>{price: 0.12, powerKW: -2},<br/>{price: 0.15, powerKW: -5}]
+    Device1->>MCA: init(order with bidCurve, meterId, objectives)
+    Device2->>Device2: Construct bid curve
+    Note right of Device2: bidCurve:<br/>[{price: 0.10, powerKW: 0},<br/>{price: 0.12, powerKW: -3},<br/>{price: 0.15, powerKW: -7}]
+    Device2->>MCA: init(order with bidCurve, meterId, objectives)
+    Device3->>Device3: Construct bid curve
+    Note right of Device3: bidCurve:<br/>[{price: 0.10, powerKW: 0},<br/>{price: 0.12, powerKW: -1},<br/>{price: 0.15, powerKW: -3}]
+    Device3->>MCA: init(order with bidCurve, meterId, objectives)
+    MCA-->>Device1: on_init(terms confirmed)
+    MCA-->>Device2: on_init(terms confirmed)
+    MCA-->>Device3: on_init(terms confirmed)
+
+    Note over GridOp,Protocol: Confirmation Phase (Bid Commitment)
+    Device1->>MCA: confirm(order, bid commitment)
+    Device2->>MCA: confirm(order, bid commitment)
+    Device3->>MCA: confirm(order, bid commitment)
+    Note right of MCA: All devices have<br/>committed their bids
+
+    Note over GridOp,Protocol: Market Clearing (After Confirmation)
+    MCA->>MCA: Collect all confirmed bids (20 devices)
+    MCA->>MCA: aggregate(all bidCurves)
     Note right of MCA: Aggregate Demand Reduction:<br/>Price 0.12 → -6 kW<br/>Price 0.15 → -15 kW<br/>(from 3 devices shown)
     MCA->>MCA: Find clearing price: ₹0.13/kWh
     MCA->>MCA: Economic disaggregation:<br/>Device1: -3.5 kW<br/>Device2: -5.0 kW<br/>Device3: -2.0 kW<br/>... (total: 50 kW)
 
-    Note over GridOp,Protocol: Market Clearing Agent Responds
-    MCA-->>Device1: on_discover(catalog with clearing price)
-    MCA-->>Device2: on_discover(catalog with clearing price)
-    MCA-->>Device3: on_discover(catalog with clearing price)
-    Note right of MCA: offerAttributes:<br/>{clearingPrice: 0.13,<br/>setpointKW: -3.5}
-
-    Note over GridOp,Protocol: Initialization Phase
-    Device1->>MCA: init(order)
-    Device2->>MCA: init(order)
-    Device3->>MCA: init(order)
-    MCA-->>Device1: on_init(terms)
-    MCA-->>Device2: on_init(terms)
-    MCA-->>Device3: on_init(terms)
-
-    Note over GridOp,Protocol: Synchronous Confirmation (Market Clearing)
-    Device1->>MCA: confirm(order with accepted clearing price)
-    Device2->>MCA: confirm(order with accepted clearing price)
-    Device3->>MCA: confirm(order with accepted clearing price)
-    Note right of MCA: Synchronous confirmation:<br/>Price locked at ₹0.13/kWh<br/>All devices confirm
-    MCA->>MCA: Lock clearing price
-    MCA->>MCA: Economic disaggregation:<br/>Distribute setpoints
-    
-    loop For each device
-        MCA->>Device1: on_confirm(setpoint: -3.5 kW)
-        Device1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: -70%)
-        Protocol-->>Device1: Setpoint applied
-    end
-    
-    MCA-->>Device1: on_confirm(contract ACTIVE, setpoint: -3.5 kW)
-    MCA-->>Device2: on_confirm(contract ACTIVE, setpoint: -5.0 kW)
-    MCA-->>Device3: on_confirm(contract ACTIVE, setpoint: -2.0 kW)
+    Note over GridOp,Protocol: Clearing Agent Sends on_confirm (After Clearing)
+    MCA-->>Device1: on_confirm(order confirmed,<br/>clearingPrice: ₹0.13/kWh,<br/>setpointKW: -3.5)
+    MCA-->>Device2: on_confirm(order confirmed,<br/>clearingPrice: ₹0.13/kWh,<br/>setpointKW: -5.0)
+    MCA-->>Device3: on_confirm(order confirmed,<br/>clearingPrice: ₹0.13/kWh,<br/>setpointKW: -2.0)
     Note right of Device1: orderAttributes:<br/>{setpointKW: -3.5,<br/>clearingPrice: 0.13}
+    
+    Device1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: -70%)
+    Device2->>Protocol: IEEE 2030.5: DERControl(opModFixedW: -83%)
+    Device3->>Protocol: IEEE 2030.5: DERControl(opModFixedW: -50%)
+    Protocol-->>Device1: Setpoint applied
+    Protocol-->>Device2: Setpoint applied
+    Protocol-->>Device3: Setpoint applied
 
     Note over GridOp,Protocol: Fulfillment Phase
     Note right of Protocol: Time window: 14:00-16:00
@@ -499,96 +534,85 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant VPPCoord as VPP Coordinator
     participant MCA as Market Clearing Agent (BPP)
-    participant Solar1 as Solar Panel 1 (BAP)
-    participant Solar2 as Solar Panel 2 (BAP)
-    participant EV1 as EV Battery 1 (BAP)
-    participant EV2 as EV Battery 2 (BAP)
-    participant Battery1 as Home Battery 1 (BAP)
-    participant Transformer as Neighborhood Transformer
-    participant Protocol as IEEE 2030.5/OCPP
+    participant Solar as Solar Resources (BAP)<br/>(Multiple panels)
+    participant EV as EV Batteries (BAP)<br/>(Multiple vehicles)
+    participant Battery as Home Batteries (BAP)<br/>(Multiple batteries)
+    participant Transformer as Grid Node (BPP)<br/>(Neighborhood Transformer)
+    participant Utility as Utility BPP
 
-    Note over VPPCoord,Protocol: Resources Express Bid Curves
-    Solar1->>MCA: discover(intent with bidCurve)
-    Note right of Solar1: bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
-    Solar2->>MCA: discover(intent with bidCurve)
-    EV1->>MCA: discover(intent with bidCurve)
-    Note right of EV1: bidCurve:<br/>[{price: 0.08, powerKW: -11},<br/>{price: 0.10, powerKW: -5},<br/>{price: 0.12, powerKW: 0}]
-    EV2->>MCA: discover(intent with bidCurve)
-    Battery1->>MCA: discover(intent with bidCurve)
+    Note over MCA,Utility: Discovery Phase (Simple)
+    Solar->>MCA: discover(location, timeWindow)
+    EV->>MCA: discover(location, timeWindow)
+    Battery->>MCA: discover(location, timeWindow)
+    Note right of Solar: Simple discover:<br/>No bid curve yet
     Transformer->>MCA: Publish locational price adder
     Note right of Transformer: locationalPriceAdder:<br/>{basePrice: 0.10,<br/>currentLoadPercent: 75,<br/>priceAdderPerPercent: 0.001}
+    MCA-->>Solar: on_discover(catalog: clearing agent)
+    MCA-->>EV: on_discover(catalog: clearing agent)
+    MCA-->>Battery: on_discover(catalog: clearing agent)
+    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}
 
-    Note over VPPCoord,Protocol: Market Clearing Agent Aggregates
-    MCA->>MCA: Collect all bid curves
+    Note over MCA,Utility: Initialization Phase (Bid Curve Submission)
+    Solar->>Solar: Construct bid curve from generation forecast
+    Note right of Solar: bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
+    Solar->>MCA: init(order with bidCurve, meterIds)
+    EV->>EV: Construct bid curve from charging objectives
+    Note right of EV: bidCurve:<br/>[{price: 0.08, powerKW: -11},<br/>{price: 0.10, powerKW: -5},<br/>{price: 0.12, powerKW: 0}]
+    EV->>MCA: init(order with bidCurve, meterIds)
+    Battery->>Battery: Construct bid curve
+    Battery->>MCA: init(order with bidCurve, meterIds)
+    MCA->>Utility: cascaded init(verify meters,<br/>calculate approved max trade volumes)
+    Utility->>Utility: Verify sanctioned loads<br/>for all meters
+    Utility-->>MCA: cascaded_on_init(approvedMaxTradeKW per meter)
+    MCA-->>Solar: on_init(terms confirmed,<br/>approvedMaxTradeKW per meter)
+    MCA-->>EV: on_init(terms confirmed,<br/>approvedMaxTradeKW per meter)
+    MCA-->>Battery: on_init(terms confirmed,<br/>approvedMaxTradeKW per meter)
+
+    Note over MCA,Utility: Confirmation Phase (Bid Commitment)
+    Solar->>MCA: confirm(order, bid commitment)
+    EV->>MCA: confirm(order, bid commitment)
+    Battery->>MCA: confirm(order, bid commitment)
+    Note right of MCA: All resources have<br/>committed their bids
+
+    Note over MCA,Utility: Market Clearing (After Confirmation)
+    MCA->>MCA: Collect all confirmed bids
     Note right of MCA: 20 solar panels<br/>10 EV batteries<br/>5 home batteries<br/>1 transformer
     MCA->>MCA: aggregate(all bidCurves)
     Note right of MCA: Aggregate Supply:<br/>Price 0.06 → 40 kW<br/>Price 0.07 → 100 kW<br/><br/>Aggregate Demand:<br/>Price 0.08 → -110 kW<br/>Price 0.10 → -50 kW
     MCA->>MCA: Apply locational price adder
     MCA->>MCA: Find clearing price: ₹0.075/kWh
-    MCA->>MCA: Economic disaggregation:<br/>Solar1: 3.5 kW<br/>Solar2: 3.5 kW<br/>EV1: -8.0 kW<br/>EV2: -8.0 kW<br/>Battery1: -2.0 kW
+    MCA->>MCA: Economic disaggregation:<br/>Solar: 3.5 kW each (avg)<br/>EV: -8.0 kW each (avg)<br/>Battery: -2.0 kW each (avg)
 
-    Note over VPPCoord,Protocol: Market Clearing Agent Responds
-    MCA-->>Solar1: on_discover(catalog with clearing price)
-    MCA-->>Solar2: on_discover(catalog with clearing price)
-    MCA-->>EV1: on_discover(catalog with clearing price)
-    MCA-->>EV2: on_discover(catalog with clearing price)
-    MCA-->>Battery1: on_discover(catalog with clearing price)
-    Note right of MCA: offerAttributes:<br/>{clearingPrice: 0.075,<br/>locationalPrice: 0.175,<br/>setpointKW: varies}
+    Note over MCA,Utility: Lock Trade & Deduct Sanctioned Load
+    MCA->>Utility: cascaded confirm(lock trades,<br/>deduct from sanctioned loads)
+    Note right of MCA: Trade details for all meters:<br/>- Solar meters: +3.5 kW each<br/>- EV meters: -8.0 kW each<br/>- Battery meters: -2.0 kW each
+    Utility->>Utility: Deduct from sanctioned loads<br/>for all meters
+    Note right of Utility: Prevents double dipping:<br/>Same sanctioned load capacity<br/>cannot be used for multiple trades
+    Utility-->>MCA: cascaded_on_confirm(trades locked,<br/>sanctioned loads deducted)
 
-    Note over VPPCoord,Protocol: Initialization Phase
-    Solar1->>MCA: init(order)
-    Solar2->>MCA: init(order)
-    EV1->>MCA: init(order)
-    EV2->>MCA: init(order)
-    Battery1->>MCA: init(order)
-    MCA-->>Solar1: on_init(terms)
-    MCA-->>Solar2: on_init(terms)
-    MCA-->>EV1: on_init(terms)
-    MCA-->>EV2: on_init(terms)
-    MCA-->>Battery1: on_init(terms)
+    Note over MCA,Utility: Clearing Agent Sends on_confirm (After Clearing)
+    MCA-->>Solar: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: 3.5 per panel)
+    MCA-->>EV: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: -8.0 per vehicle)
+    MCA-->>Battery: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: -2.0 per battery)
+    Note right of Solar: orderAttributes:<br/>{setpointKW: 3.5,<br/>clearingPrice: 0.075,<br/>locationalPrice: 0.175}
 
-    Note over VPPCoord,Protocol: Synchronous Confirmation (Market Clearing)
-    Solar1->>MCA: confirm(order with accepted clearing price)
-    Solar2->>MCA: confirm(order with accepted clearing price)
-    EV1->>MCA: confirm(order with accepted clearing price)
-    EV2->>MCA: confirm(order with accepted clearing price)
-    Battery1->>MCA: confirm(order with accepted clearing price)
-    Note right of MCA: Synchronous confirmation:<br/>Price locked at ₹0.075/kWh<br/>All resources confirm
-    MCA->>MCA: Lock clearing price
-    MCA->>MCA: Economic disaggregation:<br/>Distribute setpoints
-    
-    loop For each resource
-        MCA->>Solar1: on_confirm(setpoint: 3.5 kW)
-        Solar1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 70%)
-        Protocol-->>Solar1: Setpoint applied
-        
-        MCA->>EV1: on_confirm(setpoint: -8.0 kW)
-        EV1->>Protocol: OCPP: SetChargingProfile(8 kW)
-        Protocol-->>EV1: Setpoint applied
-    end
-    
-    MCA-->>Solar1: on_confirm(contract ACTIVE, setpoint: 3.5 kW)
-    MCA-->>Solar2: on_confirm(contract ACTIVE, setpoint: 3.5 kW)
-    MCA-->>EV1: on_confirm(contract ACTIVE, setpoint: -8.0 kW)
-    MCA-->>EV2: on_confirm(contract ACTIVE, setpoint: -8.0 kW)
-    MCA-->>Battery1: on_confirm(contract ACTIVE, setpoint: -2.0 kW)
-    Note right of Solar1: orderAttributes:<br/>{setpointKW: 3.5,<br/>clearingPrice: 0.075,<br/>locationalPrice: 0.175}
-
-    Note over VPPCoord,Protocol: Fulfillment Phase
-    Protocol->>Protocol: Resources operate at setpoints
-    Protocol->>MCA: Telemetry (actual power)
+    Note over MCA,Utility: Fulfillment Phase
+    Note right of Solar: Resources operate at setpoints<br/>(IEEE 2030.5/OCPP)
+    Solar->>MCA: Telemetry (actual power)
+    EV->>MCA: Telemetry (actual power)
+    Battery->>MCA: Telemetry (actual power)
     MCA->>MCA: Verify VPP performance
-    MCA->>Solar1: on_update(performance verified: 3.5 kW)
-    MCA->>EV1: on_update(performance verified: -8.0 kW)
+    MCA->>Solar: on_update(performance verified)
+    MCA->>EV: on_update(performance verified)
+    MCA->>Battery: on_update(performance verified)
 
-    Note over VPPCoord,Protocol: Settlement Phase
+    Note over MCA,Utility: Settlement Phase
     MCA->>MCA: Calculate final settlement
     Note right of MCA: Revenue flows:<br/>- Solar panels: Generation revenue<br/>- EV batteries: Charging cost<br/>- Home batteries: Charging cost<br/>- Transformer: Locational adder revenue
-    MCA->>Solar1: on_update(settlement: ₹0.2625 for 3.5 kW)
-    MCA->>EV1: on_update(settlement: ₹1.40 for -8.0 kW)
-    MCA-->>VPPCoord: on_update(VPP settlement complete)
+    MCA->>Solar: on_update(settlement complete)
+    MCA->>EV: on_update(settlement complete)
+    MCA->>Battery: on_update(settlement complete)
 ```
 
 **Attribute Slots Used**:
@@ -632,66 +656,62 @@ sequenceDiagram
     Transformer->>MCA: Publish catalogue with locational price adder
     Note right of Transformer: itemAttributes:<br/>{locationalPriceAdder: {...},<br/>gridConstraints: {<br/>maxReverseFlowKW: 50,<br/>currentLoadKW: 170}}
 
-    Note over GridOp,Protocol: Resources Express Bid Curves
-    Battery1->>MCA: discover(intent with bidCurve)
-    Note right of Battery1: bidCurve:<br/>[{price: 0.12, powerKW: 0},<br/>{price: 0.15, powerKW: 7},<br/>{price: 0.18, powerKW: 10}]
-    Battery2->>MCA: discover(intent with bidCurve)
-    Inverter1->>MCA: discover(intent with bidCurve)
-    Note right of Inverter1: bidCurve:<br/>[{price: 0.12, powerKW: 0},<br/>{price: 0.15, powerKW: 5},<br/>{price: 0.18, powerKW: 8}]
+    Note over GridOp,Protocol: Discovery Phase (Simple)
+    Battery1->>MCA: discover(location, timeWindow)
+    Battery2->>MCA: discover(location, timeWindow)
+    Inverter1->>MCA: discover(location, timeWindow)
+    Note right of Battery1: Simple discover:<br/>No bid curve yet
+    MCA-->>Battery1: on_discover(catalog: clearing agent)
+    MCA-->>Battery2: on_discover(catalog: clearing agent)
+    MCA-->>Inverter1: on_discover(catalog: clearing agent)
+    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}
 
-    Note over GridOp,Protocol: Market Clearing Agent Aggregates
-    MCA->>MCA: Collect all bid curves
+    Note over GridOp,Protocol: Initialization Phase (Bid Curve Submission)
+    Battery1->>Battery1: Construct bid curve
+    Note right of Battery1: bidCurve:<br/>[{price: 0.12, powerKW: 0},<br/>{price: 0.15, powerKW: 7},<br/>{price: 0.18, powerKW: 10}]
+    Battery1->>MCA: init(order with bidCurve, meterId)
+    Battery2->>Battery2: Construct bid curve
+    Battery2->>MCA: init(order with bidCurve, meterId)
+    Inverter1->>Inverter1: Construct bid curve
+    Note right of Inverter1: bidCurve:<br/>[{price: 0.12, powerKW: 0},<br/>{price: 0.15, powerKW: 5},<br/>{price: 0.18, powerKW: 8}]
+    Inverter1->>MCA: init(order with bidCurve, meterId)
+    MCA-->>Battery1: on_init(terms confirmed)
+    MCA-->>Battery2: on_init(terms confirmed)
+    MCA-->>Inverter1: on_init(terms confirmed)
+
+    Note over GridOp,Protocol: Confirmation Phase (Bid Commitment)
+    Battery1->>MCA: confirm(order, bid commitment)
+    Battery2->>MCA: confirm(order, bid commitment)
+    Inverter1->>MCA: confirm(order, bid commitment)
+    Note right of MCA: All resources have<br/>committed their bids
+
+    Note over GridOp,Protocol: Market Clearing (After Confirmation)
+    MCA->>MCA: Collect all confirmed bids
     MCA->>MCA: Apply locational price adder
     Note right of MCA: Base price: ₹0.10<br/>Locational adder: ₹0.085<br/>Final price: ₹0.185
     MCA->>MCA: aggregate(bidCurves with locational pricing)
     MCA->>MCA: Find clearing price: ₹0.17/kWh (with adder)
     MCA->>MCA: Economic disaggregation:<br/>Battery1: 8.5 kW<br/>Battery2: 8.5 kW<br/>Inverter1: 6.0 kW
-
-    Note over GridOp,Protocol: Market Clearing Agent Responds
-    MCA-->>Battery1: on_discover(catalog with clearing price)
-    MCA-->>Battery2: on_discover(catalog with clearing price)
-    MCA-->>Inverter1: on_discover(catalog with clearing price)
-    Note right of MCA: offerAttributes:<br/>{clearingPrice: 0.085,<br/>locationalPrice: 0.17,<br/>setpointKW: varies}
-
-    Note over GridOp,Protocol: Initialization Phase
-    Battery1->>MCA: init(order)
-    Battery2->>MCA: init(order)
-    Inverter1->>MCA: init(order)
-    MCA-->>Battery1: on_init(terms)
-    MCA-->>Battery2: on_init(terms)
-    MCA-->>Inverter1: on_init(terms)
-
-    Note over GridOp,Protocol: Synchronous Confirmation (Market Clearing)
-    Battery1->>MCA: confirm(order with accepted clearing price)
-    Battery2->>MCA: confirm(order with accepted clearing price)
-    Inverter1->>MCA: confirm(order with accepted clearing price)
-    Note right of MCA: Synchronous confirmation:<br/>Price locked at ₹0.17/kWh<br/>All resources confirm
-    MCA->>MCA: Lock clearing price
-    MCA->>MCA: Economic disaggregation:<br/>Distribute setpoints
     
     Note over GridOp,Protocol: Check for Flat Plateau
     MCA->>Transformer: Check bid curve for flat plateau
     Transformer->>Transformer: Detect flat plateau at ₹0.15-0.18
     Transformer->>MCA: offsetCommand: {enabled: true, offsetKW: -2.0}
     Note right of Transformer: Command offset to<br/>break flat plateau
-    
     MCA->>MCA: Apply offset command
-    MCA->>Battery1: on_confirm(setpoint: 8.5 kW, offset: -2.0 kW)
-    Battery1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 65%)
-    Protocol-->>Battery1: Setpoint applied (6.5 kW after offset)
-    
-    MCA->>Battery2: on_confirm(setpoint: 8.5 kW, offset: -2.0 kW)
-    Battery2->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 65%)
-    Protocol-->>Battery2: Setpoint applied (6.5 kW after offset)
-    
-    MCA->>Inverter1: on_confirm(setpoint: 6.0 kW, offset: 0.0 kW)
-    Inverter1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 75%)
-    Protocol-->>Inverter1: Setpoint applied (6.0 kW)
-    
-    MCA-->>Battery1: on_confirm(contract ACTIVE, setpoint: 6.5 kW)
-    MCA-->>Battery2: on_confirm(contract ACTIVE, setpoint: 6.5 kW)
-    MCA-->>Inverter1: on_confirm(contract ACTIVE, setpoint: 6.0 kW)
+
+    Note over GridOp,Protocol: Clearing Agent Sends on_confirm (After Clearing)
+    MCA-->>Battery1: on_confirm(order confirmed,<br/>clearingPrice: ₹0.085/kWh,<br/>locationalPrice: ₹0.17/kWh,<br/>setpointKW: 8.5, offsetKW: -2.0)
+    MCA-->>Battery2: on_confirm(order confirmed,<br/>clearingPrice: ₹0.085/kWh,<br/>locationalPrice: ₹0.17/kWh,<br/>setpointKW: 8.5, offsetKW: -2.0)
+    MCA-->>Inverter1: on_confirm(order confirmed,<br/>clearingPrice: ₹0.085/kWh,<br/>locationalPrice: ₹0.17/kWh,<br/>setpointKW: 6.0, offsetKW: 0.0)
     Note right of Battery1: orderAttributes:<br/>{setpointKW: 6.5,<br/>clearingPrice: 0.085,<br/>locationalPrice: 0.17,<br/>offsetCommand: {offsetKW: -2.0}}
+    
+    Battery1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 65%)
+    Battery2->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 65%)
+    Inverter1->>Protocol: IEEE 2030.5: DERControl(opModFixedW: 75%)
+    Protocol-->>Battery1: Setpoint applied (6.5 kW after offset)
+    Protocol-->>Battery2: Setpoint applied (6.5 kW after offset)
+    Protocol-->>Inverter1: Setpoint applied (6.0 kW)
 
     Note over GridOp,Protocol: Fulfillment Phase
     Protocol->>Protocol: Resources provide grid services<br/>at setpoints (with offset)
