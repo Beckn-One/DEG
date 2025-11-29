@@ -1,26 +1,27 @@
-# Conceptual Refactor Proposal: Telescoping EnergyIntent & EnergyContract Architecture
+# Conceptual Refactor Proposal: EnergyOffer & EnergyContract Architecture
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Date:** December 2024  
-**Status:** Conceptual Proposal
+**Status:** Conceptual Proposal (Revised)
 
 ---
 
 ## Executive Summary
 
-This document proposes a bold architectural refactoring that elevates **EnergyIntent** and **EnergyContract** to core abstract schemas with telescoping design (simple shells, growing optional complexity). The refactor enables:
+This document proposes a bold architectural refactoring centered on **EnergyOffer** and **EnergyContract** with telescoping design (simple shells, growing optional complexity). The refactor enables:
 
-1. **Simpler shells**: Core schemas with minimal required properties
-2. **Telescoping complexity**: Optional nested structures for advanced use cases
-3. **Multi-tenant**: Single schema pattern works across all use cases
-4. **Contract-driven billing**: Contracts compute net-zero billing flows from input signals
-5. **Intent as policy**: Intents represent actions/policies based on external factors (not objectives)
+1. **EnergyOffer as core Beckn primitive**: Goes in `offerAttributes` slot, represents willingness to assume roles in contracts
+2. **EnergyContract as computational agreement**: Defines roles, revenue flows, and quality metrics as functions of external signals
+3. **Role-based participation**: Contracts have open roles (buyer/seller/trader) that participants fill
+4. **Contract confirmation**: When all roles filled and input connections established
+5. **EnergyIntent as optional optimization tool**: Used by actors/algorithms to select contracts, but not part of Beckn schema
 6. **Fraud-resistant contracts**: Integration with Decentralized Directory Protocol (DeDi) for integrity, validity, and authenticity verification
 
 **Key Innovation**: 
-- **EnergyIntent** is a stand-in for **policy**—defining actions taken in response to external factors (e.g., offer curve decides power for a given price, tariff decides price based on power and time of day)
-- **EnergyContract** becomes a **computational agreement** that transforms input signals (meter readings, prices, states) into net-zero billing flows, rather than static price lists
-- **Objectives** are separate from intents—optimization engines derive intents from objectives/constraints
+- **EnergyOffer** is the core Beckn primitive—a bouquet of contract participation opportunities with open roles
+- **EnergyContract** is a **computational agreement** that specifies roles, revenue flows, and quality metrics as functions of external signals (prices, frequency, AGC setpoints) and telemetry
+- **EnergyIntent** is optional—an expression of actor objectives used to select contracts, but not necessarily in Beckn schema
+- **Role-based model**: CPOs publish contracts assuming seller role; EV users downselect and assume buyer role; contracts confirmed when all roles filled
 
 ---
 
@@ -87,75 +88,77 @@ This document proposes a bold architectural refactoring that elevates **EnergyIn
 
 ## 2. Core Abstract Schemas
 
-### 2.1 EnergyIntent (Core Abstract Schema)
+### 2.1 EnergyOffer (Core Beckn Primitive)
 
-**Purpose**: Unified representation of energy-related **policy** or **action** to be taken based on external factors.
+**Purpose**: Represents willingness to assume a role in an EnergyContract. This is the **core Beckn primitive** that goes in `offerAttributes` slot.
 
-**Key Concept**: Intent is a **policy** that defines actions in response to external factors:
-- **Offer Curve**: Decides power (positive for grid injection, negative for withdrawal) for a given price
-- **Tariff**: Decides price based on power and time of day
-- **Service Request**: Decides service parameters based on location and time constraints
-
-**Note**: Objectives and constraints are **separate** from intents. Optimization engines derive intents from objectives/constraints.
+**Key Concept**: 
+- **EnergyOffer** is a bouquet of contract participation opportunities
+- Each offer references a contract and specifies an **open role** (buyer/seller/trader)
+- Participants select offers to assume roles in contracts
+- Offers are published by providers (e.g., CPOs assume seller role)
 
 **Shell (Minimal)**:
 ```json
 {
-  "@context": "https://deg.energy/schema/EnergyIntent/v1/context.jsonld",
-  "@type": "EnergyIntent",
-  "intentId": "intent-ev-001",
-  "intentType": "OFFER_CURVE",  // Discriminator
-  "participantEra": "ev-battery-001",
-  "createdAt": "2024-12-15T10:00:00Z"
+  "@context": "https://deg.energy/schema/EnergyOffer/v1/context.jsonld",
+  "@type": "EnergyOffer",
+  "offerId": "offer-ev-charging-001",
+  "contractId": "contract-walk-in-001",
+  "providerId": "bpp.cpo.example.com",
+  "providerUri": "https://bpp.cpo.example.com",
+  "openRole": "BUYER"
 }
 ```
 
 **Telescoping Structure**:
 ```yaml
-EnergyIntent:
+EnergyOffer:
   type: object
-  required: [intentId, intentType, participantEra, createdAt]
+  required: [offerId, contractId, providerId, providerUri, openRole]
   properties:
     # Core (always present)
-    intentId: string
-    intentType: enum [OFFER_CURVE, SERVICE_REQUEST, TARIFF]
-    participantEra: string  # ERA of intent originator
-    createdAt: date-time
-    
-    # Type-specific data (telescoping)
-    offerCurveData: OfferCurveIntent  # When intentType = OFFER_CURVE
-    serviceRequestData: ServiceRequestIntent  # When intentType = SERVICE_REQUEST
-    tariffData: TariffIntent  # When intentType = TARIFF
+    offerId: string
+    contractId: string  # Reference to EnergyContract
+    providerId: string  # BPP ID of contract provider
+    providerUri: string  # BPP URI of contract provider
+    openRole: enum [BUYER, SELLER, TRADER]  # Role available in contract
     
     # Optional extensions (telescoping)
-    spatial: SpatialConstraints  # Location, radius, route (for service requests)
-    temporal: TemporalConstraints  # Time windows (for tariffs, service requests)
-    credentials: EnergyCredentials  # Required credentials for verification
+    expectedInputs: array[InputSpec]  # Expected inputs from role (e.g., accept/reject, offer curve)
+    contractSummary: ContractSummary  # Brief summary of contract terms
+    credentials: EnergyCredentials  # Required credentials for role
 ```
 
 **Where Used**:
-- `message.intent` in `discover` requests
-- `itemAttributes` when resources express their own intents
-- `orderAttributes.intentIds[]` when contracts reference intents
+- `offerAttributes` in Beckn `Offer` objects
+- Published in catalogues by providers (CPOs, aggregators, etc.)
+- Selected by participants (EV users, prosumers, etc.)
 
 ---
 
 ### 2.2 EnergyContract (Core Abstract Schema)
 
-**Purpose**: Computational agreement that transforms input signals into net-zero billing flows.
+**Purpose**: Computational agreement that defines roles, revenue flows, and quality metrics as functions of external signals and telemetry.
+
+**Key Concept**: 
+- Contracts specify **roles** (buyer, seller, trader) that need to be filled
+- Contracts define **revenue flows** and **quality metrics** as functions of:
+  - External signals (prices, frequency, AGC setpoints)
+  - Telemetry (meter readings, charge data records)
+- Contracts are **confirmed** when all roles are filled and input connections established
 
 **Shell (Minimal)**:
 ```json
 {
   "@context": "https://deg.energy/schema/EnergyContract/v1/context.jsonld",
   "@type": "EnergyContract",
-  "contractId": "contract-001",
-  "participants": [
-    { "era": "ev-battery-001", "role": "BUYER" },
-    { "era": "solar-panel-001", "role": "SELLER" }
+  "contractId": "contract-walk-in-001",
+  "roles": [
+    { "role": "SELLER", "filledBy": "bpp.cpo.example.com", "filled": true },
+    { "role": "BUYER", "filledBy": null, "filled": false }
   ],
-  "intentIds": ["intent-ev-001", "intent-solar-001"],
-  "status": "ACTIVE",
+  "status": "PENDING",  // PENDING, ACTIVE, COMPLETED, TERMINATED
   "createdAt": "2024-12-15T14:00:00Z"
 }
 ```
@@ -164,34 +167,75 @@ EnergyIntent:
 ```yaml
 EnergyContract:
   type: object
-  required: [contractId, participants, intentIds, status, createdAt]
+  required: [contractId, roles, status, createdAt]
   properties:
     # Core (always present)
     contractId: string
-    participants: array[Participant]  # ERAs and roles
-    intentIds: array[string]  # References to matched EnergyIntents
+    roles: array[ContractRole]  # Roles in contract (buyer, seller, trader)
     status: enum [PENDING, ACTIVE, COMPLETED, TERMINATED]
     createdAt: date-time
     
+    # Input parameters (telescoping)
+    inputParameters: array[InputParameter]  # Parameters from each role (e.g., price, offer curve)
+    
     # Input signals (telescoping)
-    inputSignals: array[InputSignal]  # Meter readings, prices, states
+    inputSignals: array[InputSignal]  # External signals (prices, frequency, AGC setpoints)
+    
+    # Telemetry sources (telescoping)
+    telemetrySources: array[TelemetrySource]  # Sources for fulfillment data (CDR, meter readings)
     
     # Transformation logic (telescoping)
-    billingLogic: BillingLogic  # Formulas, rules to compute flows
-    
-    # Output flows (telescoping)
-    revenueFlows: array[RevenueFlow]  # Computed from billingLogic
-    
-    # Fulfillment tracking (telescoping)
-    fulfillmentMode: enum [POST_FULFILLMENT, INCREMENTAL]
-    settlementCycles: array[SettlementCycle]
+    revenueFlows: RevenueFlowLogic  # Revenue flows as function of inputs/telemetry
+    qualityMetrics: QualityMetricLogic  # Quality metrics (if not in revenue flows)
     
     # Optional extensions (telescoping)
-    credentials: EnergyCredentials  # Required credentials for verification
+    credentials: EnergyCredentials  # Required credentials
     verification: ContractVerification  # DeDi protocol verification data
 ```
 
-**Key Innovation**: Contracts **compute** billing from signals, rather than storing fixed prices.
+**Contract Confirmation**: Contract moves from `PENDING` to `ACTIVE` when:
+1. All roles are filled
+2. All required input parameters provided
+3. All input signal connections established
+4. All telemetry sources connected
+
+---
+
+### 2.3 EnergyIntent (Optional - Not in Beckn Schema)
+
+**Purpose**: Expression of actor objectives used to select contracts. **Not part of Beckn schema**—used by actors/algorithms for optimization.
+
+**Key Concept**: 
+- **EnergyIntent** represents what an actor wants to achieve (objectives)
+- Actors use intents to **select a set of contracts** to participate in
+- Optimization algorithms match intents to available offers/contracts
+- Intent is **optional**—actors can select contracts directly without explicit intent
+
+**Example**:
+```json
+{
+  "intentId": "intent-ev-001",
+  "actorEra": "ev-battery-001",
+  "objectives": {
+    "targetChargeKWh": 20,
+    "deadline": "2024-12-15T18:00:00Z",
+    "maxPricePerKWh": 0.12,
+    "preferredSource": "SOLAR"
+  },
+  "constraints": {
+    "location": { "lat": 12.9716, "lon": 77.5946, "radiusMeters": 10000 },
+    "timeWindow": { "start": "2024-12-15T14:00:00Z", "end": "2024-12-15T18:00:00Z" }
+  }
+}
+```
+
+**Usage**:
+- Used by optimization engines to select contracts
+- Not transmitted in Beckn messages
+- Internal to actors/applications
+
+---
+
 
 **Contract Verification Structure**:
 ```yaml
@@ -231,131 +275,144 @@ ParticipantVerification:
 
 ---
 
-## 3. Intent Type Definitions
+## 3. Contract Role and Input Definitions
 
-### 3.1 OfferCurveIntent
+### 3.1 ContractRole
 
-**Purpose**: Express price/power policy where power is determined by price.
-
-**Policy**: "For a given price, I will inject/withdraw this amount of power from the grid"
+**Purpose**: Define roles in a contract that need to be filled.
 
 **Structure**:
 ```json
 {
-  "intentType": "OFFER_CURVE",
-  "offerCurveData": {
-    "curve": [
-      { "price": 0.05, "powerKW": 0 },
-      { "price": 0.06, "powerKW": 5 },
-      { "price": 0.08, "powerKW": 10 },
+  "role": "BUYER",
+  "filledBy": null,  // ERA or BPP ID when filled
+  "filled": false,
+  "requiredInputs": [
+    {
+      "inputName": "accept",
+      "inputType": "BOOLEAN",
+      "description": "Accept or reject the contract"
+    }
+  ]
+}
+```
+
+**Role Types**:
+- `BUYER`: Energy consumer (e.g., EV user)
+- `SELLER`: Energy provider (e.g., CPO, prosumer)
+- `TRADER`: Market intermediary (e.g., aggregator, market clearing agent)
+
+---
+
+### 3.2 InputParameter
+
+**Purpose**: Parameters provided by each role when filling the contract.
+
+**Structure**:
+```json
+{
+  "role": "SELLER",
+  "parameters": {
+    "price": 0.12,
+    "startTime": "2024-12-15T14:00:00Z",
+    "gracePeriod": "PT15M",
+    "powerRating": 50.0
+  }
+}
+```
+
+**Example for Buyer with Offer Curve**:
+```json
+{
+  "role": "BUYER",
+  "parameters": {
+    "offerCurve": [
+      { "price": 0.08, "powerKW": -11 },
       { "price": 0.10, "powerKW": -5 },
-      { "price": 0.12, "powerKW": -11 }
-    ],
-    "constraints": {
-      "minPowerKW": -11,
-      "maxPowerKW": 10,
-      "rampRateKWPerMin": 1.0
-    }
-  }
-}
-```
-
-**Semantics**:
-- **Positive powerKW**: Grid injection (generation, discharge)
-- **Negative powerKW**: Withdrawal from grid (consumption, charging)
-- **Zero powerKW**: No participation at that price
-
-**Use Cases**:
-- EV charging demand flexibility (negative power)
-- Solar generation offers (positive power)
-- Battery discharge/charge (both positive and negative)
-- Demand reduction bids (negative power)
-
----
-
-### 3.2 ServiceRequestIntent
-
-**Purpose**: Express service needs (kWh needed, location constraints, time windows).
-
-**Structure**:
-```json
-{
-  "intentType": "SERVICE_REQUEST",
-  "serviceRequestData": {
-    "requiredKWh": 20,
-    "spatial": {
-      "type": "ROUTE",
-      "route": {
-        "waypoints": [
-          { "lat": 12.9716, "lon": 77.5946 },
-          { "lat": 12.9352, "lon": 77.6245 }
-        ],
-        "radiusMeters": 5000
-      }
-    },
-    "temporal": {
-      "deadline": "2024-12-15T18:00:00Z",
-      "maxWaitTimeMinutes": 5
-    },
-    "preferences": {
-      "maxPricePerKWh": 0.12,
-      "preferredSource": "SOLAR"
-    }
-  }
-}
-```
-
-**Use Cases**:
-- EV charging along route
-- Mobile energy delivery
-- On-demand energy services
-
----
-
-### 3.3 TariffIntent
-
-**Purpose**: Express pricing structures (time-of-day, tiered, etc.).
-
-**Structure**:
-```json
-{
-  "intentType": "TARIFF",
-  "tariffData": {
-    "structure": "TIME_OF_DAY",
-    "rates": [
-      {
-        "timeWindow": {
-          "start": "00:00",
-          "end": "06:00"
-        },
-        "pricePerKWh": 0.05,
-        "currency": "INR"
-      },
-      {
-        "timeWindow": {
-          "start": "06:00",
-          "end": "18:00"
-        },
-        "pricePerKWh": 0.10,
-        "currency": "INR"
-      },
-      {
-        "timeWindow": {
-          "start": "18:00",
-          "end": "24:00"
-        },
-        "pricePerKWh": 0.15,
-        "currency": "INR"
-      }
+      { "price": 0.12, "powerKW": 0 }
     ]
   }
 }
 ```
 
-**Use Cases**:
-- Utility tariff publication
-- CPO pricing models
-- Grid operator pricing signals
+---
+
+### 3.3 RevenueFlowLogic
+
+**Purpose**: Define revenue flows as functions of inputs, signals, and telemetry.
+
+**Structure**:
+```json
+{
+  "revenueFlows": [
+    {
+      "party": { "role": "SELLER" },
+      "formula": "energyFlow * price",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.chargeDataRecords[].energyDelivered" },
+        "price": { "source": "inputParameters", "path": "$.seller.price" }
+      }
+    },
+    {
+      "party": { "role": "BUYER" },
+      "formula": "-energyFlow * price - waitTimePenalty - curtailmentPenalty",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.chargeDataRecords[].energyDelivered" },
+        "price": { "source": "inputParameters", "path": "$.seller.price" },
+        "waitTimePenalty": {
+          "formula": "max(0, (arrivalTime - startTime - gracePeriod) * penaltyRate)",
+          "variables": {
+            "arrivalTime": { "source": "telemetry", "path": "$.arrivalTime" },
+            "startTime": { "source": "inputParameters", "path": "$.seller.startTime" },
+            "gracePeriod": { "source": "inputParameters", "path": "$.seller.gracePeriod" },
+            "penaltyRate": { "constant": 0.01 }
+          }
+        },
+        "curtailmentPenalty": {
+          "formula": "max(0, (requestedPower - actualPower) * curtailmentRate)",
+          "variables": {
+            "requestedPower": { "source": "inputParameters", "path": "$.buyer.requestedPower" },
+            "actualPower": { "source": "telemetry", "path": "$.chargeDataRecords[].power" },
+            "curtailmentRate": { "constant": 0.02 }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+---
+
+### 3.4 QualityMetricLogic
+
+**Purpose**: Define quality of service metrics (if not already in revenue flows as incentives/penalties).
+
+**Structure**:
+```json
+{
+  "qualityMetrics": [
+    {
+      "metricName": "waitTime",
+      "formula": "arrivalTime - startTime",
+      "target": "PT5M",
+      "penalty": {
+        "formula": "max(0, (waitTime - target) * penaltyRate)",
+        "appliedTo": "BUYER"
+      }
+    },
+    {
+      "metricName": "powerCurtailment",
+      "formula": "requestedPower - actualPower",
+      "target": 0,
+      "penalty": {
+        "formula": "max(0, powerCurtailment * curtailmentRate)",
+        "appliedTo": "SELLER"
+      }
+    }
+  ]
+}
+```
 
 ---
 
@@ -750,31 +807,226 @@ ParticipantVerification:
 
 ## 7. Use Case Examples
 
-### 7.1 EV Charging (Demand Flexibility)
+### 7.1 EV Charging (Walk-In Flow)
 
-**Intent** (Policy: "Charge at different power levels based on price"):
+**Contract Definition** (published by CPO):
 ```json
 {
-  "@type": "EnergyIntent",
-  "intentId": "intent-ev-001",
-  "intentType": "OFFER_CURVE",
-  "participantEra": "ev-battery-001",
-  "offerCurveData": {
-    "curve": [
-      { "price": 0.08, "powerKW": -11 },
-      { "price": 0.10, "powerKW": -5 },
-      { "price": 0.12, "powerKW": 0 }
-    ],
-    "constraints": {
-      "minPowerKW": -11,
-      "maxPowerKW": 0,
-      "rampRateKWPerMin": 1.0
+  "@type": "EnergyContract",
+  "contractId": "contract-walk-in-001",
+  "roles": [
+    {
+      "role": "SELLER",
+      "filledBy": "bpp.cpo.example.com",
+      "filled": true,
+      "requiredInputs": [
+        { "inputName": "price", "inputType": "NUMBER" },
+        { "inputName": "startTime", "inputType": "DATE_TIME" },
+        { "inputName": "gracePeriod", "inputType": "DURATION" },
+        { "inputName": "powerRating", "inputType": "NUMBER" }
+      ]
+    },
+    {
+      "role": "BUYER",
+      "filledBy": null,
+      "filled": false,
+      "requiredInputs": [
+        { "inputName": "accept", "inputType": "BOOLEAN" }
+      ]
     }
+  ],
+  "status": "PENDING",
+  "telemetrySources": [
+    {
+      "sourceId": "cdr-source",
+      "sourceType": "CHARGE_DATA_RECORD",
+      "endpoint": "https://cpo.example.com/cdr/contract-walk-in-001",
+      "fields": ["arrivalTime", "chargeStartTime", "chargeEndTime", "energyDelivered", "power"]
+    }
+  ],
+  "revenueFlows": [
+    {
+      "party": { "role": "SELLER" },
+      "formula": "energyFlow * price",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.energyDelivered" },
+        "price": { "source": "inputParameters", "path": "$.seller.price" }
+      }
+    },
+    {
+      "party": { "role": "BUYER" },
+      "formula": "-energyFlow * price - waitTimePenalty - curtailmentPenalty",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.energyDelivered" },
+        "price": { "source": "inputParameters", "path": "$.seller.price" },
+        "waitTimePenalty": {
+          "formula": "max(0, (arrivalTime - startTime - gracePeriod) * 0.01)"
+        },
+        "curtailmentPenalty": {
+          "formula": "max(0, (requestedPower - actualPower) * 0.02)"
+        }
+      }
+    }
+  ]
+}
+```
+
+**EnergyOffer** (published in catalogue):
+```json
+{
+  "@type": "EnergyOffer",
+  "offerId": "offer-ev-charging-001",
+  "contractId": "contract-walk-in-001",
+  "providerId": "bpp.cpo.example.com",
+  "providerUri": "https://bpp.cpo.example.com",
+  "openRole": "BUYER",
+  "expectedInputs": [
+    { "inputName": "accept", "inputType": "BOOLEAN" }
+  ],
+  "contractSummary": {
+    "description": "Walk-in EV charging at ₹12/kWh",
+    "powerRating": "50 kW",
+    "gracePeriod": "15 minutes"
   }
 }
 ```
 
-**Note**: Objectives (e.g., "charge 20 kWh by 6 PM") are separate and used by optimization engines to derive this intent.
+**Contract Confirmation** (when buyer accepts):
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-walk-in-001",
+  "roles": [
+    { "role": "SELLER", "filledBy": "bpp.cpo.example.com", "filled": true },
+    { "role": "BUYER", "filledBy": "bap.ev-user-app.com", "filled": true }
+  ],
+  "inputParameters": {
+    "seller": {
+      "price": 0.12,
+      "startTime": "2024-12-15T14:00:00Z",
+      "gracePeriod": "PT15M",
+      "powerRating": 50.0
+    },
+    "buyer": {
+      "accept": true
+    }
+  },
+  "status": "ACTIVE"
+}
+```
+
+**Note**: EnergyIntent (e.g., "charge 20 kWh by 6 PM, minimize cost") is used by EV user's app to select this contract, but is not part of Beckn schema.
+
+---
+
+### 7.2 EV Charging (Demand Flexibility with Offer Curve)
+
+**Contract Definition** (published by Market Clearing Agent):
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-demand-flex-001",
+  "roles": [
+    {
+      "role": "BUYER",
+      "filledBy": null,
+      "filled": false,
+      "requiredInputs": [
+        { "inputName": "offerCurve", "inputType": "OFFER_CURVE" }
+      ]
+    },
+    {
+      "role": "SELLER",
+      "filledBy": null,
+      "filled": false,
+      "requiredInputs": [
+        { "inputName": "offerCurve", "inputType": "OFFER_CURVE" }
+      ]
+    }
+  ],
+  "status": "PENDING",
+  "inputSignals": [
+    {
+      "signalId": "clearing-price",
+      "signalType": "PRICE",
+      "source": { "era": "market-clearing-agent" }
+    }
+  ],
+  "telemetrySources": [
+    {
+      "sourceId": "meter-readings",
+      "sourceType": "METER_READING",
+      "endpoint": "https://meter-api.example.com/readings"
+    }
+  ],
+  "revenueFlows": [
+    {
+      "party": { "role": "BUYER" },
+      "formula": "-energyFlow * clearingPrice",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.energyFlow" },
+        "clearingPrice": { "source": "inputSignals", "path": "$.clearing-price.price" }
+      }
+    },
+    {
+      "party": { "role": "SELLER" },
+      "formula": "energyFlow * clearingPrice",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.energyFlow" },
+        "clearingPrice": { "source": "inputSignals", "path": "$.clearing-price.price" }
+      }
+    }
+  ]
+}
+```
+
+**EnergyOffer** (for buyer role):
+```json
+{
+  "@type": "EnergyOffer",
+  "offerId": "offer-demand-flex-buyer-001",
+  "contractId": "contract-demand-flex-001",
+  "providerId": "bpp.market-clearing-agent.com",
+  "providerUri": "https://bpp.market-clearing-agent.com",
+  "openRole": "BUYER",
+  "expectedInputs": [
+    {
+      "inputName": "offerCurve",
+      "inputType": "OFFER_CURVE",
+      "description": "Offer curve with negative powers (desire to charge)"
+    }
+  ]
+}
+```
+
+**Contract Confirmation** (when buyer provides offer curve):
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-demand-flex-001",
+  "roles": [
+    { "role": "BUYER", "filledBy": "bap.ev-user-app.com", "filled": true },
+    { "role": "SELLER", "filledBy": "bap.solar-prosumer-app.com", "filled": true }
+  ],
+  "inputParameters": {
+    "buyer": {
+      "offerCurve": [
+        { "price": 0.08, "powerKW": -11 },
+        { "price": 0.10, "powerKW": -5 },
+        { "price": 0.12, "powerKW": 0 }
+      ]
+    },
+    "seller": {
+      "offerCurve": [
+        { "price": 0.05, "powerKW": 0 },
+        { "price": 0.06, "powerKW": 5 },
+        { "price": 0.08, "powerKW": 10 }
+      ]
+    }
+  },
+  "status": "ACTIVE"
+}
+```
 
 **Contract** (after market clearing):
 ```json
@@ -822,29 +1074,9 @@ ParticipantVerification:
 
 ---
 
-### 7.2 P2P Trading (Market-Based)
+### 7.3 P2P Trading (Market-Based)
 
-**Intent (Solar)** (Policy: "Inject power to grid at different levels based on price"):
-```json
-{
-  "@type": "EnergyIntent",
-  "intentId": "intent-solar-001",
-  "intentType": "OFFER_CURVE",
-  "participantEra": "solar-panel-001",
-  "offerCurveData": {
-    "curve": [
-      { "price": 0.05, "powerKW": 0 },
-      { "price": 0.06, "powerKW": 5 },
-      { "price": 0.08, "powerKW": 10 }
-    ],
-    "constraints": {
-      "minPowerKW": 0,
-      "maxPowerKW": 10,
-      "rampRateKWPerMin": 0.5
-    }
-  }
-}
-```
+**Contract Definition** (published by Market Clearing Agent):
 
 **Contract** (after market clearing):
 ```json
@@ -918,40 +1150,9 @@ ParticipantVerification:
 
 ---
 
-### 7.3 Service Request (EV Charging Along Route)
+### 7.4 Service Request (EV Charging Along Route)
 
-**Intent**:
-```json
-{
-  "@type": "EnergyIntent",
-  "intentId": "intent-route-001",
-  "intentType": "SERVICE_REQUEST",
-  "participantEra": "ev-battery-001",
-  "serviceRequestData": {
-    "requiredKWh": 20,
-    "spatial": {
-      "type": "ROUTE",
-      "route": {
-        "waypoints": [
-          { "lat": 12.9716, "lon": 77.5946 },
-          { "lat": 12.9352, "lon": 77.6245 }
-        ],
-        "radiusMeters": 5000
-      }
-    },
-    "temporal": {
-      "deadline": "2024-12-15T18:00:00Z",
-      "maxWaitTimeMinutes": 5
-    },
-    "preferences": {
-      "maxPricePerKWh": 0.12,
-      "preferredSource": "SOLAR"
-    }
-  }
-}
-```
-
-**Contract**:
+**Contract Definition** (published by CPO):
 ```json
 {
   "@type": "EnergyContract",
@@ -998,43 +1199,25 @@ ParticipantVerification:
 
 ## 8. Benefits of Refactor
 
-### 8.1 Simplicity
+### 8.1 Alignment with Beckn Architecture
 
-**Before**: Many optional properties at root level
-```json
-{
-  "bidCurve": [...],
-  "objectives": {...},
-  "settlement": {...},
-  "clearingPrice": 0.075,
-  "setpointKW": -8.0,
-  "approvedMaxTradeKW": 30,
-  // ... many more optional properties
-}
-```
+**Before**: Intent scattered across different slots, unclear primitives
 
-**After**: Telescoping structure with clear organization
-```json
-{
-  "@type": "EnergyIntent",
-  "intentType": "BID_CURVE",
-  "bidCurveData": { /* nested */ },
-  "objectives": { /* nested */ }
-}
-```
+**After**: Clear Beckn alignment
+- **EnergyOffer** goes in `offerAttributes` slot (core Beckn primitive)
+- **EnergyContract** defines computational agreements
+- **EnergyIntent** is optional optimization tool (not in Beckn schema)
 
 ---
 
-### 8.2 Multi-Tenant
+### 8.2 Role-Based Participation
 
-**Before**: Different schemas for different use cases
-- `EnergyTradeContract` for P2P trading
-- `EnergyCoordination` for coordination
-- Separate structures for EV charging
+**Before**: Unclear how participants join contracts
 
-**After**: Single schema pattern works across all use cases
-- `EnergyIntent` for all intent types
-- `EnergyContract` for all contract types
+**After**: Clear role-based model
+- Contracts define **open roles** (buyer/seller/trader)
+- Participants select **offers** to assume roles
+- Contracts confirmed when **all roles filled** and inputs connected
 
 ---
 
@@ -1053,27 +1236,44 @@ ParticipantVerification:
 **After**: Computational contracts with dynamic billing
 ```json
 {
-  "billingLogic": {
-    "formula": "energyFlow * clearingPrice + ...",
-    "revenueFlowRules": [...]
-  },
-  "inputSignals": [...]
+  "revenueFlows": [
+    {
+      "party": { "role": "SELLER" },
+      "formula": "energyFlow * price",
+      "variables": {
+        "energyFlow": { "source": "telemetry", "path": "$.energyDelivered" },
+        "price": { "source": "inputParameters", "path": "$.seller.price" }
+      }
+    }
+  ]
 }
 ```
 
 ---
 
-### 8.4 Extensibility
+### 8.4 Multi-Tenant
 
-**Before**: Adding new intent types requires schema changes
+**Before**: Different schemas for different use cases
+- `EnergyTradeContract` for P2P trading
+- `EnergyCoordination` for coordination
+- Separate structures for EV charging
 
-**After**: New intent types can be added via `intentType` discriminator
-```json
-{
-  "intentType": "NEW_INTENT_TYPE",
-  "newIntentTypeData": { /* nested */ }
-}
-```
+**After**: Single schema pattern works across all use cases
+- **EnergyOffer** for all offer types
+- **EnergyContract** for all contract types
+- Works for walk-in charging, demand flexibility, P2P trading, etc.
+
+---
+
+### 8.5 Separation of Concerns
+
+**Before**: Intent, objectives, and contracts mixed together
+
+**After**: Clear separation
+- **EnergyIntent**: Optional optimization tool (not in Beckn schema)
+- **EnergyOffer**: Core Beckn primitive (in `offerAttributes`)
+- **EnergyContract**: Computational agreement with roles
+- Actors use intents to select contracts, but intents don't need to be in Beckn messages
 
 ---
 
@@ -1143,12 +1343,13 @@ ParticipantVerification:
 
 | Aspect | Current | Proposed |
 |--------|---------|----------|
-| **Intent Representation** | Scattered in `intent`, `itemAttributes`, `offerAttributes` | Unified `EnergyIntent` schema as policy |
-| **Intent vs. Objectives** | Mixed together | Separated: Intent = policy, Objectives = goals (used to derive intents) |
+| **Core Primitive** | Scattered in `intent`, `itemAttributes`, `offerAttributes` | **EnergyOffer** in `offerAttributes` slot (core Beckn primitive) |
+| **Contract Model** | `EnergyTradeContract` with many optional properties | **EnergyContract** with role-based participation model |
+| **Intent** | Mixed with contracts and offers | **Optional** (not in Beckn schema, used for optimization) |
+| **Role-Based Participation** | Unclear how participants join | Contracts have **open roles** (buyer/seller/trader) that participants fill |
+| **Contract Confirmation** | Unclear when contract is active | When **all roles filled** and input connections established |
+| **Billing** | Static revenue flows | Computed from input parameters, signals, and telemetry |
 | **Offer Curve Terminology** | "Bid curve" and "offer curve" | Unified "offer curve" (positive = injection, negative = withdrawal) |
-| **Contract Representation** | `EnergyTradeContract` with many optional properties | `EnergyContract` with telescoping structure |
-| **Billing** | Static revenue flows | Computed from input signals and billing logic |
-| **Intent Types** | Implicit (bid curves, objectives) | Explicit via `intentType` discriminator |
 | **Multi-Tenant** | Different schemas for different use cases | Single schema pattern for all use cases |
 | **Complexity** | Many optional properties at root | Telescoping nested structures |
 | **Fraud Prevention** | Limited | DeDi protocol integration for integrity, validity, authenticity |
@@ -1160,33 +1361,74 @@ ParticipantVerification:
 
 ## 11. Key Refinements from Initial Proposal
 
-### 11.1 Intent as Policy (Not Objectives)
+### 11.1 EnergyOffer as Core Beckn Primitive
 
-**Change**: Clarified that `EnergyIntent` represents **policy/action** based on external factors, not desired outcomes.
+**Change**: Shifted from `EnergyIntent` as core schema to `EnergyOffer` as core Beckn primitive.
 
 **Rationale**:
-- Intent: "Charge at 11 kW if price ≤ ₹0.08/kWh" (policy)
-- Objective: "Charge 20 kWh by 6 PM, minimize cost" (goal)
-- Relationship: Optimization engines derive intents from objectives
+- **EnergyOffer** goes in `offerAttributes` slot (aligns with Beckn architecture)
+- Offers represent willingness to assume roles in contracts
+- CPOs publish contracts and assume seller role; EV users downselect and assume buyer role
 
-**Impact**: Removed nesting of `objectives` and `constraints` from `EnergyIntent` schema.
+**Impact**: 
+- `EnergyOffer` is now the core Beckn primitive
+- `EnergyIntent` is optional (not in Beckn schema, used for optimization)
 
 ---
 
-### 11.2 Unified Offer Curve Terminology
+### 11.2 Role-Based Contract Model
+
+**Change**: Contracts now have **open roles** that need to be filled.
+
+**Rationale**:
+- Contracts specify roles (buyer/seller/trader)
+- Participants fill roles by selecting offers
+- Contracts confirmed when all roles filled and inputs connected
+
+**Impact**: Clear participation model aligned with real-world energy transactions.
+
+---
+
+### 11.3 Contract as Computational Agreement
+
+**Change**: Contracts define revenue flows and quality metrics as functions of inputs, signals, and telemetry.
+
+**Rationale**:
+- Revenue flows computed from input parameters (e.g., seller specifies price)
+- Telemetry sources provide fulfillment data (e.g., CDR, meter readings)
+- External signals provide dynamic pricing (e.g., clearing price, frequency)
+
+**Impact**: Dynamic, signal-driven billing instead of static prices.
+
+---
+
+### 11.4 EnergyIntent as Optional Optimization Tool
+
+**Change**: `EnergyIntent` is now optional and not part of Beckn schema.
+
+**Rationale**:
+- Intent represents actor objectives (e.g., "charge 20 kWh by 6 PM")
+- Actors/algorithms use intents to select contracts
+- Intent is internal to actors, not transmitted in Beckn messages
+
+**Impact**: Cleaner separation between optimization (intent) and transaction (offer/contract).
+
+---
+
+### 11.5 Unified Offer Curve Terminology
 
 **Change**: Eliminated "bid curve" term, unified under "offer curve" with signed power values.
 
 **Rationale**:
 - Positive power = grid injection (generation, discharge)
 - Negative power = withdrawal from grid (consumption, charging)
-- Single term reduces confusion and simplifies schema
+- Single term reduces confusion
 
-**Impact**: Renamed `BidCurveIntent` to `OfferCurveIntent`, removed `direction` field.
+**Impact**: Simplified terminology and schema.
 
 ---
 
-### 11.3 DeDi Protocol Integration
+### 11.6 DeDi Protocol Integration
 
 **Change**: Added integration with Decentralized Directory Protocol for contract verification.
 
@@ -1195,11 +1437,11 @@ ParticipantVerification:
 - **Validity**: Real-time revocation lists and expiration checking
 - **Authenticity**: Public key directory for participant verification
 
-**Impact**: Added `ContractVerification` schema with DeDi integration points.
+**Impact**: Enhanced contract security and fraud prevention.
 
 ---
 
-### 11.4 Fraud-Resistant Contract Patterns
+### 11.7 Fraud-Resistant Contract Patterns
 
 **Change**: Added best practices for automated contract creation and settlement.
 
@@ -1213,17 +1455,7 @@ ParticipantVerification:
 - Time-locked settlements
 - Audit trails
 
-**Impact**: Enhanced contract robustness and fraud prevention.
-
----
-
-### 11.5 Removed Backward Compatibility
-
-**Change**: Removed migration strategy section since we're starting fresh.
-
-**Rationale**: No need to maintain compatibility with existing schemas.
-
-**Impact**: Cleaner proposal focused on optimal design.
+**Impact**: Robust contract execution and settlement.
 
 ---
 
