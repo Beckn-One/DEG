@@ -28,12 +28,6 @@
         "settlement": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/context.jsonld",
           "@type": "Settlement",
-          "settlementCycles": [{
-            "cycleId": "settle-2024-10-04-001",
-            "status": "SETTLED",
-            "amount": 100.0,
-            "currency": "INR"
-          }],
           "revenueFlows": [
             {
               "party": {
@@ -76,13 +70,7 @@
             "reportId": "settle-report-2024-10-04-001",
             "totalAmount": 100.0,
             "currency": "INR",
-            "generatedAt": "2024-10-04T18:30:00Z",
-            "breakdown": {
-              "energyCost": 60.0,
-              "wheelingCharges": 20.0,
-              "platformFee": 10.0,
-              "tax": 10.0
-            }
+            "generatedAt": "2024-10-04T18:30:00Z"
           }
         }
       }

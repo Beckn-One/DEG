@@ -24,10 +24,13 @@ examples/
 │   ├── confirm-with-setpoint.json
 │   └── on_confirm-with-setpoint.json
 ├── p2p_trading_market_based/
+│   ├── discover-solar-resource-with-objectives.json
+│   ├── discover-battery-resource-with-objectives.json
 │   ├── discover-multiple-prosumers.json
 │   ├── on_discover-aggregated.json
 │   ├── aggregate-request.json
 │   ├── on_aggregate-result.json
+│   ├── order-with-settlement.json
 │   └── confirm-with-setpoints.json
 ├── demand_flexibility/
 │   ├── discover-with-objectives.json
@@ -53,9 +56,11 @@ examples/
 - Dynamic setpoint assignment
 
 ### 2. P2P Trading (Market-Based)
+- Resource objectives in itemAttributes (solar generation, battery charging)
 - Multiple prosumer bid curves
 - Market aggregation
 - Economic disaggregation
+- Multi-party settlement
 
 ### 3. Demand Flexibility
 - Objective-driven coordination
@@ -74,6 +79,26 @@ examples/
 
 ---
 
-**Status**: In Progress  
-**Next**: Create example messages for each use case
+---
+
+## EnergyObjectives Usage
+
+`EnergyObjectives` can be used in three contexts:
+
+1. **`itemAttributes.objectives`** (EnergyResource) - Resource expresses its own goals
+   - See: `p2p_trading_market_based/discover-solar-resource-with-objectives.json`
+   - See: `p2p_trading_market_based/discover-battery-resource-with-objectives.json`
+
+2. **`intent.objectives`** (EnergyIntent) - Consumer expresses demand goals
+   - See: `ev_charging_demand_flexibility/discover-with-bid-curve.json`
+
+3. **`orderAttributes.objectives`** (EnergyTradeContract) - Locked-in objectives in contract
+   - See: `ev_charging_demand_flexibility/confirm-with-setpoint.json`
+   - See: `ev_charging_demand_flexibility/on_confirm-with-setpoint.json`
+
+For detailed usage guide, see: `outputs/09_EnergyObjectives_Usage_Guide.md`
+
+---
+
+**Status**: Complete
 

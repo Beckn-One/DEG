@@ -94,119 +94,18 @@ components:
         minPricePerKWh:
           type: number
           minimum: 0
-          description: Minimum acceptable price per kilowatt-hour (for generators).
+          description: Optional. Minimum acceptable price per kilowatt-hour (for generators). Can also be expressed via bidCurve first point.
           example: 0.05
           x-jsonld: { "@id": "beckn:minPricePerKWh" }
         preferredSource:
           type: string
           enum: [SOLAR, BATTERY, GRID, HYBRID, RENEWABLE]
-          description: Preferred energy source type.
+          description: Optional. Preferred energy source type. Can be expressed via discovery filters.
           example: "SOLAR"
           x-jsonld: { "@id": "beckn:preferredSource" }
-        objectiveConstraints:
-          $ref: '#/components/schemas/ObjectiveConstraints'
 
-    ObjectiveConstraints:
-      type: object
-      description: Constraints for objective fulfillment.
-      additionalProperties: false
-      properties:
-        minChargeKWh:
-          type: number
-          minimum: 0
-          description: Minimum acceptable charge level.
-          example: 10
-          x-jsonld: { "@id": "beckn:minChargeKWh" }
-        maxChargeKWh:
-          type: number
-          minimum: 0
-          description: Maximum acceptable charge level.
-          example: 60
-          x-jsonld: { "@id": "beckn:maxChargeKWh" }
-        minGenerationKWh:
-          type: number
-          minimum: 0
-          description: Minimum acceptable generation level.
-          example: 5
-          x-jsonld: { "@id": "beckn:minGenerationKWh" }
-        maxGenerationKWh:
-          type: number
-          minimum: 0
-          description: Maximum acceptable generation level.
-          example: 100
-          x-jsonld: { "@id": "beckn:maxGenerationKWh" }
-
-    LocationalPriceAdder:
-      type: object
-      description: Price adder based on grid location and congestion. Used by grid nodes (transformers, substations) to signal congestion risk.
-      additionalProperties: false
-      properties:
-        basePrice:
-          type: number
-          minimum: 0
-          description: Base price per kilowatt-hour before locational adder.
-          example: 0.10
-          x-jsonld: { "@id": "beckn:basePrice" }
-        congestionMultiplier:
-          type: number
-          minimum: 0
-          description: Multiplier for congestion calculation (typically 1.0).
-          example: 1.0
-          x-jsonld: { "@id": "beckn:congestionMultiplier" }
-        currentLoadPercent:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: Current load as percentage of capacity.
-          example: 75
-          x-jsonld: { "@id": "beckn:currentLoadPercent" }
-        priceAdderPerPercent:
-          type: number
-          minimum: 0
-          description: Price adder per percentage point of load.
-          example: 0.001
-          x-jsonld: { "@id": "beckn:priceAdderPerPercent" }
-        currentPrice:
-          type: number
-          minimum: 0
-          description: Current price including locational adder (calculated). Formula: basePrice + (currentLoadPercent * priceAdderPerPercent).
-          example: 0.175
-          x-jsonld: { "@id": "beckn:currentPrice" }
-        formula:
-          type: string
-          description: Formula for calculating locational price (human-readable).
-          example: "basePrice + (currentLoadPercent * priceAdderPerPercent)"
-          x-jsonld: { "@id": "beckn:formula" }
-
-    GridConstraints:
-      type: object
-      description: Operational constraints for grid nodes (transformers, substations).
-      additionalProperties: false
-      properties:
-        maxReverseFlowKW:
-          type: number
-          minimum: 0
-          description: Maximum reverse power flow (from distribution to transmission) in kilowatts.
-          example: 50
-          x-jsonld: { "@id": "beckn:maxReverseFlowKW" }
-        maxForwardFlowKW:
-          type: number
-          minimum: 0
-          description: Maximum forward power flow (from transmission to distribution) in kilowatts.
-          example: 200
-          x-jsonld: { "@id": "beckn:maxForwardFlowKW" }
-        currentLoadKW:
-          type: number
-          minimum: 0
-          description: Current load in kilowatts.
-          example: 150
-          x-jsonld: { "@id": "beckn:currentLoadKW" }
-        capacityKW:
-          type: number
-          minimum: 0
-          description: Total capacity in kilowatts.
-          example: 200
-          x-jsonld: { "@id": "beckn:capacityKW" }
+    # Note: LocationalPriceAdder and GridConstraints have been moved to GridNode schema
+    # See ../GridNode/v1/attributes.yaml
 
     Settlement:
       type: object
@@ -216,28 +115,7 @@ components:
         "@context": ./context.jsonld
         "@type": Settlement
       properties:
-        settlementCycles:
-          type: array
-          description: Array of settlement cycles.
-          items:
-            type: object
-            additionalProperties: false
-            properties:
-              cycleId:
-                type: string
-                example: "settle-2024-10-04-001"
-              status:
-                type: string
-                enum: [PENDING, SETTLED, FAILED]
-                example: "SETTLED"
-              amount:
-                type: number
-                minimum: 0
-                example: 100.0
-              currency:
-                type: string
-                example: "INR"
-          x-jsonld: { "@id": "beckn:settlementCycles" }
+        # Note: settlementCycles are tracked in EnergyTradeContract.settlementCycles
         revenueFlows:
           type: array
           description: Array of revenue flow entries for multi-party settlement.
@@ -317,45 +195,16 @@ components:
           description: Timestamp when the settlement report was generated (ISO 8601).
           example: "2024-10-04T18:30:00Z"
           x-jsonld: { "@id": "schema:dateCreated" }
-        breakdown:
-          type: object
-          description: Breakdown of settlement components (energy cost, wheeling charges, platform fee, tax, etc.).
-          additionalProperties: true
-          properties:
-            energyCost:
-              type: number
-              minimum: 0
-              description: Energy cost component.
-              example: 60.0
-            wheelingCharges:
-              type: number
-              minimum: 0
-              description: Wheeling charges component.
-              example: 20.0
-            platformFee:
-              type: number
-              minimum: 0
-              description: Platform fee component.
-              example: 10.0
-            tax:
-              type: number
-              minimum: 0
-              description: Tax component.
-              example: 10.0
+        # Note: breakdown can be calculated from revenueFlows
 
     OffsetCommand:
       type: object
       description: Grid operator command to apply offset for flat bid curve plateaus.
       additionalProperties: false
       properties:
-        enabled:
-          type: boolean
-          description: Whether the offset command is enabled.
-          example: true
-          x-jsonld: { "@id": "schema:enabled" }
         offsetKW:
           type: number
-          description: Power offset in kilowatts to apply. Negative values reduce setpoint, positive values increase setpoint.
+          description: Power offset in kilowatts to apply. Negative values reduce setpoint, positive values increase setpoint. Presence of this property indicates the command is enabled.
           example: -2.0
           x-jsonld: { "@id": "beckn:offsetKW" }
 
@@ -421,9 +270,7 @@ components:
         constraints:
           $ref: '#/components/schemas/BidCurveConstraints'
           description: Operational constraints for this participant.
-        locationalPriceAdder:
-          $ref: '#/components/schemas/LocationalPriceAdder'
-          description: Locational price adder (for grid nodes).
+        # Note: locationalPriceAdder is available in GridNode schema
 
     AggregationResult:
       type: object

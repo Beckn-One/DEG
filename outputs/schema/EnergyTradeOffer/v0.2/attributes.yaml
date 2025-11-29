@@ -40,7 +40,7 @@ components:
 
         wheelingCharges:
           type: object
-          description: Utility wheeling charges (fixed charges for delivery intermediaries like PG&E). Reflected as billing line item.
+          description: Optional. Utility wheeling charges (fixed charges for delivery intermediaries like PG&E). Used for P2P trading with utilities. Reflected as billing line item.
           x-jsonld: { "@id": wheelingCharges }
           additionalProperties: false
           properties:
@@ -96,7 +96,7 @@ components:
 
         timeOfDayRates:
           type: array
-          description: Time-of-day pricing rates (applicable when pricingModel is TIME_OF_DAY).
+          description: Optional. Time-of-day pricing rates (applicable when pricingModel is TIME_OF_DAY). Can also be expressed via bidCurve with time windows.
           items:
             type: object
             additionalProperties: false
@@ -163,17 +163,6 @@ components:
           example: 3.5
           x-jsonld: { "@id": "energyCoordination:setpointKW" }
 
-        locationalPriceAdder:
-          $ref: '#/components/schemas/LocationalPriceAdder'
-          description: Price adder based on grid location and congestion. Applied to offers in congested areas.
-
-        locationalPrice:
-          type: number
-          minimum: 0
-          description: Final price including locational adder. Formula: clearingPrice + locationalPriceAdder.currentPrice.
-          example: 0.175
-          x-jsonld: { "@id": "energyCoordination:locationalPrice" }
-
     BidCurvePoint:
       type: object
       description: A single price/power pair in a bid curve.
@@ -214,45 +203,4 @@ components:
           example: 0.5
           x-jsonld: { "@id": "energyCoordination:rampRateKWPerMin" }
 
-    LocationalPriceAdder:
-      type: object
-      description: Price adder based on grid location and congestion.
-      additionalProperties: false
-      properties:
-        basePrice:
-          type: number
-          minimum: 0
-          description: Base price per kilowatt-hour before locational adder.
-          example: 0.10
-          x-jsonld: { "@id": "energyCoordination:basePrice" }
-        congestionMultiplier:
-          type: number
-          minimum: 0
-          description: Multiplier for congestion calculation (typically 1.0).
-          example: 1.0
-          x-jsonld: { "@id": "energyCoordination:congestionMultiplier" }
-        currentLoadPercent:
-          type: number
-          minimum: 0
-          maximum: 100
-          description: Current load as percentage of capacity.
-          example: 75
-          x-jsonld: { "@id": "energyCoordination:currentLoadPercent" }
-        priceAdderPerPercent:
-          type: number
-          minimum: 0
-          description: Price adder per percentage point of load.
-          example: 0.001
-          x-jsonld: { "@id": "energyCoordination:priceAdderPerPercent" }
-        currentPrice:
-          type: number
-          minimum: 0
-          description: Current price including locational adder (calculated).
-          example: 0.175
-          x-jsonld: { "@id": "energyCoordination:currentPrice" }
-        formula:
-          type: string
-          description: Formula for calculating locational price (human-readable).
-          example: "basePrice + (currentLoadPercent * priceAdderPerPercent)"
-          x-jsonld: { "@id": "energyCoordination:formula" }
 

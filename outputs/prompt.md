@@ -70,3 +70,14 @@ That is a lot.. any chance you could update sequence diagram to portray it?
 Nice improvement! This example may become simpler, if we drop User & EV app, charging station entirely as actors, and only assume that CPO, Solar prosumer are interacting with Market clearing Agent (and cascaded to Utility BPP). What do you think? Peer to peer trades between EV user & CPO can be a different flow not covered here for the sake for simplicity of illustration.
 
 ----
+
+ok.. can you reduce number of actors in VPP coordination, if they are serving duplicate functions.. It will reduce visual clutter. 
+
+----
+
+I want to refactor schemas with simplers shells and growing optional complexity with depth, and want to make these schemas telescoping and multi-tenant instead of having too many optional attributes linked at root. e.g. I was thinking that EnergyContract  and EnergyIntent would be core abstract schemas. EnergyContract is formed by the when of two or multiple party EnergyIntent are expressed and matched. A Contract specifies participant ids, all inputs signal IDs (e.f. prices or meter readings/Charger data records), states (e.g. wait time) and logic to transform them into net-zero (money is conserved) billing flows between participants, either post-fulfillment or incremetally alongside the fulfillment. One type of EnergyIntent will be bid curves (Power vs. price/kwh),  others can be offer curves, other kind will be kwh needed within certain radius / along a route with wait time less than 5min, another will be tariffs. Can you propose a conceptual refactor of how to do this.. Don't shy away from bold refactor proposal if it indeed helps simplicity and expressivity. Please think long & really hard..
+
+
+Generated outputs/10_Conceptual_Refactor_Proposal.md
+-----
+

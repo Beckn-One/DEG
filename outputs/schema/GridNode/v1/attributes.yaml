@@ -1,0 +1,116 @@
+openapi: 3.1.1
+info:
+  title: Energy Coordination — Grid Node Attributes (v1)
+  version: 1.0.0
+  x-profile-id: profiles/energy-coordination/grid_node/v1/grid-node
+  description: >
+    Attribute schemas for grid nodes (transformers, substations) as Energy Resources.
+    These attributes extend EnergyResource to provide grid-specific characteristics
+    including locational pricing, grid constraints, and offset commands.
+    Attaches to Item.itemAttributes for grid infrastructure nodes.
+
+components:
+  schemas:
+    ########################################################################
+    # ITEM.ITEMATTRIBUTES — GridNode (Grid Infrastructure)
+    ########################################################################
+    GridNode:
+      type: object
+      additionalProperties: false
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": GridNode
+      properties:
+
+        # Grid Node Identification
+        nodeId:
+          type: string
+          description: Unique identifier for the grid node (transformer, substation).
+          example: "transformer-tx-001"
+          x-jsonld: { "@id": "beckn:nodeId" }
+
+        nodeType:
+          type: string
+          enum: [TRANSFORMER, SUBSTATION, DISTRIBUTION_NODE, TRANSMISSION_NODE]
+          description: Type of grid node.
+          example: "TRANSFORMER"
+          x-jsonld: { "@id": "beckn:nodeType" }
+
+        # Locational Pricing
+        locationalPriceAdder:
+          $ref: '#/components/schemas/LocationalPriceAdder'
+          description: Price adder based on grid location and congestion. Signals congestion risk to market participants.
+
+        # Grid Operational Constraints
+        gridConstraints:
+          $ref: '#/components/schemas/GridConstraints'
+          description: Operational constraints for grid nodes including flow limits and capacity.
+
+    LocationalPriceAdder:
+      type: object
+      description: Price adder based on grid location and congestion. Used by grid nodes to signal congestion risk.
+      additionalProperties: false
+      properties:
+        basePrice:
+          type: number
+          minimum: 0
+          description: Base price per kilowatt-hour before locational adder.
+          example: 0.10
+          x-jsonld: { "@id": "beckn:basePrice" }
+        currentLoadPercent:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Current load as percentage of capacity.
+          example: 75
+          x-jsonld: { "@id": "beckn:currentLoadPercent" }
+        priceAdderPerPercent:
+          type: number
+          minimum: 0
+          description: Price adder per percentage point of load.
+          example: 0.001
+          x-jsonld: { "@id": "beckn:priceAdderPerPercent" }
+        currentPrice:
+          type: number
+          minimum: 0
+          description: Current price including locational adder (calculated). Formula: basePrice + (currentLoadPercent * priceAdderPerPercent).
+          example: 0.175
+          x-jsonld: { "@id": "beckn:currentPrice" }
+        congestionMultiplier:
+          type: number
+          minimum: 0
+          description: Optional multiplier for congestion calculation. Defaults to 1.0 if not specified.
+          example: 1.0
+          default: 1.0
+          x-jsonld: { "@id": "beckn:congestionMultiplier" }
+
+    GridConstraints:
+      type: object
+      description: Operational constraints for grid nodes (transformers, substations).
+      additionalProperties: false
+      properties:
+        maxReverseFlowKW:
+          type: number
+          minimum: 0
+          description: Maximum reverse power flow (from distribution to transmission) in kilowatts.
+          example: 50
+          x-jsonld: { "@id": "beckn:maxReverseFlowKW" }
+        maxForwardFlowKW:
+          type: number
+          minimum: 0
+          description: Maximum forward power flow (from transmission to distribution) in kilowatts.
+          example: 200
+          x-jsonld: { "@id": "beckn:maxForwardFlowKW" }
+        currentLoadKW:
+          type: number
+          minimum: 0
+          description: Current load in kilowatts.
+          example: 150
+          x-jsonld: { "@id": "beckn:currentLoadKW" }
+        capacityKW:
+          type: number
+          minimum: 0
+          description: Total capacity in kilowatts.
+          example: 200
+          x-jsonld: { "@id": "beckn:capacityKW" }
+

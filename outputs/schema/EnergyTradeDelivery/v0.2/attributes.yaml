@@ -135,22 +135,15 @@ components:
           example: "settle-2024-10-04-001"
           x-jsonld: { "@id": settlementCycleId }
 
-        lastUpdated:
-          type: string
-          format: date-time
-          description: Last delivery update timestamp (UTC). Updated as meter readings arrive.
-          example: "2024-10-04T15:30:00Z"
-          x-jsonld: { "@id": "schema:dateModified" }
-
         # Coordination Extensions
         offsetCommand:
           $ref: '#/components/schemas/OffsetCommand'
-          description: Grid operator offset command applied during fulfillment. Used to break flat bid curve plateaus.
+          description: Optional. Grid operator offset command applied during fulfillment. Used to break flat bid curve plateaus.
 
         deviationPenalty:
           type: number
           minimum: 0
-          description: Penalty for net imbalance (promised vs actual trade). Used by market clearing agent with virtual meter.
+          description: Optional. Penalty for net imbalance (promised vs actual trade). Used by market clearing agent with virtual meter.
           example: 0.0
           x-jsonld: { "@id": "energyCoordination:deviationPenalty" }
 
@@ -159,14 +152,9 @@ components:
       description: Grid operator command to apply offset for flat bid curve plateaus.
       additionalProperties: false
       properties:
-        enabled:
-          type: boolean
-          description: Whether the offset command is enabled.
-          example: true
-          x-jsonld: { "@id": "schema:enabled" }
         offsetKW:
           type: number
-          description: Power offset in kilowatts to apply. Negative values reduce setpoint, positive values increase setpoint.
+          description: Power offset in kilowatts to apply. Negative values reduce setpoint, positive values increase setpoint. Presence of this property indicates the command is enabled.
           example: -2.0
           x-jsonld: { "@id": "energyCoordination:offsetKW" }
 

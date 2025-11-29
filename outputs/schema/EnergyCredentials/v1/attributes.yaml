@@ -1,0 +1,445 @@
+openapi: 3.1.1
+info:
+  title: Energy Credentials — Credential Attributes (v1)
+  version: 1.0.0
+  x-profile-id: profiles/energy-credentials/energy_credentials/v1/credentials
+  description: >
+    Attribute schemas for energy credentials (W3C Verifiable Credentials).
+    These attributes can be attached to Item.itemAttributes, Order.orderAttributes, or Provider.providerAttributes
+    to reference or embed W3C Verifiable Credentials for trust and verification.
+    Supports credential presentation, verification status, and credential querying.
+
+components:
+  schemas:
+    ########################################################################
+    # CREDENTIAL ATTRIBUTES — EnergyCredentials (W3C Verifiable Credentials)
+    ########################################################################
+    EnergyCredentials:
+      type: object
+      additionalProperties: false
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": EnergyCredentials
+      properties:
+
+        # Credential References and Presentations
+        presentedCredentials:
+          type: array
+          description: Array of W3C Verifiable Credentials or Verifiable Presentations presented by the resource. Can be embedded directly or referenced by URI.
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/VerifiableCredential'
+              - $ref: '#/components/schemas/VerifiablePresentation'
+              - $ref: '#/components/schemas/CredentialReference'
+          x-jsonld: { "@id": "beckn:presentedCredentials" }
+
+        requiredCredentials:
+          type: array
+          description: Array of credential types or claims required for this resource/transaction. Used in discovery and contract formation.
+          items:
+            $ref: '#/components/schemas/CredentialRequirement'
+          x-jsonld: { "@id": "beckn:requiredCredentials" }
+
+        # Verification Status
+        verificationStatus:
+          $ref: '#/components/schemas/VerificationStatus'
+          description: Current verification status of presented credentials, including last verified timestamp and verification type.
+
+        # Credential Query Support
+        credentialQuery:
+          $ref: '#/components/schemas/CredentialQuery'
+          description: Optional. Query endpoint or method for requesting specific credentials from the resource holder.
+
+    ########################################################################
+    # W3C VERIFIABLE CREDENTIAL STRUCTURE
+    ########################################################################
+
+    VerifiableCredential:
+      type: object
+      description: W3C Verifiable Credential structure. Can be embedded directly or referenced.
+      additionalProperties: true
+      required: ["@context", "type", "credentialSubject", "issuer"]
+      properties:
+        "@context":
+          type: array
+          description: JSON-LD context URIs. Must include W3C VC context.
+          items:
+            type: string
+            format: uri
+          example: ["https://www.w3.org/2018/credentials/v1", "https://deg.energy/credentials/v1"]
+          x-jsonld: { "@id": "@context" }
+        type:
+          type: array
+          description: Credential types. Must include "VerifiableCredential" plus domain-specific types.
+          items:
+            type: string
+          example: ["VerifiableCredential", "GreenEnergyCertificate"]
+          x-jsonld: { "@id": "type" }
+        id:
+          type: string
+          format: uri
+          description: Unique identifier for this credential.
+          example: "https://certification.example.com/credentials/solar-cert-123"
+          x-jsonld: { "@id": "id" }
+        issuer:
+          $ref: '#/components/schemas/CredentialIssuer'
+          description: Entity that issued the credential.
+        issuanceDate:
+          type: string
+          format: date-time
+          description: When the credential was issued (ISO 8601).
+          example: "2024-01-15T00:00:00Z"
+          x-jsonld: { "@id": "issuanceDate" }
+        expirationDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the credential expires (ISO 8601). Null if no expiration.
+          example: "2029-01-15T23:59:59Z"
+          x-jsonld: { "@id": "expirationDate" }
+        credentialSubject:
+          $ref: '#/components/schemas/CredentialSubject'
+          description: Claims about the subject (energy resource).
+        credentialStatus:
+          $ref: '#/components/schemas/CredentialStatus'
+          description: Optional. Status information for revocation checking.
+        proof:
+          $ref: '#/components/schemas/CredentialProof'
+          description: Cryptographic proof (signature) of the credential.
+
+    VerifiablePresentation:
+      type: object
+      description: W3C Verifiable Presentation containing one or more Verifiable Credentials.
+      additionalProperties: true
+      required: ["@context", "type", "verifiableCredential"]
+      properties:
+        "@context":
+          type: array
+          description: JSON-LD context URIs.
+          items:
+            type: string
+            format: uri
+          example: ["https://www.w3.org/2018/credentials/v1"]
+          x-jsonld: { "@id": "@context" }
+        type:
+          type: string
+          description: Presentation type.
+          example: "VerifiablePresentation"
+          x-jsonld: { "@id": "type" }
+        verifiableCredential:
+          type: array
+          description: Array of Verifiable Credentials being presented.
+          items:
+            $ref: '#/components/schemas/VerifiableCredential'
+          x-jsonld: { "@id": "verifiableCredential" }
+        proof:
+          $ref: '#/components/schemas/CredentialProof'
+          description: Holder's signature proving they control the credentials.
+
+    CredentialReference:
+      type: object
+      description: Reference to a credential stored elsewhere (by URI or DID).
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uri
+          description: URI or DID reference to the credential.
+          example: "https://wallet.example.com/credentials/solar-cert-123"
+          x-jsonld: { "@id": "id" }
+        type:
+          type: array
+          description: Expected credential types.
+          items:
+            type: string
+          example: ["VerifiableCredential", "GreenEnergyCertificate"]
+          x-jsonld: { "@id": "type" }
+        queryEndpoint:
+          type: string
+          format: uri
+          description: Optional. Endpoint to query the credential.
+          example: "https://wallet.example.com/query-credential"
+          x-jsonld: { "@id": "queryEndpoint" }
+
+    ########################################################################
+    # CREDENTIAL COMPONENTS
+    ########################################################################
+
+    CredentialIssuer:
+      type: object
+      description: Entity that issued the credential.
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uri
+          description: Issuer identifier (DID or URI).
+          example: "did:example:renewable-certification-authority"
+          x-jsonld: { "@id": "id" }
+        name:
+          type: string
+          description: Human-readable issuer name.
+          example: "Renewable Energy Certification Authority"
+          x-jsonld: { "@id": "name" }
+
+    CredentialSubject:
+      type: object
+      description: Claims about the credential subject (energy resource).
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+          format: uri
+          description: Subject identifier (DID or ERA).
+          example: "did:deg:household-solar-battery-001"
+          x-jsonld: { "@id": "id" }
+        era:
+          type: string
+          description: Energy Resource Address of the subject.
+          example: "household-solar-battery-001.greenenergy.example.com"
+          x-jsonld: { "@id": "beckn:era" }
+        # Domain-specific claims (examples)
+        energySource:
+          type: string
+          enum: [SOLAR, BATTERY, GRID, HYBRID, RENEWABLE, WIND, HYDRO]
+          description: Energy source type.
+          example: "SOLAR"
+          x-jsonld: { "@id": "beckn:energySource" }
+        renewableEnergyType:
+          type: string
+          description: Specific renewable energy type.
+          example: "photovoltaic"
+          x-jsonld: { "@id": "beckn:renewableEnergyType" }
+        carbonIntensity:
+          type: string
+          description: Carbon intensity rating.
+          example: "0gCO2/kWh"
+          x-jsonld: { "@id": "beckn:carbonIntensity" }
+        certificationStandard:
+          type: string
+          description: Certification standard used.
+          example: "ISO 50001:2018"
+          x-jsonld: { "@id": "beckn:certificationStandard" }
+        installedCapacity:
+          type: string
+          description: Installed capacity.
+          example: "5kW"
+          x-jsonld: { "@id": "beckn:installedCapacity" }
+        annualGeneration:
+          type: string
+          description: Annual generation estimate.
+          example: "6000kWh"
+          x-jsonld: { "@id": "beckn:annualGeneration" }
+
+    CredentialStatus:
+      type: object
+      description: Status information for credential revocation checking.
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uri
+          description: Status list entry identifier.
+          example: "https://issuer.example.com/status/1#94567"
+          x-jsonld: { "@id": "id" }
+        type:
+          type: string
+          description: Status list type.
+          example: "StatusList2021Entry"
+          x-jsonld: { "@id": "type" }
+        statusPurpose:
+          type: string
+          enum: [revocation, suspension]
+          description: Purpose of the status check.
+          example: "revocation"
+          x-jsonld: { "@id": "statusPurpose" }
+        statusListIndex:
+          type: string
+          description: Index in the status list.
+          example: "94567"
+          x-jsonld: { "@id": "statusListIndex" }
+        statusListCredential:
+          type: string
+          format: uri
+          description: URI to the status list credential.
+          example: "https://issuer.example.com/status/1"
+          x-jsonld: { "@id": "statusListCredential" }
+
+    CredentialProof:
+      type: object
+      description: Cryptographic proof (signature) of the credential or presentation.
+      additionalProperties: true
+      properties:
+        type:
+          type: string
+          description: Proof type (signature suite).
+          example: "Ed25519Signature2020"
+          x-jsonld: { "@id": "type" }
+        created:
+          type: string
+          format: date-time
+          description: When the proof was created (ISO 8601).
+          example: "2024-01-15T00:00:00Z"
+          x-jsonld: { "@id": "created" }
+        proofPurpose:
+          type: string
+          enum: [assertionMethod, authentication]
+          description: Purpose of the proof.
+          example: "assertionMethod"
+          x-jsonld: { "@id": "proofPurpose" }
+        verificationMethod:
+          type: string
+          format: uri
+          description: Public key used for verification.
+          example: "did:example:renewable-certification-authority#key-1"
+          x-jsonld: { "@id": "verificationMethod" }
+        proofValue:
+          type: string
+          description: Cryptographic signature value.
+          example: "z3FXQjecWh...signature...kKJh6vW3"
+          x-jsonld: { "@id": "proofValue" }
+        challenge:
+          type: string
+          description: Optional. Challenge string for authentication proofs.
+          example: "transaction-challenge-xyz"
+          x-jsonld: { "@id": "challenge" }
+
+    ########################################################################
+    # VERIFICATION AND QUERYING
+    ########################################################################
+
+    VerificationStatus:
+      type: object
+      description: Current verification status of presented credentials.
+      additionalProperties: false
+      properties:
+        verified:
+          type: boolean
+          description: Whether credentials have been verified.
+          example: true
+          x-jsonld: { "@id": "beckn:verified" }
+        verificationType:
+          type: string
+          enum: [CRYPTOGRAPHIC, STATUS_CHECK, BINDING_CHECK, ALL]
+          description: Type of verification performed. CRYPTOGRAPHIC = signature check, STATUS_CHECK = revocation check, BINDING_CHECK = DID control check, ALL = all checks passed.
+          example: "ALL"
+          x-jsonld: { "@id": "beckn:verificationType" }
+        lastVerified:
+          type: string
+          format: date-time
+          description: Timestamp of last verification (ISO 8601).
+          example: "2024-12-15T10:00:00Z"
+          x-jsonld: { "@id": "beckn:lastVerified" }
+        verificationDetails:
+          type: array
+          description: Detailed results of each verification check.
+          items:
+            $ref: '#/components/schemas/VerificationDetail'
+          x-jsonld: { "@id": "beckn:verificationDetails" }
+        errors:
+          type: array
+          description: Optional. Verification errors if verification failed.
+          items:
+            type: string
+          example: ["Credential expired", "Status check failed"]
+          x-jsonld: { "@id": "beckn:errors" }
+
+    VerificationDetail:
+      type: object
+      description: Detailed result of a single verification check.
+      additionalProperties: false
+      properties:
+        checkType:
+          type: string
+          enum: [SIGNATURE, STATUS, BINDING, EXPIRY, SCHEMA]
+          description: Type of check performed.
+          example: "SIGNATURE"
+          x-jsonld: { "@id": "beckn:checkType" }
+        passed:
+          type: boolean
+          description: Whether this check passed.
+          example: true
+          x-jsonld: { "@id": "beckn:passed" }
+        timestamp:
+          type: string
+          format: date-time
+          description: When this check was performed (ISO 8601).
+          example: "2024-12-15T10:00:00Z"
+          x-jsonld: { "@id": "beckn:timestamp" }
+        details:
+          type: string
+          description: Optional. Additional details about the check result.
+          example: "Ed25519 signature verified against issuer public key"
+          x-jsonld: { "@id": "beckn:details" }
+
+    CredentialRequirement:
+      type: object
+      description: Specification of a credential type or claim required for a resource/transaction.
+      additionalProperties: false
+      properties:
+        credentialType:
+          type: array
+          description: Required credential types.
+          items:
+            type: string
+          example: ["VerifiableCredential", "GreenEnergyCertificate"]
+          x-jsonld: { "@id": "beckn:credentialType" }
+        requiredClaims:
+          type: object
+          description: Optional. Specific claims that must be present.
+          additionalProperties: true
+          properties:
+            energySource:
+              type: string
+              enum: [SOLAR, BATTERY, GRID, HYBRID, RENEWABLE]
+              description: Required energy source type.
+              example: "SOLAR"
+            certificationStandard:
+              type: string
+              description: Required certification standard.
+              example: "ISO 50001:2018"
+          x-jsonld: { "@id": "beckn:requiredClaims" }
+        issuerRestriction:
+          type: array
+          description: Optional. Allowed issuer DIDs or URIs.
+          items:
+            type: string
+            format: uri
+          example: ["did:example:renewable-certification-authority"]
+          x-jsonld: { "@id": "beckn:issuerRestriction" }
+        description:
+          type: string
+          description: Human-readable description of the requirement.
+          example: "Must present green energy certification from approved authority"
+          x-jsonld: { "@id": "schema:description" }
+
+    CredentialQuery:
+      type: object
+      description: Query endpoint or method for requesting specific credentials from the resource holder.
+      additionalProperties: false
+      properties:
+        queryEndpoint:
+          type: string
+          format: uri
+          description: URI endpoint for credential queries.
+          example: "https://wallet.example.com/query-credentials"
+          x-jsonld: { "@id": "beckn:queryEndpoint" }
+        queryMethod:
+          type: string
+          enum: [HTTP_GET, HTTP_POST, DID_COMM, WALLET_PROTOCOL]
+          description: Protocol/method for querying credentials.
+          example: "HTTP_GET"
+          x-jsonld: { "@id": "beckn:queryMethod" }
+        supportedCredentialTypes:
+          type: array
+          description: Credential types that can be queried.
+          items:
+            type: string
+          example: ["GreenEnergyCertificate", "SafetyCertificate", "GridInterconnectionApproval"]
+          x-jsonld: { "@id": "beckn:supportedCredentialTypes" }
+        authenticationRequired:
+          type: boolean
+          description: Whether authentication is required for queries.
+          example: true
+          x-jsonld: { "@id": "beckn:authenticationRequired" }
+
