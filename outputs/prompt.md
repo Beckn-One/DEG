@@ -81,3 +81,11 @@ I want to refactor schemas with simplers shells and growing optional complexity 
 Generated outputs/10_Conceptual_Refactor_Proposal.md
 -----
 
+Do you think the pending or confirmed EnergyContract can slot into OrderAtributes slot within Beckn init & confirm flow?
+
+------
+
+Is there a library to verify confirmance with Ricardian contract rules? I see that example refer to revenue flows.. Is it a Ricardian contract?
+
+------
+

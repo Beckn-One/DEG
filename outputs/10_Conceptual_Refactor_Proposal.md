@@ -211,7 +211,49 @@ EnergyContract:
     # Optional extensions (telescoping)
     credentials: EnergyCredentials  # Required credentials
     verification: ContractVerification  # DeDi protocol verification data
+    ricardianContract: RicardianContract  # Human-readable legal prose + hash linking to machine-readable logic
 ```
+
+**Ricardian Contract Extension** (optional):
+To make EnergyContract a true Ricardian contract, add human-readable legal prose:
+```yaml
+RicardianContract:
+  type: object
+  properties:
+    humanReadableText: string  # Natural language contract terms (Markdown/HTML)
+    humanReadableTextHash: string  # SHA-256 hash of human-readable text
+    machineReadableHash: string  # SHA-256 hash of machine-readable contract (revenue flows, formulas, etc.)
+    combinedHash: string  # Hash linking both (proves they belong together)
+    legalJurisdiction: string  # Legal jurisdiction (e.g., "IN", "US-CA")
+    contractVersion: string  # Version of contract template
+    templateId: string  # ID of contract template used
+```
+
+**Example Ricardian Contract Structure**:
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-walk-in-001",
+  "roles": [ /* ... */ ],
+  "revenueFlows": [ /* ... */ ],
+  "ricardianContract": {
+    "humanReadableText": "# Energy Charging Service Agreement\n\nThis agreement governs the provision of electric vehicle charging services...\n\n**Terms**:\n- Price: ₹12 per kWh\n- Grace period: 15 minutes\n- Power rating: 50 kW\n\n**Revenue Distribution**:\n- Seller receives: energyFlow × price\n- Buyer pays: energyFlow × price + penalties\n\n**Dispute Resolution**: All disputes shall be resolved through arbitration...",
+    "humanReadableTextHash": "sha256:a1b2c3d4e5f6...",
+    "machineReadableHash": "sha256:1a2b3c4d5e6f...",
+    "combinedHash": "sha256:abc123def456...",
+    "legalJurisdiction": "IN",
+    "contractVersion": "1.0",
+    "templateId": "ev-charging-walk-in-v1"
+  }
+}
+```
+
+**Verification Process**:
+1. Verify `humanReadableTextHash` matches hash of `humanReadableText`
+2. Verify `machineReadableHash` matches hash of contract's machine-readable parts (roles, revenueFlows, formulas)
+3. Verify `combinedHash` links both hashes together
+4. Verify digital signatures on contract
+5. Verify contract conforms to template schema
 
 **Contract Confirmation**: Contract moves from `PENDING` to `ACTIVE` when:
 1. All roles are filled
@@ -355,6 +397,270 @@ ParticipantVerification:
 **When to use EnergyContract vs EnergyOffer in offerAttributes**:
 - **EnergyContract directly**: When you want to publish the full contract definition without an offer wrapper
 - **EnergyOffer**: When you want to provide offer metadata (providerId, providerUri, contractSummary) along with contract reference or definition
+
+---
+
+## 3.1 EnergyContract Lifecycle Through Beckn Flows
+
+**EnergyContract flows through the Beckn protocol lifecycle**, appearing in different attribute slots at different stages:
+
+### Flow Overview
+
+1. **Discovery** (`discover`/`on_discover`): Contract in `offerAttributes`
+2. **Order Formation** (`init`/`on_init`): Contract in `orderAttributes` with status `PENDING`
+3. **Order Confirmation** (`confirm`/`on_confirm`): Contract in `orderAttributes` with status `ACTIVE`
+4. **Fulfillment** (`status`/`update`): Contract fulfillment data in `fulfillment.attributes`
+
+### 1. Discovery Phase: Contract in `offerAttributes`
+
+**Purpose**: Publish contract definitions for discovery and selection.
+
+**Location**: `Offer.offerAttributes`
+
+**Status**: Contract definition (not yet instantiated)
+
+**Example**:
+```json
+{
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+  "@type": "beckn:Offer",
+  "beckn:id": "offer-ev-charging-001",
+  "beckn:offerAttributes": {
+    "@context": "https://deg.energy/schema/EnergyContract/v1/context.jsonld",
+    "@type": "EnergyContract",
+    "contractId": "contract-walk-in-001",
+    "roles": [
+      {
+        "role": "SELLER",
+        "filledBy": "bpp.cpo.example.com",
+        "filled": true,
+        "expectedRoleInputs": [
+          { "inputName": "price", "inputType": "NUMBER" },
+          { "inputName": "startTime", "inputType": "DATE_TIME" }
+        ]
+      },
+      {
+        "role": "BUYER",
+        "filledBy": null,
+        "filled": false,
+        "expectedRoleInputs": [
+          { "inputName": "accept", "inputType": "BOOLEAN" }
+        ]
+      }
+    ],
+    "status": "PENDING",
+    "revenueFlows": [ /* ... */ ]
+  }
+}
+```
+
+### 2. Order Formation Phase: Contract in `orderAttributes` (init)
+
+**Purpose**: Initialize order with contract instance, populate `inputParameters` as roles are filled.
+
+**Location**: `Order.orderAttributes` in `init` request/response
+
+**Status**: `PENDING` (roles being filled, inputs being provided)
+
+**Key Points**:
+- Contract instance created with `contractId` matching the offer
+- `inputParameters` populated as participants provide inputs
+- Roles transition from `filled: false` to `filled: true` as participants join
+- Contract status remains `PENDING` until confirmation
+
+**Example** (`init` request):
+```json
+{
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+  "@type": "beckn:Init",
+  "context": {
+    "action": "init",
+    "domain": "beckn.one:deg:ev-charging:*"
+  },
+  "message": {
+    "order": {
+      "@type": "beckn:Order",
+      "beckn:id": "order-001",
+      "beckn:orderAttributes": {
+        "@context": "https://deg.energy/schema/EnergyContract/v1/context.jsonld",
+        "@type": "EnergyContract",
+        "contractId": "contract-walk-in-001",
+        "roles": [
+          {
+            "role": "SELLER",
+            "filledBy": "bpp.cpo.example.com",
+            "filled": true,
+            "expectedRoleInputs": [
+              { "inputName": "price", "inputType": "NUMBER" },
+              { "inputName": "startTime", "inputType": "DATE_TIME" }
+            ]
+          },
+          {
+            "role": "BUYER",
+            "filledBy": "bap.ev-user-app.com",
+            "filled": true,
+            "expectedRoleInputs": [
+              { "inputName": "accept", "inputType": "BOOLEAN" }
+            ]
+          }
+        ],
+        "status": "PENDING",
+        "inputParameters": {
+          "SELLER": {
+            "price": 0.12,
+            "startTime": "2024-12-15T14:00:00Z",
+            "gracePeriod": "PT15M",
+            "powerRating": 50.0
+          },
+          "BUYER": {
+            "accept": true
+          }
+        },
+        "revenueFlows": [ /* ... */ ]
+      }
+    }
+  }
+}
+```
+
+### 3. Order Confirmation Phase: Contract in `orderAttributes` (confirm)
+
+**Purpose**: Confirm order with fully instantiated contract, all roles filled, all inputs provided.
+
+**Location**: `Order.orderAttributes` in `confirm` request/response
+
+**Status**: `ACTIVE` (all roles filled, contract confirmed)
+
+**Key Points**:
+- All roles must be `filled: true`
+- All `expectedRoleInputs` must have corresponding values in `inputParameters`
+- All `inputSignals` connections established
+- All `telemetrySources` connected
+- Contract status transitions to `ACTIVE`
+- Contract is now ready for fulfillment
+
+**Example** (`confirm` request):
+```json
+{
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+  "@type": "beckn:Confirm",
+  "context": {
+    "action": "confirm",
+    "domain": "beckn.one:deg:ev-charging:*"
+  },
+  "message": {
+    "order": {
+      "@type": "beckn:Order",
+      "beckn:id": "order-001",
+      "beckn:orderAttributes": {
+        "@context": "https://deg.energy/schema/EnergyContract/v1/context.jsonld",
+        "@type": "EnergyContract",
+        "contractId": "contract-walk-in-001",
+        "roles": [
+          {
+            "role": "SELLER",
+            "filledBy": "bpp.cpo.example.com",
+            "filled": true
+          },
+          {
+            "role": "BUYER",
+            "filledBy": "bap.ev-user-app.com",
+            "filled": true
+          }
+        ],
+        "status": "ACTIVE",
+        "inputParameters": {
+          "SELLER": {
+            "price": 0.12,
+            "startTime": "2024-12-15T14:00:00Z",
+            "gracePeriod": "PT15M",
+            "powerRating": 50.0
+          },
+          "BUYER": {
+            "accept": true
+          }
+        },
+        "inputSignals": [
+          {
+            "signalId": "cdr-source",
+            "signalType": "CHARGE_DATA_RECORD",
+            "source": {
+              "era": "cpo-station-001",
+              "endpoint": "https://cpo.example.com/cdr/contract-walk-in-001"
+            }
+          }
+        ],
+        "telemetrySources": [
+          {
+            "sourceId": "meter-readings",
+            "sourceType": "METER_READING",
+            "endpoint": "https://meter-api.example.com/readings"
+          }
+        ],
+        "revenueFlows": [ /* ... */ ]
+      }
+    }
+  }
+}
+```
+
+### 4. Fulfillment Phase: Contract Fulfillment Data
+
+**Purpose**: Track fulfillment progress and compute revenue flows from telemetry.
+
+**Location**: `Fulfillment.attributes` (or `Fulfillment.deliveryAttributes`)
+
+**Status**: Contract remains `ACTIVE`, fulfillment status tracked separately
+
+**Key Points**:
+- Contract reference maintained (via `contractId`)
+- Telemetry data collected from `telemetrySources`
+- Revenue flows computed using `revenueFlows` logic
+- Fulfillment status tracked (IN_PROGRESS, COMPLETED, etc.)
+
+**Example** (`status` response):
+```json
+{
+  "@type": "beckn:Status",
+  "message": {
+    "order": {
+      "@type": "beckn:Order",
+      "beckn:id": "order-001",
+      "beckn:fulfillment": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-001",
+          "beckn:attributes": {
+            "@context": "https://deg.energy/schema/EnergyTradeDelivery/v1/context.jsonld",
+            "@type": "EnergyTradeDelivery",
+            "contractId": "contract-walk-in-001",
+            "deliveryStatus": "IN_PROGRESS",
+            "deliveredQuantity": 5.5,
+            "meterReadings": [
+              {
+                "timestamp": "2024-12-15T15:30:00Z",
+                "energyKWh": 5.5,
+                "powerKW": 11.0
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+### Summary: EnergyContract Attribute Slot Usage
+
+| Beckn Flow | Attribute Slot | Contract Status | Purpose |
+|------------|----------------|-----------------|---------|
+| `discover`/`on_discover` | `Offer.offerAttributes` | Definition (not instantiated) | Publish contract for discovery |
+| `init`/`on_init` | `Order.orderAttributes` | `PENDING` | Initialize order, fill roles, collect inputs |
+| `confirm`/`on_confirm` | `Order.orderAttributes` | `ACTIVE` | Confirm order, activate contract |
+| `status`/`update` | `Fulfillment.attributes` | `ACTIVE` (fulfillment tracked separately) | Track fulfillment, compute revenue flows |
+
+**Key Insight**: The same `EnergyContract` schema is used across all stages, but its **status and completeness** evolve as it moves through the Beckn lifecycle. The contract definition in `offerAttributes` becomes a contract instance in `orderAttributes`, which then drives fulfillment tracking.
 
 ---
 
@@ -761,8 +1067,14 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 
 1. **Ricardian Contracts**: Human-readable contract text with machine-readable logic
    - Contract terms expressed in natural language
-   - Billing logic embedded as executable code
+   - Billing logic embedded as executable code/formulas
    - Cryptographic hash links text to code
+   - **Current Status**: EnergyContract has machine-readable logic (revenue flows, formulas) but needs human-readable legal prose to be a true Ricardian contract
+   - **Verification Libraries**: 
+     - EOS blockchain provides Ricardian contract tools (eosio-ricardian-template)
+     - WAX blockchain has Ricardian contract guidelines
+     - No widely available general-purpose library; typically implemented per platform
+     - Verification involves: (1) Hash verification linking prose to code, (2) Signature verification, (3) Schema validation
 
 2. **Event Sourcing**: Immutable event log of all contract state changes
    ```json

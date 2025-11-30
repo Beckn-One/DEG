@@ -11,12 +11,17 @@
 This document contains Mermaid sequence diagrams for all energy exchange use cases, showing how Beckn Protocol building blocks (including proposed extensions) enable each use case. Each diagram shows:
 
 - Beckn actions and responses
-- Attribute slot usage
+- Attribute slot usage (EnergyContract in `orderAttributes` during init/confirm)
 - Protocol integration points
-- Bid curve flows (where applicable)
+- Offer curve flows (where applicable) - unified terminology for price/power preferences
 - Market clearing patterns (where applicable)
+- Role-based participation (MARKET_CLEARING_AGENT, PROSUMER, GRID_OPERATOR, AGGREGATOR)
 
-> **Pay-as-clear note**: For market-based flows (Sections 2, 4, 5, 6, 7) `select/on_select` is intentionally skipped. Participants confirm “pay-as-clear” bids, and `on_confirm` returns the binding clearing outcome once the market clears.
+> **Pay-as-clear note**: For market-based flows (Sections 2, 4, 5, 6, 7) `select/on_select` is intentionally skipped. Participants confirm "pay-as-clear" offer curves, and `on_confirm` returns the binding clearing outcome once the market clears.
+
+> **Terminology note**: "Offer curve" is the unified term (replacing "bid curve") with signed power values (positive = export/generation, negative = withdrawal/consumption). Offer curves include `currency`, `minExport`, `maxExport`, and `curve` array.
+
+> **EnergyContract in orderAttributes**: Contracts appear in `orderAttributes` during `init` (status: PENDING) and `confirm` (status: ACTIVE) flows, with roles, inputParameters, and revenue flows.
 
 ---
 
@@ -117,119 +122,135 @@ sequenceDiagram
 
 ## 2. EV Charging (Demand Flexibility)
 
-**Use Case**: Market clearing agent coordinates multiple participants (CPO representing EV charging demand, solar prosumers representing supply) with utility load approval, clears market at confirmation time
+**Use Case**: Market clearing agent coordinates multiple prosumers (EV charging demand, solar generation supply) with utility load approval, clears market at confirmation time
 
 **Key Features**:
 - Simple discover (returns clearing agent ID + "PAY_AS_CLEAR")
-- Bid curves submitted during init
+- Offer curves submitted during init (with currency, maxExport, minExport)
 - Utility load approval via cascaded init
 - Market clearing at confirmation (synchronous)
 - Virtual meter balancing (net = 0, deviation penalties)
+- MCA contract with Grid Operator for deviation pricing
 
-**Note**: This diagram focuses on market clearing coordination. The peer-to-peer trade between EV user and CPO is a separate flow not shown here.
+**Note**: This diagram focuses on market clearing coordination. Participants use PROSUMER role (can be consumer, producer, or both). MCA uses MARKET_CLEARING_AGENT role.
 
 ```mermaid
 sequenceDiagram
-    participant CPO as CPO Platform (BPP)<br/>(Represents EV Charging Demand)
-    participant MCA as Market Clearing Agent (BPP)<br/>(Virtual Meter: Net = 0)
-    participant Utility as Utility BPP
-    participant Solar as Solar Prosumer (BPP)
+    participant EVProsumer as EV Prosumer (BPP)<br/>(Role: PROSUMER)<br/>(Represents EV Charging Demand)
+    participant MCA as Market Clearing Agent (BPP)<br/>(Role: MARKET_CLEARING_AGENT)<br/>(Virtual Meter: Net = 0)
+    participant Utility as Utility BPP<br/>(Role: GRID_OPERATOR)
+    participant SolarProsumer as Solar Prosumer (BPP)<br/>(Role: PROSUMER)<br/>(Represents Solar Generation)
 
-    Note over CPO,Solar: Discovery Phase (Simple)
-    CPO->>MCA: discover(location, timeWindow)
-    Note right of CPO: Simple discover:<br/>No bid curve yet
-    MCA-->>CPO: on_discover(catalog: clearing agent)
-    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}
+    Note over EVProsumer,SolarProsumer: Discovery Phase (Simple)
+    EVProsumer->>MCA: discover(location, timeWindow)
+    Note right of EVProsumer: Simple discover:<br/>No offer curve yet
+    MCA-->>EVProsumer: on_discover(catalog: clearing agent)
+    Note right of MCA: offerAttributes:<br/>{pricingModel: "PAY_AS_CLEAR",<br/>clearingAgentId: "mca-001"}<br/>EnergyContract with role:<br/>MARKET_CLEARING_AGENT (filled),<br/>PROSUMER (open)
     
-    Solar->>MCA: discover(location, timeWindow)
-    MCA-->>Solar: on_discover(catalog: clearing agent)
+    SolarProsumer->>MCA: discover(location, timeWindow)
+    MCA-->>SolarProsumer: on_discover(catalog: clearing agent)
 
-    Note over CPO,Solar: Initialization Phase (Bid Curve Submission)
-    CPO->>CPO: Construct bid curve from EV objectives
-    Note right of CPO: bidCurve:<br/>[{price: 0.08, powerKW: -11},<br/>{price: 0.10, powerKW: -5},<br/>{price: 0.12, powerKW: 0}]
-    CPO->>MCA: init(order with bidCurve, meterId, objectives)
-    Note right of CPO: orderAttributes:<br/>{bidCurve: [...],<br/>objectives: {targetChargeKWh: 20,<br/>deadline: "18:00",<br/>maxPrice: 0.12},<br/>meterId: "98765456"}
+    Note over EVProsumer,SolarProsumer: Initialization Phase (Offer Curve Submission)
+    EVProsumer->>EVProsumer: Construct offer curve from EV objectives
+    Note right of EVProsumer: offerCurve:<br/>{currency: "INR",<br/>minExport: -11,<br/>maxExport: 0,<br/>curve: [{price: 0.08, powerKW: -11},<br/>{price: 0.10, powerKW: -5},<br/>{price: 0.12, powerKW: 0}]}
+    EVProsumer->>MCA: init(order with offerCurve, meterId)
+    Note right of EVProsumer: orderAttributes:<br/>{EnergyContract:<br/>roles: [{role: "PROSUMER",<br/>filledBy: "ev-prosumer",<br/>filled: true}],<br/>inputParameters: {<br/>PROSUMER: {offerCurve: {...}}<br/>},<br/>status: "PENDING"}
 
-    Note over CPO,Solar: Utility Load Approval (Cascaded)
+    Note over EVProsumer,SolarProsumer: Utility Load Approval (Cascaded)
     MCA->>Utility: cascaded init(verify meter,<br/>calculate approved max trade volume)
     Note right of Utility: Check sanctioned load<br/>for meter 98765456
     Utility->>Utility: Verify sanctioned load: 50 kW<br/>Calculate available capacity: 30 kW
     Utility-->>MCA: cascaded_on_init(approvedMaxTradeKW: 30,<br/>wheelingCharges: ₹1/kWh)
     Note right of Utility: Approved max trade:<br/>30 kW (relative to<br/>sanctioned load)
 
-    Note over CPO,Solar: Clearing Agent Confirms Init
-    MCA->>MCA: Store bid curve & approved limits
-    MCA-->>CPO: on_init(terms confirmed,<br/>approvedMaxTradeKW: 30,<br/>clearingFees: ₹0.5/kWh)
-    Note right of MCA: Bid curve stored<br/>Approved limits confirmed<br/>Ready for market clearing
+    Note over EVProsumer,SolarProsumer: Clearing Agent Confirms Init
+    MCA->>MCA: Store offer curve & approved limits
+    MCA-->>EVProsumer: on_init(terms confirmed,<br/>approvedMaxTradeKW: 30,<br/>marketMakingFee: ₹0.01/kWh)
+    Note right of MCA: Offer curve stored<br/>Approved limits confirmed<br/>Ready for market clearing
 
-    Note over CPO,Solar: Solar Prosumer Submits Bid
-    Solar->>Solar: Construct bid curve from generation forecast
-    Note right of Solar: bidCurve:<br/>[{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]
-    Solar->>MCA: init(order with bidCurve, meterId)
+    Note over EVProsumer,SolarProsumer: Solar Prosumer Submits Offer Curve
+    SolarProsumer->>SolarProsumer: Construct offer curve from generation forecast
+    Note right of SolarProsumer: offerCurve:<br/>{currency: "INR",<br/>minExport: 0,<br/>maxExport: 5,<br/>curve: [{price: 0.05, powerKW: 0},<br/>{price: 0.06, powerKW: 2},<br/>{price: 0.07, powerKW: 5}]}
+    SolarProsumer->>MCA: init(order with offerCurve, meterId)
     MCA->>Utility: cascaded init(verify solar meter)
     Utility->>Utility: Verify sanctioned load: 10 kW<br/>Calculate available capacity: 5 kW
     Utility-->>MCA: cascaded_on_init(approvedMaxTradeKW: 5)
-    MCA-->>Solar: on_init(terms confirmed,<br/>approvedMaxTradeKW: 5)
+    MCA-->>SolarProsumer: on_init(terms confirmed,<br/>approvedMaxTradeKW: 5)
 
-    Note over CPO,Solar: Confirmation Phase (Bid Commitment)
-    CPO->>MCA: confirm(order, bid commitment)
-    Note right of CPO: Commits to bid curve<br/>Accepts PAY_AS_CLEAR pricing
-    Solar->>MCA: confirm(order, bid commitment)
-    Note right of Solar: Commits to bid curve
-    Note right of MCA: All participants have<br/>committed their bids
+    Note over EVProsumer,SolarProsumer: Confirmation Phase (Offer Curve Commitment)
+    EVProsumer->>MCA: confirm(order, offer curve commitment)
+    Note right of EVProsumer: Commits to offer curve<br/>Accepts PAY_AS_CLEAR pricing<br/>orderAttributes: EnergyContract<br/>status: "PENDING"
+    SolarProsumer->>MCA: confirm(order, offer curve commitment)
+    Note right of SolarProsumer: Commits to offer curve
+    Note right of MCA: All prosumers have<br/>committed their offer curves
 
-    Note over CPO,Solar: Market Clearing (After Confirmation)
-    MCA->>MCA: Collect all confirmed bids
-    Note right of MCA: Aggregate all bid curves:<br/>- CPO (EV demand): [-11, -5, 0] kW @ [0.08, 0.10, 0.12]<br/>- Solar (supply): [0, 2, 5] kW @ [0.05, 0.06, 0.07]<br/>- Other participants...
-    MCA->>MCA: aggregate(all bidCurves)
-    MCA->>MCA: Find clearing price: ₹0.075/kWh
-    MCA->>MCA: Economic disaggregation:<br/>CPO setpoint: -8.0 kW<br/>Solar setpoint: 3.5 kW
+    Note over EVProsumer,SolarProsumer: Market Clearing (After Confirmation)
+    MCA->>MCA: Collect all confirmed offer curves
+    Note right of MCA: Aggregate all offer curves:<br/>- EV Prosumer: [-11, -5, 0] kW @ [0.08, 0.10, 0.12]<br/>- Solar Prosumer: [0, 2, 5] kW @ [0.05, 0.06, 0.07]<br/>- Other prosumers...
+    MCA->>MCA: aggregate(all offerCurves)
+    MCA->>MCA: Find clearing price: ₹0.075/kWh<br/>Intersect with offer curves
+    MCA->>MCA: Economic disaggregation:<br/>EV Prosumer clearedPower: -8.0 kW<br/>Solar Prosumer clearedPower: 3.5 kW
     MCA->>MCA: Verify virtual meter balance:<br/>Net = -8.0 + 3.5 + ... = 0 ✓
     Note right of MCA: Virtual meter constraint:<br/>Net power flow = 0<br/>(any imbalance = deviation penalty)
 
-    Note over CPO,Solar: Lock Trade & Deduct Sanctioned Load
+    Note over EVProsumer,SolarProsumer: Lock Trade & Deduct Sanctioned Load
     MCA->>Utility: cascaded confirm(lock trade,<br/>deduct from sanctioned load)
-    Note right of MCA: Trade details:<br/>- CPO meter 98765456: -8.0 kW<br/>- Solar meter 100200300: +3.5 kW<br/>- Clearing price: ₹0.075/kWh
+    Note right of MCA: Trade details:<br/>- EV Prosumer meter 98765456: -8.0 kW<br/>- Solar Prosumer meter 100200300: +3.5 kW<br/>- Clearing price: ₹0.075/kWh
     Utility->>Utility: Deduct from sanctioned load:<br/>- Meter 98765456: 30 kW → 22 kW remaining<br/>- Meter 100200300: 5 kW → 1.5 kW remaining
     Note right of Utility: Prevents double dipping:<br/>Same sanctioned load capacity<br/>cannot be used for multiple trades
     Utility-->>MCA: cascaded_on_confirm(trade locked,<br/>sanctioned load deducted)
     Note right of Utility: Remaining capacity:<br/>- Meter 98765456: 22 kW<br/>- Meter 100200300: 1.5 kW
 
-    Note over CPO,Solar: Clearing Agent Sends on_confirm (After Clearing)
-    MCA-->>CPO: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: -8.0)
-    Note right of CPO: orderAttributes:<br/>{setpointKW: -8.0,<br/>clearingPrice: 0.075,<br/>locationalPrice: 0.075}
-    MCA-->>Solar: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>setpointKW: 3.5)
-    Note right of Solar: orderAttributes:<br/>{setpointKW: 3.5,<br/>clearingPrice: 0.075}
+    Note over EVProsumer,SolarProsumer: Clearing Agent Sends on_confirm (After Clearing)
+    MCA->>MCA: Generate market-clearing-price signal<br/>(price + clearedPower for each prosumer)
+    MCA-->>EVProsumer: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>clearedPower: -8.0 kW)
+    Note right of EVProsumer: orderAttributes:<br/>{EnergyContract:<br/>status: "ACTIVE",<br/>inputSignals: [{<br/>signalId: "market-clearing-price",<br/>price: 0.075,<br/>clearedPower: -8.0<br/>}],<br/>revenueFlows: [{<br/>party: {role: "PROSUMER"},<br/>formula: "-(marketClearingPrice + marketMakingFee) * clearedPower"<br/>}]}
+    MCA-->>SolarProsumer: on_confirm(order confirmed,<br/>clearingPrice: ₹0.075/kWh,<br/>clearedPower: 3.5 kW)
+    Note right of SolarProsumer: orderAttributes:<br/>{EnergyContract:<br/>status: "ACTIVE",<br/>clearedPower: 3.5}
 
-    Note over CPO,Solar: Settlement & Deviation Penalty
-    CPO->>CPO: Calculate actual delivery: 20 kWh
-    CPO->>Utility: Report actual trade
-    Solar->>Utility: Report actual trade: 3.5 kWh
+    Note over EVProsumer,SolarProsumer: MCA Contract with Grid Operator (Deviation Pricing)
+    Note right of MCA: Separate contract for deviation:<br/>EnergyContract with roles:<br/>MARKET_CLEARING_AGENT, GRID_OPERATOR
+    MCA->>Utility: Report total cleared bids & offers
+    Note right of MCA: totalClearedBids: -8.0 kW<br/>totalClearedOffers: 3.5 kW<br/>Net: -4.5 kW (imbalance)
+    Utility->>Utility: Calculate deviation penalty:<br/>deviationPrice × (totalClearedBids - totalClearedOffers - 0)<br/>= 0.05 × (-4.5) = -₹0.225
+    Utility-->>MCA: on_update(deviation penalty: ₹0.225)
+    Note right of Utility: MCA pays grid operator<br/>for deviation from zero net flow
+
+    Note over EVProsumer,SolarProsumer: Settlement & Revenue Flows
+    EVProsumer->>EVProsumer: Calculate actual delivery: 20 kWh
+    EVProsumer->>Utility: Report actual trade
+    SolarProsumer->>Utility: Report actual trade: 3.5 kWh
     Utility->>Utility: Calculate net imbalance:<br/>Promised: -8.0 + 3.5 = -4.5 kW<br/>Actual: -8.0 + 3.5 = -4.5 kW<br/>Deviation: 0 kW ✓
     Utility->>MCA: on_update(settlement: 20 kWh,<br/>deviationPenalty: ₹0)
-    MCA->>MCA: Calculate revenue flows:<br/>- CPO pays: 20 × ₹0.075 = ₹1.50<br/>- Solar receives: 3.5 × ₹0.075 = ₹0.2625<br/>- Clearing fee: ₹0.5/kWh
-    MCA->>CPO: on_update(settlement complete,<br/>finalCost: ₹1.50)
-    MCA->>Solar: on_update(settlement complete,<br/>revenue: ₹0.2625)
+    MCA->>MCA: Calculate revenue flows:<br/>- EV Prosumer pays: (0.075 + 0.01) × 8.0 = ₹0.68<br/>- Solar Prosumer receives: (0.075 + 0.01) × 3.5 = ₹0.2975<br/>- MCA receives: marketMakingFee × clearedPower
+    MCA->>EVProsumer: on_update(settlement complete,<br/>finalCost: ₹0.68)
+    MCA->>SolarProsumer: on_update(settlement complete,<br/>revenue: ₹0.2975)
 ```
 
 **Attribute Slots Used**:
+- `offerAttributes`: EnergyContract with MARKET_CLEARING_AGENT role (filled), PROSUMER role (open)
 - `offerAttributes.pricingModel`: "PAY_AS_CLEAR" pricing model
-- `orderAttributes.bidCurve`: Bid curve submitted during init
-- `orderAttributes.objectives`: Charging goals and constraints (for CPO)
+- `orderAttributes`: EnergyContract with roles, inputParameters (offerCurve), status: "PENDING" → "ACTIVE"
+- `orderAttributes.offerCurve`: Offer curve with currency, minExport, maxExport, curve array
 - `orderAttributes.approvedMaxTradeKW`: Utility-approved trade limit
-- `orderAttributes.clearingPrice`: Market-cleared price (from on_confirm)
-- `orderAttributes.setpointKW`: Confirmed setpoint (from on_confirm)
-- `fulfillmentAttributes.deviationPenalty`: Penalty for net imbalance
+- `orderAttributes.inputSignals`: market-clearing-price signal (generated by MCA after clearing)
+- `orderAttributes.clearedPower`: Cleared power for each prosumer (from on_confirm)
+- `orderAttributes.revenueFlows`: Formula: (marketClearingPrice + marketMakingFee) × clearedPower
+- `fulfillmentAttributes.deviationPenalty`: Penalty for net imbalance (MCA-Grid Operator contract)
 
 **Key Innovation**: 
-- Market clearing agent is a special peer with virtual meter (net = 0)
+- Market clearing agent uses MARKET_CLEARING_AGENT role, prosumers use PROSUMER role
+- EnergyContract slots into orderAttributes during init/confirm flows
+- Offer curves (not bid curves) with currency, minExport, maxExport structure
+- MCA generates market-clearing-price signal after market clears
+- Revenue formula: (marketClearingPrice + marketMakingFee) × clearedPower
+- Separate MCA-Grid Operator contract for deviation pricing
+- Virtual meter balancing (net = 0, deviation penalties)
 - Simple discover returns clearing agent ID and pricing model
-- Bid curves submitted during init (not discover)
+- Offer curves submitted during init (not discover)
 - Utility load approval via cascaded init
 - Prices discovered at confirmation time (synchronous market clearing)
 - Trade locking and sanctioned load deduction prevents double dipping
-- Deviation penalties incentivize balancing
-- Focus on coordination pattern, not end-to-end user flow
 
 ---
 
