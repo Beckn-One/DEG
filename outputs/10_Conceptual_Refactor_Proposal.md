@@ -12,7 +12,7 @@ This document proposes a bold architectural refactoring centered on **EnergyOffe
 
 1. **EnergyOffer as core Beckn primitive**: Goes in `offerAttributes` slot, represents willingness to assume roles in contracts
 2. **EnergyContract as computational agreement**: Defines roles, revenue flows, and quality metrics as functions of external signals
-3. **Role-based participation**: Contracts have open roles (buyer/seller/trader) that participants fill
+3. **Role-based participation**: Contracts have open roles (buyer/seller/prosumer/market clearing agent/aggregator/grid operator) that participants fill
 4. **Contract confirmation**: When all roles filled and input connections established
 5. **EnergyIntent only in discover calls**: Used in `discover` calls to tie intent to contract discovery & participation, not part of core Beckn schema
 6. **Fraud-resistant contracts**: Integration with Decentralized Directory Protocol (DeDi) for integrity, validity, and authenticity verification
@@ -103,7 +103,7 @@ This document proposes a bold architectural refactoring centered on **EnergyOffe
 
 **Key Concept**: 
 - **EnergyOffer** is a bouquet of contract participation opportunities
-- Each offer references a contract and specifies an **open role** (buyer/seller/trader)
+- Each offer references a contract and specifies an **open role** (buyer/seller/prosumer/market clearing agent/aggregator/grid operator)
 - Participants select offers to assume roles in contracts
 - Offers are published by providers (e.g., CPOs assume seller role)
 - **EnergyContract** can also slot into `offerAttributes` directly, allowing full contract definition to be included in offers for discovery
@@ -132,7 +132,7 @@ EnergyOffer:
     contractId: string  # Reference to EnergyContract
     providerId: string  # BPP ID of contract provider
     providerUri: string  # BPP URI of contract provider
-    openRole: enum [BUYER, SELLER, TRADER]  # Role available in contract
+    openRole: enum [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]  # Role available in contract
     
     # Optional extensions (telescoping)
     contract: EnergyContract  # Full contract definition (can be included in offerAttributes)
@@ -158,7 +158,7 @@ EnergyOffer:
 **Purpose**: Computational agreement that defines roles, revenue flows, and quality metrics as functions of external signals and telemetry.
 
 **Key Concept**: 
-- Contracts specify **roles** (buyer, seller, trader) that need to be filled
+- Contracts specify **roles** (buyer, seller, prosumer, market clearing agent, aggregator, grid operator) that need to be filled
 - Each role defines `expectedRoleInputs` (optional) specifying what inputs are expected
 - Contracts define **revenue flows** and **quality metrics** as functions of:
   - Input parameters (actual values provided by roles)
@@ -190,7 +190,7 @@ EnergyContract:
   properties:
     # Core (always present)
     contractId: string
-    roles: array[ContractRole]  # Roles in contract (buyer, seller, trader) with expectedRoleInputs
+    roles: array[ContractRole]  # Roles in contract (buyer, seller, prosumer, market clearing agent, aggregator, grid operator) with expectedRoleInputs
     status: enum [PENDING, ACTIVE, COMPLETED, TERMINATED]
     createdAt: date-time
     
@@ -382,20 +382,38 @@ ParticipantVerification:
 
 **Offer Curves in Expected Role Inputs**:
 Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or flexible (price responsive) trading**:
-- **Positive power values**: Providing energy to grid (injection)
-- **Negative power values**: Receiving energy from grid (withdrawal)
+- **Positive power values**: Providing energy to grid (injection/export)
+- **Negative power values**: Receiving energy from grid (withdrawal/consumption)
 
-**Example with Offer Curve**:
+**Offer Curve Structure**:
 ```json
 {
-  "role": "BUYER",
+  "offerCurve": {
+    "currency": "INR",        // Currency for prices
+    "minExport": -11,         // Minimum export (negative = maximum withdrawal)
+    "maxExport": 10,           // Maximum export (positive = maximum generation)
+    "curve": [                // Array of price/power pairs
+      { "price": 0.08, "powerKW": -11 },  // Negative = receiving energy
+      { "price": 0.10, "powerKW": -5 },
+      { "price": 0.12, "powerKW": 0 },
+      { "price": 0.14, "powerKW": 5 },    // Positive = providing energy
+      { "price": 0.16, "powerKW": 10 }
+    ]
+  }
+}
+```
+
+**Example with Offer Curve in Expected Role Inputs**:
+```json
+{
+  "role": "PROSUMER",
   "filledBy": null,
   "filled": false,
   "expectedRoleInputs": [
     {
       "inputName": "offerCurve",
       "inputType": "OFFER_CURVE",
-      "description": "Price-responsive offer curve (negative powers indicate desire to charge)",
+      "description": "Price-responsive offer curve (negative powers = withdrawal, positive = export)",
       "optional": true
     }
   ]
@@ -405,7 +423,10 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 **Role Types**:
 - `BUYER`: Energy consumer (e.g., EV user)
 - `SELLER`: Energy provider (e.g., CPO, prosumer)
-- `TRADER`: Market intermediary (e.g., aggregator, market clearing agent)
+- `PROSUMER`: Producer and/or consumer (can be both, used in market clearing contracts)
+- `MARKET_CLEARING_AGENT`: Market clearing agent that aggregates bids and clears market
+- `AGGREGATOR`: Market intermediary that aggregates resources
+- `GRID_OPERATOR`: Grid operator managing grid infrastructure and constraints
 
 ---
 
@@ -438,18 +459,28 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 {
   "inputParameters": {
     "BUYER": {
-      "offerCurve": [
-        { "price": 0.08, "powerKW": -11 },  // Negative = receiving energy (charging)
-        { "price": 0.10, "powerKW": -5 },
-        { "price": 0.12, "powerKW": 0 }
-      ]
+      "offerCurve": {
+        "currency": "INR",
+        "minExport": -11,  // Minimum export (negative = maximum withdrawal/charging)
+        "maxExport": 0,   // Maximum export (negative = no export, only withdrawal)
+        "curve": [
+          { "price": 0.08, "powerKW": -11 },  // Negative = receiving energy (charging)
+          { "price": 0.10, "powerKW": -5 },
+          { "price": 0.12, "powerKW": 0 }
+        ]
+      }
     },
     "SELLER": {
-      "offerCurve": [
-        { "price": 0.05, "powerKW": 0 },  // Positive = providing energy (generation)
-        { "price": 0.06, "powerKW": 5 },
-        { "price": 0.08, "powerKW": 10 }
-      ]
+      "offerCurve": {
+        "currency": "INR",
+        "minExport": 0,   // Minimum export (no withdrawal)
+        "maxExport": 10,  // Maximum export (generation)
+        "curve": [
+          { "price": 0.05, "powerKW": 0 },  // Positive = providing energy (generation)
+          { "price": 0.06, "powerKW": 5 },
+          { "price": 0.08, "powerKW": 10 }
+        ]
+      }
     }
   }
 }
@@ -956,7 +987,7 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 
 ---
 
-### 7.2 EV Charging (Demand Flexibility with Offer Curve)
+### 7.2 EV Charging (Demand Flexibility with Market Clearing)
 
 **Contract Definition** (published by Market Clearing Agent):
 ```json
@@ -965,28 +996,35 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
   "contractId": "contract-demand-flex-001",
   "roles": [
     {
-      "role": "BUYER",
-      "filledBy": null,
-      "filled": false,
-      "expectedRoleInputs": [
-        { "inputName": "offerCurve", "inputType": "OFFER_CURVE", "optional": true }
-      ]
+      "role": "MARKET_CLEARING_AGENT",
+      "filledBy": "bpp.market-clearing-agent.com",
+      "filled": true,
+      "expectedRoleInputs": []  // MCA has no expected inputs, generates market_clearing_price signal
     },
     {
-      "role": "SELLER",
+      "role": "PROSUMER",
       "filledBy": null,
       "filled": false,
       "expectedRoleInputs": [
-        { "inputName": "offerCurve", "inputType": "OFFER_CURVE", "optional": true }
+        { 
+          "inputName": "offerCurve", 
+          "inputType": "OFFER_CURVE", 
+          "optional": true,
+          "description": "Offer curve with positive powers (export/generation) or negative powers (withdrawal/consumption)"
+        }
       ]
     }
   ],
   "status": "PENDING",
   "inputSignals": [
     {
-      "signalId": "clearing-price",
+      "signalId": "market-clearing-price",
       "signalType": "PRICE",
-      "source": { "era": "market-clearing-agent" }
+      "source": { 
+        "era": "market-clearing-agent",
+        "generatedBy": "MARKET_CLEARING_AGENT",
+        "description": "Market clearing price generated after market clears, intersects with prosumer bid curves to decide cleared power"
+      }
     }
   ],
   "telemetrySources": [
@@ -998,74 +1036,144 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
   ],
   "revenueFlows": [
     {
-      "party": { "role": "BUYER" },
-      "formula": "-energyFlow * clearingPrice",
+      "party": { "role": "PROSUMER" },
+      "formula": "-(marketClearingPrice + marketMakingFee) * clearedPower",
+      "description": "Prosumer pays (market clearing price + market making fee) × cleared power",
       "variables": {
-        "energyFlow": { "source": "telemetry", "path": "$.energyFlow" },
-        "clearingPrice": { "source": "inputSignals", "path": "$.clearing-price.price" }
+        "marketClearingPrice": { "source": "inputSignals", "path": "$.market-clearing-price.price" },
+        "marketMakingFee": { "constant": 0.01 },
+        "clearedPower": { 
+          "source": "inputSignals", 
+          "path": "$.market-clearing-price.clearedPower",
+          "description": "Cleared power determined by intersection of market clearing price with prosumer offer curve"
+        }
       }
     },
     {
-      "party": { "role": "SELLER" },
-      "formula": "energyFlow * clearingPrice",
+      "party": { "role": "MARKET_CLEARING_AGENT" },
+      "formula": "(marketClearingPrice + marketMakingFee) * clearedPower",
+      "description": "MCA receives (market clearing price + market making fee) × cleared power",
       "variables": {
-        "energyFlow": { "source": "telemetry", "path": "$.energyFlow" },
-        "clearingPrice": { "source": "inputSignals", "path": "$.clearing-price.price" }
+        "marketClearingPrice": { "source": "inputSignals", "path": "$.market-clearing-price.price" },
+        "marketMakingFee": { "constant": 0.01 },
+        "clearedPower": { "source": "inputSignals", "path": "$.market-clearing-price.clearedPower" }
       }
     }
   ]
 }
 ```
 
-**EnergyOffer** (for buyer role):
+**EnergyOffer** (for prosumer role):
 ```json
 {
   "@type": "EnergyOffer",
-  "offerId": "offer-demand-flex-buyer-001",
+  "offerId": "offer-demand-flex-prosumer-001",
   "contractId": "contract-demand-flex-001",
   "providerId": "bpp.market-clearing-agent.com",
   "providerUri": "https://bpp.market-clearing-agent.com",
-  "openRole": "BUYER",
+  "openRole": "PROSUMER",
   "expectedInputs": [
     {
       "inputName": "offerCurve",
       "inputType": "OFFER_CURVE",
-      "description": "Offer curve with negative powers (desire to charge)"
+      "description": "Offer curve with positive powers (export) or negative powers (withdrawal)"
     }
   ]
 }
 ```
 
-**Contract Confirmation** (when buyer provides offer curve):
+**Contract Confirmation** (when prosumer provides offer curve):
 ```json
 {
   "@type": "EnergyContract",
   "contractId": "contract-demand-flex-001",
   "roles": [
-    { "role": "BUYER", "filledBy": "bap.ev-user-app.com", "filled": true },
-    { "role": "SELLER", "filledBy": "bap.solar-prosumer-app.com", "filled": true }
+    { "role": "MARKET_CLEARING_AGENT", "filledBy": "bpp.market-clearing-agent.com", "filled": true },
+    { "role": "PROSUMER", "filledBy": "bap.ev-user-app.com", "filled": true }
   ],
   "inputParameters": {
-    "BUYER": {
-      "offerCurve": [
-        { "price": 0.08, "powerKW": -11 },
-        { "price": 0.10, "powerKW": -5 },
-        { "price": 0.12, "powerKW": 0 }
-      ]
-    },
-    "SELLER": {
-      "offerCurve": [
-        { "price": 0.05, "powerKW": 0 },
-        { "price": 0.06, "powerKW": 5 },
-        { "price": 0.08, "powerKW": 10 }
-      ]
+    "PROSUMER": {
+      "offerCurve": {
+        "currency": "INR",
+        "minExport": -11,  // Maximum withdrawal (charging)
+        "maxExport": 0,   // No export, only withdrawal
+        "curve": [
+          { "price": 0.08, "powerKW": -11 },
+          { "price": 0.10, "powerKW": -5 },
+          { "price": 0.12, "powerKW": 0 }
+        ]
+      }
     }
   },
   "status": "ACTIVE"
 }
 ```
 
-**Note**: After market clearing, the contract's `inputSignals` are updated with the clearing price, and revenue flows are computed based on the offer curves and clearing price.
+**Note**: After market clearing:
+1. MCA generates `market-clearing-price` signal (price and cleared power for each prosumer)
+2. Revenue flows computed: Prosumer pays `(marketClearingPrice + marketMakingFee) * clearedPower`
+3. MCA receives the same amount from prosumer
+
+**MCA Contract with Grid Operator** (for deviation pricing):
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-mca-grid-operator-001",
+  "roles": [
+    {
+      "role": "MARKET_CLEARING_AGENT",
+      "filledBy": "bpp.market-clearing-agent.com",
+      "filled": true,
+      "expectedRoleInputs": []
+    },
+    {
+      "role": "GRID_OPERATOR",
+      "filledBy": "bpp.grid-operator.com",
+      "filled": true,
+      "expectedRoleInputs": []
+    }
+  ],
+  "status": "ACTIVE",
+  "inputSignals": [
+    {
+      "signalId": "total-cleared-bids",
+      "signalType": "STATE",
+      "source": { "era": "market-clearing-agent" },
+      "description": "Total cleared bids (negative powers, withdrawals)"
+    },
+    {
+      "signalId": "total-cleared-offers",
+      "signalType": "STATE",
+      "source": { "era": "market-clearing-agent" },
+      "description": "Total cleared offers (positive powers, exports)"
+    }
+  ],
+  "revenueFlows": [
+    {
+      "party": { "role": "MARKET_CLEARING_AGENT" },
+      "formula": "-deviationPrice * (totalClearedBids - totalClearedOffers - 0)",
+      "description": "MCA pays grid operator for deviation from zero net flow",
+      "variables": {
+        "deviationPrice": { "constant": 0.05 },
+        "totalClearedBids": { "source": "inputSignals", "path": "$.total-cleared-bids.value" },
+        "totalClearedOffers": { "source": "inputSignals", "path": "$.total-cleared-offers.value" }
+      }
+    },
+    {
+      "party": { "role": "GRID_OPERATOR" },
+      "formula": "deviationPrice * (totalClearedBids - totalClearedOffers - 0)",
+      "description": "Grid operator receives payment for deviation",
+      "variables": {
+        "deviationPrice": { "constant": 0.05 },
+        "totalClearedBids": { "source": "inputSignals", "path": "$.total-cleared-bids.value" },
+        "totalClearedOffers": { "source": "inputSignals", "path": "$.total-cleared-offers.value" }
+      }
+    }
+  ]
+}
+```
+
+**Note**: The MCA has a virtual meter (net power flow = 0). Any deviation from zero (imbalance between total cleared bids and total cleared offers) incurs a deviation penalty paid to the grid operator, incentivizing the MCA to balance supply and demand.
 
 ---
 
@@ -1232,7 +1340,7 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 **Before**: Unclear how participants join contracts
 
 **After**: Clear role-based model
-- Contracts define **open roles** (buyer/seller/trader)
+- Contracts define **open roles** (buyer/seller/prosumer/market clearing agent/aggregator/grid operator)
 - Participants select **offers** to assume roles
 - Contracts confirmed when **all roles filled** and inputs connected
 
@@ -1363,7 +1471,7 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 | **Core Primitive** | Scattered in `intent`, `itemAttributes`, `offerAttributes` | **EnergyOffer** in `offerAttributes` slot (core Beckn primitive) |
 | **Contract Model** | `EnergyTradeContract` with many optional properties | **EnergyContract** with role-based participation model |
 | **Intent** | Mixed with contracts and offers | **Optional** (not in Beckn schema, used for optimization) |
-| **Role-Based Participation** | Unclear how participants join | Contracts have **open roles** (buyer/seller/trader) that participants fill |
+| **Role-Based Participation** | Unclear how participants join | Contracts have **open roles** (buyer/seller/prosumer/market clearing agent/aggregator/grid operator) that participants fill |
 | **Contract Confirmation** | Unclear when contract is active | When **all roles filled** and input connections established |
 | **Billing** | Static revenue flows | Computed from input parameters, signals, and telemetry |
 | **Offer Curve Terminology** | "Bid curve" and "offer curve" | Unified "offer curve" (positive = injection, negative = withdrawal) |
@@ -1398,7 +1506,7 @@ Offer curves can be specified in `expectedRoleInputs` to allow **inflexible or f
 **Change**: Contracts now have **open roles** that need to be filled, with `expectedRoleInputs` as optional sub-attribute.
 
 **Rationale**:
-- Contracts specify roles (buyer/seller/trader)
+- Contracts specify roles (buyer/seller/prosumer/market clearing agent/aggregator/grid operator)
 - Each role has `expectedRoleInputs` (optional) defining what inputs are expected
 - Participants fill roles by selecting offers and providing required inputs
 - Contracts confirmed when:
