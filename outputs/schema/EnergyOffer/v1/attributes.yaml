@@ -1,0 +1,110 @@
+openapi: 3.1.1
+info:
+  title: Energy Coordination — Energy Offer Attributes (v1)
+  version: 1.0.0
+  x-profile-id: profiles/energy-coordination/energy_offer/v1/offer
+  description: >
+    Core Beckn primitive for energy contract participation opportunities.
+    EnergyOffer represents willingness to assume a role in an EnergyContract.
+    Goes in offerAttributes slot. Can include full contract definition or reference by contractId.
+
+components:
+  schemas:
+    ########################################################################
+    # OFFER.OFFERATTRIBUTES — EnergyOffer (Core Beckn Primitive)
+    ########################################################################
+    EnergyOffer:
+      type: object
+      description: >
+        Represents willingness to assume a role in an EnergyContract.
+        This is the core Beckn primitive that goes in offerAttributes slot.
+        EnergyOffer is a bouquet of contract participation opportunities with open roles.
+      additionalProperties: false
+      required: [offerId, contractId, providerId, providerUri, openRole]
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": EnergyOffer
+      properties:
+
+        # Core (always present)
+        offerId:
+          type: string
+          description: Unique identifier for this offer.
+          example: "offer-ev-charging-001"
+          x-jsonld: { "@id": "beckn:offerId" }
+
+        contractId:
+          type: string
+          description: Reference to EnergyContract (contract ID).
+          example: "contract-walk-in-001"
+          x-jsonld: { "@id": "beckn:contractId" }
+
+        providerId:
+          type: string
+          description: BPP ID of contract provider.
+          example: "bpp.cpo.example.com"
+          x-jsonld: { "@id": "beckn:providerId" }
+
+        providerUri:
+          type: string
+          format: uri
+          description: BPP URI of contract provider.
+          example: "https://bpp.cpo.example.com"
+          x-jsonld: { "@id": "beckn:providerUri" }
+
+        openRole:
+          type: string
+          enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
+          description: Role available in contract that this offer represents.
+          example: "BUYER"
+          x-jsonld: { "@id": "beckn:openRole" }
+
+        # Optional extensions (telescoping)
+        contract:
+          $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/EnergyContract'
+          description: Optional. Full contract definition (can be included in offerAttributes for discovery).
+
+        expectedInputs:
+          type: array
+          description: Optional. Expected inputs from role (mirrors expectedRoleInputs from contract).
+          items:
+            $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ExpectedRoleInput'
+          x-jsonld: { "@id": "beckn:expectedInputs" }
+
+        contractSummary:
+          $ref: '#/components/schemas/ContractSummary'
+          description: Optional. Brief summary of contract terms (alternative to full contract).
+
+        credentials:
+          $ref: '../EnergyCredentials/v1/attributes.yaml#/components/schemas/EnergyCredentials'
+          description: Optional. Required credentials for role.
+
+    ContractSummary:
+      type: object
+      description: Brief summary of contract terms (alternative to full contract definition).
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+          description: Human-readable description of the contract.
+          example: "Walk-in EV charging at ₹12/kWh"
+          x-jsonld: { "@id": "schema:description" }
+
+        powerRating:
+          type: string
+          description: Optional. Power rating description.
+          example: "50 kW"
+          x-jsonld: { "@id": "beckn:powerRating" }
+
+        gracePeriod:
+          type: string
+          description: Optional. Grace period description.
+          example: "15 minutes"
+          x-jsonld: { "@id": "beckn:gracePeriod" }
+
+        pricing:
+          type: string
+          description: Optional. Pricing summary.
+          example: "₹12/kWh"
+          x-jsonld: { "@id": "beckn:pricing" }
+

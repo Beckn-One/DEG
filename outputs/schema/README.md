@@ -11,18 +11,18 @@ schema/
 ├── EnergyResource/
 │   └── v0.2/
 │       └── attributes.yaml          # Item.itemAttributes schema
-├── EnergyTradeOffer/
-│   └── v0.2/
-│       └── attributes.yaml          # Offer.offerAttributes schema
-├── EnergyTradeContract/
-│   └── v0.2/
-│       └── attributes.yaml          # Order.orderAttributes schema
+├── EnergyOffer/
+│   └── v1/
+│       └── attributes.yaml          # Offer.offerAttributes schema (Core Beckn Primitive)
+├── EnergyContract/
+│   └── v1/
+│       └── attributes.yaml          # Order.orderAttributes / Offer.offerAttributes schema (Core Abstract Schema)
 ├── EnergyTradeDelivery/
 │   └── v0.2/
 │       └── attributes.yaml          # Fulfillment.attributes schema
 ├── EnergyCoordination/
 │   └── v1/
-│       └── attributes.yaml          # Shared coordination schemas
+│       └── attributes.yaml          # Shared coordination schemas (OfferCurve, EnergyObjectives, Settlement)
 ├── GridNode/
 │   └── v1/
 │       └── attributes.yaml          # Grid node attributes (transformers, substations)
@@ -35,6 +35,43 @@ schema/
 
 ## Schema Files
 
+### EnergyOffer/v1/attributes.yaml (NEW - Core Beckn Primitive)
+
+**Purpose**: Core Beckn primitive representing willingness to assume a role in an EnergyContract. This is the primary schema for `offerAttributes`.
+
+**Attaches to**: `Offer.offerAttributes`
+
+**Key Properties**:
+- **Core**: `offerId`, `contractId`, `providerId`, `providerUri`, `openRole` (BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR)
+- **Optional**: `contract` (full EnergyContract definition), `expectedInputs`, `contractSummary`, `credentials`
+
+**Key Concept**: EnergyOffer is a bouquet of contract participation opportunities. Each offer references a contract and specifies an open role.
+
+**Example Usage**: See `outputs/10_Conceptual_Refactor_Proposal.md` section 2.1
+
+---
+
+### EnergyContract/v1/attributes.yaml (NEW - Core Abstract Schema)
+
+**Purpose**: Core abstract schema for computational energy contracts. Defines roles, revenue flows, and quality metrics as functions of external signals and telemetry.
+
+**Attaches to**: 
+- `Offer.offerAttributes` (for discovery - contract definition)
+- `Order.orderAttributes` (during init/confirm flows - contract instance, status: PENDING → ACTIVE)
+
+**Key Properties**:
+- **Core**: `contractId`, `roles` (array of ContractRole), `status` (PENDING, ACTIVE, COMPLETED, TERMINATED), `createdAt`
+- **Telescoping**: `inputParameters` (actual values by role), `inputSignals` (external signals), `telemetrySources` (fulfillment data), `revenueFlows` (RevenueFlowLogic), `qualityMetrics` (optional)
+- **Extensions**: `credentials`, `verification` (DeDi protocol), `ricardianContract` (optional)
+
+**Key Concept**: Contracts specify roles that need to be filled. Revenue flows are computed from input parameters, signals, and telemetry using formulas.
+
+**Contract Roles**: BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR
+
+**Example Usage**: See `outputs/10_Conceptual_Refactor_Proposal.md` section 2.2 and 3.1
+
+---
+
 ### EnergyResource/v0.2/attributes.yaml
 
 **Purpose**: Defines attributes for energy resources (generators, storage, consumers, infrastructure).
@@ -43,39 +80,12 @@ schema/
 
 **Key Properties**:
 - **Core**: `sourceType`, `deliveryMode`, `certificationStatus` (optional), `meterId`, `inverterId` (optional), `productionWindow`
-- **Coordination Extensions**: `bidCurve`, `constraints`, `objectives`
+- **Coordination Extensions**: `offerCurve` (use OfferCurve from EnergyCoordination), `constraints`, `objectives`
 
 **Example Usage**: See `outputs/examples/ev_charging_demand_flexibility/discover-with-bid-curve.json`
 
 ---
 
-### EnergyTradeOffer/v0.2/attributes.yaml
-
-**Purpose**: Defines attributes for energy trade offers (pricing, settlement, availability).
-
-**Attaches to**: `Offer.offerAttributes`
-
-**Key Properties**:
-- **Core**: `pricingModel`, `settlementType`, `wheelingCharges` (optional), `minimumQuantity`, `maximumQuantity`, `validityWindow`, `timeOfDayRates` (optional)
-- **Coordination Extensions**: `bidCurve`, `constraints`, `clearingPrice`, `setpointKW`
-
-**Example Usage**: See `outputs/examples/p2p_trading_market_based/` directory
-
----
-
-### EnergyTradeContract/v0.2/attributes.yaml
-
-**Purpose**: Defines attributes for energy trade contracts (commercial agreements, settlement, billing).
-
-**Attaches to**: `Order.orderAttributes`
-
-**Key Properties**:
-- **Core**: `contractStatus`, `sourceMeterId`, `targetMeterId`, `inverterId` (optional), `contractedQuantity`, `tradeStartTime`, `tradeEndTime`, `settlementCycles`, `billingCycles`
-- **Coordination Extensions**: `bidCurve`, `objectives`, `approvedMaxTradeKW`, `clearingPrice`, `setpointKW`, `settlement`, `offsetCommand` (optional)
-
-**Example Usage**: See `outputs/examples/p2p_trading_market_based/order-with-settlement.json`
-
----
 
 ### EnergyTradeDelivery/v0.2/attributes.yaml
 
@@ -98,15 +108,18 @@ schema/
 **Attaches to**: Multiple attribute slots (via composition)
 
 **Key Schemas**:
-- `BidCurvePoint`: Price/power pair
-- `BidCurveConstraints`: Operational constraints
-- `EnergyObjectives`: Goals and constraints (targetChargeKWh, targetGenerationKWh, targetReductionKW, deadline, maxPricePerKWh, minPricePerKWh (optional), preferredSource (optional))
-- `Settlement`: Multi-party revenue flows (revenueFlows, settlementReport)
-- `SettlementReport`: Billing document (reportId, totalAmount, currency, generatedAt)
-- `OffsetCommand`: Grid operator commands
-- `AggregationRequest` / `AggregationResult`: Market clearing schemas
+- **`OfferCurve`**: Unified offer curve structure with `currency`, `minExport`, `maxExport`, and `curve` array (replaces "bid curve")
+- **`OfferCurvePoint`**: Price/power pair in offer curve
+- **`EnergyObjectives`**: Goals and constraints (targetChargeKWh, targetGenerationKWh, targetReductionKW, deadline, maxPricePerKWh, minPricePerKWh (optional), preferredSource (optional))
+- **`Settlement`**: Multi-party revenue flows (revenueFlows, settlementReport) - computed revenue flows for settlement
+- **`SettlementReport`**: Billing document (reportId, totalAmount, currency, generatedAt)
+- **`OffsetCommand`**: Grid operator commands
+- **`AggregationRequest` / `AggregationResult`**: Market clearing schemas
+- **`Participant`**: Participant in aggregation with offerCurve
 
-**Note**: `LocationalPriceAdder` and `GridConstraints` have been moved to the `GridNode` schema.
+**Note**: 
+- `LocationalPriceAdder` and `GridConstraints` have been moved to the `GridNode` schema.
+- OfferCurve replaces "bid curve" terminology. Positive power = export/generation, negative power = withdrawal/consumption.
 
 **Example Usage**: See `outputs/examples/aggregate_action/` directory
 
@@ -182,9 +195,14 @@ These schemas are replicas and extensions of the schemas in:
 ```
 
 **Key Differences**:
-1. **Extended with Coordination**: Added bid curves, objectives, locational pricing, settlement, market clearing
-2. **Detailed Documentation**: Comprehensive property descriptions and examples
-3. **Composition Examples**: Shows how schemas compose within example JSONs
+1. **New Core Schemas**: EnergyOffer (v1) and EnergyContract (v1) as core primitives
+2. **Role-Based Participation**: Contracts use roles (BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR)
+3. **Computational Contracts**: Revenue flows computed from input parameters, signals, and telemetry
+4. **OfferCurve**: Unified terminology replacing "bid curve" (currency, minExport, maxExport, curve)
+5. **Extended with Coordination**: Added offer curves, objectives, locational pricing, settlement, market clearing
+6. **Detailed Documentation**: Comprehensive property descriptions and examples
+7. **Composition Examples**: Shows how schemas compose within example JSONs
+8. **Removed Deprecated Schemas**: EnergyTradeOffer and EnergyTradeContract have been removed (use EnergyOffer and EnergyContract instead)
 
 ---
 
@@ -200,16 +218,69 @@ These schemas are used in the example JSON messages in:
 
 ```json
 {
+  "beckn:offerAttributes": {
+    "@context": "https://deg.energy/schema/EnergyOffer/v1/context.jsonld",
+    "@type": "EnergyOffer",
+    "offerId": "offer-ev-charging-001",
+    "contractId": "contract-walk-in-001",
+    "providerId": "bpp.cpo.example.com",
+    "providerUri": "https://bpp.cpo.example.com",
+    "openRole": "BUYER",
+    "contract": {
+      "@context": "https://deg.energy/schema/EnergyContract/v1/context.jsonld",
+      "@type": "EnergyContract",
+      "contractId": "contract-walk-in-001",
+      "roles": [
+        {
+          "role": "SELLER",
+          "filledBy": "bpp.cpo.example.com",
+          "filled": true,
+          "expectedRoleInputs": [
+            { "inputName": "price", "inputType": "NUMBER" }
+          ]
+        },
+        {
+          "role": "BUYER",
+          "filledBy": null,
+          "filled": false,
+          "expectedRoleInputs": [
+            { "inputName": "accept", "inputType": "BOOLEAN" }
+          ]
+        }
+      ],
+      "status": "PENDING"
+    }
+  },
+  "beckn:orderAttributes": {
+    "@context": "https://deg.energy/schema/EnergyContract/v1/context.jsonld",
+    "@type": "EnergyContract",
+    "contractId": "contract-walk-in-001",
+    "roles": [
+      { "role": "SELLER", "filledBy": "bpp.cpo.example.com", "filled": true },
+      { "role": "BUYER", "filledBy": "bap.ev-user-app.com", "filled": true }
+    ],
+    "status": "ACTIVE",
+    "inputParameters": {
+      "SELLER": { "price": 0.12 },
+      "BUYER": { "accept": true }
+    },
+    "revenueFlows": [ /* ... */ ]
+  },
   "beckn:itemAttributes": {
     "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "deliveryMode": "GRID_INJECTION",
-    "bidCurve": [
-      { "price": 0.05, "powerKW": 0 },
-      { "price": 0.06, "powerKW": 2 },
-      { "price": 0.07, "powerKW": 5 }
-    ]
+    "offerCurve": {
+      "currency": "INR",
+      "minExport": 0,
+      "maxExport": 5,
+      "curve": [
+        { "price": 0.05, "powerKW": 0 },
+        { "price": 0.06, "powerKW": 2 },
+        { "price": 0.07, "powerKW": 5 }
+      ]
+    }
   }
 }
 ```
@@ -235,7 +306,111 @@ These schemas can be validated using:
 
 ---
 
+---
+
+## Schema Migration Guide
+
+### From EnergyTradeOffer to EnergyOffer
+
+**Old Schema** (DEPRECATED):
+```json
+{
+  "beckn:offerAttributes": {
+    "@type": "EnergyTradeOffer",
+    "pricingModel": "PER_KWH",
+    "bidCurve": [ /* ... */ ]
+  }
+}
+```
+
+**New Schema**:
+```json
+{
+  "beckn:offerAttributes": {
+    "@type": "EnergyOffer",
+    "offerId": "offer-001",
+    "contractId": "contract-001",
+    "providerId": "bpp.cpo.example.com",
+    "providerUri": "https://bpp.cpo.example.com",
+    "openRole": "BUYER",
+    "contract": { /* EnergyContract definition */ }
+  }
+}
+```
+
+### From EnergyTradeContract to EnergyContract
+
+**Old Schema** (DEPRECATED):
+```json
+{
+  "beckn:orderAttributes": {
+    "@type": "EnergyTradeContract",
+    "contractStatus": "ACTIVE",
+    "sourceMeterId": "100200300",
+    "targetMeterId": "98765456"
+  }
+}
+```
+
+**New Schema**:
+```json
+{
+  "beckn:orderAttributes": {
+    "@type": "EnergyContract",
+    "contractId": "contract-001",
+    "roles": [
+      { "role": "SELLER", "filledBy": "bpp.cpo.example.com", "filled": true },
+      { "role": "BUYER", "filledBy": "bap.ev-user-app.com", "filled": true }
+    ],
+    "status": "ACTIVE",
+    "inputParameters": { /* ... */ },
+    "revenueFlows": { /* ... */ }
+  }
+}
+```
+
+### From bidCurve to offerCurve
+
+**Old Schema** (DEPRECATED):
+```json
+{
+  "bidCurve": [
+    { "price": 0.05, "powerKW": 0 },
+    { "price": 0.06, "powerKW": 2 }
+  ]
+}
+```
+
+**New Schema**:
+```json
+{
+  "offerCurve": {
+    "currency": "INR",
+    "minExport": 0,
+    "maxExport": 5,
+    "curve": [
+      { "price": 0.05, "powerKW": 0 },
+      { "price": 0.06, "powerKW": 2 },
+      { "price": 0.07, "powerKW": 5 }
+    ]
+  }
+}
+```
+
+### Role Updates
+
+**Old Roles**: BUYER, SELLER, TRADER
+
+**New Roles**: BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR
+
+- **PROSUMER**: Producer and/or consumer (used in market clearing contracts)
+- **MARKET_CLEARING_AGENT**: Market clearing agent that aggregates bids and clears market
+- **AGGREGATOR**: Market intermediary (replaces TRADER)
+- **GRID_OPERATOR**: Grid operator managing grid infrastructure
+
+---
+
 **Status**: Complete  
-**Version**: 1.0  
+**Version**: 2.0  
 **Last Updated**: December 2024
 

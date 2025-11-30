@@ -5,10 +5,13 @@ info:
   x-profile-id: profiles/energy-coordination/energy_coordination/v1/coordination
   description: >
     Attribute schemas for energy coordination extensions.
-    These attributes extend EnergyResource, EnergyTradeOffer, EnergyTradeContract, and EnergyTradeDelivery
-    to enable bid curve expression, objective-driven coordination, locational pricing, market clearing,
+    These attributes extend EnergyResource, EnergyOffer, EnergyContract, and EnergyTradeDelivery
+    to enable offer curve expression, objective-driven coordination, locational pricing, market clearing,
     and multi-party settlement. Used across Item.itemAttributes, Offer.offerAttributes, Order.orderAttributes,
     and Fulfillment.attributes.
+    
+    **Key Changes**:
+    - OfferCurve replaces "bid curve" terminology (currency, minExport, maxExport, curve)
 
 components:
   schemas:
@@ -16,9 +19,51 @@ components:
     # COORDINATION EXTENSIONS — Shared Across Attribute Slots
     ########################################################################
 
-    BidCurvePoint:
+    OfferCurve:
       type: object
-      description: A single price/power pair in a bid curve.
+      description: >
+        Price-responsive offer curve with signed power values.
+        Positive power values = providing energy to grid (injection/export).
+        Negative power values = receiving energy from grid (withdrawal/consumption).
+        Unified terminology replacing "bid curve".
+      additionalProperties: false
+      required: [currency, minExport, maxExport, curve]
+      properties:
+        currency:
+          type: string
+          description: Currency for prices (ISO 4217).
+          example: "INR"
+          x-jsonld: { "@id": "schema:currency" }
+
+        minExport:
+          type: number
+          description: >
+            Minimum export in kilowatts.
+            Negative values = maximum withdrawal/consumption.
+            Positive values = minimum export/generation.
+          example: -11
+          x-jsonld: { "@id": "beckn:minExport" }
+
+        maxExport:
+          type: number
+          description: >
+            Maximum export in kilowatts.
+            Negative values = no export, only withdrawal.
+            Positive values = maximum export/generation.
+          example: 10
+          x-jsonld: { "@id": "beckn:maxExport" }
+
+        curve:
+          type: array
+          description: Array of price/power pairs.
+          items:
+            $ref: '#/components/schemas/OfferCurvePoint'
+          minItems: 1
+          x-jsonld: { "@id": "beckn:curve" }
+
+    OfferCurvePoint:
+      type: object
+      description: A single price/power pair in an offer curve.
       additionalProperties: false
       required: [price, powerKW]
       properties:
@@ -28,33 +73,16 @@ components:
           description: Price per kilowatt-hour at this power level.
           example: 0.06
           x-jsonld: { "@id": "schema:price" }
+
         powerKW:
           type: number
-          description: Power level in kilowatts. Negative values indicate consumption (charging, load), positive values indicate generation (discharge, export), zero indicates no participation.
+          description: >
+            Power level in kilowatts.
+            Negative values = receiving energy (withdrawal/consumption).
+            Positive values = providing energy (injection/export).
+            Zero = no participation.
           example: 2.0
           x-jsonld: { "@id": "beckn:powerKW" }
-
-    BidCurveConstraints:
-      type: object
-      description: Operational constraints for bid curve execution.
-      additionalProperties: false
-      properties:
-        minPowerKW:
-          type: number
-          description: Minimum power level in kilowatts.
-          example: 0
-          x-jsonld: { "@id": "beckn:minPowerKW" }
-        maxPowerKW:
-          type: number
-          description: Maximum power level in kilowatts.
-          example: 5
-          x-jsonld: { "@id": "beckn:maxPowerKW" }
-        rampRateKWPerMin:
-          type: number
-          minimum: 0
-          description: Maximum rate of power change in kilowatts per minute.
-          example: 0.5
-          x-jsonld: { "@id": "beckn:rampRateKWPerMin" }
 
     EnergyObjectives:
       type: object
@@ -115,7 +143,7 @@ components:
         "@context": ./context.jsonld
         "@type": Settlement
       properties:
-        # Note: settlementCycles are tracked in EnergyTradeContract.settlementCycles
+        # Note: settlementCycles can be tracked in EnergyContract or EnergyTradeDelivery
         revenueFlows:
           type: array
           description: Array of revenue flow entries for multi-party settlement.
@@ -253,7 +281,7 @@ components:
 
     Participant:
       type: object
-      description: A participant in the aggregation with bid curve and optional locational pricing.
+      description: A participant in the aggregation with offer curve and optional locational pricing.
       additionalProperties: false
       properties:
         era:
@@ -261,20 +289,15 @@ components:
           description: Energy Resource Address of the participant.
           example: "solar-panel-001"
           x-jsonld: { "@id": "beckn:era" }
-        bidCurve:
-          type: array
-          description: Bid curve for this participant.
-          items:
-            $ref: '#/components/schemas/BidCurvePoint'
-          x-jsonld: { "@id": "beckn:bidCurve" }
-        constraints:
-          $ref: '#/components/schemas/BidCurveConstraints'
-          description: Operational constraints for this participant.
+        offerCurve:
+          $ref: '#/components/schemas/OfferCurve'
+          description: Offer curve for this participant.
+          x-jsonld: { "@id": "beckn:offerCurve" }
         # Note: locationalPriceAdder is available in GridNode schema
 
     AggregationResult:
       type: object
-      description: Result of bid curve aggregation and market clearing.
+      description: Result of offer curve aggregation and market clearing.
       additionalProperties: false
       x-jsonld:
         "@context": ./context.jsonld
@@ -307,13 +330,13 @@ components:
           type: array
           description: Aggregated supply curve (for reference).
           items:
-            $ref: '#/components/schemas/BidCurvePoint'
+            $ref: '#/components/schemas/OfferCurvePoint'
           x-jsonld: { "@id": "beckn:aggregatedSupplyCurve" }
         aggregatedDemandCurve:
           type: array
           description: Aggregated demand curve (for reference).
           items:
-            $ref: '#/components/schemas/BidCurvePoint'
+            $ref: '#/components/schemas/OfferCurvePoint'
           x-jsonld: { "@id": "beckn:aggregatedDemandCurve" }
         timestamp:
           type: string

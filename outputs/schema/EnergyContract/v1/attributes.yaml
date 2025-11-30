@@ -1,0 +1,626 @@
+openapi: 3.1.1
+info:
+  title: Energy Coordination — Energy Contract Attributes (v1)
+  version: 1.0.0
+  x-profile-id: profiles/energy-coordination/energy_contract/v1/contract
+  description: >
+    Core abstract schema for computational energy contracts.
+    EnergyContract defines roles, revenue flows, and quality metrics as functions of external signals and telemetry.
+    Can slot into offerAttributes (for discovery) or orderAttributes (during init/confirm flows).
+    Status transitions: PENDING (in init) → ACTIVE (in confirm).
+
+components:
+  schemas:
+    ########################################################################
+    # ORDER.ORDERATTRIBUTES / OFFER.OFFERATTRIBUTES — EnergyContract (Core Abstract Schema)
+    ########################################################################
+    EnergyContract:
+      type: object
+      description: >
+        Computational agreement that defines roles, revenue flows, and quality metrics as functions of external signals and telemetry.
+        Contracts specify roles (buyer, seller, prosumer, market clearing agent, aggregator, grid operator) that need to be filled.
+        Contracts are confirmed when all roles are filled and input connections established.
+      additionalProperties: false
+      required: [contractId, roles, status, createdAt]
+      x-jsonld:
+        "@context": ./context.jsonld
+        "@type": EnergyContract
+      properties:
+
+        # Core (always present)
+        contractId:
+          type: string
+          description: Unique identifier for the contract.
+          example: "contract-walk-in-001"
+          x-jsonld: { "@id": "beckn:contractId" }
+
+        roles:
+          type: array
+          description: Roles in contract that need to be filled. Each role can specify expectedRoleInputs.
+          items:
+            $ref: '#/components/schemas/ContractRole'
+          minItems: 1
+          x-jsonld: { "@id": "beckn:roles" }
+
+        status:
+          type: string
+          enum: [PENDING, ACTIVE, COMPLETED, TERMINATED]
+          description: Contract lifecycle status. PENDING during init, ACTIVE after confirm.
+          example: "PENDING"
+          x-jsonld: { "@id": "beckn:status" }
+
+        createdAt:
+          type: string
+          format: date-time
+          description: Contract creation timestamp (ISO 8601).
+          example: "2024-12-15T14:00:00Z"
+          x-jsonld: { "@id": "schema:dateCreated" }
+
+        # Input parameters (telescoping) - actual values provided by roles
+        inputParameters:
+          type: object
+          description: >
+            Actual values provided by each role when filling the contract.
+            Keyed by role name (e.g., "SELLER", "BUYER", "PROSUMER").
+            Values correspond to expectedRoleInputs defined in ContractRole.
+          additionalProperties: true
+          example:
+            SELLER:
+              price: 0.12
+              startTime: "2024-12-15T14:00:00Z"
+              gracePeriod: "PT15M"
+              powerRating: 50.0
+            BUYER:
+              accept: true
+          x-jsonld: { "@id": "beckn:inputParameters" }
+
+        # Input signals (telescoping)
+        inputSignals:
+          type: array
+          description: External signals (prices, frequency, AGC setpoints) used in revenue flow computation.
+          items:
+            $ref: '#/components/schemas/InputSignal'
+          x-jsonld: { "@id": "beckn:inputSignals" }
+
+        # Telemetry sources (telescoping)
+        telemetrySources:
+          type: array
+          description: Sources for fulfillment data (CDR, meter readings) used in revenue flow computation.
+          items:
+            $ref: '#/components/schemas/TelemetrySource'
+          x-jsonld: { "@id": "beckn:telemetrySources" }
+
+        # Transformation logic (telescoping)
+        revenueFlows:
+          $ref: '#/components/schemas/RevenueFlowLogic'
+          description: Revenue flows as function of inputs, signals, and telemetry.
+
+        qualityMetrics:
+          $ref: '#/components/schemas/QualityMetricLogic'
+          description: Quality of service metrics (if not already in revenue flows as incentives/penalties).
+
+        # Optional extensions (telescoping)
+        credentials:
+          $ref: '../EnergyCredentials/v1/attributes.yaml#/components/schemas/EnergyCredentials'
+          description: Required credentials for contract participation.
+
+        verification:
+          $ref: '#/components/schemas/ContractVerification'
+          description: DeDi protocol verification data for contract integrity, validity, and authenticity.
+
+        ricardianContract:
+          $ref: '#/components/schemas/RicardianContract'
+          description: Optional. Human-readable legal prose + hash linking to machine-readable logic.
+
+    ########################################################################
+    # Contract Role and Input Definitions
+    ########################################################################
+
+    ContractRole:
+      type: object
+      description: Define roles in a contract that need to be filled.
+      additionalProperties: false
+      required: [role, filled]
+      properties:
+        role:
+          type: string
+          enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
+          description: Role type in the contract.
+          example: "BUYER"
+          x-jsonld: { "@id": "beckn:role" }
+
+        filledBy:
+          type: string
+          nullable: true
+          description: ERA or BPP ID when role is filled. Null if not yet filled.
+          example: "bap.ev-user-app.com"
+          x-jsonld: { "@id": "beckn:filledBy" }
+
+        filled:
+          type: boolean
+          description: Whether this role has been filled.
+          example: false
+          x-jsonld: { "@id": "beckn:filled" }
+
+        expectedRoleInputs:
+          type: array
+          description: Optional. Expected inputs from this role (e.g., offerCurve, price, accept).
+          items:
+            $ref: '#/components/schemas/ExpectedRoleInput'
+          x-jsonld: { "@id": "beckn:expectedRoleInputs" }
+
+    ExpectedRoleInput:
+      type: object
+      description: Specification of an expected input from a role.
+      additionalProperties: false
+      required: [inputName, inputType]
+      properties:
+        inputName:
+          type: string
+          description: Name of the input (e.g., "offerCurve", "price", "accept").
+          example: "offerCurve"
+          x-jsonld: { "@id": "beckn:inputName" }
+
+        inputType:
+          type: string
+          enum: [BOOLEAN, NUMBER, DATE_TIME, DURATION, OFFER_CURVE, STRING, ROUTE]
+          description: Type of the input.
+          example: "OFFER_CURVE"
+          x-jsonld: { "@id": "beckn:inputType" }
+
+        description:
+          type: string
+          description: Human-readable description of the input.
+          example: "Price-responsive offer curve (negative powers = withdrawal, positive = export)"
+          x-jsonld: { "@id": "schema:description" }
+
+        optional:
+          type: boolean
+          default: false
+          description: Whether this input is optional.
+          example: true
+          x-jsonld: { "@id": "beckn:optional" }
+
+    ########################################################################
+    # Input Signals and Telemetry Sources
+    ########################################################################
+
+    InputSignal:
+      type: object
+      description: External signal (price, frequency, AGC setpoint) used in contract computation.
+      additionalProperties: false
+      required: [signalId, signalType, source]
+      properties:
+        signalId:
+          type: string
+          description: Unique identifier for the signal.
+          example: "market-clearing-price"
+          x-jsonld: { "@id": "beckn:signalId" }
+
+        signalType:
+          type: string
+          enum: [PRICE, STATE, COMMAND, FREQUENCY, AGC_SETPOINT]
+          description: Type of signal.
+          example: "PRICE"
+          x-jsonld: { "@id": "beckn:signalType" }
+
+        source:
+          type: object
+          description: Source of the signal (ERA, endpoint, etc.).
+          additionalProperties: true
+          properties:
+            era:
+              type: string
+              description: Energy Resource Address of signal source.
+              example: "market-clearing-agent"
+              x-jsonld: { "@id": "beckn:era" }
+
+            endpoint:
+              type: string
+              format: uri
+              description: Optional. Endpoint URL for signal source.
+              example: "https://market.example.com/prices/clearing"
+              x-jsonld: { "@id": "beckn:endpoint" }
+
+          x-jsonld: { "@id": "beckn:source" }
+
+        format:
+          type: string
+          enum: [JSON, IEEE_2030_5, XML]
+          description: Optional. Format of the signal data.
+          example: "JSON"
+          x-jsonld: { "@id": "beckn:format" }
+
+        refreshInterval:
+          type: string
+          description: Optional. ISO 8601 duration for signal refresh interval.
+          example: "PT1H"
+          x-jsonld: { "@id": "beckn:refreshInterval" }
+
+        description:
+          type: string
+          description: Optional. Human-readable description of the signal.
+          example: "Market clearing price generated after market clears"
+          x-jsonld: { "@id": "schema:description" }
+
+    TelemetrySource:
+      type: object
+      description: Source for fulfillment data (CDR, meter readings) used in contract computation.
+      additionalProperties: false
+      required: [sourceId, sourceType]
+      properties:
+        sourceId:
+          type: string
+          description: Unique identifier for the telemetry source.
+          example: "meter-readings"
+          x-jsonld: { "@id": "beckn:sourceId" }
+
+        sourceType:
+          type: string
+          enum: [METER_READING, CHARGE_DATA_RECORD, INVERTER_DATA, BATTERY_STATE]
+          description: Type of telemetry source.
+          example: "METER_READING"
+          x-jsonld: { "@id": "beckn:sourceType" }
+
+        source:
+          type: object
+          description: Source details (ERA, meterId, endpoint).
+          additionalProperties: true
+          properties:
+            era:
+              type: string
+              description: Energy Resource Address.
+              example: "solar-panel-001"
+              x-jsonld: { "@id": "beckn:era" }
+
+            meterId:
+              type: string
+              description: Optional. Meter identifier (IEEE 2030.5 mRID).
+              example: "100200300"
+              x-jsonld: { "@id": "ieee:mRID" }
+
+            endpoint:
+              type: string
+              format: uri
+              description: Optional. Endpoint URL for telemetry source.
+              example: "https://meter-api.example.com/readings/100200300"
+              x-jsonld: { "@id": "beckn:endpoint" }
+
+          x-jsonld: { "@id": "beckn:source" }
+
+        endpoint:
+          type: string
+          format: uri
+          description: Optional. Direct endpoint URL (alternative to source.endpoint).
+          example: "https://cpo.example.com/cdr/contract-walk-in-001"
+          x-jsonld: { "@id": "beckn:endpoint" }
+
+        format:
+          type: string
+          enum: [JSON, IEEE_2030_5, XML]
+          description: Optional. Format of the telemetry data.
+          example: "IEEE_2030_5"
+          x-jsonld: { "@id": "beckn:format" }
+
+        refreshInterval:
+          type: string
+          description: Optional. ISO 8601 duration for telemetry refresh interval.
+          example: "PT15M"
+          x-jsonld: { "@id": "beckn:refreshInterval" }
+
+        fields:
+          type: array
+          items:
+            type: string
+          description: Optional. List of fields to retrieve from this source.
+          example: ["arrivalTime", "chargeStartTime", "chargeEndTime", "energyDelivered", "power"]
+          x-jsonld: { "@id": "beckn:fields" }
+
+    ########################################################################
+    # Revenue Flow Logic
+    ########################################################################
+
+    RevenueFlowLogic:
+      type: object
+      description: Define revenue flows as functions of inputs, signals, and telemetry.
+      additionalProperties: false
+      properties:
+        revenueFlows:
+          type: array
+          description: Array of revenue flow definitions.
+          items:
+            $ref: '#/components/schemas/RevenueFlow'
+          x-jsonld: { "@id": "beckn:revenueFlows" }
+
+    RevenueFlow:
+      type: object
+      description: A single revenue flow definition.
+      additionalProperties: false
+      required: [party, formula]
+      properties:
+        party:
+          type: object
+          description: Party receiving this revenue flow.
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
+              description: Role of the party.
+              example: "SELLER"
+              x-jsonld: { "@id": "beckn:role" }
+
+            era:
+              type: string
+              description: Optional. Energy Resource Address of the party.
+              example: "bpp.cpo.example.com"
+              x-jsonld: { "@id": "beckn:era" }
+
+          x-jsonld: { "@id": "beckn:party" }
+
+        formula:
+          type: string
+          description: Mathematical formula for computing revenue flow. Uses variables defined in variables.
+          example: "energyFlow * price"
+          x-jsonld: { "@id": "beckn:formula" }
+
+        variables:
+          type: object
+          description: Variables used in the formula, each referencing inputParameters, inputSignals, or telemetry.
+          additionalProperties: true
+          x-jsonld: { "@id": "beckn:variables" }
+
+        description:
+          type: string
+          description: Optional. Human-readable description of the revenue flow.
+          example: "Seller receives energyFlow × price"
+          x-jsonld: { "@id": "schema:description" }
+
+    ########################################################################
+    # Quality Metric Logic
+    ########################################################################
+
+    QualityMetricLogic:
+      type: object
+      description: Define quality of service metrics (if not already in revenue flows as incentives/penalties).
+      additionalProperties: false
+      properties:
+        qualityMetrics:
+          type: array
+          description: Array of quality metric definitions.
+          items:
+            $ref: '#/components/schemas/QualityMetric'
+          x-jsonld: { "@id": "beckn:qualityMetrics" }
+
+    QualityMetric:
+      type: object
+      description: A single quality metric definition.
+      additionalProperties: false
+      required: [metricName, formula]
+      properties:
+        metricName:
+          type: string
+          description: Name of the quality metric.
+          example: "waitTime"
+          x-jsonld: { "@id": "beckn:metricName" }
+
+        formula:
+          type: string
+          description: Formula for computing the metric.
+          example: "arrivalTime - startTime"
+          x-jsonld: { "@id": "beckn:formula" }
+
+        target:
+          type: string
+          description: Optional. Target value for the metric (can be number or ISO 8601 duration).
+          example: "PT5M"
+          x-jsonld: { "@id": "beckn:target" }
+
+        penalty:
+          type: object
+          description: Optional. Penalty formula if target not met.
+          additionalProperties: false
+          properties:
+            formula:
+              type: string
+              description: Penalty formula.
+              example: "max(0, (waitTime - target) * penaltyRate)"
+              x-jsonld: { "@id": "beckn:formula" }
+
+            appliedTo:
+              type: string
+              enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
+              description: Role to which penalty is applied.
+              example: "BUYER"
+              x-jsonld: { "@id": "beckn:appliedTo" }
+
+          x-jsonld: { "@id": "beckn:penalty" }
+
+    ########################################################################
+    # Contract Verification (DeDi Protocol)
+    ########################################################################
+
+    ContractVerification:
+      type: object
+      description: DeDi protocol verification data for contract integrity, validity, and authenticity.
+      additionalProperties: false
+      properties:
+        integrity:
+          type: object
+          description: Cryptographic integrity verification.
+          additionalProperties: false
+          properties:
+            hash:
+              type: string
+              description: Cryptographic hash of contract.
+              example: "sha256:abc123..."
+              x-jsonld: { "@id": "beckn:hash" }
+
+            algorithm:
+              type: string
+              enum: [SHA256, SHA512, BLAKE2B]
+              description: Hash algorithm used.
+              example: "SHA256"
+              x-jsonld: { "@id": "beckn:algorithm" }
+
+            signedBy:
+              type: string
+              description: ERA of signer.
+              example: "bpp.cpo.example.com"
+              x-jsonld: { "@id": "beckn:signedBy" }
+
+            signature:
+              type: string
+              description: Digital signature.
+              example: "ed25519:..."
+              x-jsonld: { "@id": "beckn:signature" }
+
+            publicKeyEndpoint:
+              type: string
+              format: uri
+              description: DeDi endpoint for public key lookup.
+              example: "https://dedi.example.com/keys/bpp.cpo.example.com"
+              x-jsonld: { "@id": "beckn:publicKeyEndpoint" }
+
+          x-jsonld: { "@id": "beckn:integrity" }
+
+        validity:
+          type: object
+          description: Validity verification (revocation, expiration).
+          additionalProperties: false
+          properties:
+            revocationCheckEndpoint:
+              type: string
+              format: uri
+              description: DeDi endpoint for revocation list.
+              example: "https://dedi.example.com/revoke/contracts"
+              x-jsonld: { "@id": "beckn:revocationCheckEndpoint" }
+
+            expirationTime:
+              type: string
+              format: date-time
+              description: Contract expiration time.
+              example: "2025-12-15T14:00:00Z"
+              x-jsonld: { "@id": "schema:expires" }
+
+            lastVerifiedAt:
+              type: string
+              format: date-time
+              description: Last validity check timestamp.
+              example: "2024-12-15T14:00:00Z"
+              x-jsonld: { "@id": "beckn:lastVerifiedAt" }
+
+          x-jsonld: { "@id": "beckn:validity" }
+
+        authenticity:
+          type: object
+          description: Authenticity verification (participant verification, membership checks).
+          additionalProperties: false
+          properties:
+            participantVerifications:
+              type: array
+              description: Array of participant verification records.
+              items:
+                $ref: '#/components/schemas/ParticipantVerification'
+              x-jsonld: { "@id": "beckn:participantVerifications" }
+
+            membershipCheckEndpoints:
+              type: array
+              items:
+                type: string
+                format: uri
+              description: DeDi endpoints for membership verification.
+              example: ["https://dedi.example.com/membership/cpo"]
+              x-jsonld: { "@id": "beckn:membershipCheckEndpoints" }
+
+          x-jsonld: { "@id": "beckn:authenticity" }
+
+    ParticipantVerification:
+      type: object
+      description: Verification record for a participant.
+      additionalProperties: false
+      required: [era, namespace, verificationEndpoint]
+      properties:
+        era:
+          type: string
+          description: Energy Resource Address.
+          example: "bpp.cpo.example.com"
+          x-jsonld: { "@id": "beckn:era" }
+
+        publicKeyId:
+          type: string
+          description: Public key identifier.
+          example: "key-12345"
+          x-jsonld: { "@id": "beckn:publicKeyId" }
+
+        namespace:
+          type: string
+          description: DeDi namespace.
+          example: "energy-cpo"
+          x-jsonld: { "@id": "beckn:namespace" }
+
+        verificationEndpoint:
+          type: string
+          format: uri
+          description: DeDi lookup endpoint.
+          example: "https://dedi.example.com/verify/bpp.cpo.example.com"
+          x-jsonld: { "@id": "beckn:verificationEndpoint" }
+
+        verifiedAt:
+          type: string
+          format: date-time
+          description: Timestamp of verification.
+          example: "2024-12-15T14:00:00Z"
+          x-jsonld: { "@id": "beckn:verifiedAt" }
+
+    ########################################################################
+    # Ricardian Contract Extension
+    ########################################################################
+
+    RicardianContract:
+      type: object
+      description: Human-readable legal prose + hash linking to machine-readable logic.
+      additionalProperties: false
+      properties:
+        humanReadableText:
+          type: string
+          description: Natural language contract terms (Markdown/HTML).
+          example: "# Energy Charging Service Agreement\n\nThis agreement governs..."
+          x-jsonld: { "@id": "beckn:humanReadableText" }
+
+        humanReadableTextHash:
+          type: string
+          description: SHA-256 hash of human-readable text.
+          example: "sha256:a1b2c3d4e5f6..."
+          x-jsonld: { "@id": "beckn:humanReadableTextHash" }
+
+        machineReadableHash:
+          type: string
+          description: SHA-256 hash of machine-readable contract (revenue flows, formulas, etc.).
+          example: "sha256:1a2b3c4d5e6f..."
+          x-jsonld: { "@id": "beckn:machineReadableHash" }
+
+        combinedHash:
+          type: string
+          description: Hash linking both (proves they belong together).
+          example: "sha256:abc123def456..."
+          x-jsonld: { "@id": "beckn:combinedHash" }
+
+        legalJurisdiction:
+          type: string
+          description: Legal jurisdiction (e.g., "IN", "US-CA").
+          example: "IN"
+          x-jsonld: { "@id": "beckn:legalJurisdiction" }
+
+        contractVersion:
+          type: string
+          description: Version of contract template.
+          example: "1.0"
+          x-jsonld: { "@id": "beckn:contractVersion" }
+
+        templateId:
+          type: string
+          description: ID of contract template used.
+          example: "ev-charging-walk-in-v1"
+          x-jsonld: { "@id": "beckn:templateId" }
+

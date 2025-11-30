@@ -76,67 +76,17 @@ components:
               x-jsonld: { "@id": "schema:endTime" }
 
         # Coordination Extensions
-        bidCurve:
-          type: array
-          description: Array of price/power pairs expressing resource opportunity cost or willingness to transact. Used for market-based coordination and economic disaggregation.
-          items:
-            $ref: '#/components/schemas/BidCurvePoint'
-          x-jsonld: { "@id": "energyCoordination:bidCurve" }
-          example:
-            - price: 0.05
-              powerKW: 0
-            - price: 0.06
-              powerKW: 2
-            - price: 0.07
-              powerKW: 5
-
-        constraints:
-          $ref: '#/components/schemas/BidCurveConstraints'
-          description: Operational constraints for bid curve execution.
+        offerCurve:
+          $ref: '../EnergyCoordination/v1/attributes.yaml#/components/schemas/OfferCurve'
+          description: >
+            Optional. Price-responsive offer curve expressing resource's opportunity cost.
+            Used for market clearing and economic disaggregation.
+            Positive power values = export/generation, negative = withdrawal/consumption.
+          x-jsonld: { "@id": "energyCoordination:offerCurve" }
 
         objectives:
           $ref: '#/components/schemas/EnergyObjectives'
           description: Resource objectives expressing goals, constraints, and preferences for energy transactions.
-
-    BidCurvePoint:
-      type: object
-      description: A single price/power pair in a bid curve.
-      additionalProperties: false
-      required: [price, powerKW]
-      properties:
-        price:
-          type: number
-          minimum: 0
-          description: Price per kilowatt-hour at this power level.
-          example: 0.06
-          x-jsonld: { "@id": "schema:price" }
-        powerKW:
-          type: number
-          description: Power level in kilowatts. Negative values indicate consumption (charging, load), positive values indicate generation (discharge, export), zero indicates no participation.
-          example: 2.0
-          x-jsonld: { "@id": "energyCoordination:powerKW" }
-
-    BidCurveConstraints:
-      type: object
-      description: Operational constraints for bid curve execution.
-      additionalProperties: false
-      properties:
-        minPowerKW:
-          type: number
-          description: Minimum power level in kilowatts.
-          example: 0
-          x-jsonld: { "@id": "energyCoordination:minPowerKW" }
-        maxPowerKW:
-          type: number
-          description: Maximum power level in kilowatts.
-          example: 5
-          x-jsonld: { "@id": "energyCoordination:maxPowerKW" }
-        rampRateKWPerMin:
-          type: number
-          minimum: 0
-          description: Maximum rate of power change in kilowatts per minute.
-          example: 0.5
-          x-jsonld: { "@id": "energyCoordination:rampRateKWPerMin" }
 
     EnergyObjectives:
       type: object
@@ -176,7 +126,7 @@ components:
         minPricePerKWh:
           type: number
           minimum: 0
-          description: Optional. Minimum acceptable price per kilowatt-hour (for generators). Can also be expressed via bidCurve first point.
+          description: Optional. Minimum acceptable price per kilowatt-hour (for generators). Can also be expressed via offerCurve first point.
           example: 0.05
           x-jsonld: { "@id": "energyCoordination:minPricePerKWh" }
         preferredSource:
