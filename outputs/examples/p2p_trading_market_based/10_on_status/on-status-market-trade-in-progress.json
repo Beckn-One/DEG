@@ -1,0 +1,225 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_status",
+    "timestamp": "2024-10-04T15:00:05Z",
+    "message_id": "msg-on-status-market-001",
+    "transaction_id": "txn-market-energy-001",
+    "bap_id": "bap.energy-consumer.com",
+    "bap_uri": "https://bap.energy-consumer.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-market-consumer-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-market-001",
+          "quantity": {
+            "count": 50.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-market-clearing-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "bpp.market-clearing-agent.com"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-market-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:state": {
+            "@type": "beckn:State",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "IN_PROGRESS"
+            }
+          },
+          "beckn:attributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+            "@type": "EnergyTradeDelivery",
+            "deliveryStatus": "IN_PROGRESS",
+            "deliveryMode": "GRID_INJECTION",
+            "deliveredQuantity": 48.5,
+            "deliveryStartTime": "2024-10-04T10:00:00Z",
+            "deliveryEndTime": null,
+            "meterReadings": [
+              {
+                "timestamp": "2024-10-04T10:00:00Z",
+                "sourceReading": 1000.0,
+                "targetReading": 990.0,
+                "energyFlow": 10.0
+              },
+              {
+                "timestamp": "2024-10-04T12:00:00Z",
+                "sourceReading": 1000.5,
+                "targetReading": 990.3,
+                "energyFlow": 10.2
+              },
+              {
+                "timestamp": "2024-10-04T14:00:00Z",
+                "sourceReading": 1001.0,
+                "targetReading": 990.8,
+                "energyFlow": 10.2
+              }
+            ],
+            "telemetry": [
+              {
+                "eventTime": "2024-10-04T12:00:00Z",
+                "metrics": [
+                  {
+                    "name": "ENERGY",
+                    "value": 30.5,
+                    "unitCode": "KWH"
+                  },
+                  {
+                    "name": "POWER",
+                    "value": 2.5,
+                    "unitCode": "KW"
+                  },
+                  {
+                    "name": "VOLTAGE",
+                    "value": 240.0,
+                    "unitCode": "VLT"
+                  }
+                ]
+              }
+            ],
+            "settlementCycleId": "settle-2024-10-04-001",
+            "settlementCycles": [
+              {
+                "cycleId": "settle-2024-10-04-001",
+                "startTime": "2024-10-04T00:00:00Z",
+                "endTime": "2024-10-04T23:59:59Z",
+                "status": "PENDING",
+                "amount": 0.0,
+                "currency": "INR"
+              }
+            ],
+            "lastUpdated": "2024-10-04T15:30:00Z"
+          }
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-market-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractP2PTrade/v1/context.jsonld",
+        "@type": "EnergyContractP2PTrade",
+        "contractId": "contract-market-p2p-001",
+        "status": "ACTIVE",
+        "createdAt": "2024-10-04T10:00:00Z",
+        "roles": [
+          {
+            "role": "MARKET_CLEARING_AGENT",
+            "filledBy": "bpp.market-clearing-agent.com",
+            "filled": true,
+            "roleInputs": {
+              "marketMakingFee": 0.01,
+              "clearingPrice": 0.0625,
+              "clearedPower": {
+                "bap.energy-consumer.com": -50.0,
+                "bap.solar-prosumer.com": 5.0
+              }
+            }
+          },
+          {
+            "role": "PROSUMER",
+            "filledBy": "bap.energy-consumer.com",
+            "filled": true,
+            "roleInputs": {
+              "sourceMeterId": "98765456",
+              "sourceType": "CONSUMER",
+              "offerCurve": {
+                "currency": "INR",
+                "minExport": -50,
+                "maxExport": 0,
+                "curve": [
+                  {
+                    "price": 0.06,
+                    "powerKW": -50
+                  },
+                  {
+                    "price": 0.07,
+                    "powerKW": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "role": "GRID_OPERATOR",
+            "filledBy": "example-transmission-bpp.com",
+            "filled": true,
+            "roleInputs": {
+              "wheelingCharges": 0.025,
+              "current_buyer_trades_total": 5.0,
+              "current_seller_trade_total": 20.0,
+              "buyer_trade_cap": 50.0,
+              "seller_trade_cap": 100.0
+            }
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-04T23:59:59Z"
+          },
+          "pricingModel": "PAY_AS_CLEAR",
+          "approvedMaxTradeKW": 45.0
+        },
+        "inputSignals": [
+          {
+            "signalId": "market-clearing-price",
+            "signalType": "PRICE",
+            "source": {
+              "era": "market-clearing-agent",
+              "providerId": "bpp.market-clearing-agent.com"
+            },
+            "value": 0.0625,
+            "unit": "INR/kWh",
+            "timestamp": "2024-10-04T10:25:05Z"
+          }
+        ],
+        "telemetrySources": [],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "PROSUMER",
+              "to": "MARKET_CLEARING_AGENT",
+              "formula": "(roles.MARKET_CLEARING_AGENT.roleInputs.clearingPrice + roles.MARKET_CLEARING_AGENT.roleInputs.marketMakingFee) × roles.MARKET_CLEARING_AGENT.roleInputs.clearedPower[PROSUMER.era]",
+              "description": "PROSUMER pays MARKET_CLEARING_AGENT based on clearing price + market making fee × cleared power"
+            },
+            {
+              "from": "MARKET_CLEARING_AGENT",
+              "to": "GRID_OPERATOR",
+              "formula": "abs(roles.MARKET_CLEARING_AGENT.roleInputs.clearedPower[PROSUMER.era]) × roles.GRID_OPERATOR.roleInputs.wheelingCharges",
+              "description": "MARKET_CLEARING_AGENT pays GRID_OPERATOR for wheeling charges"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": []
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "timestamp": "2024-10-04T10:25:05Z",
+    "message_id": "msg-on-confirm-solar-prosumer-001",
+    "transaction_id": "txn-market-energy-002",
+    "bap_id": "bap.solar-prosumer.com",
+    "bap_uri": "https://bap.solar-prosumer.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-market-solar-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-market-001",
+          "quantity": {
+            "count": 5.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-market-clearing-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "bpp.market-clearing-agent.com"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-market-solar-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:state": {
+            "@type": "beckn:State",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "PENDING"
+            }
+          }
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-market-solar-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractP2PTrade/v1/context.jsonld",
+        "@type": "EnergyContractP2PTrade",
+        "contractId": "contract-market-p2p-001",
+        "status": "ACTIVE",
+        "createdAt": "2024-10-04T10:00:00Z",
+        "roles": [
+          {
+            "role": "MARKET_CLEARING_AGENT",
+            "filledBy": "bpp.market-clearing-agent.com",
+            "filled": true,
+            "roleInputs": {
+              "marketMakingFee": 0.01,
+              "clearingPrice": 0.0625,
+              "clearedPower": {
+                "bap.solar-prosumer.com": 5.0
+              }
+            }
+          },
+          {
+            "role": "PROSUMER",
+            "filledBy": "bap.solar-prosumer.com",
+            "filled": true,
+            "roleInputs": {
+              "sourceMeterId": "100200300",
+              "sourceType": "SOLAR",
+              "offerCurve": {
+                "currency": "INR",
+                "minExport": 0,
+                "maxExport": 5,
+                "curve": [
+                  {
+                    "price": 0.05,
+                    "powerKW": 0
+                  },
+                  {
+                    "price": 0.06,
+                    "powerKW": 2
+                  },
+                  {
+                    "price": 0.07,
+                    "powerKW": 5
+                  }
+                ]
+              },
+              "inverterId": "inv-12345",
+              "certification": {
+                "status": "Carbon Offset Certified",
+                "certificates": [
+                  "https://example.com/certs/solar-panel-cert.pdf"
+                ]
+              }
+            }
+          },
+          {
+            "role": "GRID_OPERATOR",
+            "filledBy": "example-transmission-bpp.com",
+            "filled": true,
+            "roleInputs": {
+              "wheelingCharges": 0.025,
+              "current_buyer_trades_total": 5.0,
+              "current_seller_trade_total": 20.0,
+              "buyer_trade_cap": 50.0,
+              "seller_trade_cap": 100.0
+            }
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-04T23:59:59Z"
+          },
+          "pricingModel": "PAY_AS_CLEAR",
+          "approvedMaxTradeKW": 45.0
+        },
+        "inputSignals": [
+          {
+            "signalId": "market-clearing-price",
+            "signalType": "PRICE",
+            "source": {
+              "era": "market-clearing-agent",
+              "providerId": "bpp.market-clearing-agent.com"
+            },
+            "value": 0.0625,
+            "unit": "INR/kWh",
+            "timestamp": "2024-10-04T10:25:05Z"
+          }
+        ],
+        "telemetrySources": [],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "PROSUMER",
+              "to": "MARKET_CLEARING_AGENT",
+              "formula": "(roles.MARKET_CLEARING_AGENT.roleInputs.clearingPrice + roles.MARKET_CLEARING_AGENT.roleInputs.marketMakingFee) × roles.MARKET_CLEARING_AGENT.roleInputs.clearedPower[PROSUMER.era]",
+              "description": "PROSUMER receives from MARKET_CLEARING_AGENT: (₹0.0625 + ₹0.01) × 5.0 kW = ₹0.3625"
+            },
+            {
+              "from": "MARKET_CLEARING_AGENT",
+              "to": "GRID_OPERATOR",
+              "formula": "abs(roles.MARKET_CLEARING_AGENT.roleInputs.clearedPower[PROSUMER.era]) × roles.GRID_OPERATOR.roleInputs.wheelingCharges",
+              "description": "MARKET_CLEARING_AGENT pays GRID_OPERATOR: 5.0 kW × ₹0.025/kWh = ₹0.125"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": []
+        }
+      }
+    }
+  }
+}

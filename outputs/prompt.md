@@ -99,3 +99,51 @@ With that said, please go ahead with changing the architecture/ files.. Please e
 
 -----
 
+Most changes looj good.. but for Energy Catalog can you keep most of original language, while layering your proposed changes on top? This is because catalog can be thought as a bouquet of EnergyOffers .. and need not be replaced by the EnergyOffer.  Also on EnergyContract.md, please see if original layered perspective and language can be preserved, while adding full EnergyContract schema in layer4 .. When the original language, is in conflict with new understanding, ok to delete it. But in specific cases, it could be complementary,
+
+
+-----
+
+The task you did for ev charging, could you do the same for examples/v2/P2P_Trading and create outputs/examples/P2P_Trading and use new EnergyContractP2PTrade (to be newly created similar to what you did for EnergyContractEVCharging, so that it can be swapped in P2P examples as they stand now) ? Can you plan this task, ask me questions and propose new EnergyContractP2PTrade schema creation as a interim milestone to review?
+
+------
+
+## Questions for Review
+
+1. **Role Assignment:**
+   - Should `sourceType` and `certification` be in SELLER's roleInputs, or should they remain at contract root level? 
+   A: SELLER's roleInputs. 
+   - Should `pricingModel`, `settlementType`, `wheelingCharges` from `EnergyTradeOffer` move to SELLER's roleInputs?
+   A: For wheeling_charges, please add it to a new role `GRID_OPERATOR`, who will provide wheeling_charges, current_buyer_trades_total, current_seller_trade_total, buyer_trade_cap, seller_trade_cap (maximum trade volume is minimum of the cap-total for buyer & seller). This will be filled in cascaded_init and cascaded_confirm call.
+
+2. **Contract Root vs Role Inputs:**
+   - Should `contractedQuantity`, `tradeStartTime`, `tradeEndTime` be in BUYER's roleInputs or in `inputParameters`? No
+   - Should `sourceMeterId` and `targetMeterId` be in roleInputs or in `inputParameters`? roleInputs.
+
+3. **Telemetry Sources:**
+   - Should meter readings be defined as `telemetrySources` in the contract? 
+   A: Not in this P2P contract. There could be multiple P2P contracts. But each seller & buyer will
+      have a seperate contract with GRID OPERATOR, where any deviation from say current_buyer_trade_total will be billed at utility tariff or market rate.
+      That contract will use meter telemetry to measure the deviation.
+   - How should we reference source and target meters in revenue flow formulas?
+   A: in those contracts seperate from P2P trade (but still affected by the trade, since current_buyer_trade_total changes after each P2P trade)
+
+4. **Revenue Flows:**
+   - Should revenue flow be: `BUYER → SELLER` based on `contractedQuantity × pricePerKWh`? 
+    A: Yes
+   - How should `wheelingCharges` be handled in revenue flows? (BUYER → GRID_OPERATOR?) 
+    A: `contractedQuantity × wheelingCharges` should flow from BUYER → GRID_OPERATOR
+
+5. **Settlement Cycles:**
+   - Should `settlementCycles` remain in contract or move to `fulfillment.attributes`?
+   A: move to `fulfillment.attributes`
+   - How should settlement be computed from meter readings?
+   A: Meter readings are used not for P2P contract itself, but for side contracts seller & buyer have with the grid operator.
+
+
+6. **Cascaded Init:**
+   - The cascaded init example shows utility registration. Should this be a separate contract type or handled via contract roles?
+   A: Handled via contract roles.
+
+-----
+

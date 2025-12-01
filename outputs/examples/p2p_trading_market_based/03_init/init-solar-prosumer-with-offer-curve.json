@@ -1,0 +1,148 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "timestamp": "2024-10-04T10:20:00Z",
+    "message_id": "msg-init-solar-prosumer-001",
+    "transaction_id": "txn-market-energy-002",
+    "bap_id": "bap.solar-prosumer.com",
+    "bap_uri": "https://bap.solar-prosumer.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-market-solar-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-market-001",
+          "quantity": {
+            "count": 5.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-market-clearing-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "bpp.market-clearing-agent.com"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-market-solar-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:stops": [
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-start-001",
+              "beckn:type": "START",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "100200300"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-market-solar-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractP2PTrade/v1/context.jsonld",
+        "@type": "EnergyContractP2PTrade",
+        "contractId": "contract-market-p2p-001",
+        "status": "PENDING",
+        "createdAt": "2024-10-04T10:00:00Z",
+        "roles": [
+          {
+            "role": "MARKET_CLEARING_AGENT",
+            "filledBy": "bpp.market-clearing-agent.com",
+            "filled": true,
+            "roleInputs": {
+              "marketMakingFee": 0.01
+            }
+          },
+          {
+            "role": "PROSUMER",
+            "filledBy": "bap.solar-prosumer.com",
+            "filled": true,
+            "roleInputs": {
+              "sourceMeterId": "100200300",
+              "sourceType": "SOLAR",
+              "offerCurve": {
+                "currency": "INR",
+                "minExport": 0,
+                "maxExport": 5,
+                "curve": [
+                  {
+                    "price": 0.05,
+                    "powerKW": 0
+                  },
+                  {
+                    "price": 0.06,
+                    "powerKW": 2
+                  },
+                  {
+                    "price": 0.07,
+                    "powerKW": 5
+                  }
+                ]
+              },
+              "inverterId": "inv-12345",
+              "certification": {
+                "status": "Carbon Offset Certified",
+                "certificates": [
+                  "https://example.com/certs/solar-panel-cert.pdf"
+                ]
+              }
+            }
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-04T23:59:59Z"
+          },
+          "pricingModel": "PAY_AS_CLEAR"
+        },
+        "inputSignals": [],
+        "telemetrySources": [],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "PROSUMER",
+              "to": "MARKET_CLEARING_AGENT",
+              "formula": "(roles.MARKET_CLEARING_AGENT.roleInputs.clearingPrice + roles.MARKET_CLEARING_AGENT.roleInputs.marketMakingFee) × roles.MARKET_CLEARING_AGENT.roleInputs.clearedPower[PROSUMER.era]",
+              "description": "PROSUMER receives from MARKET_CLEARING_AGENT based on clearing price + market making fee × cleared power (positive = receives, negative = pays)"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": []
+        }
+      }
+    }
+  }
+}

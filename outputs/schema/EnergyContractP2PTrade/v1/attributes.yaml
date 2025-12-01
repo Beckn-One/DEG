@@ -5,10 +5,18 @@ info:
   x-profile-id: profiles/energy-coordination/energy_contract_p2p_trade/v1/contract
   description: >
     Specialized contract schema for P2P energy trading use cases.
-    Inherits from EnergyContract and defines SELLER, BUYER, and GRID_OPERATOR roleInputs structure for P2P trading contracts.
-    SELLER must provide: sourceMeterId, sourceType, pricePerKWh, currency.
-    BUYER must provide: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime.
-    GRID_OPERATOR provides: wheelingCharges, current_buyer_trades_total, current_seller_trade_total, buyer_trade_cap, seller_trade_cap (filled in cascaded_init/cascaded_confirm).
+    Inherits from EnergyContract and supports two trading modes:
+    
+    1. **Fixed Price Mode**: SELLER + BUYER roles with fixed pricePerKWh
+       - SELLER must provide: sourceMeterId, sourceType, pricePerKWh, currency
+       - BUYER must provide: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime
+    
+    2. **Market-Based Mode**: MARKET_CLEARING_AGENT + PROSUMER roles with offer curves
+       - MARKET_CLEARING_AGENT provides: marketMakingFee (required), clearingPrice, clearedPower (after market clearing)
+       - PROSUMER provides: sourceMeterId, sourceType, offerCurve (required)
+       - Pay-as-clear pricing: prices discovered at confirmation time after market clearing
+    
+    GRID_OPERATOR role (optional) provides: wheelingCharges, trade capacity info (filled in cascaded_init/cascaded_confirm).
 
 components:
   schemas:
@@ -21,25 +29,57 @@ components:
         - type: object
           description: >
             Specialized contract for P2P energy trading use cases.
-            SELLER role must provide: sourceMeterId, sourceType, pricePerKWh, currency.
-            BUYER role must provide: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime.
-            GRID_OPERATOR role provides: wheelingCharges, current_buyer_trades_total, current_seller_trade_total, buyer_trade_cap, seller_trade_cap (filled in cascaded_init/cascaded_confirm).
+            Supports two modes:
+            
+            **Fixed Price Mode** (SELLER + BUYER):
+            - SELLER: sourceMeterId, sourceType, pricePerKWh, currency
+            - BUYER: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime
+            
+            **Market-Based Mode** (MARKET_CLEARING_AGENT + PROSUMER):
+            - MARKET_CLEARING_AGENT: marketMakingFee (required), clearingPrice, clearedPower (after clearing)
+            - PROSUMER: sourceMeterId, sourceType, offerCurve (required)
+            
+            GRID_OPERATOR role (optional): wheelingCharges, trade capacity info (filled in cascaded_init/cascaded_confirm).
           additionalProperties: false
           x-jsonld:
             "@context": ./context.jsonld
             "@type": EnergyContractP2PTrade
+          x-validation-rules:
+            - rule: "Fixed Price Mode: Must contain exactly one SELLER role and one BUYER role"
+              condition: "roles contains role='SELLER' and roles contains role='BUYER'"
+              error: "Fixed Price Mode requires exactly one SELLER and one BUYER role"
+            - rule: "Market-Based Mode: Must contain exactly one MARKET_CLEARING_AGENT role and at least one PROSUMER role"
+              condition: "roles contains role='MARKET_CLEARING_AGENT' and roles contains role='PROSUMER'"
+              error: "Market-Based Mode requires exactly one MARKET_CLEARING_AGENT and at least one PROSUMER role"
+            - rule: "Cannot mix modes: Cannot have both SELLER/BUYER and MARKET_CLEARING_AGENT/PROSUMER in same contract"
+              condition: "not (roles contains role='SELLER' and roles contains role='MARKET_CLEARING_AGENT')"
+              error: "Cannot mix Fixed Price Mode (SELLER/BUYER) and Market-Based Mode (MARKET_CLEARING_AGENT/PROSUMER)"
+            - rule: "GRID_OPERATOR role is optional and can be present in either mode"
+              condition: "roles may contain role='GRID_OPERATOR'"
+              error: null
           properties:
             roles:
               type: array
               description: >
-                Roles in P2P trading contract. SELLER, BUYER, and GRID_OPERATOR roleInputs structures are predefined.
+                Roles in P2P trading contract. Supports two modes:
+                - Fixed Price: SELLER + BUYER roles
+                - Market-Based: MARKET_CLEARING_AGENT + PROSUMER roles
+                GRID_OPERATOR role is optional for both modes.
+                
+                **Validation Rules**:
+                - Fixed Price Mode: Must contain exactly one SELLER and one BUYER role
+                - Market-Based Mode: Must contain exactly one MARKET_CLEARING_AGENT and one or more PROSUMER roles
+                - GRID_OPERATOR role is optional and can be present in either mode
+                - Cannot mix modes: Cannot have both (SELLER/BUYER) and (MARKET_CLEARING_AGENT/PROSUMER) in same contract
               items:
                 anyOf:
                   - $ref: '#/components/schemas/P2PTradeSellerRole'
                   - $ref: '#/components/schemas/P2PTradeBuyerRole'
+                  - $ref: '#/components/schemas/P2PTradeMarketClearingAgentRole'
+                  - $ref: '#/components/schemas/P2PTradeProsumerRole'
                   - $ref: '#/components/schemas/P2PTradeGridOperatorRole'
                   - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
-              minItems: 1
+              minItems: 2
               x-jsonld: { "@id": "beckn:roles" }
 
     ########################################################################
@@ -65,13 +105,16 @@ components:
             roleInputs:
               type: object
               description: >
-                SELLER must provide: sourceMeterId, sourceType, pricePerKWh, currency.
+                SELLER must provide: sourceMeterId, sourceType, and either pricePerKWh (fixed price) OR offerCurve (market-based).
+                For fixed price mode: pricePerKWh, currency (required).
+                For market-based mode: use PROSUMER role with offerCurve instead.
                 Optional: inverterId, certification, pricingModel, settlementType,
-                minimumQuantity, maximumQuantity, validityWindow.
+                minimumQuantity, maximumQuantity, validityWindow, offerCurve.
                 Each input includes type, required, description, and nullable value.
                 Note: wheelingCharges is provided by GRID_OPERATOR role, not SELLER.
               additionalProperties: false
-              required: [sourceMeterId, sourceType, pricePerKWh, currency]
+              required: [sourceMeterId, sourceType]
+              # Note: Either pricePerKWh+currency OR offerCurve should be provided, but schema allows both for flexibility
               properties:
                 sourceMeterId:
                   $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
@@ -85,11 +128,22 @@ components:
 
                 pricePerKWh:
                   $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
-                  description: Price per kilowatt-hour (required, NUMBER type).
+                  description: >
+                    Price per kilowatt-hour (NUMBER type).
+                    Required for fixed price mode. Not used in market-based mode (use PROSUMER role with offerCurve instead).
 
                 currency:
                   $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
-                  description: Currency code (required, STRING type, e.g., "USD", "INR").
+                  description: >
+                    Currency code (STRING type, e.g., "USD", "INR").
+                    Required for fixed price mode. Not used in market-based mode (use offerCurve.currency instead).
+
+                offerCurve:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Offer curve for market-based trading (OBJECT type).
+                    For market-based mode, use PROSUMER role with offerCurve instead of SELLER.
+                    Reference: ../EnergyCoordination/v1/attributes.yaml#/components/schemas/OfferCurve
 
                 inverterId:
                   $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
@@ -374,4 +428,159 @@ components:
                   required: true
                   description: "Maximum allowed seller trade volume for this meter in kWh"
                   value: 100.0
+
+    ########################################################################
+    # P2P Trading Market Clearing Agent Role
+    ########################################################################
+
+    P2PTradeMarketClearingAgentRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: >
+            MARKET_CLEARING_AGENT role in market-based P2P trading contract.
+            MCA aggregates offer curves, clears the market, and provides clearing price and cleared power.
+            This role is used in market-based mode (not fixed price mode).
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [MARKET_CLEARING_AGENT]
+              description: Role type must be MARKET_CLEARING_AGENT.
+              example: "MARKET_CLEARING_AGENT"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                MARKET_CLEARING_AGENT must provide: marketMakingFee.
+                After market clearing, provides: clearingPrice, clearedPower (per PROSUMER).
+                Each input includes type, required, description, and nullable value.
+              additionalProperties: false
+              required: [marketMakingFee]
+              properties:
+                marketMakingFee:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Market making fee per kWh (required, NUMBER type).
+                    Added to clearing price in revenue flows: (clearingPrice + marketMakingFee) × clearedPower.
+
+                clearingPrice:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Market clearing price per kWh (NUMBER type).
+                    Provided after market clearing in on_confirm. Null before clearing.
+
+                clearedPower:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Cleared power for each PROSUMER in kW (OBJECT type, keyed by PROSUMER era or meterId).
+                    Positive = export/generation, negative = withdrawal/consumption.
+                    Provided after market clearing in on_confirm. Null before clearing.
+                    Example: {"prosumer-001": 5.0, "prosumer-002": -8.0}
+              x-jsonld: { "@id": "beckn:roleInputs" }
+              example:
+                marketMakingFee:
+                  type: "NUMBER"
+                  required: true
+                  description: "Market making fee per kWh"
+                  value: 0.01
+                clearingPrice:
+                  type: "NUMBER"
+                  required: false
+                  description: "Market clearing price per kWh (after clearing)"
+                  value: 0.0625
+                clearedPower:
+                  type: "OBJECT"
+                  required: false
+                  description: "Cleared power per prosumer in kW (after clearing)"
+                  value:
+                    "prosumer-001": 5.0
+                    "prosumer-002": -8.0
+
+    ########################################################################
+    # P2P Trading Prosumer Role (Market-Based)
+    ########################################################################
+
+    P2PTradeProsumerRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: >
+            PROSUMER role in market-based P2P trading contract.
+            PROSUMER provides offer curve expressing price/power preferences.
+            Positive power = providing energy (seller), negative power = receiving energy (buyer).
+            This role is used in market-based mode (not fixed price mode).
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [PROSUMER]
+              description: Role type must be PROSUMER.
+              example: "PROSUMER"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                PROSUMER must provide: sourceMeterId, sourceType, offerCurve.
+                Optional: inverterId, certification.
+                Each input includes type, required, description, and nullable value.
+              additionalProperties: false
+              required: [sourceMeterId, sourceType, offerCurve]
+              properties:
+                sourceMeterId:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: PROSUMER's meter identifier (required, STRING type).
+
+                sourceType:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Energy source type (required, STRING type).
+                    Examples: SOLAR, WIND, BATTERY, HYDRO, BIOMASS, CONSUMER.
+
+                offerCurve:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Offer curve expressing price/power preferences (required, OBJECT type).
+                    Positive power = providing energy (seller), negative power = receiving energy (buyer).
+                    Reference: ../EnergyCoordination/v1/attributes.yaml#/components/schemas/OfferCurve
+                    Structure: {currency, minExport, maxExport, curve: [{price, powerKW}]}
+
+                inverterId:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Inverter identifier (STRING type).
+
+                certification:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Certification details (OBJECT type with status and certificates array).
+                    Example: {status: "Carbon Offset Certified", certificates: ["https://..."]}
+              x-jsonld: { "@id": "beckn:roleInputs" }
+              example:
+                sourceMeterId:
+                  type: "STRING"
+                  required: true
+                  description: "PROSUMER's meter identifier"
+                  value: "100200300"
+                sourceType:
+                  type: "STRING"
+                  required: true
+                  description: "Energy source type (SOLAR, WIND, etc.)"
+                  value: "SOLAR"
+                offerCurve:
+                  type: "OBJECT"
+                  required: true
+                  description: "Offer curve with price/power pairs"
+                  value:
+                    currency: "INR"
+                    minExport: 0
+                    maxExport: 5
+                    curve:
+                      - price: 0.05
+                        powerKW: 0
+                      - price: 0.06
+                        powerKW: 2
+                      - price: 0.07
+                        powerKW: 5
 

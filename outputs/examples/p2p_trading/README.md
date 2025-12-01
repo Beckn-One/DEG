@@ -1,4 +1,4 @@
-# P2P Trading Examples - EnergyContractP2PTrade Pattern
+# P2P Trading Examples - EnergyContractP2PTrade Pattern (Fixed Price Mode)
 
 **Version:** 1.0  
 **Date:** December 2024
@@ -7,7 +7,9 @@
 
 ## Overview
 
-This directory contains complete JSON message examples for P2P energy trading use cases using the new `EnergyContractP2PTrade` pattern. These examples demonstrate how the refactored contract-based architecture works in practice, with computational contracts that define roles (SELLER, BUYER, GRID_OPERATOR), revenue flows, and trade capacity management.
+This directory contains complete JSON message examples for **fixed price P2P energy trading** use cases using the new `EnergyContractP2PTrade` pattern. These examples demonstrate the **Fixed Price Mode** with SELLER + BUYER roles and fixed `pricePerKWh`.
+
+**Note**: For market-based trading with offer curves and market clearing, see `../p2p_trading_market_based/` directory.
 
 ---
 
@@ -48,16 +50,17 @@ p2p_trading/
 
 ## Key Features
 
-### 1. EnergyContractP2PTrade Pattern
+### 1. EnergyContractP2PTrade Pattern - Fixed Price Mode
 
-All examples use `EnergyContractP2PTrade` in `orderAttributes` (and `offerAttributes` in discovery). This specialized contract:
+All examples use `EnergyContractP2PTrade` in **Fixed Price Mode** with `orderAttributes` (and `offerAttributes` in discovery). This specialized contract:
 
 - **Inherits from** `EnergyContract` (core abstract schema)
-- **Defines three roles**:
-  - **SELLER (PROSUMER)**: Provides `sourceMeterId`, `sourceType`, `pricePerKWh`, `currency` (required) + optional fields
-  - **BUYER (CONSUMER)**: Provides `targetMeterId`, `contractedQuantity`, `tradeStartTime`, `tradeEndTime` (required)
-  - **GRID_OPERATOR**: Provides `wheelingCharges`, `current_buyer_trades_total`, `current_seller_trade_total`, `buyer_trade_cap`, `seller_trade_cap` (filled in cascaded_init/cascaded_confirm)
+- **Fixed Price Mode Roles**:
+  - **SELLER**: Provides `sourceMeterId`, `sourceType`, `pricePerKWh`, `currency` (required) + optional fields
+  - **BUYER**: Provides `targetMeterId`, `contractedQuantity`, `tradeStartTime`, `tradeEndTime` (required)
+  - **GRID_OPERATOR** (optional): Provides `wheelingCharges`, trade capacity info (filled in cascaded_init/cascaded_confirm)
 - **Status transitions**: `PENDING` (in init/select) → `ACTIVE` (in on_confirm) → `COMPLETED` (in on_status_completed)
+- **Pricing**: Fixed `pricePerKWh` known upfront (not market-cleared)
 
 ### 2. Simple roleInputs Format
 
@@ -211,6 +214,17 @@ All examples use proper JSON-LD composition:
 
 ---
 
+## Comparison: Fixed Price vs Market-Based
+
+| Aspect | Fixed Price Mode (this directory) | Market-Based Mode (`../p2p_trading_market_based/`) |
+|-------|-----------------------------------|-----------------------------------------------------|
+| **Roles** | SELLER + BUYER | MARKET_CLEARING_AGENT + PROSUMER |
+| **Pricing** | Fixed `pricePerKWh` | Pay-as-clear (discovered at confirmation) |
+| **Price Expression** | `pricePerKWh` in SELLER roleInputs | `offerCurve` in PROSUMER roleInputs |
+| **Quantity** | `contractedQuantity` in BUYER roleInputs | `clearedPower` from MCA after clearing |
+| **Market Clearing** | Not applicable | MCA aggregates offer curves, finds clearing price |
+| **Use Case** | Direct buyer-seller trade | Multiple prosumers, market coordination |
+
 ## Migration from Original Examples
 
 These examples replace the original `EnergyTradeContract` and `EnergyTradeOffer` schemas with the new `EnergyContractP2PTrade` pattern. Key differences:
@@ -220,6 +234,7 @@ These examples replace the original `EnergyTradeContract` and `EnergyTradeOffer`
 3. **Computational billing**: Revenue flows defined as formulas
 4. **GRID_OPERATOR integration**: Trade capacity and wheeling charges provided via cascaded_init
 5. **Settlement in fulfillment**: Settlement cycles moved to `fulfillment.attributes`
+6. **Polymorphic design**: Same schema supports both fixed price and market-based modes
 
 ---
 

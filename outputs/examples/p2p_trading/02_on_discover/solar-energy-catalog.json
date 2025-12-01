@@ -20,7 +20,8 @@
         "beckn:id": "catalog-energy-001",
         "beckn:descriptor": {
           "@type": "beckn:Descriptor",
-          "schema:name": "Solar Energy Trading Catalog"
+          "schema:name": "Solar Energy Trading Catalog - Fixed Price Mode",
+          "beckn:shortDesc": "Fixed price P2P trading (SELLER + BUYER roles)"
         },
         "beckn:items": [
           {
@@ -86,12 +87,14 @@
               "providerId": "bpp.energy-provider.com",
               "providerUri": "https://bpp.energy-provider.com",
               "openRole": "BUYER",
+              "contractSummary": "Fixed price P2P trading: SELLER provides fixed pricePerKWh, BUYER provides contractedQuantity",
               "contract": {
                 "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractP2PTrade/v1/context.jsonld",
                 "@type": "EnergyContractP2PTrade",
                 "contractId": "contract-p2p-trade-001",
                 "status": "PENDING",
                 "createdAt": "2024-10-04T10:00:00Z",
+                "_comment": "Fixed Price Mode: SELLER + BUYER roles with fixed pricePerKWh",
                 "roles": [
                   {
                     "role": "SELLER",

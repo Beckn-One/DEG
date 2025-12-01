@@ -96,6 +96,8 @@
         "contractId": "contract-p2p-trade-001",
         "status": "PENDING",
         "createdAt": "2024-10-04T10:00:00Z",
+        "_mode": "FIXED_PRICE",
+        "_comment": "Fixed Price Mode: SELLER + BUYER roles with fixed pricePerKWh",
         "roles": [
           {
             "role": "SELLER",

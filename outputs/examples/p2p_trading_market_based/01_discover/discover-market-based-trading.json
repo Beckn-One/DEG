@@ -1,0 +1,54 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "discover",
+    "timestamp": "2024-10-04T10:00:00Z",
+    "message_id": "msg-discover-market-001",
+    "transaction_id": "txn-market-energy-001",
+    "bap_id": "bap.energy-consumer.com",
+    "bap_uri": "https://bap.energy-consumer.com",
+    "bpp_id": "bpp.market-clearing-agent.com",
+    "bpp_uri": "https://bpp.market-clearing-agent.com",
+    "ttl": "PT30S",
+    "domain": "energy-trade",
+    "location": {
+      "city": {
+        "code": "BLR",
+        "name": "Bangalore"
+      },
+      "country": {
+        "code": "IND",
+        "name": "India"
+      }
+    }
+  },
+  "message": {
+    "intent": {
+      "item": {
+        "descriptor": {
+          "name": "Energy Trading - Market Based"
+        }
+      },
+      "fulfillment": {
+        "type": "ENERGY_DELIVERY",
+        "stops": [
+          {
+            "type": "END",
+            "location": {
+              "address": "98765456"
+            },
+            "time": {
+              "range": {
+                "start": "2024-10-04T10:00:00Z",
+                "end": "2024-10-04T18:00:00Z"
+              }
+            }
+          }
+        ]
+      },
+      "payment": {
+        "type": "ON-FULFILLMENT"
+      }
+    }
+  }
+}
