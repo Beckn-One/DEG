@@ -105,16 +105,18 @@ components:
             roleInputs:
               type: object
               description: >
-                SELLER must provide: sourceMeterId, sourceType, and either pricePerKWh (fixed price) OR offerCurve (market-based).
-                For fixed price mode: pricePerKWh, currency (required).
-                For market-based mode: use PROSUMER role with offerCurve instead.
+                SELLER must provide: sourceMeterId, sourceType, and ONE of:
+                - pricePerKWh + currency (simple fixed price)
+                - tariff (full tariff object for time-of-use, tiered pricing, utility tariffs)
+                - offerCurve (market-based mode, use PROSUMER role instead)
                 Optional: inverterId, certification, pricingModel, settlementType,
-                minimumQuantity, maximumQuantity, validityWindow, offerCurve.
+                minimumQuantity, maximumQuantity, validityWindow.
                 Each input includes type, required, description, and nullable value.
                 Note: wheelingCharges is provided by GRID_OPERATOR role, not SELLER.
+                Note: pricePerKWh and tariff are mutually exclusive (use one or the other).
               additionalProperties: false
               required: [sourceMeterId, sourceType]
-              # Note: Either pricePerKWh+currency OR offerCurve should be provided, but schema allows both for flexibility
+              # Note: Either pricePerKWh+currency OR tariff OR offerCurve should be provided, but schema allows flexibility
               properties:
                 sourceMeterId:
                   $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
@@ -137,6 +139,15 @@ components:
                   description: >
                     Currency code (STRING type, e.g., "USD", "INR").
                     Required for fixed price mode. Not used in market-based mode (use offerCurve.currency instead).
+
+                tariff:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Full tariff object for time-of-use, tiered pricing, utility tariffs (OBJECT type).
+                    Reference: ../EnergyCoordination/v1/attributes.yaml#/components/schemas/Tariff
+                    Use instead of pricePerKWh for complex pricing structures (time-of-use, tiered rates).
+                    Mutually exclusive with pricePerKWh (use one or the other).
+                    Based on OCPI Tariff standard.
 
                 offerCurve:
                   $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'

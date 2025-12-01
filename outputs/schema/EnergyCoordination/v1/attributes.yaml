@@ -135,6 +135,266 @@ components:
     # Note: LocationalPriceAdder and GridConstraints have been moved to GridNode schema
     # See ../GridNode/v1/attributes.yaml
 
+    ########################################################################
+    # TARIFF SCHEMAS — Based on OCPI Standard
+    ########################################################################
+
+    Tariff:
+      type: object
+      description: >
+        Comprehensive tariff structure based on OCPI standard.
+        Supports time-of-use pricing, tiered rates, and utility-style tariffs.
+        Can be used in SELLER roleInputs instead of pricePerKWh for fixed price mode.
+      additionalProperties: false
+      required: [currency, elements]
+      properties:
+        tariffId:
+          type: string
+          description: Unique tariff identifier (optional, for reference).
+          example: "TARIFF-TOU-001"
+          x-jsonld: { "@id": "schema:identifier" }
+
+        currency:
+          type: string
+          description: Currency code (ISO 4217).
+          example: "INR"
+          x-jsonld: { "@id": "schema:currency" }
+
+        type:
+          type: string
+          enum: [REGULAR, AD_HOC_PAYMENT, PROFILE_CHEAP, PROFILE_FAST, PROFILE_GREEN]
+          description: >
+            Tariff type (OCPI enum).
+            REGULAR: Standard tariff
+            AD_HOC_PAYMENT: One-time payment
+            PROFILE_*: Profile-based tariffs
+          default: "REGULAR"
+          x-jsonld: { "@id": "ocpi:type" }
+
+        tariffAltText:
+          type: array
+          description: Human-readable tariff description in multiple languages.
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              language:
+                type: string
+                example: "en"
+                x-jsonld: { "@id": "schema:inLanguage" }
+              text:
+                type: string
+                example: "Time-of-Use Tariff - Peak/Off-Peak"
+                x-jsonld: { "@id": "schema:text" }
+          x-jsonld: { "@id": "ocpi:tariff_alt_text" }
+
+        tariffAltUrl:
+          type: string
+          format: uri
+          description: URL to detailed tariff information.
+          example: "https://utility.com/tariffs/tou-001"
+          x-jsonld: { "@id": "ocpi:tariff_alt_url" }
+
+        minPrice:
+          type: object
+          description: Minimum price (excl/incl VAT).
+          additionalProperties: false
+          properties:
+            exclVat:
+              type: number
+              minimum: 0
+              description: Price excluding VAT.
+              x-jsonld: { "@id": "ocpi:excl_vat" }
+            inclVat:
+              type: number
+              minimum: 0
+              description: Price including VAT.
+              x-jsonld: { "@id": "ocpi:incl_vat" }
+          x-jsonld: { "@id": "ocpi:min_price" }
+
+        maxPrice:
+          type: object
+          description: Maximum price (excl/incl VAT).
+          additionalProperties: false
+          properties:
+            exclVat:
+              type: number
+              minimum: 0
+              x-jsonld: { "@id": "ocpi:excl_vat" }
+            inclVat:
+              type: number
+              minimum: 0
+              x-jsonld: { "@id": "ocpi:incl_vat" }
+          x-jsonld: { "@id": "ocpi:max_price" }
+
+        elements:
+          type: array
+          description: >
+            Array of tariff elements, each defining price components and restrictions.
+            Multiple elements allow time-of-use, tiered pricing, etc.
+          items:
+            $ref: '#/components/schemas/TariffElement'
+          minItems: 1
+          x-jsonld: { "@id": "ocpi:elements" }
+
+        energyMix:
+          type: object
+          description: >
+            Optional. Energy source information (OCPI EnergyMix).
+            Specifies renewable energy percentage, carbon footprint, etc.
+          additionalProperties: false
+          properties:
+            isGreenEnergy:
+              type: boolean
+              description: Whether energy is from renewable sources.
+              x-jsonld: { "@id": "ocpi:is_green_energy" }
+            energySources:
+              type: array
+              description: Array of energy sources with percentages.
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  source:
+                    type: string
+                    enum: [SOLAR, WIND, HYDRO, NUCLEAR, COAL, GAS, OTHER]
+                    x-jsonld: { "@id": "ocpi:source" }
+                  percentage:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                    x-jsonld: { "@id": "ocpi:percentage" }
+              x-jsonld: { "@id": "ocpi:energy_sources" }
+            environImpact:
+              type: object
+              description: Environmental impact metrics.
+              additionalProperties: false
+              properties:
+                carbonDioxide:
+                  type: number
+                  minimum: 0
+                  description: CO2 emissions in g/kWh.
+                  x-jsonld: { "@id": "ocpi:carbon_dioxide" }
+              x-jsonld: { "@id": "ocpi:environ_impact" }
+            supplierName:
+              type: string
+              description: Name of energy supplier.
+              x-jsonld: { "@id": "ocpi:supplier_name" }
+            energyProductName:
+              type: string
+              description: Name of energy product.
+              x-jsonld: { "@id": "ocpi:energy_product_name" }
+          x-jsonld: { "@id": "ocpi:energy_mix" }
+
+    TariffElement:
+      type: object
+      description: >
+        A single tariff element with price components and restrictions.
+        Multiple elements enable time-of-use, tiered pricing, etc.
+      additionalProperties: false
+      required: [priceComponents]
+      properties:
+        priceComponents:
+          type: array
+          description: Array of price components (ENERGY, TIME, FLAT, etc.).
+          items:
+            $ref: '#/components/schemas/TariffPriceComponent'
+          minItems: 1
+          x-jsonld: { "@id": "ocpi:price_components" }
+
+        restrictions:
+          type: object
+          description: >
+            Optional. Restrictions on when this tariff element applies.
+            Enables time-of-use, day-of-week, reservation requirements, etc.
+          additionalProperties: false
+          properties:
+            startTime:
+              type: string
+              pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+              description: Start time (HH:MM format, 24-hour).
+              example: "06:00"
+              x-jsonld: { "@id": "ocpi:start_time" }
+            endTime:
+              type: string
+              pattern: '^([0-1][0-9]|2[0-3]):[0-5][0-9]$'
+              description: End time (HH:MM format, 24-hour).
+              example: "22:00"
+              x-jsonld: { "@id": "ocpi:end_time" }
+            dayOfWeek:
+              type: array
+              description: Days of week when this element applies.
+              items:
+                type: string
+                enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+              x-jsonld: { "@id": "ocpi:day_of_week" }
+            minKWh:
+              type: number
+              minimum: 0
+              description: Minimum energy (kWh) for this tier to apply.
+              x-jsonld: { "@id": "ocpi:min_kwh" }
+            maxKWh:
+              type: number
+              minimum: 0
+              description: Maximum energy (kWh) for this tier to apply.
+              x-jsonld: { "@id": "ocpi:max_kwh" }
+            reservation:
+              type: string
+              enum: [RESERVED, NOT_RESERVED]
+              description: Whether reservation is required.
+              x-jsonld: { "@id": "ocpi:reservation" }
+          x-jsonld: { "@id": "ocpi:restrictions" }
+
+    TariffPriceComponent:
+      type: object
+      description: >
+        A single price component within a tariff element.
+        Based on OCPI price_component structure.
+      additionalProperties: false
+      required: [type, price]
+      properties:
+        type:
+          type: string
+          enum: [ENERGY, TIME, FLAT, PARKING_TIME, AD_HOC_PAYMENT]
+          description: >
+            Price component type (OCPI enum).
+            ENERGY: Per kWh pricing
+            TIME: Per hour/minute pricing
+            FLAT: Flat fee
+            PARKING_TIME: Parking time fee
+            AD_HOC_PAYMENT: One-time payment
+          x-jsonld: { "@id": "ocpi:type" }
+
+        price:
+          type: number
+          minimum: 0
+          description: >
+            Price per unit.
+            For ENERGY: price per kWh
+            For TIME: price per hour (or minute if step_size < 60)
+            For FLAT: flat fee amount
+          example: 18.0
+          x-jsonld: { "@id": "schema:price" }
+
+        vat:
+          type: number
+          minimum: 0
+          default: 0
+          description: Value-added tax percentage.
+          example: 18.0
+          x-jsonld: { "@id": "ocpi:vat" }
+
+        stepSize:
+          type: integer
+          minimum: 1
+          default: 1
+          description: >
+            Step size in seconds.
+            For ENERGY: typically 1 (per kWh)
+            For TIME: typically 3600 (per hour) or 60 (per minute)
+          example: 1
+          x-jsonld: { "@id": "ocpi:step_size" }
+
     Settlement:
       type: object
       description: Settlement information including revenue flows and billing report. Enables unambiguous multi-party billing.

@@ -32,8 +32,11 @@ The contract mode is determined by which roles are present:
    - `roleInputs` (required):
      - `sourceMeterId`: String (required)
      - `sourceType`: String (required)
-     - `pricePerKWh`: Number (required)
-     - `currency`: String (required)
+     - **Pricing (ONE of the following)**:
+       - `pricePerKWh`: Number (required for simple fixed price)
+       - `currency`: String (required with pricePerKWh)
+       - OR `tariff`: Object (required for tariff-based pricing)
+       - OR `offerCurve`: Object (for market-based, use PROSUMER role instead)
 
 2. **BUYER role** (required)
    - `role`: Must be `BUYER` or `CONSUMER`
@@ -57,8 +60,16 @@ The contract mode is determined by which roles are present:
 ### Validation Rules
 
 1. **SELLER roleInputs**:
-   - `pricePerKWh` MUST be > 0
-   - `currency` MUST be valid ISO 4217 code
+   - **Mutual Exclusivity**: `pricePerKWh` and `tariff` MUST NOT both be provided (use one or the other)
+   - **Simple Fixed Price** (if `pricePerKWh` provided):
+     - `pricePerKWh` MUST be > 0
+     - `currency` MUST be valid ISO 4217 code
+   - **Tariff-Based** (if `tariff` provided):
+     - `tariff.currency` MUST be valid ISO 4217 code
+     - `tariff.elements` MUST have at least one element
+     - Each element MUST have at least one `priceComponents` with `type: ENERGY`
+     - If `restrictions.startTime` provided, `restrictions.endTime` MUST also be provided
+     - `tariff.currency` MUST match contract currency (if specified)
    - `offerCurve` MUST NOT be provided (use PROSUMER role for market-based)
 
 2. **BUYER roleInputs**:
@@ -73,8 +84,9 @@ The contract mode is determined by which roles are present:
    - `contractedQuantity` MUST be ≤ maximum trade volume
 
 4. **Revenue Flows**:
-   - MUST include flow: `BUYER → SELLER` with formula using `contractedQuantity × pricePerKWh`
-   - If GRID_OPERATOR present: MUST include flow: `BUYER → GRID_OPERATOR` with formula using `contractedQuantity × wheelingCharges`
+   - **Simple Fixed Price**: MUST include flow: `BUYER → SELLER` with formula using `contractedQuantity × pricePerKWh`
+   - **Tariff-Based**: MUST include flow: `BUYER → SELLER` with formula using `computeTariffPrice(tariff, tradeStartTime, tradeEndTime, deliveredQuantity) × deliveredQuantity`
+   - If GRID_OPERATOR present: MUST include flow: `BUYER → GRID_OPERATOR` with formula using `contractedQuantity × wheelingCharges` (or `deliveredQuantity` for tariff-based)
    - `netZero` MUST be `true`
 
 ---
@@ -221,12 +233,17 @@ init     on_confirm  on_status
 
 ### Fixed Price Mode
 
-**Required flows**:
+**Required flows** (Simple Fixed Price):
 1. `BUYER → SELLER`: `contractedQuantity × pricePerKWh`
 2. `BUYER → GRID_OPERATOR`: `contractedQuantity × wheelingCharges` (if GRID_OPERATOR present)
 
+**Required flows** (Tariff-Based):
+1. `BUYER → SELLER`: `computeTariffPrice(roles.SELLER.roleInputs.tariff, roles.BUYER.roleInputs.tradeStartTime, roles.BUYER.roleInputs.tradeEndTime, deliveredQuantity) × deliveredQuantity`
+2. `BUYER → GRID_OPERATOR`: `deliveredQuantity × roles.GRID_OPERATOR.roleInputs.wheelingCharges` (if GRID_OPERATOR present)
+
 **Validation**:
 - Formula MUST reference valid roleInputs paths
+- For tariff-based: Tariff computation requires `deliveredQuantity` (from telemetry), `tradeStartTime`, `tradeEndTime`
 - `netZero` MUST be `true` (sum of all flows = 0)
 
 ### Market-Based Mode
@@ -303,6 +320,16 @@ Error: Market clearing validation failed
 - clearingPrice (0.0625) does not intersect all offer curves
 - clearedPower (6.0) exceeds offerCurve.maxExport (5.0) for prosumer-001
 - Sum of clearedPower values does not balance: buyers (-50) ≠ sellers (45)
+```
+
+### Tariff Validation
+
+```
+Error: Invalid tariff structure
+- tariff.elements must have at least one element
+- Each element must have at least one priceComponents with type: ENERGY
+- restrictions.startTime (18:00) provided but restrictions.endTime missing
+- tariff.currency (USD) does not match contract currency (INR)
 ```
 
 ---

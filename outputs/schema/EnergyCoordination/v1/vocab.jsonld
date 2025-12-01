@@ -1,0 +1,329 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "beckn": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyCoordination/v1/#",
+    "ocpi": "https://schemas.ocpi.org/2.2/",
+    "schema": "https://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "beckn:OfferCurve",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Offer Curve",
+      "rdfs:comment": "Price-responsive offer curve with signed power values. Positive power values = providing energy to grid (injection/export). Negative power values = receiving energy from grid (withdrawal/consumption).",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:OfferCurvePoint",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Offer Curve Point",
+      "rdfs:comment": "A single price/power pair in an offer curve.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:minExport",
+      "@type": "rdf:Property",
+      "rdfs:label": "Minimum Export",
+      "rdfs:comment": "Minimum export in kilowatts. Negative values = maximum withdrawal/consumption. Positive values = minimum export/generation.",
+      "rdfs:domain": "beckn:OfferCurve",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:maxExport",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Export",
+      "rdfs:comment": "Maximum export in kilowatts. Negative values = no export, only withdrawal. Positive values = maximum export/generation.",
+      "rdfs:domain": "beckn:OfferCurve",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:curve",
+      "@type": "rdf:Property",
+      "rdfs:label": "Curve",
+      "rdfs:comment": "Array of price/power pairs.",
+      "rdfs:domain": "beckn:OfferCurve",
+      "schema:rangeIncludes": "beckn:OfferCurvePoint"
+    },
+    {
+      "@id": "beckn:powerKW",
+      "@type": "rdf:Property",
+      "rdfs:label": "Power (kW)",
+      "rdfs:comment": "Power level in kilowatts. Negative values = receiving energy (withdrawal/consumption). Positive values = providing energy (injection/export). Zero = no participation.",
+      "rdfs:domain": "beckn:OfferCurvePoint",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:EnergyObjectives",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Energy Objectives",
+      "rdfs:comment": "Structured objectives for energy resources expressing goals, constraints, and preferences.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:targetChargeKWh",
+      "@type": "rdf:Property",
+      "rdfs:label": "Target Charge (kWh)",
+      "rdfs:comment": "Target energy to charge (for batteries, EVs).",
+      "rdfs:domain": "beckn:EnergyObjectives",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:targetGenerationKWh",
+      "@type": "rdf:Property",
+      "rdfs:label": "Target Generation (kWh)",
+      "rdfs:comment": "Target energy to generate (for solar, wind).",
+      "rdfs:domain": "beckn:EnergyObjectives",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:targetReductionKW",
+      "@type": "rdf:Property",
+      "rdfs:label": "Target Reduction (kW)",
+      "rdfs:comment": "Target demand reduction (for demand flexibility).",
+      "rdfs:domain": "beckn:EnergyObjectives",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:maxPricePerKWh",
+      "@type": "rdf:Property",
+      "rdfs:label": "Maximum Price per kWh",
+      "rdfs:comment": "Maximum acceptable price per kilowatt-hour.",
+      "rdfs:domain": "beckn:EnergyObjectives",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:minPricePerKWh",
+      "@type": "rdf:Property",
+      "rdfs:label": "Minimum Price per kWh",
+      "rdfs:comment": "Minimum acceptable price per kilowatt-hour (for generators).",
+      "rdfs:domain": "beckn:EnergyObjectives",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:preferredSource",
+      "@type": "rdf:Property",
+      "rdfs:label": "Preferred Source",
+      "rdfs:comment": "Preferred energy source type.",
+      "rdfs:domain": "beckn:EnergyObjectives",
+      "schema:rangeIncludes": "schema:Text"
+    },
+    {
+      "@id": "beckn:Settlement",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Settlement",
+      "rdfs:comment": "Settlement information including revenue flows and billing report.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:revenueFlows",
+      "@type": "rdf:Property",
+      "rdfs:label": "Revenue Flows",
+      "rdfs:comment": "Array of revenue flow entries for multi-party settlement.",
+      "rdfs:domain": "beckn:Settlement",
+      "schema:rangeIncludes": "beckn:RevenueFlow"
+    },
+    {
+      "@id": "beckn:RevenueFlow",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Revenue Flow",
+      "rdfs:comment": "A single revenue flow entry for a party.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:Party",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Party",
+      "rdfs:comment": "Structure for party identification.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:era",
+      "@type": "rdf:Property",
+      "rdfs:label": "Energy Resource Address",
+      "rdfs:comment": "Energy Resource Address of the party.",
+      "rdfs:domain": "beckn:Party",
+      "schema:rangeIncludes": "schema:Text"
+    },
+    {
+      "@id": "beckn:SettlementReport",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Settlement Report",
+      "rdfs:comment": "Structured billing document for settlement.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:reportId",
+      "@type": "rdf:Property",
+      "rdfs:label": "Report ID",
+      "rdfs:comment": "Unique identifier for the settlement report.",
+      "rdfs:domain": "beckn:SettlementReport",
+      "schema:rangeIncludes": "schema:Text"
+    },
+    {
+      "@id": "beckn:totalAmount",
+      "@type": "rdf:Property",
+      "rdfs:label": "Total Amount",
+      "rdfs:comment": "Total settlement amount.",
+      "rdfs:domain": "beckn:SettlementReport",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:OffsetCommand",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Offset Command",
+      "rdfs:comment": "Grid operator command to apply offset for flat bid curve plateaus.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:offsetKW",
+      "@type": "rdf:Property",
+      "rdfs:label": "Offset (kW)",
+      "rdfs:comment": "Power offset in kilowatts to apply. Negative values reduce setpoint, positive values increase setpoint.",
+      "rdfs:domain": "beckn:OffsetCommand",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:AggregationRequest",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Aggregation Request",
+      "rdfs:comment": "Request for bid curve aggregation and market clearing.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:participants",
+      "@type": "rdf:Property",
+      "rdfs:label": "Participants",
+      "rdfs:comment": "Array of participants with offer curves.",
+      "rdfs:domain": "beckn:AggregationRequest",
+      "schema:rangeIncludes": "beckn:Participant"
+    },
+    {
+      "@id": "beckn:Participant",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Participant",
+      "rdfs:comment": "A participant in the aggregation with offer curve and optional locational pricing.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:aggregationType",
+      "@type": "rdf:Property",
+      "rdfs:label": "Aggregation Type",
+      "rdfs:comment": "Type of aggregation.",
+      "rdfs:domain": "beckn:AggregationRequest",
+      "schema:rangeIncludes": "schema:Text"
+    },
+    {
+      "@id": "beckn:timeWindow",
+      "@type": "rdf:Property",
+      "rdfs:label": "Time Window",
+      "rdfs:comment": "Time window for aggregation.",
+      "rdfs:domain": "beckn:AggregationRequest",
+      "schema:rangeIncludes": "schema:TimePeriod"
+    },
+    {
+      "@id": "beckn:AggregationResult",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Aggregation Result",
+      "rdfs:comment": "Result of offer curve aggregation and market clearing.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:clearingPrice",
+      "@type": "rdf:Property",
+      "rdfs:label": "Clearing Price",
+      "rdfs:comment": "Market clearing price per kilowatt-hour.",
+      "rdfs:domain": "beckn:AggregationResult",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:clearingQuantityKW",
+      "@type": "rdf:Property",
+      "rdfs:label": "Clearing Quantity (kW)",
+      "rdfs:comment": "Clearing quantity in kilowatts.",
+      "rdfs:domain": "beckn:AggregationResult",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:setpoints",
+      "@type": "rdf:Property",
+      "rdfs:label": "Setpoints",
+      "rdfs:comment": "Array of setpoints for each participant.",
+      "rdfs:domain": "beckn:AggregationResult",
+      "schema:rangeIncludes": "beckn:Setpoint"
+    },
+    {
+      "@id": "beckn:Setpoint",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Setpoint",
+      "rdfs:comment": "Power setpoint for a resource.",
+      "rdfs:subClassOf": "schema:Thing"
+    },
+    {
+      "@id": "beckn:setpointKW",
+      "@type": "rdf:Property",
+      "rdfs:label": "Setpoint (kW)",
+      "rdfs:comment": "Power setpoint in kilowatts. Negative for consumption, positive for generation.",
+      "rdfs:domain": "beckn:Setpoint",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:locationalPrice",
+      "@type": "rdf:Property",
+      "rdfs:label": "Locational Price",
+      "rdfs:comment": "Final price including locational adder.",
+      "rdfs:domain": "beckn:AggregationResult",
+      "schema:rangeIncludes": "schema:Number"
+    },
+    {
+      "@id": "beckn:aggregatedSupplyCurve",
+      "@type": "rdf:Property",
+      "rdfs:label": "Aggregated Supply Curve",
+      "rdfs:comment": "Aggregated supply curve (for reference).",
+      "rdfs:domain": "beckn:AggregationResult",
+      "schema:rangeIncludes": "beckn:OfferCurvePoint"
+    },
+    {
+      "@id": "beckn:aggregatedDemandCurve",
+      "@type": "rdf:Property",
+      "rdfs:label": "Aggregated Demand Curve",
+      "rdfs:comment": "Aggregated demand curve (for reference).",
+      "rdfs:domain": "beckn:AggregationResult",
+      "schema:rangeIncludes": "beckn:OfferCurvePoint"
+    },
+    {
+      "@id": "beckn:Tariff",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Tariff",
+      "rdfs:comment": "Comprehensive tariff structure based on OCPI standard. Supports time-of-use pricing, tiered rates, and utility-style tariffs. Can be used in SELLER roleInputs instead of pricePerKWh for fixed price mode.",
+      "rdfs:subClassOf": "ocpi:Tariff",
+      "rdfs:seeAlso": "ocpi:Tariff"
+    },
+    {
+      "@id": "beckn:tariff",
+      "@type": "rdf:Property",
+      "rdfs:label": "Tariff",
+      "rdfs:comment": "Full tariff object for time-of-use, tiered pricing, utility tariffs.",
+      "schema:rangeIncludes": "beckn:Tariff"
+    },
+    {
+      "@id": "beckn:TariffElement",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Tariff Element",
+      "rdfs:comment": "A single tariff element with price components and restrictions. Multiple elements enable time-of-use, tiered pricing, etc.",
+      "rdfs:subClassOf": "ocpi:TariffElement",
+      "rdfs:seeAlso": "ocpi:TariffElement"
+    },
+    {
+      "@id": "beckn:TariffPriceComponent",
+      "@type": "rdfs:Class",
+      "rdfs:label": "Tariff Price Component",
+      "rdfs:comment": "A single price component within a tariff element. Based on OCPI price_component structure.",
+      "rdfs:subClassOf": "ocpi:PriceComponent",
+      "rdfs:seeAlso": "ocpi:PriceComponent"
+    }
+  ]
+}
+

@@ -7,18 +7,19 @@
 
 ## Overview
 
-`EnergyContractP2PTrade` has been extended to support **two trading modes** in a polymorphic design:
+`EnergyContractP2PTrade` has been extended to support **three pricing modes** in a polymorphic design:
 
-1. **Fixed Price Mode**: Direct buyer-to-seller trades with fixed pricing
-2. **Market-Based Mode**: Market clearing agent coordinates multiple prosumers with offer curves
+1. **Simple Fixed Price Mode**: Direct buyer-to-seller trades with fixed `pricePerKWh`
+2. **Tariff-Based Mode**: Utility-style trades with time-of-use, tiered pricing via `tariff` object
+3. **Market-Based Mode**: Market clearing agent coordinates multiple prosumers with offer curves
 
-Both modes share the same contract schema but use different role combinations and roleInputs structures.
+All modes share the same contract schema but use different role combinations and roleInputs structures.
 
 ---
 
 ## Trading Modes
 
-### Mode 1: Fixed Price Trading
+### Mode 1: Simple Fixed Price Trading
 
 **Roles**: `SELLER` + `BUYER` (+ optional `GRID_OPERATOR`)
 
@@ -42,7 +43,41 @@ Both modes share the same contract schema but use different role combinations an
 
 ---
 
-### Mode 2: Market-Based Trading
+### Mode 2: Tariff-Based Trading
+
+**Roles**: `SELLER` + `BUYER` (+ optional `GRID_OPERATOR`)
+
+**SELLER roleInputs** (required):
+- `sourceMeterId`: String
+- `sourceType`: String (GRID, SOLAR, etc.)
+- `tariff`: Object (full tariff structure based on OCPI standard)
+
+**BUYER roleInputs** (required):
+- `targetMeterId`: String
+- `contractedQuantity`: Number (kWh)
+- `tradeStartTime`: DateTime
+- `tradeEndTime`: DateTime
+
+**Tariff Structure** (OCPI-based):
+- `elements`: Array of tariff elements with price components and time restrictions
+- `priceComponents`: Type (ENERGY, TIME, FLAT), price, VAT, step_size
+- `restrictions`: Time-of-day, day-of-week, tier limits (minKWh, maxKWh)
+- `energyMix`: Optional energy source information
+
+**Revenue Flows**:
+- `BUYER → SELLER`: `computeTariffPrice(tariff, tradeStartTime, tradeEndTime, deliveredQuantity) × deliveredQuantity`
+- `BUYER → GRID_OPERATOR`: `deliveredQuantity × wheelingCharges` (if GRID_OPERATOR role present)
+
+**Example Use Case**: Consumer buys from utility with time-of-use tariff:
+- Peak hours (6 PM - 10 PM): ₹0.20/kWh
+- Off-peak hours (10 PM - 6 AM): ₹0.10/kWh
+- Mid-peak hours (6 AM - 6 PM): ₹0.15/kWh
+
+**Note**: `pricePerKWh` and `tariff` are mutually exclusive in SELLER roleInputs.
+
+---
+
+### Mode 3: Market-Based Trading
 
 **Roles**: `MARKET_CLEARING_AGENT` + `PROSUMER` (+ optional `GRID_OPERATOR`)
 
@@ -87,15 +122,18 @@ Both modes share the same contract schema but use different role combinations an
 
 The contract mode is determined by which roles are present:
 
-- **Fixed Price Mode**: Contract contains `SELLER` and `BUYER` roles
+- **Fixed Price Mode** (Simple or Tariff): Contract contains `SELLER` and `BUYER` roles
+  - **Simple Fixed Price**: SELLER provides `pricePerKWh` + `currency`
+  - **Tariff-Based**: SELLER provides `tariff` object
 - **Market-Based Mode**: Contract contains `MARKET_CLEARING_AGENT` and `PROSUMER` roles
 
 ### 2. Conditional RoleInputs
 
 **SELLER role** (polymorphic):
-- **Fixed Price Mode**: Must provide `pricePerKWh` and `currency`
+- **Simple Fixed Price Mode**: Must provide `pricePerKWh` and `currency`
+- **Tariff-Based Mode**: Must provide `tariff` object (mutually exclusive with `pricePerKWh`)
 - **Market-Based Mode**: Not used (use `PROSUMER` role instead)
-- Optional `offerCurve` for hybrid scenarios
+- Optional `offerCurve` for hybrid scenarios (discouraged)
 
 **BUYER role** (fixed price only):
 - Only used in fixed price mode
@@ -114,7 +152,7 @@ The contract mode is determined by which roles are present:
 
 Revenue flows adapt based on mode:
 
-**Fixed Price Mode**:
+**Simple Fixed Price Mode**:
 ```json
 {
   "from": "BUYER",
@@ -122,6 +160,17 @@ Revenue flows adapt based on mode:
   "formula": "roles.BUYER.roleInputs.contractedQuantity × roles.SELLER.roleInputs.pricePerKWh"
 }
 ```
+
+**Tariff-Based Mode**:
+```json
+{
+  "from": "BUYER",
+  "to": "SELLER",
+  "formula": "computeTariffPrice(roles.SELLER.roleInputs.tariff, roles.BUYER.roleInputs.tradeStartTime, roles.BUYER.roleInputs.tradeEndTime, deliveredQuantity) × deliveredQuantity"
+}
+```
+
+**Note**: Tariff computation requires `deliveredQuantity` (from telemetry) and matches delivery time windows to tariff element restrictions.
 
 **Market-Based Mode**:
 ```json
@@ -180,29 +229,36 @@ EnergyContractP2PTrade:
 
 ## Examples
 
-### Fixed Price Example
+### Simple Fixed Price Example
 See: `outputs/examples/p2p_trading/`
 
+### Tariff-Based Example
+See: `outputs/examples/p2p_trading_tariff/`
+
 ### Market-Based Example
-(To be created in `outputs/examples/p2p_trading_market_based/`)
+See: `outputs/examples/p2p_trading_market_based/`
 
 ---
 
 ## Benefits of Polymorphic Design
 
-1. **Single Schema**: One contract schema handles both trading modes
+1. **Single Schema**: One contract schema handles all three pricing modes
 2. **Type Safety**: Role combinations enforce mode correctness
 3. **Backward Compatible**: Existing fixed price examples continue to work
-4. **Extensible**: Easy to add new modes or roles in the future
-5. **Clear Semantics**: Role names clearly indicate mode and responsibilities
+4. **Standards Alignment**: Tariff structure based on OCPI (widely adopted)
+5. **Extensible**: Easy to add new modes or roles in the future
+6. **Clear Semantics**: Role names clearly indicate mode and responsibilities
+7. **Utility Integration**: Enables utility-to-consumer trades with complex tariffs
 
 ---
 
 ## Migration Notes
 
-- **Existing fixed price examples**: No changes needed, continue using `SELLER` + `BUYER` roles
+- **Existing fixed price examples**: No changes needed, continue using `SELLER` + `BUYER` roles with `pricePerKWh`
+- **New tariff-based examples**: Use `SELLER` + `BUYER` roles with `tariff` object (instead of `pricePerKWh`)
 - **New market-based examples**: Use `MARKET_CLEARING_AGENT` + `PROSUMER` roles with `offerCurve`
-- **Hybrid scenarios**: Can mix roles (e.g., SELLER with offerCurve) for flexibility
+- **Mutual Exclusivity**: `pricePerKWh` and `tariff` are mutually exclusive in SELLER roleInputs
+- **Hybrid scenarios**: Can mix roles (e.g., SELLER with offerCurve) for flexibility (discouraged)
 
 ---
 

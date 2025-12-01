@@ -1,0 +1,190 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "timestamp": "2024-10-04T10:25:05Z",
+    "message_id": "msg-on-confirm-tariff-001",
+    "transaction_id": "txn-tariff-energy-001",
+    "bap_id": "bap.energy-consumer.com",
+    "bap_uri": "https://bap.energy-consumer.com",
+    "bpp_id": "bpp.utility-company.com",
+    "bpp_uri": "https://bpp.utility-company.com",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-tariff-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-tariff-001",
+          "quantity": {
+            "count": 100.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-utility-tariff-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "bpp.utility-company.com"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-tariff-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:state": {
+            "@type": "beckn:State",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "PENDING"
+            }
+          }
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-tariff-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractP2PTrade/v1/context.jsonld",
+        "@type": "EnergyContractP2PTrade",
+        "contractId": "contract-tariff-p2p-001",
+        "status": "ACTIVE",
+        "createdAt": "2024-10-04T10:00:00Z",
+        "_mode": "FIXED_PRICE_TARIFF",
+        "roles": [
+          {
+            "role": "SELLER",
+            "filledBy": "bpp.utility-company.com",
+            "filled": true,
+            "roleInputs": {
+              "sourceMeterId": "grid-meter-001",
+              "sourceType": "GRID",
+              "tariff": {
+                "tariffId": "TOU-2024-001",
+                "currency": "INR",
+                "type": "REGULAR",
+                "tariffAltText": [
+                  {
+                    "language": "en",
+                    "text": "Time-of-Use Tariff - Residential"
+                  }
+                ],
+                "elements": [
+                  {
+                    "priceComponents": [
+                      {
+                        "type": "ENERGY",
+                        "price": 0.20,
+                        "vat": 18.0,
+                        "stepSize": 1
+                      }
+                    ],
+                    "restrictions": {
+                      "startTime": "18:00",
+                      "endTime": "22:00",
+                      "dayOfWeek": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
+                    }
+                  },
+                  {
+                    "priceComponents": [
+                      {
+                        "type": "ENERGY",
+                        "price": 0.10,
+                        "vat": 18.0,
+                        "stepSize": 1
+                      }
+                    ],
+                    "restrictions": {
+                      "startTime": "22:00",
+                      "endTime": "06:00"
+                    }
+                  },
+                  {
+                    "priceComponents": [
+                      {
+                        "type": "ENERGY",
+                        "price": 0.15,
+                        "vat": 18.0,
+                        "stepSize": 1
+                      }
+                    ],
+                    "restrictions": {
+                      "startTime": "06:00",
+                      "endTime": "18:00"
+                    }
+                  }
+                ],
+                "energyMix": {
+                  "isGreenEnergy": false,
+                  "energySources": [
+                    {
+                      "source": "COAL",
+                      "percentage": 60.0
+                    },
+                    {
+                      "source": "SOLAR",
+                      "percentage": 40.0
+                    }
+                  ],
+                  "environImpact": {
+                    "carbonDioxide": 450.0
+                  },
+                  "supplierName": "State Utility Co",
+                  "energyProductName": "Mixed Grid Power"
+                }
+              }
+            }
+          },
+          {
+            "role": "BUYER",
+            "filledBy": "bap.energy-consumer.com",
+            "filled": true,
+            "roleInputs": {
+              "targetMeterId": "98765456",
+              "contractedQuantity": 100.0,
+              "tradeStartTime": "2024-10-04T18:00:00Z",
+              "tradeEndTime": "2024-10-05T06:00:00Z"
+            }
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-05T23:59:59Z"
+          },
+          "pricingModel": "TIME_OF_DAY"
+        },
+        "inputSignals": [],
+        "telemetrySources": [],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "BUYER",
+              "to": "SELLER",
+              "formula": "computeTariffPrice(roles.SELLER.roleInputs.tariff, roles.BUYER.roleInputs.tradeStartTime, roles.BUYER.roleInputs.tradeEndTime, deliveredQuantity) × deliveredQuantity",
+              "description": "Compute price from time-of-use tariff: peak (18:00-22:00) @ ₹0.20/kWh, off-peak (22:00-06:00) @ ₹0.10/kWh, mid-peak (06:00-18:00) @ ₹0.15/kWh"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": []
+        }
+      }
+    }
+  }
+}
+
