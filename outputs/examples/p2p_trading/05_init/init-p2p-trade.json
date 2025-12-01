@@ -1,0 +1,175 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "timestamp": "2024-10-04T10:20:00Z",
+    "message_id": "msg-init-001",
+    "transaction_id": "txn-energy-001",
+    "bap_id": "bap.energy-consumer.com",
+    "bap_uri": "https://bap.energy-consumer.com",
+    "bpp_id": "bpp.energy-provider.com",
+    "bpp_uri": "https://bpp.energy-provider.com",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-energy-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-resource-solar-001",
+          "quantity": {
+            "count": 10.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-energy-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "provider-solar-farm-001"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-energy-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:stops": [
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-start-001",
+              "beckn:type": "START",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "100200300"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              }
+            },
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-end-001",
+              "beckn:type": "END",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "98765456"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-energy-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:billing": {
+        "@type": "beckn:Billing",
+        "beckn:name": "Energy Consumer",
+        "beckn:email": "consumer@example.com",
+        "beckn:phone": "+1-555-0100"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractP2PTrade/v1/context.jsonld",
+        "@type": "EnergyContractP2PTrade",
+        "contractId": "contract-p2p-trade-001",
+        "status": "PENDING",
+        "createdAt": "2024-10-04T10:00:00Z",
+        "roles": [
+          {
+            "role": "SELLER",
+            "filledBy": "bpp.energy-provider.com",
+            "filled": true,
+            "roleInputs": {
+              "sourceMeterId": "100200300",
+              "sourceType": "SOLAR",
+              "pricePerKWh": 0.15,
+              "currency": "USD",
+              "inverterId": "inv-12345",
+              "certification": {
+                "status": "Carbon Offset Certified",
+                "certificates": [
+                  "https://example.com/certs/solar-panel-cert.pdf"
+                ]
+              },
+              "pricingModel": "PER_KWH",
+              "settlementType": "DAILY",
+              "minimumQuantity": 1.0,
+              "maximumQuantity": 100.0,
+              "validityWindow": {
+                "start": "2024-10-04T00:00:00Z",
+                "end": "2024-10-04T23:59:59Z"
+              }
+            }
+          },
+          {
+            "role": "BUYER",
+            "filledBy": "bap.energy-consumer.com",
+            "filled": true,
+            "roleInputs": {
+              "targetMeterId": "98765456",
+              "contractedQuantity": 10.0,
+              "tradeStartTime": "2024-10-04T10:00:00Z",
+              "tradeEndTime": "2024-10-04T18:00:00Z",
+              "preferredSourceType": "SOLAR",
+              "preferredCertification": {
+                "status": "Carbon Offset Certified",
+                "required": true
+              }
+            }
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-04T23:59:59Z"
+          }
+        },
+        "inputSignals": [],
+        "telemetrySources": [],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "BUYER",
+              "to": "SELLER",
+              "formula": "roles.BUYER.roleInputs.contractedQuantity × roles.SELLER.roleInputs.pricePerKWh",
+              "description": "BUYER pays SELLER based on contracted quantity × price per kWh"
+            },
+            {
+              "from": "BUYER",
+              "to": "GRID_OPERATOR",
+              "formula": "roles.BUYER.roleInputs.contractedQuantity × roles.GRID_OPERATOR.roleInputs.wheelingCharges",
+              "description": "BUYER pays GRID_OPERATOR for wheeling charges based on contracted quantity"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": []
+        }
+      }
+    }
+  }
+}
+

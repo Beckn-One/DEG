@@ -1,0 +1,377 @@
+openapi: 3.1.1
+info:
+  title: Energy Coordination — Energy Contract P2P Trade Attributes (v1)
+  version: 1.0.0
+  x-profile-id: profiles/energy-coordination/energy_contract_p2p_trade/v1/contract
+  description: >
+    Specialized contract schema for P2P energy trading use cases.
+    Inherits from EnergyContract and defines SELLER, BUYER, and GRID_OPERATOR roleInputs structure for P2P trading contracts.
+    SELLER must provide: sourceMeterId, sourceType, pricePerKWh, currency.
+    BUYER must provide: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime.
+    GRID_OPERATOR provides: wheelingCharges, current_buyer_trades_total, current_seller_trade_total, buyer_trade_cap, seller_trade_cap (filled in cascaded_init/cascaded_confirm).
+
+components:
+  schemas:
+    ########################################################################
+    # ORDER.ORDERATTRIBUTES / OFFER.OFFERATTRIBUTES — EnergyContractP2PTrade (Specialized Contract)
+    ########################################################################
+    EnergyContractP2PTrade:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/EnergyContract'
+        - type: object
+          description: >
+            Specialized contract for P2P energy trading use cases.
+            SELLER role must provide: sourceMeterId, sourceType, pricePerKWh, currency.
+            BUYER role must provide: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime.
+            GRID_OPERATOR role provides: wheelingCharges, current_buyer_trades_total, current_seller_trade_total, buyer_trade_cap, seller_trade_cap (filled in cascaded_init/cascaded_confirm).
+          additionalProperties: false
+          x-jsonld:
+            "@context": ./context.jsonld
+            "@type": EnergyContractP2PTrade
+          properties:
+            roles:
+              type: array
+              description: >
+                Roles in P2P trading contract. SELLER, BUYER, and GRID_OPERATOR roleInputs structures are predefined.
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/P2PTradeSellerRole'
+                  - $ref: '#/components/schemas/P2PTradeBuyerRole'
+                  - $ref: '#/components/schemas/P2PTradeGridOperatorRole'
+                  - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+              minItems: 1
+              x-jsonld: { "@id": "beckn:roles" }
+
+    ########################################################################
+    # P2P Trading Seller Role (PROSUMER)
+    ########################################################################
+
+    P2PTradeSellerRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: >
+            SELLER (PROSUMER) role in P2P trading contract with predefined roleInputs structure.
+            SELLER provides energy source information, pricing, and trade parameters.
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [SELLER, PROSUMER]
+              description: Role type must be SELLER or PROSUMER.
+              example: "SELLER"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                SELLER must provide: sourceMeterId, sourceType, pricePerKWh, currency.
+                Optional: inverterId, certification, pricingModel, settlementType,
+                minimumQuantity, maximumQuantity, validityWindow.
+                Each input includes type, required, description, and nullable value.
+                Note: wheelingCharges is provided by GRID_OPERATOR role, not SELLER.
+              additionalProperties: false
+              required: [sourceMeterId, sourceType, pricePerKWh, currency]
+              properties:
+                sourceMeterId:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: SELLER's meter identifier (required, STRING type).
+
+                sourceType:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Energy source type (required, STRING type).
+                    Examples: SOLAR, WIND, BATTERY, HYDRO, BIOMASS.
+
+                pricePerKWh:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Price per kilowatt-hour (required, NUMBER type).
+
+                currency:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Currency code (required, STRING type, e.g., "USD", "INR").
+
+                inverterId:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Inverter identifier (STRING type).
+
+                certification:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Certification details (OBJECT type with status and certificates array).
+                    Example: {status: "Carbon Offset Certified", certificates: ["https://..."]}
+
+                pricingModel:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Pricing model (STRING type).
+                    Examples: PER_KWH, FIXED, TIME_OF_DAY.
+
+                settlementType:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Settlement type (STRING type).
+                    Examples: DAILY, HOURLY, REAL_TIME.
+
+                minimumQuantity:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Minimum trade quantity in kWh (NUMBER type).
+
+                maximumQuantity:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Maximum trade quantity in kWh (NUMBER type).
+
+                validityWindow:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Offer validity window (OBJECT type with start and end DateTime).
+                    Example: {start: "2024-10-04T00:00:00Z", end: "2024-10-04T23:59:59Z"}
+              x-jsonld: { "@id": "beckn:roleInputs" }
+              example:
+                sourceMeterId:
+                  type: "STRING"
+                  required: true
+                  description: "SELLER's meter identifier"
+                  value: "100200300"
+                sourceType:
+                  type: "STRING"
+                  required: true
+                  description: "Energy source type (SOLAR, WIND, etc.)"
+                  value: "SOLAR"
+                pricePerKWh:
+                  type: "NUMBER"
+                  required: true
+                  description: "Price per kilowatt-hour"
+                  value: 0.15
+                currency:
+                  type: "STRING"
+                  required: true
+                  description: "Currency code (USD, INR, etc.)"
+                  value: "USD"
+                inverterId:
+                  type: "STRING"
+                  required: false
+                  description: "Inverter identifier"
+                  value: "inv-12345"
+                certification:
+                  type: "OBJECT"
+                  required: false
+                  description: "Certification details"
+                  value:
+                    status: "Carbon Offset Certified"
+                    certificates:
+                      - "https://example.com/certs/solar-panel-cert.pdf"
+                pricingModel:
+                  type: "STRING"
+                  required: false
+                  description: "Pricing model"
+                  value: "PER_KWH"
+                settlementType:
+                  type: "STRING"
+                  required: false
+                  description: "Settlement type"
+                  value: "DAILY"
+                minimumQuantity:
+                  type: "NUMBER"
+                  required: false
+                  description: "Minimum trade quantity in kWh"
+                  value: 1.0
+                maximumQuantity:
+                  type: "NUMBER"
+                  required: false
+                  description: "Maximum trade quantity in kWh"
+                  value: 100.0
+                validityWindow:
+                  type: "OBJECT"
+                  required: false
+                  description: "Offer validity window"
+                  value:
+                    start: "2024-10-04T00:00:00Z"
+                    end: "2024-10-04T23:59:59Z"
+
+    ########################################################################
+    # P2P Trading Buyer Role (CONSUMER)
+    ########################################################################
+
+    P2PTradeBuyerRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: >
+            BUYER (CONSUMER) role in P2P trading contract with predefined roleInputs structure.
+            BUYER provides consumption requirements and trade window.
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [BUYER, CONSUMER]
+              description: Role type must be BUYER or CONSUMER.
+              example: "BUYER"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                BUYER must provide: targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime.
+                Optional: preferredSourceType, preferredCertification.
+                Each input includes type, required, description, and nullable value.
+              additionalProperties: false
+              required: [targetMeterId, contractedQuantity, tradeStartTime, tradeEndTime]
+              properties:
+                targetMeterId:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: BUYER's meter identifier (required, STRING type).
+
+                contractedQuantity:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Energy quantity to trade in kWh (required, NUMBER type).
+                    This is the contracted amount, actual delivery may vary.
+
+                tradeStartTime:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Start time of trade window (required, DATETIME type).
+                    ISO 8601 format: "2024-10-04T10:00:00Z"
+
+                tradeEndTime:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    End time of trade window (required, DATETIME type).
+                    ISO 8601 format: "2024-10-04T18:00:00Z"
+
+                preferredSourceType:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Preferred energy source type (STRING type).
+                    Examples: SOLAR, WIND, BATTERY.
+
+                preferredCertification:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Preferred certification requirements (OBJECT type).
+                    Example: {status: "Carbon Offset Certified", required: true}
+              x-jsonld: { "@id": "beckn:roleInputs" }
+              example:
+                targetMeterId:
+                  type: "STRING"
+                  required: true
+                  description: "BUYER's meter identifier"
+                  value: "98765456"
+                contractedQuantity:
+                  type: "NUMBER"
+                  required: true
+                  description: "Energy quantity to trade in kWh"
+                  value: 10.0
+                tradeStartTime:
+                  type: "DATETIME"
+                  required: true
+                  description: "Start time of trade window"
+                  value: "2024-10-04T10:00:00Z"
+                tradeEndTime:
+                  type: "DATETIME"
+                  required: true
+                  description: "End time of trade window"
+                  value: "2024-10-04T18:00:00Z"
+                preferredSourceType:
+                  type: "STRING"
+                  required: false
+                  description: "Preferred energy source type"
+                  value: "SOLAR"
+                preferredCertification:
+                  type: "OBJECT"
+                  required: false
+                  description: "Preferred certification requirements"
+                  value:
+                    status: "Carbon Offset Certified"
+                    required: true
+
+    ########################################################################
+    # P2P Trading Grid Operator Role
+    ########################################################################
+
+    P2PTradeGridOperatorRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: >
+            GRID_OPERATOR role in P2P trading contract with predefined roleInputs structure.
+            GRID_OPERATOR provides wheeling charges and trade capacity information.
+            This role is filled during cascaded_init and cascaded_confirm calls.
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [GRID_OPERATOR]
+              description: Role type must be GRID_OPERATOR.
+              example: "GRID_OPERATOR"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                GRID_OPERATOR must provide: wheelingCharges, current_buyer_trades_total, current_seller_trade_total,
+                buyer_trade_cap, seller_trade_cap.
+                Maximum trade volume is minimum of (buyer_trade_cap - current_buyer_trades_total) and
+                (seller_trade_cap - current_seller_trade_total).
+                Each input includes type, required, description, and nullable value.
+              additionalProperties: false
+              required: [wheelingCharges, current_buyer_trades_total, current_seller_trade_total, buyer_trade_cap, seller_trade_cap]
+              properties:
+                wheelingCharges:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Wheeling charges per kWh (required, NUMBER type).
+                    Used in revenue flow: BUYER → GRID_OPERATOR = contractedQuantity × wheelingCharges.
+
+                current_buyer_trades_total:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Current total of all active buyer trades for this meter in kWh (required, NUMBER type).
+                    Used to calculate remaining capacity: buyer_trade_cap - current_buyer_trades_total.
+
+                current_seller_trade_total:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Current total of all active seller trades for this meter in kWh (required, NUMBER type).
+                    Used to calculate remaining capacity: seller_trade_cap - current_seller_trade_total.
+
+                buyer_trade_cap:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Maximum allowed buyer trade volume for this meter in kWh (required, NUMBER type).
+                    Based on sanctioned load or grid constraints.
+
+                seller_trade_cap:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Maximum allowed seller trade volume for this meter in kWh (required, NUMBER type).
+                    Based on generation capacity or grid constraints.
+              x-jsonld: { "@id": "beckn:roleInputs" }
+              example:
+                wheelingCharges:
+                  type: "NUMBER"
+                  required: true
+                  description: "Wheeling charges per kWh"
+                  value: 0.025
+                current_buyer_trades_total:
+                  type: "NUMBER"
+                  required: true
+                  description: "Current total of all active buyer trades for this meter in kWh"
+                  value: 5.0
+                current_seller_trade_total:
+                  type: "NUMBER"
+                  required: true
+                  description: "Current total of all active seller trades for this meter in kWh"
+                  value: 20.0
+                buyer_trade_cap:
+                  type: "NUMBER"
+                  required: true
+                  description: "Maximum allowed buyer trade volume for this meter in kWh"
+                  value: 50.0
+                seller_trade_cap:
+                  type: "NUMBER"
+                  required: true
+                  description: "Maximum allowed seller trade volume for this meter in kWh"
+                  value: 100.0
+
