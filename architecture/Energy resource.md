@@ -51,16 +51,19 @@ Resources that enable energy delivery:
 ### Service Providers
 Logical resources that facilitate transactions:
 - **Utilities**: Energy distribution companies
-- **Aggregators**: Entities that pool distributed resources
+- **Aggregators**: Entities that pool distributed resources (role: AGGREGATOR)
+- **Market Clearing Agents**: Coordinate market-based trading (role: MARKET_CLEARING_AGENT)
+- **Grid Operators**: Manage grid infrastructure (role: GRID_OPERATOR)
 - **Energy Service Companies (ESCOs)**: Efficiency and management service providers
-- **Demand Response Providers**: Services that coordinate load management
 - **Financial institutions**: Banks, payment processors enabling settlements
 
 ### Prosumers
-Resources that act as both consumers and producers:
+Resources that act as both consumers and producers (role: PROSUMER):
 - **Households with solar + storage**: Buy from grid during night, sell during day
 - **Commercial buildings with solar**: Self-consume during business hours, export excess
 - **EV fleets**: Charge during off-peak, potentially provide grid services during peak
+
+**Note**: Prosumers express **OfferCurves** (not "bid curves") - positive power for export, negative for withdrawal.
 
 ## Resource Characteristics
 
@@ -237,11 +240,11 @@ Energy Resources are central to all DEG interactions:
 
 1. **Energy Resource Address (ERA)**: Every resource must have an ERA to be discoverable and addressable
 2. **Energy Credentials**: Resources carry credentials that attest to their capabilities, certifications, and trustworthiness
-3. **Energy Intent**: Resources can express intents describing their energy needs
-4. **Energy Catalogue**: Resources can publish catalogues listing available energy or services
-5. **Energy Contract**: Resources enter into contracts when their intents and catalogues match
+3. **Energy Intent**: Resources express intents (objectives) describing what they value
+4. **Energy Offer**: Resources publish offers with open roles in contracts
+5. **Energy Contract**: Resources participate in contracts by assuming roles
 
-The same resource can play multiple roles across different transactions - a battery storage system might express an intent to charge during off-peak hours while simultaneously publishing a catalogue offering grid services during peak demand.
+The same resource can play multiple roles across different transactions - a battery storage system might express an intent to charge during off-peak hours while simultaneously publishing an offer with open BUYER role, or publish an offer with open SELLER role for grid services during peak demand.
 
 ## Summary
 
@@ -253,6 +256,6 @@ Every transaction begins with resources: they receive ERAs, carry credentials, e
 
 - [Energy Resource Address](./Energy%20resource%20address.md) - How resources are uniquely identified
 - [Energy Credentials](./Energy%20credentials.md) - How resources establish trust
-- [Energy Catalogue](./Energy%20catalogue.md) - How provider resources advertise services
-- [Energy Intent](./Energy%20intent.md) - How consumer resources express needs
-- [EV Charging Implementation Guide](../docs/implementation-guides/v2/EV_Charging_V0.8-draft.md) - Real-world examples
+- [Energy Offer](./Energy%20catalogue.md) - How resources publish contract participation opportunities
+- [Energy Intent](./Energy%20intent.md) - How resources express what they value or need
+- [Energy Contract](./Energy%20contract.md) - How resources participate in computational agreements

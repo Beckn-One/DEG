@@ -1,43 +1,42 @@
-# Energy Intent
+# Energy Intent (also called Energy Objective)
 
 ## Definition
 
-An Energy Intent is a digital representation of energy demand or requirements, expressing what an energy consumer needs, along with preferred conditions, constraints, and acceptable terms. Intents articulate the "ask" side of energy transactions - enabling consumers to specify their needs in a structured, machine-readable format that can be matched against provider catalogues.
+An Energy Intent expresses **what an actor values** - goals, preferences, constraints, and objectives. Also called Energy Objective, it guides optimization: actors accept EnergyOffers, participate in contracts, or update offer curves to maximize their expressed values. For at home EV charging, it may be reducing charging bill, while for charging on-the-go, it could be a combination of detour (from the intended route) + wait time and cost.
 
-Energy intents range from simple expressions ("charge my EV") to detailed specifications with quantity, timing, location, price limits, source preferences, and quality requirements.
+Intents are used in `discover` calls to find matching contracts. They are optional and can aid better discovery - they're expressions used by actors/algorithms for optimization and contract discovery.
 
 ## Why Energy Intents Matter
 
-In traditional energy systems, consumers have limited ability to express preferences:
-- **Utility service**: You get whatever power is available, when it's available
-- **Limited choice**: No ability to specify renewable sources, price caps, or delivery timing
-- **Opaque matching**: No visibility into how demand meets supply
+In decentralized energy markets, actors need to express their values to:
+- **Guide optimization**: Algorithms use intents to select which offers to accept
+- **Discover contracts**: Find EnergyOffers that align with expressed values
+- **Update strategies**: Adjust offer curves based on changing objectives
+- **Enable automation**: Allow agents to transact on behalf of actors
 
-In decentralized energy markets with multiple providers, diverse resources, and varied service offerings, consumers need a standardized way to:
-- **Discover relevant services**: Find providers that can meet their specific needs
-- **Express preferences**: Specify renewable energy, time windows, location constraints
-- **Set boundaries**: Define maximum prices, minimum service levels, required credentials
-- **Enable automation**: Allow apps/agents to transact on their behalf
-
-Energy Intents solve this by providing a structured format for expressing demand that can be automatically matched with supply catalogues across distributed networks.
+**Key Insight**: Intent = Objective = What you value. To maximize value, actors can accept offers, participate in contracts, or update offer parameters (e.g offer curves).
 
 ## Structure of Energy Intents
 
-Energy intents are expressed through Beckn Protocol API calls, primarily the `discover` and `select` actions:
+Energy intents appear in `discover` calls via `message.intent` (optional). They express values that guide contract discovery and participation:
 
-### Discovery Intent (discover)
+### Intent in Discover Calls
 
-The initial expression of need, often broad, to find available services:
+Intent appears in `message.intent` of `discover` requests:
 
 ```json
 {
   "context": {
     "action": "discover",
-    "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "app.example.com",
-    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002"
+    "domain": "beckn.one:deg:ev-charging:*"
   },
   "message": {
+    "intent": {
+      "targetChargeKWh": 20,
+      "deadline": "2024-12-15T18:00:00Z",
+      "maxPricePerKWh": 0.12,
+      "preferredSource": "SOLAR"
+    },
     "spatial": [{
       "op": "s_dwithin",
       "targets": "$['beckn:availableAt'][*]['geo']",
@@ -56,68 +55,30 @@ The initial expression of need, often broad, to find available services:
 ```
 
 **Intent Components**:
-- **Context**: Who is asking (BAP ID), what domain (EV charging), when
-- **Spatial filters**: Geographic constraints (point + radius, along route)
-- **Attribute filters**: JSONPath expressions for resource specifications (connector type, power rating, availability windows)
+- **Goals**: What the actor wants (targetChargeKWh, deadline)
+- **Constraints**: Limits (maxPricePerKWh, preferredSource)
+- **Preferences**: Desired attributes (location, timing, quality)
 
-### Selection Intent (select)
+**Note**: Intent is used to find matching EnergyOffers. Once offers are selected, contracts are formed based on roles, not intents.
 
-A refined intent specifying exactly what is desired from discovered options:
+## How Intents Guide Optimization
 
-```json
-{
-  "context": {
-    "action": "select",
-    "domain": "beckn.one:deg:ev-charging:*"
-  },
-  "message": {
-    "order": {
-      "beckn:orderItems": [{
-        "beckn:orderedItem": "ev-charger-ccs2-001",
-        "beckn:quantity": 2.5,
-        "beckn:acceptedOffer": {
-          "beckn:price": {
-            "value": 18.0,
-            "applicableQuantity": {
-              "unitCode": "KWH"
-            }
-          }
-        }
-      }],
-      "beckn:fulfillment": {
-        "beckn:mode": "RESERVATION"
-      }
-    }
-  }
-}
+Actors use intents to maximize their expressed values by:
+
+1. **Accepting EnergyOffers**: Select offers that align with intent
+2. **Participating in Contracts**: Assume roles in contracts that satisfy objectives
+3. **Updating Offer Curves**: Adjust price/power curves based on changing values
+
+**Example Flow**:
 ```
-
-**Refined Intent Components**:
-- **Specific resource**: Exact item/service selected (eg: EVSE ID or ERA)
-- **Quantity**: Amount of energy (kWh) or duration
-- **Accepted offer**: Specific pricing terms agreed to
-- **Fulfillment mode**: Immediate, reservation, scheduled delivery
-
-## Types of Energy Intents
-
-### Simple Intents
-
-High-level expressions of need without detailed constraints:
-
-**Examples**:
-- "As a consumer, I want to charge my electric scooter"
-- "As a utility, I need energy consumption data from households in sector XYZ"
-- "I require solar rooftop installation and financing"
-- "Find charging stations near me"
-
-### Detailed Intents
-
-Specific requirements with multiple constraints and preferences:
-
-**Examples**:
-- "I need 20 kWh between 6 PM and 9 PM, preferably sourced from solar power, and will pay no more than ₹7 per kWh"
-- "Reserve a CCS2 fast charger within 5km, available in next 30 minutes, accepting UPI payment"
-- "Buy 10 kWh solar energy from verified prosumers in my neighborhood, delivery between 2-4 PM, price ≤ ₹5.50/kWh"
+Intent: "Value: Charge 20 kWh by 9 PM, prefer solar, max ₹18/kWh, minimize cost."
+  ↓
+Discover finds EnergyOffers matching intent, with the lowest cost
+  ↓
+Actor accepts offer, assumes BUYER role
+  ↓
+Contract forms; billing computed from signals
+```
 
 ## Energy Intents in Practice
 
@@ -288,84 +249,35 @@ Specific requirements with multiple constraints and preferences:
 }
 ```
 
-## Intent Lifecycle in Transactions
+## Intent Usage in Discover
 
-### Phase 1: Initial Discovery
-
-**Actor**: Consumer (via BAP)
-**Action**: `discover`
-**Purpose**: Express broad need, find available services
+Intent appears in `discover` calls to guide contract discovery:
 
 ```
-User opens app → Expresses intent → BAP sends discover → CDS routes to BPPs
-```
-
-**Example**: EV user searches for "charging stations near me"
-
-### Phase 2: Catalogue Matching
-
-**Actors**: Catalogue Discovery Service, BPPs
-**Process**: Route intent to relevant providers, filter catalogues
-
-```
-CDS receives intent → Identifies relevant BPPs based on domain/location
+Actor expresses intent (values) → discover(intent)
   ↓
-BPPs filter their catalogues based on intent constraints
+CDS/BPPs match intent against EnergyOffers
   ↓
-Return matching items in on_discover
+Returns offers that align with expressed values
+  ↓
+Actor selects offer, assumes role in contract
 ```
 
-**Example**: Only chargers within radius, with CCS2 connector, ≥50kW power, currently available
-
-### Phase 3: Refinement and Selection
-
-**Actor**: Consumer (via BAP)
-**Action**: `select`
-**Purpose**: Specify exact choice from discovered options
-
-```
-User reviews catalogue results → Selects specific service → BAP sends select
-  ↓
-BPP generates detailed quote with pricing
-  ↓
-Returns on_select with quote
-```
-
-**Example**: User chooses specific charger, requests 20 kWh at quoted ₹18/kWh
-
-### Phase 4: Initialization and Confirmation
-
-**Actions**: `init`, `confirm`
-**Purpose**: Finalize terms, establish contract
-
-```
-User provides billing details (init) → BPP returns payment terms (on_init)
-  ↓
-User reviews final terms → Confirms order (confirm)
-  ↓
-BPP confirms reservation (on_confirm) → Contract established
-```
-
-**Example**: User confirms charging session with UPI payment, receives booking confirmation
+**Note**: Intent is not stored in contracts. Contracts use roles and input signals, not intents.
 
 ## Relationship with Other Primitives
 
-1. **Energy Resource**: Intent originates from a consumer resource (ERA of requester)
-2. **Energy Resource Address**: Intent targets resources addressable by ERA
-3. **Energy Credentials**: Intent may require specific credentials from providers
-4. **Energy Catalogue**: Intent is matched against catalogues to find suitable offerings
-5. **Energy Contract**: Successful intent-catalogue match leads to contract formation
+1. **Energy Resource**: Resources express intents (what they value)
+2. **Energy Offer**: Intent guides selection of offers that align with values
+3. **Energy Contract**: Contracts form when roles are filled, not based on intents
+4. **Energy Credentials**: Intent may specify required credentials
 
 ## Summary
 
-Energy Intents are the consumer's voice in the Digital Energy Grid - enabling structured, machine-readable expression of energy needs that can be automatically matched with provider offerings across distributed networks. From simple discovery ("find nearby chargers") to complex specifications ("CCS2, 50kW+, available 12:30-2:30 PM, within 10km"), intents empower consumers with choice, transparency, and control in decentralized energy markets.
-
-By combining intents with catalogues through the Beckn Protocol's discover-select-init-confirm flow, DEG creates a dynamic, responsive marketplace where demand finds supply efficiently.
+Energy Intent (also called Energy Objective) expresses **what an actor values**. Used in `discover` calls to find matching EnergyOffers. Actors maximize their expressed values by accepting offers, participating in contracts, or updating offer curves. Intent is not part of the required Beckn schema - it's an optimization guide used by actors/algorithms.
 
 ## See Also
 
-- [Energy Catalogue](./Energy%20catalogue.md) - The supply side that matches with intents
-- [Energy Contract](./Energy%20contract.md) - What emerges when intent meets catalogue
+- [Energy Offer](./Energy%20catalogue.md) - Contract participation opportunities that match intents
+- [Energy Contract](./Energy%20contract.md) - Role-based agreements formed when offers are accepted
 - [Energy Resource](./Energy%20resource.md) - Resources that express intents
-- [Energy Credentials](./Energy%20credentials.md) - Credentials required in intents
-- [EV Charging Implementation Guide](../docs/implementation-guides/v2/EV_Charging_V0.8-draft.md) - Intent examples in practice

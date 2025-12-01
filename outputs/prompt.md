@@ -89,3 +89,13 @@ Is there a library to verify confirmance with Ricardian contract rules? I see th
 
 ------
 
+Based on your understanding of the refactor plan.. could you propose changes to files under architecture/ ? First just describe changes in brief..
+
+----
+
+Sorry for possibly confusing with my viewpoint shifts. Now I think EnergyIntent is same as EnergyObjective. It expresses what an actor values. In order to maximize that value we can accept various energy Offers, participate in contracts or update offer curves.
+
+With that said, please go ahead with changing the architecture/ files.. Please ensure brevity and impact.  It is better to be brief and clear instead of verbose and clear. Please don't be brief & unclear.
+
+-----
+

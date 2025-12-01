@@ -6,6 +6,8 @@ An Energy Catalogue is a structured listing of available energy resources, servi
 
 Energy catalogues are the supply-side complement to energy intents - when a consumer's intent matches a provider's catalogue offering, the foundation for an energy contract is established.
 
+**EnergyOffer as Core Primitive**: A catalogue can be thought of as a **bouquet of EnergyOffers**. Each **EnergyOffer** is the **core Beckn primitive** representing contract participation opportunities, published in `offerAttributes`. Offers specify **open roles** (BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR) that participants can assume in EnergyContracts. Offers reference EnergyContracts that define computational billing logic.
+
 ## Why Energy Catalogues Matter
 
 In traditional centralized energy systems:
@@ -20,7 +22,7 @@ In decentralized energy markets with multiple providers, diverse resources, and 
 - **Update dynamically**: Reflect real-time availability, pricing changes, seasonal variations
 - **Reach consumers**: Connect with intent-expressing consumers beyond geographic boundaries
 
-Energy Catalogues solve this by providing a structured format for publishing supply that can be automatically matched with demand intents across distributed networks.
+Energy Catalogues solve this by providing a structured format for publishing supply that can be automatically matched with demand intents across distributed networks. The underlying **EnergyOffers** enable role-based contract participation.
 
 ## Structure of Energy Catalogues
 
@@ -49,7 +51,7 @@ Energy catalogues are returned through Beckn Protocol `on_discover` responses:
         /* Array of available services/resources */
       ],
       "beckn:offers": [
-        /* Array of pricing and commercial terms */
+        /* Array of EnergyOffers in offerAttributes */
       ]
     }]
   }
@@ -60,83 +62,158 @@ Energy catalogues are returned through Beckn Protocol `on_discover` responses:
 - **Descriptor**: Catalogue name and description
 - **Validity**: Time period for which catalogue is valid
 - **Items**: Available resources/services (e.g., charging stations, energy offerings)
-- **Offers**: Pricing models and commercial terms
+- **Offers**: Array of **EnergyOffers** (core Beckn primitives) in `offerAttributes`
 
-### Item Structure (Energy Resource Listing)
+### EnergyOffer Structure (Core Primitive)
 
-From the EV Charging Implementation Guide:
-
-```json
-{
-  "beckn:id": "ev-charger-ccs2-001",
-  "beckn:descriptor": {
-    "schema:name": "DC Fast Charger - CCS2 (60kW)",
-    "beckn:shortDesc": "High-speed DC charging station with CCS2 connector"
-  },
-  "beckn:category": {
-    "schema:codeValue": "ev-charging",
-    "schema:name": "EV Charging"
-  },
-  "beckn:availableAt": [{
-    "geo": {
-      "type": "Point",
-      "coordinates": [77.5946, 12.9716]
-    },
-    "address": {
-      "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
-      "addressLocality": "Bengaluru",
-      "postalCode": "560076"
-    }
-  }],
-  "beckn:availabilityWindow": {
-    "schema:startTime": "06:00:00",
-    "schema:endTime": "22:00:00"
-  },
-  "beckn:rating": {
-    "beckn:ratingValue": 4.5,
-    "beckn:ratingCount": 128
-  },
-  "beckn:itemAttributes": {
-    "connectorType": "CCS2",
-    "maxPowerKW": 60,
-    "evseId": "IN*ECO*BTM*01*CCS2*A",
-    "stationStatus": "Available"
-  }
-}
-```
-
-### Offer Structure (Pricing and Terms)
+Each offer in the catalogue is an **EnergyOffer** in `offerAttributes`:
 
 ```json
 {
-  "beckn:id": "offer-ccs2-60kw-kwh",
-  "beckn:descriptor": {
-    "schema:name": "Per-kWh Tariff - CCS2 60kW"
-  },
-  "beckn:items": ["ev-charger-ccs2-001"],
-  "beckn:price": {
-    "currency": "INR",
-    "value": 18.0,
-    "applicableQuantity": {
-      "unitText": "Kilowatt Hour",
-      "unitCode": "KWH",
-      "unitQuantity": 1
-    }
-  },
-  "beckn:validity": {
-    "schema:startDate": "2025-10-10T00:00:00Z",
-    "schema:endDate": "2026-04-10T23:59:59Z"
-  },
-  "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
-  "beckn:offerAttributes": {
-    "buyerFinderFee": {
-      "feeType": "PERCENTAGE",
-      "feeValue": 2.5
+  "beckn:offers": [{
+    "beckn:id": "offer-ccs2-60kw-kwh",
+    "beckn:items": ["ev-charger-ccs2-001"],
+    "beckn:price": {
+      "currency": "INR",
+      "value": 18.0,
+      "applicableQuantity": {
+        "unitCode": "KWH"
+      }
     },
-    "idleFeePolicy": "₹2/min after 10 min post-charge"
-  }
+    "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
+    "beckn:offerAttributes": {
+      "@type": "EnergyOffer",
+      "offerId": "offer-ev-charging-001",
+      "contractId": "contract-walk-in-001",
+      "providerId": "bpp.cpo.example.com",
+      "providerUri": "https://bpp.cpo.example.com",
+      "openRole": "BUYER",
+      "contract": {
+        "@type": "EnergyContractEVCharging",
+        "contractId": "contract-walk-in-001",
+        "status": "PENDING",
+        "createdAt": "2024-12-15T10:00:00Z",
+        "roles": [
+          {
+            "role": "SELLER",
+            "filledBy": "bpp.cpo.example.com",
+            "filled": true,
+            "roleInputs": {
+              "pricePerKWh": {
+                "type": "number",
+                "required": true,
+                "description": "Fixed price per kilowatt-hour",
+                "value": 18.0
+              },
+              "currency": {
+                "type": "string",
+                "required": true,
+                "description": "Currency code (e.g., INR, USD)",
+                "value": "INR"
+              },
+              "connectorType": {
+                "type": "string",
+                "required": true,
+                "description": "Connector type (CCS2, CHAdeMO, Type2, etc.)",
+                "value": "CCS2"
+              },
+              "maxPowerKW": {
+                "type": "number",
+                "required": true,
+                "description": "Maximum charging power in kilowatts",
+                "value": 60
+              },
+              "minPowerKW": {
+                "type": "number",
+                "required": true,
+                "description": "Minimum charging power in kilowatts",
+                "value": 5
+              },
+              "location": {
+                "type": "object",
+                "required": true,
+                "description": "Charging station location (geo coordinates and address)",
+                "value": {
+                  "geo": {
+                    "type": "Point",
+                    "coordinates": [77.5946, 12.9716]
+                  },
+                  "address": {
+                    "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
+                    "addressLocality": "Bengaluru",
+                    "postalCode": "560076"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "role": "BUYER",
+            "filledBy": null,
+            "filled": false,
+            "roleInputs": {}
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2024-12-15T06:00:00Z",
+            "endTime": "2024-12-15T22:00:00Z"
+          },
+          "gracePeriodMinutes": 10
+        },
+        "inputSignals": [],
+        "telemetrySources": [
+          {
+            "sourceId": "cdr-ev-charger-ccs2-001",
+            "sourceType": "CHARGE_DATA_RECORD",
+            "description": "Charge Data Record from EVSE",
+            "required": true
+          }
+        ],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "BUYER",
+              "to": "SELLER",
+              "formula": "roles.SELLER.roleInputs.pricePerKWh.value × telemetrySources.cdr-ev-charger-ccs2-001.energyKWh",
+              "description": "BUYER pays SELLER based on energy consumed (from CDR) × price provided by SELLER"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": [
+            {
+              "metricId": "averageChargingPower",
+              "formula": "telemetrySources.cdr-ev-charger-ccs2-001.energyKWh / ((telemetrySources.cdr-ev-charger-ccs2-001.endTime - telemetrySources.cdr-ev-charger-ccs2-001.startTime) / 3600)",
+              "unit": "kW",
+              "description": "Average charging power in kilowatts"
+            }
+          ]
+        }
+      }
+    }
+  }]
 }
 ```
+
+
+**EnergyOffer Key Components**:
+- **offerId**: Unique identifier
+- **contractId**: Reference to EnergyContract
+- **openRole**: Role available for participants (BUYER, SELLER, PROSUMER, etc.)
+- **contract**: Optional full contract definition (shown above for EV charging)
+
+**EnergyContractEVCharging Details (Specialized Contract Type)**:
+- **Inherits from**: EnergyContract (base abstract schema)
+- **SELLER Role Responsibilities**: SELLER must provide pricePerKWh, currency, connectorType, maxPowerKW, minPowerKW, location via `roleInputs` (each input has type, required, description, and nullable value)
+- **Roles**: SELLER (CPO, filled with roleInputs values) and BUYER (open, empty roleInputs)
+- **RoleInputs Structure**: Each input includes schema (type, required, description) and nullable value - if value is null, input not provided yet
+- **Input Parameters**: Only fixed contract-level parameters (validityWindow, gracePeriodMinutes) - not role-specific
+- **Telemetry Sources**: Charge Data Record (CDR) from EVSE for energy consumption
+- **Revenue Flows**: BUYER pays SELLER = `roles.SELLER.roleInputs.pricePerKWh.value × energyKWh` (from CDR)
+- **Quality Metrics**: Average charging power computed from CDR data
+- **Status**: PENDING (becomes ACTIVE when BUYER assumes role and contract is confirmed)
 
 ## Types of Energy Catalogue Offerings
 
@@ -150,6 +227,7 @@ Catalogues listing physical infrastructure available for energy transactions:
 - Availability windows
 - Amenities (restroom, Wi-Fi, food)
 - Real-time status
+- **EnergyOffer**: Open BUYER role, fixed-price or dynamic contract
 
 **Grid Connection Services**:
 - Interconnection capacity available
@@ -172,12 +250,14 @@ Catalogues listing energy available for purchase:
 - Battery storage discharge windows
 - Combined heat and power (CHP) availability
 - Wind farm allocations
+- **EnergyOffer**: Open BUYER role, may include OfferCurve for market-based trading
 
 **Peer-to-Peer (P2P) Trading**:
 - Prosumer excess energy
 - Community solar shares
 - Virtual power plant (VPP) aggregated capacity
 - Time-based availability windows
+- **EnergyOffer**: Open BUYER role, OfferCurve-based contracts
 
 ### Data and Analytics Services
 
@@ -254,33 +334,24 @@ Catalogues for energy-adjacent services:
           "evseId": "IN*ECO*BTM*01*CCS2*A",
           "stationStatus": "Available",
           "amenityFeature": ["Restaurant", "Restroom", "Wi-Fi"]
-        },
-        "beckn:rating": {
-          "beckn:ratingValue": 4.5,
-          "beckn:ratingCount": 128
         }
       }],
       "beckn:offers": [{
         "beckn:id": "offer-ccs2-60kw-kwh",
-        "beckn:descriptor": {
-          "schema:name": "Per-kWh Tariff - CCS2 60kW"
-        },
         "beckn:items": ["ev-charger-ccs2-001"],
         "beckn:price": {
           "currency": "INR",
           "value": 18.0,
           "applicableQuantity": {
-            "unitText": "Kilowatt Hour",
             "unitCode": "KWH"
           }
         },
-        "beckn:acceptedPaymentMethod": ["UPI", "CreditCard", "Wallet"],
         "beckn:offerAttributes": {
-          "buyerFinderFee": {
-            "feeType": "PERCENTAGE",
-            "feeValue": 2.5
-          },
-          "idleFeePolicy": "₹2/min after 10 min post-charge"
+          "@type": "EnergyOffer",
+          "offerId": "offer-ev-charging-001",
+          "contractId": "contract-walk-in-001",
+          "providerId": "bpp.cpo.example.com",
+          "openRole": "BUYER"
         }
       }]
     }]
@@ -294,10 +365,8 @@ Catalogues for energy-adjacent services:
 3. **Availability**: Operating hours 6 AM - 10 PM
 4. **Status**: Real-time "Available" status
 5. **Amenities**: Restaurant, restroom, Wi-Fi on-site
-6. **Pricing**: ₹18/kWh
-7. **Payment**: UPI, Credit Card, Wallet accepted
-8. **Fees**: 2.5% finder fee, ₹2/min idle fee after 10 min grace
-9. **Reputation**: 4.5 star rating from 128 users
+6. **EnergyOffer**: Open BUYER role in fixed-price contract
+7. **Pricing**: ₹18/kWh
 
 ### P2P Energy Trading Catalogue (Conceptual)
 
@@ -315,52 +384,28 @@ Catalogues for energy-adjacent services:
       },
       "beckn:items": [{
         "beckn:id": "excess-solar-export-afternoon",
-        "beckn:descriptor": {
-          "schema:name": "Rooftop Solar Excess Capacity",
-          "beckn:longDesc": "Clean solar energy from certified 5kW rooftop installation"
-        },
-        "beckn:category": {
-          "schema:codeValue": "solar-export",
-          "schema:name": "Peer-to-Peer Solar Trading"
-        },
-        "beckn:availableAt": [{
-          "address": {
-            "addressLocality": "Sector 5, Bengaluru",
-            "postalCode": "560001"
-          }
-        }],
-        "beckn:availabilityWindow": {
-          "schema:startTime": "10:00:00",
-          "schema:endTime": "16:00:00"
-        },
         "beckn:itemAttributes": {
           "energySource": "solar",
           "installedCapacity": "5kW",
-          "averageExportCapacity": "3kW",
-          "greenCertified": true,
-          "certificateId": "SOLAR-CERT-2024-XYZ",
-          "gridInterconnected": true
+          "greenCertified": true
         }
       }],
       "beckn:offers": [{
         "beckn:id": "solar-export-rate-afternoon",
         "beckn:items": ["excess-solar-export-afternoon"],
-        "beckn:price": {
-          "currency": "INR",
-          "value": 5.50,
-          "applicableQuantity": {
-            "unitCode": "KWH"
-          }
-        },
-        "beckn:validity": {
-          "schema:startDate": "2024-11-01T00:00:00Z",
-          "schema:endDate": "2024-12-31T23:59:59Z"
-        },
         "beckn:offerAttributes": {
-          "minimumPurchase": "5kWh",
-          "maximumPurchase": "15kWh",
-          "deliveryMethod": "grid-injection",
-          "meteringAttestation": true
+          "@type": "EnergyOffer",
+          "offerId": "offer-solar-export-001",
+          "contractId": "contract-market-clearing-001",
+          "providerId": "bpp.prosumer.example.com",
+          "openRole": "BUYER",
+          "expectedInputs": [
+            {
+              "name": "offerCurve",
+              "type": "OfferCurve",
+              "required": true
+            }
+          ]
         }
       }]
     }]
@@ -370,13 +415,10 @@ Catalogues for energy-adjacent services:
 
 **Key Catalogue Elements**:
 1. **Energy Source**: Solar, green certified
-2. **Capacity**: 5kW installation, ~3kW average export
-3. **Availability**: 10 AM - 4 PM daily (peak solar hours)
-4. **Location**: Sector 5, Bengaluru (local P2P)
-5. **Credentials**: Green certificate SOLAR-CERT-2024-XYZ
-6. **Pricing**: ₹5.50/kWh
-7. **Constraints**: Min 5 kWh, max 15 kWh per transaction
-8. **Delivery**: Grid injection with smart meter attestation
+2. **Capacity**: 5kW installation
+3. **Availability**: 10 AM - 4 PM daily
+4. **EnergyOffer**: Open BUYER role, expects OfferCurve for market clearing
+5. **Contract**: Market-clearing contract computes billing from clearing price × cleared power
 
 ## Catalogue Lifecycle in Transactions
 
@@ -388,7 +430,7 @@ Catalogues for energy-adjacent services:
 ```
 Provider defines services → BPP structures catalogue → Registers with CDS
   ↓
-Catalogue indexed for discovery
+Catalogue indexed for discovery (contains bouquet of EnergyOffers)
   ↓
 Real-time updates (availability, pricing)
 ```
@@ -403,15 +445,15 @@ CDS receives discover intent → Routes to relevant BPPs
   ↓
 BPP filters catalogue based on intent constraints
   ↓
-Returns matching items in on_discover
+Returns matching items and EnergyOffers in on_discover
 ```
 
-**Example**: Intent for "CCS2, 50kW+, within 10km" → Catalogue filtered to matching chargers only
+**Example**: Intent for "CCS2, 50kW+, within 10km" → Catalogue filtered to matching chargers with EnergyOffers
 
 ### Phase 3: Selection Response
 
 **Actor**: BPP
-**Process**: Generate detailed quote for selected item
+**Process**: Generate detailed quote for selected EnergyOffer
 
 ```
 BPP receives select → Validates selection → Generates quote (on_select)
@@ -419,10 +461,10 @@ BPP receives select → Validates selection → Generates quote (on_select)
 
 ### Phase 4: Contract Formation
 
-**Process**: Catalogue offering + accepted intent → Energy Contract
+**Process**: EnergyOffer selected → Participant assumes role → Energy Contract forms
 
 ```
-Init/Confirm flow → Catalogue terms finalized → Contract established
+Init/Confirm flow → Participant assumes open role → Contract confirmed
 ```
 
 ## Catalogue Composition
@@ -441,11 +483,12 @@ Catalogues can include multiple dimensions:
 - **Capacity**: Current vs. total capacity
 - **Scheduling**: Future availability windows
 
-### Commercial Terms
+### Commercial Terms (via EnergyOffers)
 - **Pricing**: Per-unit rates, subscription models, time-of-use tariffs
 - **Payment**: Accepted methods, prepaid vs. postpaid
 - **Fees**: Platform fees, idle fees, cancellation fees
 - **Minimums/maximums**: Minimum purchase, maximum capacity
+- **Open Roles**: BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, etc.
 
 ### Service Quality
 - **Ratings**: User reviews and average ratings
@@ -465,18 +508,19 @@ Catalogues can include multiple dimensions:
 2. **Energy Resource Address**: Each catalogue item has an ERA for addressability
 3. **Energy Credentials**: Catalogue includes or references resource credentials
 4. **Energy Intent**: Catalogues are filtered/matched against consumer intents
-5. **Energy Contract**: Catalogue offering + matched intent = contract formation
+5. **Energy Offer**: Catalogues contain a bouquet of EnergyOffers (core Beckn primitives)
+6. **Energy Contract**: EnergyOffer references contract; contract forms when roles filled
 
 ## Summary
 
 Energy Catalogues are the supply-side voice in the Digital Energy Grid - enabling structured, machine-readable publication of energy offerings that can be automatically matched with consumer intents across distributed networks. From charging station listings to prosumer solar exports, catalogues make diverse energy services discoverable, comparable, and accessible.
 
-Together with intents, catalogues form the complementary sides of a digital handshake. When an energy intent matches an energy catalogue offering, an energy contract is established - **this cycle of intent matched with catalogue, forming a contract, is the fundamental interaction loop in the Digital Energy Grid**.
+A catalogue can be thought of as a **bouquet of EnergyOffers** - each offer is the core Beckn primitive representing contract participation opportunities with open roles. When an energy intent matches an energy catalogue offering (EnergyOffer), an energy contract is established - **this cycle of intent matched with catalogue, forming a contract, is the fundamental interaction loop in the Digital Energy Grid**.
 
 ## See Also
 
 - [Energy Intent](./Energy%20intent.md) - The demand side that matches with catalogues
-- [Energy Contract](./Energy%20contract.md) - What emerges when catalogue meets intent
+- [Energy Contract](./Energy%20contract.md) - What emerges when EnergyOffer is accepted and roles filled
 - [Energy Resource](./Energy%20resource.md) - Resources listed in catalogues
 - [Energy Credentials](./Energy%20credentials.md) - Credentials referenced in catalogues
 - [EV Charging Implementation Guide](../docs/implementation-guides/v2/EV_Charging_V0.8-draft.md) - Catalogue examples in practice

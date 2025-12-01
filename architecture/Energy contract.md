@@ -53,6 +53,27 @@ Energy contracts operate as layered frameworks, where the basic requirement is s
 - Long-term power purchase agreements
 - Multi-party energy trading with settlement and penalties
 
+**Layer 4 includes the full EnergyContract schema**: A **computational, role-based agreement** that specifies how billing flows are computed from input signals (prices, meter readings, telemetry). Contracts transform external signals into **net-zero revenue flows** between parties - money is conserved, with all inflows equaling all outflows.
+
+**Role-Based Participation**:
+Contracts define **roles** that participants assume:
+- **BUYER**: Consumer (e.g., EV user)
+- **SELLER**: Provider (e.g., CPO)
+- **PROSUMER**: Both consumer and provider (e.g., household with solar)
+- **MARKET_CLEARING_AGENT**: Market coordinator (e.g., demand flexibility)
+- **AGGREGATOR**: Resource aggregator (e.g., VPP coordinator)
+- **GRID_OPERATOR**: Grid infrastructure operator
+
+Each role specifies:
+- **expectedRoleInputs**: Required inputs (e.g., OfferCurve, price)
+- **participantId**: Who fills the role (null if open)
+
+**Contract Confirmation**:
+A contract is ready to confirm when:
+1. **All roles are filled**: Every role has a participantId
+2. **All inputs provided**: Each role provides expectedRoleInputs
+3. **Signal connections established**: Input signals (prices, meter readings) are connected
+
 The legal enforceability of energy contracts can vary widely. Some contracts may not require legal enforceability or specific business requirements such as Service Level Agreements (SLAs).
 
 ## Contract Formation in Beckn Protocol
@@ -111,6 +132,73 @@ Energy contracts are established through the `confirm` and `on_confirm` actions:
 }
 ```
 
+## EnergyContract Schema (Layer 4)
+
+For complex multi-party agreements (Layer 4), the full **EnergyContract** schema provides computational, role-based contract structure:
+
+### Minimal Contract (Shell)
+
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-walk-in-001",
+  "roles": [
+    {
+      "role": "SELLER",
+      "participantId": "bpp.cpo.example.com"
+    },
+    {
+      "role": "BUYER",
+      "participantId": null,
+      "expectedRoleInputs": []
+    }
+  ],
+  "status": "PENDING"
+}
+```
+
+### Contract with Revenue Flows
+
+```json
+{
+  "@type": "EnergyContract",
+  "contractId": "contract-market-clearing-001",
+  "roles": [
+    {
+      "role": "MARKET_CLEARING_AGENT",
+      "participantId": "bpp.mca.example.com",
+      "expectedRoleInputs": []
+    },
+    {
+      "role": "PROSUMER",
+      "participantId": null,
+      "expectedRoleInputs": [
+        {
+          "name": "offerCurve",
+          "type": "OfferCurve",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "inputSignals": [
+    {
+      "signalId": "marketClearingPrice",
+      "source": "MARKET_CLEARING_AGENT",
+      "type": "PRICE"
+    }
+  ],
+  "revenueFlows": [
+    {
+      "from": "PROSUMER",
+      "to": "MARKET_CLEARING_AGENT",
+      "formula": "(marketClearingPrice + marketMakingFee) × clearedPower"
+    }
+  ],
+  "status": "PENDING"
+}
+```
+
 ## Contract Lifecycle
 
 ### Phase 1: Formation (discover → confirm)
@@ -124,6 +212,15 @@ Initialize (init) ↔ Terms (on_init)
 Confirm (confirm) ↔ CONTRACT ESTABLISHED (on_confirm)
 ```
 
+For Layer 4 contracts:
+```
+EnergyOffer published (open role)
+  ↓
+Participant assumes role, provides inputs
+  ↓
+All roles filled → Contract confirmed
+```
+
 ### Phase 2: Execution
 ```
 Fulfillment initiated (update)
@@ -131,6 +228,15 @@ Fulfillment initiated (update)
 Progress tracking (track, on_status)
   ↓
 Completion (update: stop)
+```
+
+For Layer 4 contracts:
+```
+Signals flow (prices, meter readings, telemetry)
+  ↓
+Contract computes revenue flows from signals
+  ↓
+Billing updated incrementally or post-fulfillment
 ```
 
 ### Phase 3: Settlement
@@ -142,9 +248,18 @@ Payment settlement
 Transaction receipt
 ```
 
+For Layer 4 contracts:
+```
+Final signal values captured
+  ↓
+Revenue flows computed (net-zero)
+  ↓
+Settlement executed
+```
+
 ## Examples from EV Charging
 
-### Confirmed Charging Session Contract
+### Confirmed Charging Session Contract (Layer 3)
 
 **Parties**: Ravi Kumar ↔ CPO (ecopower-charging)
 **Service**: 5 kWh EV charging
@@ -155,6 +270,13 @@ Transaction receipt
 Contract ID: ORD-2025-001
 Reservation: RESV-789012
 
+### Market-Clearing Contract (Layer 4)
+
+**Roles**: MARKET_CLEARING_AGENT, PROSUMER (multiple)
+**Input Signals**: Market clearing price, cleared power
+**Revenue Flow**: `(marketClearingPrice + marketMakingFee) × clearedPower`
+**Result**: PROSUMER pays MCA; MCA pays GRID_OPERATOR for deviations
+
 ## Relationship with Other Primitives
 
 Energy Contracts culminate all primitives:
@@ -163,15 +285,18 @@ Energy Contracts culminate all primitives:
 2. **Energy Resource Address**: Contract parties identified by ERAs
 3. **Energy Credentials**: Verified during contract formation
 4. **Energy Intent**: Forms one input to contract
-5. **Energy Catalogue**: Forms the other input to contract
+5. **Energy Catalogue**: Forms the other input to contract (contains EnergyOffers)
+6. **Energy Offer**: Offers reference contracts; Layer 4 contracts form when roles filled
 
 ## Summary
 
-Energy Contracts formalize energy transactions in the Digital Energy Grid. Emerging from intent-catalogue matching, contracts define who transacts, what is exchanged, under what terms, and how fulfillment occurs. From simple acknowledgments to complex multi-party arrangements, energy contracts enable the full spectrum of energy interactions.
+Energy Contracts formalize energy transactions in the Digital Energy Grid. Emerging from intent-catalogue matching, contracts define who transacts, what is exchanged, under what terms, and how fulfillment occurs. From simple acknowledgments (Layer 1) to complex multi-party arrangements (Layer 4), energy contracts enable the full spectrum of energy interactions.
+
+Layer 4 contracts use the full **EnergyContract** schema - a **computational, role-based agreement** that transforms input signals (prices, meter readings, telemetry) into net-zero revenue flows. Billing is computed, not stored - enabling automated, fraud-resistant agreements that adapt to real-time conditions.
 
 ## See Also
 
 - [Energy Intent](./Energy%20intent.md) - Consumer demand forming contracts
-- [Energy Catalogue](./Energy%20catalogue.md) - Provider supply forming contracts
+- [Energy Catalogue](./Energy%20catalogue.md) - Provider supply forming contracts (contains EnergyOffers)
 - [Energy Resource](./Energy%20resource.md) - Resources bound by contracts
 - [EV Charging Implementation Guide](../docs/implementation-guides/v2/EV_Charging_V0.8-draft.md) - Contract examples
