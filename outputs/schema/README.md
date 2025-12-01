@@ -17,6 +17,9 @@ schema/
 ├── EnergyContract/
 │   └── v1/
 │       └── attributes.yaml          # Order.orderAttributes / Offer.offerAttributes schema (Core Abstract Schema)
+├── EnergyContractEVCharging/
+│   └── v1/
+│       └── attributes.yaml          # Specialized contract for EV charging (inherits from EnergyContract)
 ├── EnergyTradeDelivery/
 │   └── v0.2/
 │       └── attributes.yaml          # Fulfillment.attributes schema
@@ -60,15 +63,40 @@ schema/
 - `Order.orderAttributes` (during init/confirm flows - contract instance, status: PENDING → ACTIVE)
 
 **Key Properties**:
-- **Core**: `contractId`, `roles` (array of ContractRole), `status` (PENDING, ACTIVE, COMPLETED, TERMINATED), `createdAt`
-- **Telescoping**: `inputParameters` (actual values by role), `inputSignals` (external signals), `telemetrySources` (fulfillment data), `revenueFlows` (RevenueFlowLogic), `qualityMetrics` (optional)
+- **Core**: `contractId`, `roles` (array of ContractRole with `roleInputs`), `status` (PENDING, ACTIVE, COMPLETED, TERMINATED), `createdAt`
+- **Role Inputs**: Each role has `roleInputs` (object) - each input includes `type`, `required`, `description`, and nullable `value` (if null, not provided; if not null, provided)
+- **Telescoping**: `inputParameters` (fixed contract-level parameters, not role-specific), `inputSignals` (external signals), `telemetrySources` (fulfillment data), `revenueFlows` (RevenueFlowLogic with `flows` array and `netZero`), `qualityMetrics` (QualityMetricLogic with `metrics` array)
 - **Extensions**: `credentials`, `verification` (DeDi protocol), `ricardianContract` (optional)
 
-**Key Concept**: Contracts specify roles that need to be filled. Revenue flows are computed from input parameters, signals, and telemetry using formulas.
+**Key Concept**: Contracts specify roles that need to be filled. Each role's `roleInputs` combines schema definition with actual values. Revenue flows are computed from role inputs, signals, and telemetry using formulas.
 
 **Contract Roles**: BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR
 
 **Example Usage**: See `outputs/10_Conceptual_Refactor_Proposal.md` section 2.2 and 3.1
+
+---
+
+### EnergyContractEVCharging/v1/attributes.yaml (NEW - Specialized Contract)
+
+**Purpose**: Specialized contract schema for EV charging use cases. Inherits from EnergyContract and defines SELLER roleInputs structure.
+
+**Attaches to**: 
+- `Offer.offerAttributes` (for discovery - contract definition)
+- `Order.orderAttributes` (during init/confirm flows - contract instance)
+
+**Key Properties**:
+- **Inherits from**: EnergyContract (all base properties)
+- **SELLER RoleInputs**: Predefined structure requiring:
+  - `pricePerKWh` (NUMBER, required)
+  - `currency` (STRING, required, e.g., "INR", "USD")
+  - `connectorType` (STRING, required, e.g., "CCS2", "CHAdeMO", "Type2")
+  - `maxPowerKW` (NUMBER, required)
+  - `minPowerKW` (NUMBER, required)
+  - `location` (OBJECT, required, with geo and address)
+
+**Key Concept**: Specialized contract type that makes EV charging contracts self-documenting. SELLER must provide all roleInputs when filling the role.
+
+**Example Usage**: See `architecture/Energy catalogue.md` section "EnergyOffer Structure (Core Primitive)"
 
 ---
 

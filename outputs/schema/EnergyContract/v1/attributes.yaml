@@ -36,7 +36,7 @@ components:
 
         roles:
           type: array
-          description: Roles in contract that need to be filled. Each role can specify expectedRoleInputs.
+          description: Roles in contract that need to be filled. Each role specifies roleInputs (schema + nullable values).
           items:
             $ref: '#/components/schemas/ContractRole'
           minItems: 1
@@ -56,22 +56,18 @@ components:
           example: "2024-12-15T14:00:00Z"
           x-jsonld: { "@id": "schema:dateCreated" }
 
-        # Input parameters (telescoping) - actual values provided by roles
+        # Input parameters (telescoping) - fixed contract-level parameters (not role-specific)
         inputParameters:
           type: object
           description: >
-            Actual values provided by each role when filling the contract.
-            Keyed by role name (e.g., "SELLER", "BUYER", "PROSUMER").
-            Values correspond to expectedRoleInputs defined in ContractRole.
+            Fixed contract-level parameters that are not role-specific (e.g., validityWindow, gracePeriodMinutes, contract duration).
+            Role-specific inputs are stored in roles[].roleInputs, not here.
           additionalProperties: true
           example:
-            SELLER:
-              price: 0.12
-              startTime: "2024-12-15T14:00:00Z"
-              gracePeriod: "PT15M"
-              powerRating: 50.0
-            BUYER:
-              accept: true
+            validityWindow:
+              startTime: "2024-12-15T06:00:00Z"
+              endTime: "2024-12-15T22:00:00Z"
+            gracePeriodMinutes: 10
           x-jsonld: { "@id": "beckn:inputParameters" }
 
         # Input signals (telescoping)
@@ -142,44 +138,49 @@ components:
           example: false
           x-jsonld: { "@id": "beckn:filled" }
 
-        expectedRoleInputs:
-          type: array
-          description: Optional. Expected inputs from this role (e.g., offerCurve, price, accept).
-          items:
-            $ref: '#/components/schemas/ExpectedRoleInput'
-          x-jsonld: { "@id": "beckn:expectedRoleInputs" }
+        roleInputs:
+          type: object
+          description: >
+            Inputs for this role. Each key is an input name, value is RoleInput (schema + nullable value).
+            If value is null, input not provided yet. If not null, input is provided.
+          additionalProperties:
+            $ref: '#/components/schemas/RoleInput'
+          x-jsonld: { "@id": "beckn:roleInputs" }
 
-    ExpectedRoleInput:
+    RoleInput:
       type: object
-      description: Specification of an expected input from a role.
+      description: >
+        Schema and value for a role input. Combines expected input specification with actual value.
+        Value is nullable - if null, input not provided; if not null, input is provided.
       additionalProperties: false
-      required: [inputName, inputType]
+      required: [type, required]
       properties:
-        inputName:
+        type:
           type: string
-          description: Name of the input (e.g., "offerCurve", "price", "accept").
-          example: "offerCurve"
-          x-jsonld: { "@id": "beckn:inputName" }
-
-        inputType:
-          type: string
-          enum: [BOOLEAN, NUMBER, DATE_TIME, DURATION, OFFER_CURVE, STRING, ROUTE]
+          enum: [BOOLEAN, NUMBER, DATE_TIME, DURATION, OFFER_CURVE, STRING, ROUTE, OBJECT]
           description: Type of the input.
-          example: "OFFER_CURVE"
+          example: "NUMBER"
           x-jsonld: { "@id": "beckn:inputType" }
+
+        required:
+          type: boolean
+          description: Whether this input is required.
+          example: true
+          x-jsonld: { "@id": "beckn:required" }
 
         description:
           type: string
           description: Human-readable description of the input.
-          example: "Price-responsive offer curve (negative powers = withdrawal, positive = export)"
+          example: "Fixed price per kilowatt-hour"
           x-jsonld: { "@id": "schema:description" }
 
-        optional:
-          type: boolean
-          default: false
-          description: Whether this input is optional.
-          example: true
-          x-jsonld: { "@id": "beckn:optional" }
+        value:
+          description: >
+            Actual value of the input. Nullable - if null, input not provided yet; if not null, input is provided.
+            Type must match the 'type' field (number for NUMBER, string for STRING, object for OBJECT/OFFER_CURVE, etc.).
+          nullable: true
+          example: 18.0
+          x-jsonld: { "@id": "beckn:value" }
 
     ########################################################################
     # Input Signals and Telemetry Sources
@@ -325,55 +326,52 @@ components:
       description: Define revenue flows as functions of inputs, signals, and telemetry.
       additionalProperties: false
       properties:
-        revenueFlows:
+        flows:
           type: array
           description: Array of revenue flow definitions.
           items:
             $ref: '#/components/schemas/RevenueFlow'
-          x-jsonld: { "@id": "beckn:revenueFlows" }
+          x-jsonld: { "@id": "beckn:flows" }
+
+        netZero:
+          type: boolean
+          description: Whether revenue flows are net-zero (all inflows equal all outflows).
+          example: true
+          x-jsonld: { "@id": "beckn:netZero" }
 
     RevenueFlow:
       type: object
-      description: A single revenue flow definition.
+      description: A single revenue flow definition (from one role to another).
       additionalProperties: false
-      required: [party, formula]
+      required: [from, to, formula]
       properties:
-        party:
-          type: object
-          description: Party receiving this revenue flow.
-          additionalProperties: false
-          properties:
-            role:
-              type: string
-              enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
-              description: Role of the party.
-              example: "SELLER"
-              x-jsonld: { "@id": "beckn:role" }
+        from:
+          type: string
+          enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
+          description: Role paying (source of revenue flow).
+          example: "BUYER"
+          x-jsonld: { "@id": "beckn:from" }
 
-            era:
-              type: string
-              description: Optional. Energy Resource Address of the party.
-              example: "bpp.cpo.example.com"
-              x-jsonld: { "@id": "beckn:era" }
-
-          x-jsonld: { "@id": "beckn:party" }
+        to:
+          type: string
+          enum: [BUYER, SELLER, PROSUMER, MARKET_CLEARING_AGENT, AGGREGATOR, GRID_OPERATOR]
+          description: Role receiving (destination of revenue flow).
+          example: "SELLER"
+          x-jsonld: { "@id": "beckn:to" }
 
         formula:
           type: string
-          description: Mathematical formula for computing revenue flow. Uses variables defined in variables.
-          example: "energyFlow * price"
+          description: >
+            Mathematical formula for computing revenue flow. 
+            Can reference: roles[ROLE].roleInputs[INPUT].value, inputParameters[PARAM], inputSignals[SIGNAL], telemetrySources[SOURCE].
+            Example: "roles.SELLER.roleInputs.pricePerKWh.value × telemetrySources.cdr-ev-charger-ccs2-001.energyKWh"
+          example: "roles.SELLER.roleInputs.pricePerKWh.value × telemetrySources.cdr-ev-charger-ccs2-001.energyKWh"
           x-jsonld: { "@id": "beckn:formula" }
-
-        variables:
-          type: object
-          description: Variables used in the formula, each referencing inputParameters, inputSignals, or telemetry.
-          additionalProperties: true
-          x-jsonld: { "@id": "beckn:variables" }
 
         description:
           type: string
           description: Optional. Human-readable description of the revenue flow.
-          example: "Seller receives energyFlow × price"
+          example: "BUYER pays SELLER based on energy consumed (from CDR) × price provided by SELLER"
           x-jsonld: { "@id": "schema:description" }
 
     ########################################################################
@@ -385,30 +383,39 @@ components:
       description: Define quality of service metrics (if not already in revenue flows as incentives/penalties).
       additionalProperties: false
       properties:
-        qualityMetrics:
+        metrics:
           type: array
           description: Array of quality metric definitions.
           items:
             $ref: '#/components/schemas/QualityMetric'
-          x-jsonld: { "@id": "beckn:qualityMetrics" }
+          x-jsonld: { "@id": "beckn:metrics" }
 
     QualityMetric:
       type: object
       description: A single quality metric definition.
       additionalProperties: false
-      required: [metricName, formula]
+      required: [metricId, formula]
       properties:
-        metricName:
+        metricId:
           type: string
-          description: Name of the quality metric.
-          example: "waitTime"
-          x-jsonld: { "@id": "beckn:metricName" }
+          description: Unique identifier for the quality metric.
+          example: "averageChargingPower"
+          x-jsonld: { "@id": "beckn:metricId" }
 
         formula:
           type: string
-          description: Formula for computing the metric.
-          example: "arrivalTime - startTime"
+          description: >
+            Formula for computing the metric.
+            Can reference: roles[ROLE].roleInputs[INPUT].value, inputParameters[PARAM], inputSignals[SIGNAL], telemetrySources[SOURCE].
+            Example: "telemetrySources.cdr-ev-charger-ccs2-001.energyKWh / ((telemetrySources.cdr-ev-charger-ccs2-001.endTime - telemetrySources.cdr-ev-charger-ccs2-001.startTime) / 3600)"
+          example: "telemetrySources.cdr-ev-charger-ccs2-001.energyKWh / ((telemetrySources.cdr-ev-charger-ccs2-001.endTime - telemetrySources.cdr-ev-charger-ccs2-001.startTime) / 3600)"
           x-jsonld: { "@id": "beckn:formula" }
+
+        unit:
+          type: string
+          description: Optional. Unit of the metric (e.g., "kW", "kWh", "minutes").
+          example: "kW"
+          x-jsonld: { "@id": "beckn:unit" }
 
         target:
           type: string
