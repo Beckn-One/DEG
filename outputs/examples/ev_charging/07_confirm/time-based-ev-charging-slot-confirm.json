@@ -1,0 +1,242 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
+    "timestamp": "2025-01-27T10:05:00Z",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-123456",
+      "beckn:orderStatus": "PENDING",
+      "beckn:orderNumber": "ORD-2025-001",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:acceptedOffer": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:id": "offer-001",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "name": "EV Charging Session Offer",
+              "short_desc": "Fast charging session with CCS2 connector"
+            },
+            "beckn:items": ["pe-charging-01"],
+            "beckn:provider": "cpo1.com",
+            "beckn:price": {
+              "currency": "INR",
+              "value": 18.0,
+              "applicableQuantity": {
+                "unitText": "Kilowatt Hour",
+                "unitCode": "KWH",
+                "unitQuantity": 1
+              }
+            },
+            "beckn:validity": {
+              "@type": "beckn:TimePeriod",
+              "schema:startDate": "2025-01-27T00:00:00Z",
+              "schema:endDate": "2025-04-27T23:59:59Z"
+            }
+          },
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 5
+          },
+          "beckn:price": {
+            "currency": "INR",
+            "value": 90.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 5
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 128.64,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 100.0,
+            "currency": "INR",
+            "description": "Base charging session cost (100 INR)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
+          "@type": "ChargingSession",
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "vehicleMake": "Tata",
+          "vehicleModel": "Nexon EV",
+          "sessionStatus": "PENDING"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 128.64
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:beneficiary": "BPP",
+        "beckn:acceptedPaymentMethod": ["BANK_TRANSFER", "UPI", "WALLET"],
+        "beckn:paymentStatus": "COMPLETED"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyContractEVCharging/v1/context.jsonld",
+        "@type": "EnergyContractEVCharging",
+        "contractId": "contract-walk-in-001",
+        "status": "PENDING",
+        "createdAt": "2025-01-27T10:00:00Z",
+        "roles": [
+          {
+            "role": "SELLER",
+            "filledBy": "cpo1.com",
+            "filled": true,
+            "roleInputs": {
+              "pricePerKWh": 18.0,
+              "currency": "INR",
+              "connectorType": "CCS2",
+              "maxPowerKW": 50,
+              "minPowerKW": 5,
+              "location": {
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [77.5946, 12.9716]
+                },
+                "address": {
+                  "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
+                  "addressLocality": "Bengaluru",
+                  "postalCode": "560076"
+                }
+              },
+              "buyerFinderFee": {
+                "feeType": "PERCENTAGE",
+                "feeValue": 2.0
+              },
+              "discountPercentage": 20.0
+            }
+          },
+          {
+            "role": "BUYER",
+            "filledBy": "user-123",
+            "filled": true,
+            "roleInputs": {
+              "sessionPreferences": {
+                "preferredStartTime": "2025-01-27T10:00:00Z",
+                "preferredEndTime": "2025-01-27T11:30:00Z",
+                "notificationPreferences": {
+                  "email": true,
+                  "sms": true,
+                  "push": false
+                }
+              },
+              "vehicleMake": "Tata",
+              "vehicleModel": "Nexon EV"
+            }
+          }
+        ],
+        "inputParameters": {
+          "validityWindow": {
+            "startTime": "2025-01-27T06:00:00Z",
+            "endTime": "2025-01-27T22:00:00Z"
+          },
+          "gracePeriodMinutes": 10,
+          "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
+        },
+        "inputSignals": [],
+        "telemetrySources": [
+          {
+            "sourceId": "cdr-ev-charger-ccs2-001",
+            "sourceType": "CHARGE_DATA_RECORD",
+            "description": "Charge Data Record from EVSE",
+            "required": true,
+            "source": {
+              "era": "pe-charging-01",
+              "meterId": "IN-ECO-BTM-01"
+            },
+            "fields": ["arrivalTime", "chargeStartTime", "chargeEndTime", "energyDelivered", "power"]
+          }
+        ],
+        "revenueFlows": {
+          "flows": [
+            {
+              "from": "BUYER",
+              "to": "SELLER",
+              "formula": "roles.SELLER.roleInputs.pricePerKWh × telemetrySources.cdr-ev-charger-ccs2-001.energyKWh",
+              "description": "BUYER pays SELLER based on energy consumed (from CDR) × price provided by SELLER"
+            }
+          ],
+          "netZero": true
+        },
+        "qualityMetrics": {
+          "metrics": [
+            {
+              "metricId": "averageChargingPower",
+              "formula": "telemetrySources.cdr-ev-charger-ccs2-001.energyKWh / ((telemetrySources.cdr-ev-charger-ccs2-001.endTime - telemetrySources.cdr-ev-charger-ccs2-001.startTime) / 3600)",
+              "unit": "kW",
+              "description": "Average charging power in kilowatts"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+

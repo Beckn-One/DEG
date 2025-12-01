@@ -1,0 +1,183 @@
+openapi: 3.1.1
+info:
+  title: Energy Coordination — Energy Contract EV Charging Attributes (v1)
+  version: 1.0.0
+  x-profile-id: profiles/energy-coordination/energy_contract_ev_charging/v1/contract
+  description: >
+    Specialized contract schema for EV charging use cases.
+    Inherits from EnergyContract and defines SELLER roleInputs structure for EV charging contracts.
+    SELLER must provide: pricePerKWh, currency, connectorType, maxPowerKW, minPowerKW, location.
+
+components:
+  schemas:
+    ########################################################################
+    # ORDER.ORDERATTRIBUTES / OFFER.OFFERATTRIBUTES — EnergyContractEVCharging (Specialized Contract)
+    ########################################################################
+    EnergyContractEVCharging:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/EnergyContract'
+        - type: object
+          description: >
+            Specialized contract for EV charging use cases.
+            SELLER role must provide pricePerKWh, currency, connectorType, maxPowerKW, minPowerKW, location.
+          additionalProperties: false
+          x-jsonld:
+            "@context": ./context.jsonld
+            "@type": EnergyContractEVCharging
+          properties:
+            roles:
+              type: array
+              description: >
+                Roles in EV charging contract. SELLER roleInputs structure is predefined.
+                BUYER role can optionally provide sessionPreferences, vehicleMake, vehicleModel.
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/EVChargingSellerRole'
+                  - $ref: '#/components/schemas/EVChargingBuyerRole'
+                  - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+              minItems: 1
+              x-jsonld: { "@id": "beckn:roles" }
+
+    ########################################################################
+    # EV Charging Role Definitions
+    ########################################################################
+
+    EVChargingSellerRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: SELLER role in EV charging contract with predefined roleInputs structure.
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [SELLER]
+              description: Role type must be SELLER.
+              example: "SELLER"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                SELLER must provide: pricePerKWh, currency, connectorType, maxPowerKW, minPowerKW, location.
+                Optional: buyerFinderFee, idleFeePolicy, discountPercentage.
+                Each input includes type, required, description, and nullable value.
+              additionalProperties: false
+              required: [pricePerKWh, currency, connectorType, maxPowerKW, minPowerKW, location]
+              properties:
+                pricePerKWh:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Fixed price per kilowatt-hour (required, NUMBER type).
+
+                currency:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Currency code (required, STRING type, e.g., "INR", "USD").
+
+                connectorType:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Connector type (required, STRING type, e.g., "CCS2", "CHAdeMO", "Type2").
+
+                maxPowerKW:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Maximum charging power in kilowatts (required, NUMBER type).
+
+                minPowerKW:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Minimum charging power in kilowatts (required, NUMBER type).
+
+                location:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Charging station location (required, OBJECT type).
+                    Should contain geo (Point with coordinates) and address (streetAddress, addressLocality, postalCode).
+
+                buyerFinderFee:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Buyer finder fee structure (OBJECT type with feeType and feeValue).
+
+                idleFeePolicy:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Idle fee policy description (STRING type).
+
+                discountPercentage:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Discount percentage (NUMBER type).
+              x-jsonld: { "@id": "beckn:roleInputs" }
+              example:
+                pricePerKWh:
+                  type: "NUMBER"
+                  required: true
+                  description: "Fixed price per kilowatt-hour"
+                  value: 18.0
+                currency:
+                  type: "STRING"
+                  required: true
+                  description: "Currency code (e.g., INR, USD)"
+                  value: "INR"
+                connectorType:
+                  type: "STRING"
+                  required: true
+                  description: "Connector type (CCS2, CHAdeMO, Type2, etc.)"
+                  value: "CCS2"
+                maxPowerKW:
+                  type: "NUMBER"
+                  required: true
+                  description: "Maximum charging power in kilowatts"
+                  value: 60
+                minPowerKW:
+                  type: "NUMBER"
+                  required: true
+                  description: "Minimum charging power in kilowatts"
+                  value: 5
+                location:
+                  type: "OBJECT"
+                  required: true
+                  description: "Charging station location (geo coordinates and address)"
+                  value:
+                    geo:
+                      type: "Point"
+                      coordinates: [77.5946, 12.9716]
+                    address:
+                      streetAddress: "EcoPower BTM Hub, 100 Ft Rd"
+                      addressLocality: "Bengaluru"
+                      postalCode: "560076"
+
+    ########################################################################
+    # EV Charging Buyer Role
+    ########################################################################
+
+    EVChargingBuyerRole:
+      allOf:
+        - $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/ContractRole'
+        - type: object
+          description: BUYER role in EV charging contract with optional roleInputs structure.
+          additionalProperties: false
+          properties:
+            role:
+              type: string
+              enum: [BUYER]
+              description: Role type must be BUYER.
+              example: "BUYER"
+              x-jsonld: { "@id": "beckn:role" }
+
+            roleInputs:
+              type: object
+              description: >
+                BUYER can optionally provide: sessionPreferences, vehicleMake, vehicleModel.
+                Each input includes type, required, description, and nullable value.
+              additionalProperties: false
+              properties:
+                sessionPreferences:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: >
+                    Optional. Session preferences (OBJECT type with preferredStartTime, preferredEndTime, notificationPreferences).
+
+                vehicleMake:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Vehicle make (STRING type, e.g., "Tata", "Tesla").
+
+                vehicleModel:
+                  $ref: '../EnergyContract/v1/attributes.yaml#/components/schemas/RoleInput'
+                  description: Optional. Vehicle model (STRING type, e.g., "Nexon EV", "Model 3").
+              x-jsonld: { "@id": "beckn:roleInputs" }
+

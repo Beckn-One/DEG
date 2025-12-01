@@ -141,10 +141,13 @@ components:
         roleInputs:
           type: object
           description: >
-            Inputs for this role. Each key is an input name, value is RoleInput (schema + nullable value).
-            If value is null, input not provided yet. If not null, input is provided.
-          additionalProperties:
-            $ref: '#/components/schemas/RoleInput'
+            Inputs for this role. Each key is an input name.
+            Value can be:
+            - RoleInput object (schema + nullable value) - when schema metadata is needed
+            - Direct value (number, string, object, etc.) - when input is provided and schema is known from contract definition
+            - null - when input not provided yet
+            This allows both verbose (schema + value) and concise (value only) representations.
+          additionalProperties: true
           x-jsonld: { "@id": "beckn:roleInputs" }
 
     RoleInput:

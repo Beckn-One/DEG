@@ -99,50 +99,20 @@ Each offer in the catalogue is an **EnergyOffer** in `offerAttributes`:
             "filledBy": "bpp.cpo.example.com",
             "filled": true,
             "roleInputs": {
-              "pricePerKWh": {
-                "type": "number",
-                "required": true,
-                "description": "Fixed price per kilowatt-hour",
-                "value": 18.0
-              },
-              "currency": {
-                "type": "string",
-                "required": true,
-                "description": "Currency code (e.g., INR, USD)",
-                "value": "INR"
-              },
-              "connectorType": {
-                "type": "string",
-                "required": true,
-                "description": "Connector type (CCS2, CHAdeMO, Type2, etc.)",
-                "value": "CCS2"
-              },
-              "maxPowerKW": {
-                "type": "number",
-                "required": true,
-                "description": "Maximum charging power in kilowatts",
-                "value": 60
-              },
-              "minPowerKW": {
-                "type": "number",
-                "required": true,
-                "description": "Minimum charging power in kilowatts",
-                "value": 5
-              },
+              "pricePerKWh": 18.0,
+              "currency": "INR",
+              "connectorType": "CCS2",
+              "maxPowerKW": 60,
+              "minPowerKW": 5,
               "location": {
-                "type": "object",
-                "required": true,
-                "description": "Charging station location (geo coordinates and address)",
-                "value": {
-                  "geo": {
-                    "type": "Point",
-                    "coordinates": [77.5946, 12.9716]
-                  },
-                  "address": {
-                    "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
-                    "addressLocality": "Bengaluru",
-                    "postalCode": "560076"
-                  }
+                "geo": {
+                  "type": "Point",
+                  "coordinates": [77.5946, 12.9716]
+                },
+                "address": {
+                  "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
+                  "addressLocality": "Bengaluru",
+                  "postalCode": "560076"
                 }
               }
             }
