@@ -1,5 +1,7 @@
 # P2P Energy Trading Implementation Guide <!-- omit from toc -->
 
+Version 0.1 (Non-Normative)
+
 ## Table of Contents  <!-- omit from toc -->
 
 - [1. Introduction](#1-introduction)
@@ -7,7 +9,7 @@
 - [3. Intended Audience](#3-intended-audience)
 - [4. Conventions and Terminology](#4-conventions-and-terminology)
 - [5. Terminology](#5-terminology)
-- [6. User Journey](#6-user-journey)
+- [6. Example User Journey](#6-example-user-journey)
   - [6.1. Sequence diagram of a P2P transaction](#61-sequence-diagram-of-a-p2p-transaction)
 - [7. Reference Architecture](#7-reference-architecture)
   - [7.1. Architecture Diagram](#71-architecture-diagram)
@@ -68,7 +70,7 @@ This document provides an implementation guidance for deploying peer to peer (P2
 services using the Beckn Protocol ecosystem. Peer to peer energy trading enables energy producers 
 (prosumers) to directly sell excess energy to consumers. 
 
-Peer-to-peer (P2P) energy trading enables decentralized energy exchange that benefits all participants while strengthening the grid. For consumers, P2P markets offer lower prices during periods of abundant renewable supply (such as mid-day solar or nightly wind), creating demand that might otherwise be curtailed. For producers, these markets can provide higher prices than utility export rates, incentivizing renewable energy generation. Grid operators benefit through reduced transmission losses, local supply-demand balancing, and new revenue streams from wheeling charges on P2P transactions. Additionally, prosumers with accumulated net-metering credits can monetize them through P2P trades, converting credits into cash. These benefits extend beyond direct participants, as reduced grid congestion and improved efficiency ultimately lower costs for all ratepayers.
+Peer-to-peer (P2P) energy trading enables decentralized energy exchange that benefits all participants while strengthening the grid. For consumers, P2P markets offer lower prices during periods of abundant renewable supply (such as mid-day solar or nightly wind), creating demand for supply that might otherwise be curtailed. For producers, these markets may provide higher prices incentivizing the renewable energy generation. Grid operators benefit through reduced transmission losses, local supply-demand balancing, and new revenue streams from wheeling charges on P2P transactions. Additionally, prosumers with accumulated net-metering credits can monetize them through P2P trades, converting credits into cash. These benefits extend beyond direct participants, as reduced grid congestion and improved efficiency ultimately lower costs for all ratepayers.
 
 P2P trades are executed virtually before the delivery hour based on estimated load and generation, with actual energy flows potentially deviating from contracts. However, the economic incentives, namely better revenue for adhering to contracts and penalties for deviations, naturally align producer and consumer behavior toward delivering contracted energy. Each trade contract references a real or virtual meter for post-delivery deviation measurement, with utilities maintaining visibility and control through network policies that limit trade volumes based on sanctioned load or generation at each meter. Virtual meters enable aggregators to balance supply and demand across multiple participants, as any net deviation from zero flow through these virtual meters incurs penalties, creating a self-regulating mechanism for grid stability.
 
@@ -90,7 +92,7 @@ This document does NOT cover:
   and apportion the shortfall against it.
 * Cyber-security and best practices to ensure privacy of market participants by 
   guarding of personally identifiable information data.
-* Escrow services to cover the cost trade participant reneging or defaulting on payment.
+* Payment guarantees or ACH hold until fulfillment to cover the cost trade participant reneging or defaulting on payment.
 
 # 3. Intended Audience
 
@@ -112,20 +114,25 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | BPP     | Beckn Provider Platform          | Service provider platform that responds to BAP requests.                                                              |
 | NFO     | Network Facilitator Organization | Organization responsible for the adoption and growth of the network. Usually the custodian of the network’s registry. |
 | CDS     | Catalog Discovery Service        | Enables discovery of energy services from BPPs in the network by providing a cache service for catalogs.                                                        |
+| MDMS     | Meter Data Management System        | Platform that enables collection, storage and processing of smart meter data                                                        |
+| RMS     | Revenue Management System        | Platform that enables money flows throughout the transaction and post fulfillment                                                        |
 
 
-# 6. User Journey
 
-This walkthrough demonstrates a complete P2P energy trading transaction: Swati runs a flour mill business and has a sanctioned load of 20kw. As the festival season is approaching, anticipating large demand, she is looking to purchase cheaper energy than the utility import price of of 10 INR/kwh between 10am to 6pm for next week. 
-A nearby solar farm is hoping to get better returns than 3 INR/kwh for its exports, and has published an offer
-to sell energy at 7 INR/kwh.
+# 6. Example User Journey
 
-Swati is already enrolled on a peer to peer energy trading app (BAP), and searches with above price and time of day filters. To her delight, she **discovers** a local solar farm is offering renewable energy at 6 INR/kwh between 12am to 4pm on all days in that week. With wheeling charges of 1 INR/kwh, the total 8 INR/kwh is still 20% cheaper than importing from utility. 
+This walkthrough demonstrates a complete P2P energy trading transaction: 
 
-She **initiates** in an order of 20kw. The (BAP) app knows and shares her meter number with the seller's app (BPP), which in turn shares both with the utility BPP which knows the sanctioned import & export for each meter and existing trades. Utility BPP applies a 50% cap policy and replies back saying that upto 10kw of trade is allowed and adds wheeling charges to the quote. It also adds terms & conditions that specify that any underconsumption by Swati will be treated as a spot export by her reimbursed at 3 INR/kwh and any underproduction by solar farm by the farm is treated as a spot import at 10$/kwh. After this Swati **confirms** the 8 INR/kwh final order with her BAP, solar farm BPP in turn cascaded it to utility BPP and utility BPP acknowledges, logs the trade and deducts it from the further trading allowance in those hours for both Swati & the solar farm. 
+Nisha, who has a large rooftop solar is hoping to get better returns than 3 INR/kwh for the surplus energy mid-day and wants to sell it at 6 INR/kwh. She is eligible to participate and is enrolled as a prosumer in a peer to peer trading app (BPP), which publishes the offer to catalog discovery service (CDS).
 
-On the delivery day, the floor mill is busy and consumes 400 kwh from the solar farm and saves a `400 *2=800` INR 
-in energy costs. The solar farm gains additional 400*(7-3) = 1600 INR revenue, and utility gets `400*1 = 400` INR of revenue for the upkeep of transmission & to cover the administration cost. Utility BPP sends the final settlement including the wheeling and deviation charges to Swati & the solar farm. Swati pays the solar farm BPP 
+In parallel, nearby, Swati runs a small mill which has a sanctioned load of 20kw. Anticipating large seasonal demand, she is looking to purchase cheaper energy than the utility import price of of 10 INR/kwh between 10am to 6pm for next week. Swati is eligible to participate and is already enrolled as a consumer on a *different* peer to peer energy trading app (BAP), and declares her intent to buy with above price and time of day filters.
+
+To her delight, the Beckn network helps her *discovers* Nisha's offer of renewable energy at 6 INR/kwh between 12am to 4pm on all days in that week. With wheeling charges of 1 INR/kwh, the total 8 INR/kwh is still 20% cheaper than importing. 
+
+She *initiates* in an order of 20kw. The (BAP) app knows and shares her meter number with the seller's app (BPP), which in turn shares both with the utility BPP which knows the sanctioned import & export for each meter and existing trades. Utility BPP applies a 50% cap policy and replies back saying that upto 10kw of trade is allowed and adds wheeling charges to the quote. It also adds terms & conditions that specify that any underconsumption by Swati will be treated as a spot export by her reimbursed at 3 INR/kwh and any underproduction by solar farm by the farm is treated as a spot import at 10$/kwh. After this Swati *confirms* the 8 INR/kwh final order with her BAP, solar farm BPP in turn cascaded it to utility BPP and utility BPP acknowledges, locks and logs the trade and deducts it from the further trading allowance in those hours for both Swati & Nisha. 
+
+On the delivery day, the floor mill is busy and consumes 400 kwh from the rooftop solar and saves on its 
+in energy costs. The solar farm gains additional revenue, and utility gets revenue for the upkeep of transmission & to cover the administration cost. Utility BPP sends the final settlement including the wheeling and deviation charges to Swati & the solar farm. Swati pays the solar farm BPP 
 for the trade itself via her BAP.
 
 ## 6.1. Sequence diagram of a P2P transaction
@@ -136,24 +143,26 @@ for the trade itself via her BAP.
 ```mermaid
 sequenceDiagram
     participant P2P Trading BAP
+    participant CDS
     participant P2P Trading BPP
     participant Utility Company
+    P2P Trading BPP-->>CDS: upload(Item/Offer changes)
     Note over P2P Trading BAP, Utility Company: Opening Bell
-    P2P Trading BAP->>+P2P Trading BPP: discover
-    P2P Trading BPP-->>-P2P Trading BAP: on_discover
-
+    P2P Trading BAP->>+CDS: discover
+    CDS-->>-P2P Trading BAP: on_discover
+    Note over P2P Trading BAP, P2P Trading BPP: Post-discovery, BAP calls BPP directly for transaction APIs
     P2P Trading BAP->>+P2P Trading BPP: select
     P2P Trading BPP-->>-P2P Trading BAP: on_select
 
     P2P Trading BAP->>+P2P Trading BPP: init (Trading Order)
     P2P Trading BPP->>+Utility Company: cascaded init (Initialze a delivery order)
       Note right of Utility Company: 1. Calculate wheeling charges<br/>2. remaining sanctioned load
-    Utility Company-->>-P2P Trading BPP: on_init (Wheeling charges, remaining sanctioned load etc. )
+    Utility Company-->>-P2P Trading BPP: on_init (Wheeling charges, remaining trading limit etc. )
     P2P Trading BPP-->>-P2P Trading BAP: cascaded_on_init
 
     P2P Trading BAP->>+P2P Trading BPP: confirm (Trading Order)
     P2P Trading BPP->>+Utility Company: cascaded confirm (Initialize a delivery order)
-      Note right of Utility Company: 1. Log trade<br/>2. Deduct sanctioned load.
+      Note right of Utility Company: 1. Log trade<br/>2. Deduct from trading limits.
     Utility Company-->>-P2P Trading BPP: on_confirm (remaining sanctioned load etc. )
     P2P Trading BPP-->>-P2P Trading BAP: on_confirm (Trading Order)
     Note over P2P Trading BAP, Utility Company: Closing Bell
@@ -1707,16 +1716,9 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 
 This section gives a general walkthrough of how you would integrate your software with the Beckn network (say the sandbox environment). Refer to the starter kit for details on how to register with the sandbox and get credentials.
 
-<<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_draft.md
-12. Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at [Beckn-ONIX repository](https://github.com/beckn/beckn-onix). The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.
-=======
-For questions or issues:
-- Review the examples in `schema/EnergyResource/v0.2/examples/`
-- Check the schema definitions in `schema/Energy*/v0.2/attributes.yaml`
-- Refer to the Beckn Protocol v2 documentation
-13. <<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide.md
-=======
->>>>>>> p2p-trading:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_DRAFT.md
+Beckn-ONIX is an initiative to promote easy installation and maintenance of a Beckn Network. Apart from the Registry and Gateway components that are required for a network facilitator, Beckn-ONIX provides a Beckn Adapter. A reference implementation of the Beckn-ONIX specification is available at [Beckn-ONIX repository](https://github.com/beckn/beckn-onix). The reference implementation of the Beckn Adapter is called the Protocol Server. Based on whether we are writing the seeker platform or the provider platform, we will be installing the BAP Protocol Server or the BPP Protocol Server respectively.
+
+TODO
 
 #### 13.0.0.1. **Integrating the BAP**
 
@@ -1749,9 +1751,3 @@ TODO
 * [Postman collection for EV Charging](/testnet/postman-collections/v2/EV_Charging/)  
 * [Beckn 1.0 (legacy) Layer2 config for peer to peer trading](https://github.com/beckn/missions/blob/main/DEG2.0/layer2/P2P/trade_1.1.0.yaml)
 
-
-14. <<<<<<< HEAD:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_draft.md
-=======
-
->>>>>>> draft:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_DRAFT.md
->>>>>>> p2p-trading:docs/implementation-guides/v2/P2P_Trading/P2P_Trading_implementation_guide_DRAFT.md
