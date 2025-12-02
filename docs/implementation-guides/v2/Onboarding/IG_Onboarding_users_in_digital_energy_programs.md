@@ -482,13 +482,3 @@ Examples:
 * EA_NOT_CERTIFIED
 
 Each error must follow Beckn’s standard error object with code and message.
-
----
-
-## End of Implementation Guide
-
-If you want, I can now generate:
-
-* A PDF/LaTeX export
-* A GitHub-ready repository version
-* A companion Operational Handbook for utilities and EAs
