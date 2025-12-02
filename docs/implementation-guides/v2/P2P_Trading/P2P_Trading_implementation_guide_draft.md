@@ -166,8 +166,6 @@ sequenceDiagram
     Utility Company-->>-P2P Trading BPP: on_confirm (remaining sanctioned load etc. )
     P2P Trading BPP-->>-P2P Trading BAP: on_confirm (Trading Order)
     Note over P2P Trading BAP, Utility Company: Closing Bell
-    P2P Trading BPP->>+Utility Company: confirm (Place delivery order)
-    Utility Company-->>-P2P Trading BPP: on_confirm (Confirm delivery order)
 
     Note over P2P Trading BAP, Utility Company: Fulfillment
      Utility Company->> Utility Company: Calculate total actual energy <br> surplus produced by provider
