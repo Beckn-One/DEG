@@ -38,7 +38,7 @@
               "beckn:id": "provider-solar-farm-001"
             },
             "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyResource/v0.2/context.jsonld",
               "@type": "EnergyResource",
               "sourceType": "SOLAR",
               "deliveryMode": "GRID_INJECTION",
@@ -79,7 +79,7 @@
               "schema:unitText": "kWh"
             },
             "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",

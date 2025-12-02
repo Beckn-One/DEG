@@ -612,7 +612,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "beckn:id": "provider-solar-farm-001"
             },
             "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyResource/v0.2/context.jsonld",
               "@type": "EnergyResource",
               "sourceType": "SOLAR",
               "deliveryMode": "GRID_INJECTION",
@@ -653,7 +653,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "schema:unitText": "kWh"
             },
             "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
@@ -1037,7 +1037,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "PENDING",
         "sourceMeterId": "100200300",
@@ -1083,93 +1083,115 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 
 ```json
 {
-    "context": {
-        "domain": "energy",
-        "action": "init",
-        "location": {
-            "country": {
-                "name": "India",
-                "code": "IND"
-            },
-            "city": {
-                "name": "Lucknow",
-                "code": "std:522"
-            }
-        },
-        "version": "1.1.0",
-        "bap_id": "p2pTrading-bpp.com",
-        "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v1",
-        "bpp_id": "example-transmission-bpp.com",
-        "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
-        "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
-        "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
-        "timestamp": "2023-07-16T04:41:16Z"
-    },
-    "message": {
-        "order": {
-            "provider": {
-                "descriptor": {
-                    "name": "UPPCL"
-                }
-            },
-            "fulfillments": [
-                {
-                    "customer": {
-                        "person": {
-                            "name": "Raj"
-                        },
-                        "contact": {
-                            "phone": "+91-1276522222"
-                        }
-                    },
-                    "stops": [
-                        {
-                            "type": "start",
-                            "location": {
-                                "address": "der://uppcl.meter/92982739"
-                            },
-                            "time": {
-                                "range": {
-                                    "start": "2024-10-04T10:00:00",
-                                    "end": "2024-10-04T18:00:00"
-                                }
-                            }
-                        },
-                        {
-                            "type": "end",
-                            "location": {
-                                "address": "der://uppcl.meter/98765456"
-                            },
-                            "time": {
-                                "range": {
-                                    "start": "2024-10-04T10:00:00",
-                                    "end": "2024-10-04T18:00:00"
-                                }
-                            }
-                        }
-                    ],
-                    "tags": [
-                        {
-                            "descriptor": {
-                                "name": "P2P-Trade-Draft-Contract"
-                            },
-                            "list": [
-                                {
-                                    "Value": "https://https://dhiway.com/vc/energy/3894434.json"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "billing": {
-                "name": "p2p-Trading-BPP",
-                "email": "p2tbpp@example.com",
-                "phone": "+91-1276522222"
-            }
-        }
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "timestamp": "2024-10-04T10:20:00Z",
+    "message_id": "msg-cascaded-init-001",
+    "transaction_id": "txn-cascaded-energy-001",
+    "bap_id": "p2pTrading-bpp.com",
+    "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v2",
+    "bpp_id": "example-transmission-bpp.com",
+    "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
+    "ttl": "PT30S",
+    "domain": "energy-trade",
+    "location": {
+      "city": {
+        "code": "std:522",
+        "name": "Lucknow"
+      },
+      "country": {
+        "code": "IND",
+        "name": "India"
+      }
     }
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-cascaded-utility-001",
+      "beckn:provider": {
+        "@type": "beckn:Provider",
+        "beckn:id": "provider-uppcl-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "UPPCL"
+        }
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-utility-registration-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:customer": {
+            "@type": "beckn:Customer",
+            "beckn:person": {
+              "@type": "schema:Person",
+              "schema:name": "Raj"
+            },
+            "beckn:contact": {
+              "@type": "schema:ContactPoint",
+              "schema:telephone": "+91-1276522222"
+            }
+          },
+          "beckn:stops": [
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-source-utility-001",
+              "beckn:type": "START",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "92982739"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              }
+            },
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-target-utility-001",
+              "beckn:type": "END",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "98765456"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
+        "@type": "EnergyTradeContract",
+        "contractStatus": "PENDING",
+        "sourceMeterId": "92982739",
+        "targetMeterId": "98765456",
+        "contractedQuantity": 10.0,
+        "tradeStartTime": "2024-10-04T10:00:00Z",
+        "tradeEndTime": "2024-10-04T18:00:00Z",
+        "sourceType": "SOLAR"
+      },
+      "beckn:billing": {
+        "@type": "beckn:Billing",
+        "beckn:name": "p2p-Trading-BPP",
+        "beckn:email": "p2tbpp@example.com",
+        "beckn:phone": "+91-1276522222"
+      }
+    }
+  }
 }
+
 ```
 </details>
 
@@ -1188,116 +1210,120 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 
 ```json
 {
-    "context": {
-        "domain": "energy",
-        "action": "on_init",
-        "location": {
-            "country": {
-                "name": "India",
-                "code": "IND"
-            },
-            "city": {
-                "name": "Lucknow",
-                "code": "std:522"
-            }
-        },
-        "version": "1.1.0",
-        "bap_id": "p2pTrading-bpp.com",
-        "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v1",
-        "bpp_id": "example-transmission-bpp.com",
-        "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
-        "transaction_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
-        "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
-        "timestamp": "2023-07-16T04:41:16Z"
-    },
-    "message": {
-        "order": {
-            "provider": {
-                "descriptor": {
-                    "name": "UPPCL"
-                }
-            },
-            "fulfillments": [
-                {
-                    "customer": {
-                        "person": {
-                            "name": "Raj"
-                        },
-                        "contact": {
-                            "phone": "+91-1276522222"
-                        }
-                    },
-                    "stops": [
-                        {
-                            "type": "start",
-                            "location": {
-                                "address": "der://uppcl.meter/92982739"
-                            },
-                            "time": {
-                                "range": {
-                                    "start": "2024-10-04T10:00:00",
-                                    "end": "2024-10-04T18:00:00"
-                                }
-                            }
-                        },
-                        {
-                            "type": "end",
-                            "location": {
-                                "address": "der://uppcl.meter/98765456"
-                            },
-                            "time": {
-                                "range": {
-                                    "start": "2024-10-04T10:00:00",
-                                    "end": "2024-10-04T18:00:00"
-                                }
-                            }
-                        }
-                    ],
-                    "tags": [
-                        {
-                            "descriptor": {
-                                "name": "P2P-Trade-Draft-Contract"
-                            },
-                            "list": [
-                                {
-                                    "Value": "https://https://dhiway.com/vc/energy/3894434.json"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "quote": {
-                "price": {
-                    "value": "2.5",
-                    "currency": "INR"
-                },
-                "breakup": [
-                    {
-                        "title": "wheeling charge",
-                        "price": {
-                            "value": "2.5",
-                            "currency": "INR"
-                        }
-                    }
-                ]
-            },
-            "billing": {
-                "name": "p2p-Trading-BPP",
-                "email": "p2ptbpp@example.com",
-                "phone": "+91-1276522222"
-            },
-            "cancellation_terms": [
-                {
-                    "external_ref": {
-                        "mimetype": "text/html",
-                        "url": "https://mvvnl.in/cancellation_terms.html"
-                    }
-                }
-            ]
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "timestamp": "2024-10-04T10:20:05Z",
+    "message_id": "msg-cascaded-on-init-001",
+    "transaction_id": "txn-cascaded-energy-001",
+    "bap_id": "p2pTrading-bpp.com",
+    "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v2",
+    "bpp_id": "example-transmission-bpp.com",
+    "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-cascaded-utility-001",
+      "beckn:provider": {
+        "@type": "beckn:Provider",
+        "beckn:id": "provider-uppcl-001",
+        "beckn:descriptor": {
+          "@type": "beckn:Descriptor",
+          "schema:name": "UPPCL"
         }
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-utility-registration-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:customer": {
+            "@type": "beckn:Customer",
+            "beckn:person": {
+              "@type": "schema:Person",
+              "schema:name": "Raj"
+            },
+            "beckn:contact": {
+              "@type": "schema:ContactPoint",
+              "schema:telephone": "+91-1276522222"
+            }
+          },
+          "beckn:stops": [
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-source-utility-001",
+              "beckn:type": "START",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "92982739"
+              }
+            },
+            {
+              "@type": "beckn:Stop",
+              "beckn:id": "stop-target-utility-001",
+              "beckn:type": "END",
+              "beckn:location": {
+                "@type": "beckn:Location",
+                "beckn:address": "98765456"
+              }
+            }
+          ]
+        }
+      ],
+      "beckn:quote": {
+        "@type": "beckn:Quotation",
+        "beckn:price": {
+          "@type": "schema:PriceSpecification",
+          "schema:price": 2.5,
+          "schema:priceCurrency": "INR"
+        },
+        "beckn:breakup": [
+          {
+            "@type": "beckn:Breakup",
+            "beckn:title": "Wheeling Charge",
+            "beckn:price": {
+              "@type": "schema:PriceSpecification",
+              "schema:price": 2.5,
+              "schema:priceCurrency": "INR"
+            }
+          }
+        ]
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
+        "@type": "EnergyTradeContract",
+        "contractStatus": "PENDING",
+        "sourceMeterId": "92982739",
+        "targetMeterId": "98765456",
+        "contractedQuantity": 10.0,
+        "tradeStartTime": "2024-10-04T10:00:00Z",
+        "tradeEndTime": "2024-10-04T18:00:00Z",
+        "sourceType": "SOLAR"
+      },
+      "beckn:billing": {
+        "@type": "beckn:Billing",
+        "beckn:name": "p2p-Trading-BPP",
+        "beckn:email": "p2ptbpp@example.com",
+        "beckn:phone": "+91-1276522222"
+      },
+      "beckn:cancellationTerms": [
+        {
+          "@type": "beckn:CancellationTerm",
+          "beckn:externalRef": {
+            "@type": "schema:MediaObject",
+            "schema:encodingFormat": "text/html",
+            "schema:contentUrl": "https://mvvnl.in/cancellation_terms.html"
+          }
+        }
+      ]
     }
+  }
 }
+
 ```
 </details>
 
@@ -1445,7 +1471,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
@@ -1585,7 +1611,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
             }
           },
           "beckn:attributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeDelivery/v0.2/context.jsonld",
             "@type": "EnergyTradeDelivery",
             "deliveryStatus": "IN_PROGRESS",
             "deliveryMode": "GRID_INJECTION",
@@ -1649,7 +1675,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
         }
       ],
       "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
