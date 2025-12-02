@@ -47,10 +47,10 @@ Version 0.1 (Non-Normative)
   - [10.6. Status Flow](#106-status-flow)
 - [11. Additional Resources](#11-additional-resources)
     - [11.0.1. **Integrating with your software**](#1101-integrating-with-your-software)
-      - [13.0.0.1. **Integrating the BAP**](#13001-integrating-the-bap)
-      - [13.0.0.2. **Integrating the BPP**](#13002-integrating-the-bpp)
-  - [13.1. FAQs](#131-faqs)
-  - [13.2. References](#132-references)
+      - [11.0.1.1. **Integrating the BAP**](#11011-integrating-the-bap)
+      - [11.0.1.2. **Integrating the BPP**](#11012-integrating-the-bpp)
+  - [11.1. FAQs](#111-faqs)
+  - [11.2. References](#112-references)
 
 Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
 
@@ -1708,7 +1708,7 @@ Beckn-ONIX is an initiative to promote easy installation and maintenance of a Be
 
 TODO
 
-#### 13.0.0.1. **Integrating the BAP**
+#### 11.0.1.1. **Integrating the BAP**
 
 If you are writing the seeker platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -1720,7 +1720,7 @@ If you are writing the seeker platform software, the following are the steps you
 
 TODO
 
-#### 13.0.0.2. **Integrating the BPP**
+#### 11.0.1.2. **Integrating the BPP**
 
 If you are writing the provider platform software, the following are the steps you can follow to build and integrate your application.
 
@@ -1732,9 +1732,9 @@ If you are writing the provider platform software, the following are the steps y
 
 TODO
 
-## 13.1. FAQs
+## 11.1. FAQs
 
-## 13.2. References
+## 11.2. References
 
 * [Postman collection for EV Charging](/testnet/postman-collections/v2/EV_Charging/)  
 * [Beckn 1.0 (legacy) Layer2 config for peer to peer trading](https://github.com/beckn/missions/blob/main/DEG2.0/layer2/P2P/trade_1.1.0.yaml)
