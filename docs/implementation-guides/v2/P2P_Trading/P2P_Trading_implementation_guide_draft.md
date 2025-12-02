@@ -219,20 +219,8 @@ The section defines the reference ecosystem architecture that is used for buildi
 
 ## 7.1. Architecture Diagram
 
-```mermaid
-sequenceDiagram
-    participant BPP1
-    participant BPP2
-    participant CDS
-    participant BAP
-    Note over BPP1,BPP2: Out-of-band catalog publication
-    BPP1-->>CDS: upload(Item/Offer changes)
-    BPP2-->>CDS: upload(Item/Offer changes)
-    Note over CDS: Index + normalize using Beckn v2 core schema
-    BAP->>CDS: discover (query, filters)
-    CDS-->>BAP: on_discover or synchronous response (Catalog subset)
-    Note over BAP,BPP1: Post-discovery, BAP calls BPP1 directly for transaction APIs
-```
+
+TBD
 
 ## 7.2. Actors
 
