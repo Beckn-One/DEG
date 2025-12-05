@@ -1,6 +1,72 @@
-# Implementation Guide: Multi-Channel Onboarding of Users into Digital Energy Programs
+# Implementation Guide: Multi-Channel Onboarding of Users into Digital Energy Programs <!-- omit from toc -->
 
-Version 0.1 (Non-Normative)
+Version 0.2 (Non-Normative)
+
+## Table of Contents <!-- omit from toc -->
+- [1. Introduction](#1-introduction)
+- [2. Scope](#2-scope)
+- [3. Terminology](#3-terminology)
+- [4. Terminology](#4-terminology)
+- [5. Implementation Principles](#5-implementation-principles)
+- [6. System Architecture Overview](#6-system-architecture-overview)
+- [7. Identity and Authentication Implementation](#7-identity-and-authentication-implementation)
+- [8. Asset Mapping and Data Integration](#8-asset-mapping-and-data-integration)
+  - [8.1. Meter Discovery](#81-meter-discovery)
+  - [8.2. DER Discovery](#82-der-discovery)
+  - [8.3. Data Integration](#83-data-integration)
+- [9. Beckn-Based Enrollment Implementation](#9-beckn-based-enrollment-implementation)
+  - [9.1. 8.1 Standard Beckn Flow](#91-81-standard-beckn-flow)
+  - [9.2. 8.2 Enrollment Flow Diagram](#92-82-enrollment-flow-diagram)
+- [10. Channel-Specific Implementation Guides](#10-channel-specific-implementation-guides)
+  - [10.1. 9.1 Utility Portal](#101-91-utility-portal)
+  - [10.2. 9.2 Enrolment Agency Portal](#102-92-enrolment-agency-portal)
+  - [10.3. 9.3 Network Participant App using SDK](#103-93-network-participant-app-using-sdk)
+- [11. Persona-Specific Implementation Guidance](#11-persona-specific-implementation-guidance)
+  - [11.1. Consumer – Single Household, Single Meter](#111-consumer--single-household-single-meter)
+  - [11.2. Consumer – Multiple Households, Multiple Meters](#112-consumer--multiple-households-multiple-meters)
+  - [11.3. Consumer – BTM Appliances via Home Meter](#113-consumer--btm-appliances-via-home-meter)
+  - [11.4. Consumer – BTM Appliances via Same Utility (e.g., neighbor’s meter)](#114-consumer--btm-appliances-via-same-utility-eg-neighbors-meter)
+  - [11.5. Consumer/Prosumer – BTM Appliances via Different Utility](#115-consumerprosumer--btm-appliances-via-different-utility)
+  - [11.6. Prosumer – Single Rooftop Solar Meter](#116-prosumer--single-rooftop-solar-meter)
+  - [11.7. Prosumer – Multiple Meters with Solar](#117-prosumer--multiple-meters-with-solar)
+  - [11.8. Prosumer – EV with V2G](#118-prosumer--ev-with-v2g)
+- [12. Governance and Operational Guidance](#12-governance-and-operational-guidance)
+- [13. Data Models and Storage Considerations](#13-data-models-and-storage-considerations)
+- [14. Security and Privacy Implementation](#14-security-and-privacy-implementation)
+- [15. Testing, Certification and Compliance](#15-testing-certification-and-compliance)
+- [16. Deployment Topology Recommendations](#16-deployment-topology-recommendations)
+- [17. Developer Tooling and SDK Recommendations](#17-developer-tooling-and-sdk-recommendations)
+- [18. Appendix A – Sample Payloads](#18-appendix-a--sample-payloads)
+  - [18.1. 17.1 Init Request](#181-171-init-request)
+    - [18.1.1. Example: Simple Consumer with Single Meter](#1811-example-simple-consumer-with-single-meter)
+    - [18.1.2. Example: Prosumer with Solar and Battery](#1812-example-prosumer-with-solar-and-battery)
+  - [18.2. 17.2 On\_Init Response](#182-172-on_init-response)
+    - [18.2.1. Example: Successful Verification, No Conflicts](#1821-example-successful-verification-no-conflicts)
+    - [18.2.2. Example: Enrollment Conflict Detected](#1822-example-enrollment-conflict-detected)
+  - [18.3. 17.3 Confirm Request](#183-173-confirm-request)
+    - [18.3.1. Example: Confirm with Enrollment Dates](#1831-example-confirm-with-enrollment-dates)
+  - [18.4. 17.4 On\_Confirm Response](#184-174-on_confirm-response)
+    - [18.4.1. Example: Successful Enrollment with Credential](#1841-example-successful-enrollment-with-credential)
+  - [18.5. 17.5 Error Response Example](#185-175-error-response-example)
+    - [18.5.1. Example: Credential Verification Failed](#1851-example-credential-verification-failed)
+  - [18.6. 17.6 Consent Revocation](#186-176-consent-revocation)
+    - [18.6.1. Example: Consent Revocation Request](#1861-example-consent-revocation-request)
+    - [18.6.2. Example: Consent Revocation Response](#1862-example-consent-revocation-response)
+  - [18.7. 17.7 Unenrollment](#187-177-unenrollment)
+    - [18.7.1. Example: Unenrollment Request](#1871-example-unenrollment-request)
+    - [18.7.2. Example: Unenrollment Response](#1872-example-unenrollment-response)
+- [19. Appendix B – Multi-Utility Interaction Patterns](#19-appendix-b--multi-utility-interaction-patterns)
+- [20. Appendix C – Error Handling Patterns](#20-appendix-c--error-handling-patterns)
+
+Table of contents and section auto-numbering was done using [Markdown-All-In-One](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) vscode extension. Specifically `Markdown All in One: Create Table of Contents` and `Markdown All in One: Add/Update section numbers` commands accessible via vs code command pallete.
+
+Example jsons were imported directly from source of truth elsewhere in this repo inline by inserting the pattern below within all json expand blocks, and running this [script](/scripts/embed_example_json.py), e.g. `python3 scripts/embed_example_json.py path_to_markdown_file.md`.
+
+```
+<details><summary><a href="/path_to_file_from_root">txt_with_json_keyword</a></summary>
+
+</details>
+``` 
 
 ---
 
@@ -51,7 +117,7 @@ Here is the **terminology section regenerated cleanly as a table**, with no spec
 
 ---
 
-## Terminology
+## 4. Terminology
 
 | Term                                   | Definition                                                                                                            |
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -93,7 +159,7 @@ Here is the **terminology section regenerated cleanly as a table**, with no spec
 
 ---
 
-## 4. Implementation Principles
+## 5. Implementation Principles
 
 1. All onboarding channels must route to the same Program Owner backend.
 2. Onboarding follows a consistent order:
@@ -105,7 +171,7 @@ Here is the **terminology section regenerated cleanly as a table**, with no spec
 
 ---
 
-## 5. System Architecture Overview
+## 6. System Architecture Overview
 
 A typical implementation includes:
 
@@ -143,7 +209,7 @@ graph TD
 
 ---
 
-## 6. Identity and Authentication Implementation
+## 7. Identity and Authentication Implementation
 
 * Use a central OIDC Identity Provider.
 * Support multiple login types: national ID, utility ID, meter-based ID.
@@ -154,15 +220,15 @@ graph TD
 
 ---
 
-## 7. Asset Mapping and Data Integration
+## 8. Asset Mapping and Data Integration
 
-### Meter Discovery
+### 8.1. Meter Discovery
 
 Utility Portal: call CIS/MDM.
 EA Portal: call a protected utility Meter API with user token.
 SDK: rely on BPP’s Beckn init to resolve meter associations.
 
-### DER Discovery
+### 8.2. DER Discovery
 
 Sources include:
 
@@ -171,7 +237,7 @@ Sources include:
 * Inverter, battery, or smart home systems
 * User declarations (with certification uploads)
 
-### Data Integration
+### 8.3. Data Integration
 
 Typical integrations:
 
@@ -182,9 +248,9 @@ Typical integrations:
 
 ---
 
-## 8. Beckn-Based Enrollment Implementation
+## 9. Beckn-Based Enrollment Implementation
 
-### 8.1 Standard Beckn Flow
+### 9.1. 8.1 Standard Beckn Flow
 
 1. search
 2. on_search
@@ -195,7 +261,7 @@ Typical integrations:
 7. confirm
 8. on_confirm
 
-### 8.2 Enrollment Flow Diagram
+### 9.2. 8.2 Enrollment Flow Diagram
 
 ```mermaid
 sequenceDiagram
@@ -224,23 +290,23 @@ sequenceDiagram
 
 ---
 
-## 9. Channel-Specific Implementation Guides
+## 10. Channel-Specific Implementation Guides
 
-### 9.1 Utility Portal
+### 10.1. 9.1 Utility Portal
 
 * Handles authentication and orchestrates meter/DER discovery.
 * Responsible for direct integration with utility’s CIS, MDM, DER registry.
 * Must call BPP endpoints exactly as specified by Beckn.
 * Must display eligibility criteria dynamically based on BPP responses.
 
-### 9.2 Enrolment Agency Portal
+### 10.2. 9.2 Enrolment Agency Portal
 
 * Redirects user to IdP; does not authenticate users directly.
 * Calls BPP endpoints with EA identifier.
 * Must log all actions for audit.
 * Supports assisted onboarding for complex personas.
 
-### 9.3 Network Participant App using SDK
+### 10.3. 9.3 Network Participant App using SDK
 
 SDK responsibilities:
 
@@ -258,43 +324,43 @@ App responsibilities:
 
 ---
 
-## 10. Persona-Specific Implementation Guidance
+## 11. Persona-Specific Implementation Guidance
 
-### Consumer – Single Household, Single Meter
+### 11.1. Consumer – Single Household, Single Meter
 
 Straightforward auto-discovery; minimal input required.
 
-### Consumer – Multiple Households, Multiple Meters
+### 11.2. Consumer – Multiple Households, Multiple Meters
 
 Portal must display meter–program matrix.
 
-### Consumer – BTM Appliances via Home Meter
+### 11.3. Consumer – BTM Appliances via Home Meter
 
 SDK initiated from EV or smart home app.
 
-### Consumer – BTM Appliances via Same Utility (e.g., neighbor’s meter)
+### 11.4. Consumer – BTM Appliances via Same Utility (e.g., neighbor’s meter)
 
 Requires two-party consent.
 
-### Consumer/Prosumer – BTM Appliances via Different Utility
+### 11.5. Consumer/Prosumer – BTM Appliances via Different Utility
 
 Requires cross-utility identity linking and consent.
 
-### Prosumer – Single Rooftop Solar Meter
+### 11.6. Prosumer – Single Rooftop Solar Meter
 
 Requires DER certification.
 
-### Prosumer – Multiple Meters with Solar
+### 11.7. Prosumer – Multiple Meters with Solar
 
 Multiple program enrollments required.
 
-### Prosumer – EV with V2G
+### 11.8. Prosumer – EV with V2G
 
 Requires control rights, telemetry consent, and device capability checks.
 
 ---
 
-## 11. Governance and Operational Guidance
+## 12. Governance and Operational Guidance
 
 Utilities must:
 
@@ -317,7 +383,7 @@ Network participants must:
 
 ---
 
-## 12. Data Models and Storage Considerations
+## 13. Data Models and Storage Considerations
 
 Recommended tables:
 
@@ -333,7 +399,7 @@ Use encryption, tokenization, and strict retention schedules.
 
 ---
 
-## 13. Security and Privacy Implementation
+## 14. Security and Privacy Implementation
 
 * Enforce mutual TLS for all service-to-service calls.
 * Sign Beckn messages.
@@ -343,7 +409,7 @@ Use encryption, tokenization, and strict retention schedules.
 
 ---
 
-## 14. Testing, Certification and Compliance
+## 15. Testing, Certification and Compliance
 
 Test categories include:
 
@@ -358,7 +424,7 @@ Compliance levels range from basic consumer onboarding to V2G-capable advanced p
 
 ---
 
-## 15. Deployment Topology Recommendations
+## 16. Deployment Topology Recommendations
 
 Recommend:
 
@@ -407,7 +473,7 @@ graph TD
 
 ---
 
-## 16. Developer Tooling and SDK Recommendations
+## 17. Developer Tooling and SDK Recommendations
 
 * SDK available for JavaScript/TypeScript, Kotlin/Java, Swift, Flutter.
 * Include UI modules for consent screens.
@@ -416,13 +482,13 @@ graph TD
 
 ---
 
-## 17. Appendix A – Sample Payloads
+## 18. Appendix A – Sample Payloads
 
-### 17.1 Init Request
+### 18.1. 17.1 Init Request
 
 The init request includes Verifiable Credentials (VCs) provided by the calling entity (Portal/BAP) that prove meter ownership, program eligibility, and DER certifications. The BPP verifies these credentials and checks for conflicts with existing enrollments.
 
-#### Example: Simple Consumer with Single Meter
+#### 18.1.1. Example: Simple Consumer with Single Meter
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/init-request-simple-consumer.json">Example json :rocket:</a></summary>
@@ -521,7 +587,7 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
 - `fulfillment.fulfillmentAttributes.existingEnrollments[]`: Array of existing enrollment credentials for conflict checking
 - BPP verifies these credentials and checks for conflicts
 
-#### Example: Prosumer with Solar and Battery
+#### 18.1.2. Example: Prosumer with Solar and Battery
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/init-request-prosumer-solar-battery.json">Example json :rocket:</a></summary>
@@ -629,11 +695,11 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
 ```
 </details>
 
-### 17.2 On_Init Response
+### 18.2. 17.2 On_Init Response
 
 The BPP verifies the provided credentials and checks for conflicts with existing enrollments. It returns either a rejection (with error) or proceeds to confirm.
 
-#### Example: Successful Verification, No Conflicts
+#### 18.2.1. Example: Successful Verification, No Conflicts
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/on-init-response-success.json">Example json :rocket:</a></summary>
@@ -721,7 +787,7 @@ The BPP verifies the provided credentials and checks for conflicts with existing
 ```
 </details>
 
-#### Example: Enrollment Conflict Detected
+#### 18.2.2. Example: Enrollment Conflict Detected
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/on-init-response-conflict.json">Example json :rocket:</a></summary>
@@ -802,11 +868,11 @@ The BPP verifies the provided credentials and checks for conflicts with existing
 ```
 </details>
 
-### 17.3 Confirm Request
+### 18.3. 17.3 Confirm Request
 
 The confirm request includes the desired enrollment start and end dates, along with any required consents.
 
-#### Example: Confirm with Enrollment Dates
+#### 18.3.1. Example: Confirm with Enrollment Dates
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/confirm-request.json">Example json :rocket:</a></summary>
@@ -869,11 +935,11 @@ The confirm request includes the desired enrollment start and end dates, along w
 ```
 </details>
 
-### 17.4 On_Confirm Response
+### 18.4. 17.4 On_Confirm Response
 
 The BPP returns a signed enrollment credential with start and end dates, and logs the enrollment.
 
-#### Example: Successful Enrollment with Credential
+#### 18.4.1. Example: Successful Enrollment with Credential
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/on-confirm-response-success.json">Example json :rocket:</a></summary>
@@ -966,9 +1032,9 @@ The BPP returns a signed enrollment credential with start and end dates, and log
 - `orderAttributes.loggedAt`: Timestamp when enrollment was logged
 - `orderAttributes.logReference`: Reference to enrollment log entry
 
-### 17.5 Error Response Example
+### 18.5. 17.5 Error Response Example
 
-#### Example: Credential Verification Failed
+#### 18.5.1. Example: Credential Verification Failed
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/on-init-response-error.json">Example json :rocket:</a></summary>
@@ -1013,11 +1079,11 @@ The BPP returns a signed enrollment credential with start and end dates, and log
 
 **Note**: For vocabulary definitions of new terms and slotted attributes, see `outputs_onboarding_guide/Vocabulary_Definitions.md`.
 
-### 17.6 Consent Revocation
+### 18.6. 17.6 Consent Revocation
 
 Users can revoke consent at any time after enrollment. The revocation uses the Beckn `update` action and updates the W3C VC status list to mark the consent credential as revoked.
 
-#### Example: Consent Revocation Request
+#### 18.6.1. Example: Consent Revocation Request
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/update-request-consent-revocation.json">Example json :rocket:</a></summary>
@@ -1075,7 +1141,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
 - `orderAttributes.consentRevocation.consentType`: Type of consent being revoked
 - `orderAttributes.consentRevocation.reason`: Reason for revocation
 
-#### Example: Consent Revocation Response
+#### 18.6.2. Example: Consent Revocation Response
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/on-update-response-consent-revocation.json">Example json :rocket:</a></summary>
@@ -1137,11 +1203,11 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
 - `orderAttributes.consentRevocation.statusListIndex`: Index in the status list
 - Verifiers check this status list to verify if consent is still valid
 
-### 17.7 Unenrollment
+### 18.7. 17.7 Unenrollment
 
 Users can unenroll from a program at any time. Unenrollment revokes the enrollment credential and optionally all associated consent credentials.
 
-#### Example: Unenrollment Request
+#### 18.7.1. Example: Unenrollment Request
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/update-request-unenrollment.json">Example json :rocket:</a></summary>
@@ -1198,7 +1264,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
 - `orderAttributes.unenrollment.revokeAllConsents`: Whether to revoke all associated consents
 - `orderAttributes.unenrollment.effectiveDate`: When the unenrollment becomes effective
 
-#### Example: Unenrollment Response
+#### 18.7.2. Example: Unenrollment Response
 
 <details>
 <summary><a href="../../../../examples/v2/enrollment/on-update-response-unenrollment.json">Example json :rocket:</a></summary>
@@ -1300,7 +1366,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
 
 ---
 
-## 18. Appendix B – Multi-Utility Interaction Patterns
+## 19. Appendix B – Multi-Utility Interaction Patterns
 
 ```mermaid
 sequenceDiagram
@@ -1326,7 +1392,7 @@ sequenceDiagram
 
 ---
 
-## 19. Appendix C – Error Handling Patterns
+## 20. Appendix C – Error Handling Patterns
 
 Examples:
 
