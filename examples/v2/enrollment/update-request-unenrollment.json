@@ -1,0 +1,41 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "update",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-11-20T15:00:00Z",
+    "message_id": "msg-update-unenroll-001",
+    "transaction_id": "txn-unenroll-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "updateType": "UNENROLLMENT",
+        "unenrollment": {
+          "enrollmentId": "enrollment-consumer-001",
+          "reason": "USER_REQUESTED",
+          "effectiveDate": "2024-11-20T15:00:00Z",
+          "revokeAllConsents": true
+        }
+      }
+    }
+  }
+}

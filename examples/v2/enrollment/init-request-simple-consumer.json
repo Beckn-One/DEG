@@ -1,0 +1,84 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:00Z",
+    "message_id": "msg-init-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001",
+        "beckn:descriptor": {
+          "schema:name": "Demand Flexibility Program"
+        }
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345",
+            "beckn:person": {
+              "schema:name": "Rajesh Kumar",
+              "schema:email": "rajesh.kumar@example.com"
+            }
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001",
+                "beckn:utilityId": "utility-example-001",
+                "beckn:utilityCustomerId": "CUST-123456"
+              }
+            ],
+            "ders": []
+          },
+          "beckn:fulfillmentAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+            "@type": "EnergyEnrollment",
+            "credentials": [
+              {
+                "credentialId": "vc-meter-ownership-001",
+                "type": "MeterOwnershipCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiTWV0ZXJPd25lcnNoaXBDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsIm1ldGVySWQiOiJ1bWlkLTAwMSIsInV0aWxpdHlJZCI6InV0aWxpdHktZXhhbXBsZS0wMDEiLCJvd25lcnNoaXBTdGF0dXMiOiJPV05FUiIsInZhbGlkRnJvbSI6IjIwMjQtMDEtMDFUMDA6MDA6MDBaIiwidmFsaWRVbnRpbCI6IjIwMjUtMTItMzFUMjM6NTk6NTlaIn19LCJpc3MiOiJkaWQ6ZXhhbXBsZTp1dGlsaXR5LWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
+                "verificationUrl": "https://utility-example-001.com/verify/vc-meter-ownership-001"
+              },
+              {
+                "credentialId": "vc-program-eligibility-001",
+                "type": "ProgramEligibilityCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVsaWdpYmlsaXR5Q3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpleGFtcGxlOnVzZXItMTIzNDUiLCJwcm9ncmFtSWQiOiJwcm9ncmFtLWZsZXgtZGVtYW5kLXJlc3BvbnNlLTAwMSIsImVsaWdpYmlsaXR5U3RhdHVzIjoiRUxJR0lCTEUiLCJjcml0ZXJpYU1ldCI6WyJBQ0NPVU5UX1NUQU5ESU5HIiwiR0VPR1JBUEhJQ19FTElHSUJJTElUWSIsIk1FVEVSX1RZUEUiXX19LCJpc3MiOiJkaWQ6ZXhhbXBsZTpwcm9ncmFtLWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
+                "verificationUrl": "https://vpp-program-owner.example.com/verify/vc-program-eligibility-001"
+              }
+            ],
+            "existingEnrollments": [
+              {
+                "credentialId": "vc:enrollment:existing-001",
+                "type": "ProgramEnrollmentCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpleGFtcGxlOnVzZXItMTIzNDUiLCJlbnJvbGxtZW50SWQiOiJlbnJvbGxtZW50LWV4aXN0aW5nLTAwMSIsInByb2dyYW1JZCI6InByb2dyYW0tZmxleC1vdGhlci0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDIiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0wOS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0wOS0wMVQwMDowMDowMFoifX19.signature"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

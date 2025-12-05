@@ -1,0 +1,71 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-conflict-001",
+    "transaction_id": "txn-onboard-conflict-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-conflict-001",
+      "beckn:status": "REJECTED",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-conflict-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:state": {
+            "beckn:descriptor": {
+              "schema:name": "REJECTED"
+            }
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "credentialVerification": {
+          "status": "VERIFIED"
+        },
+        "conflictCheck": {
+          "hasConflict": true,
+          "conflictingEnrollments": [
+            {
+              "enrollmentId": "enrollment-existing-001",
+              "programId": "program-flex-other-001",
+              "conflictReason": "Meter umid-001 is already enrolled in program-flex-other-001 from 2024-09-01 to 2025-09-01",
+              "conflictType": "METER_ALREADY_ENROLLED"
+            }
+          ],
+          "checkedAt": "2024-10-15T10:30:05Z"
+        }
+      },
+      "error": {
+        "type": "ENROLLMENT_ERROR",
+        "code": "ENROLLMENT_CONFLICT",
+        "message": "Enrollment conflicts with existing enrollment. Meter umid-001 is already enrolled in another program.",
+        "path": "message.order.orderAttributes.conflictCheck",
+        "details": {
+          "conflictingEnrollmentId": "enrollment-existing-001",
+          "conflictEndDate": "2025-09-01T00:00:00Z"
+        }
+      }
+    }
+  }
+}

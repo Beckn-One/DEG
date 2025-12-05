@@ -1,0 +1,78 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:status": "PENDING",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:state": {
+            "beckn:descriptor": {
+              "schema:name": "PENDING_CONFIRM"
+            }
+          },
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345"
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001",
+                "beckn:credentialVerified": true
+              }
+            ],
+            "ders": []
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "credentialVerification": {
+          "status": "VERIFIED",
+          "verifiedCredentials": [
+            {
+              "credentialId": "vc-meter-ownership-001",
+              "status": "VERIFIED",
+              "verifiedAt": "2024-10-15T10:30:05Z"
+            },
+            {
+              "credentialId": "vc-program-eligibility-001",
+              "status": "VERIFIED",
+              "verifiedAt": "2024-10-15T10:30:05Z"
+            }
+          ]
+        },
+        "conflictCheck": {
+          "hasConflict": false,
+          "checkedAt": "2024-10-15T10:30:05Z",
+          "message": "No conflicts found with existing enrollments"
+        }
+      }
+    }
+  }
+}

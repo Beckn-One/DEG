@@ -1,0 +1,53 @@
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:35:00Z",
+    "message_id": "msg-confirm-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345"
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001"
+              }
+            ],
+            "ders": []
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z"
+      }
+    }
+  }
+}

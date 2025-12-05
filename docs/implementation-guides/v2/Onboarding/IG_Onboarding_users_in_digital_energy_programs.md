@@ -418,30 +418,885 @@ graph TD
 
 ## 17. Appendix A – Sample Payloads
 
-Example init request (shortened):
+### 17.1 Init Request
+
+The init request includes Verifiable Credentials (VCs) provided by the calling entity (Portal/BAP) that prove meter ownership, program eligibility, and DER certifications. The BPP verifies these credentials and checks for conflicts with existing enrollments.
+
+#### Example: Simple Consumer with Single Meter
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/init-request-simple-consumer.json">Example json :rocket:</a></summary>
 
 ```json
 {
   "context": {
-    "domain": "energy.onboarding",
+    "version": "2.0.0",
     "action": "init",
-    "transaction_id": "txn-123"
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:00Z",
+    "message_id": "msg-init-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
   },
   "message": {
     "order": {
-      "provider": { "id": "program-owner.example" },
-      "items": [{ "id": "program-p2p-001" }],
-      "fulfillments": [{
-        "customer": { "id": "did:example:user-123" },
-        "instrument": {
-          "meters": ["umid-001"],
-          "ders": ["der-ev-111"]
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001",
+        "beckn:descriptor": {
+          "schema:name": "Demand Flexibility Program"
         }
-      }]
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345",
+            "beckn:person": {
+              "schema:name": "Rajesh Kumar",
+              "schema:email": "rajesh.kumar@example.com"
+            }
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001",
+                "beckn:utilityId": "utility-example-001",
+                "beckn:utilityCustomerId": "CUST-123456"
+              }
+            ],
+            "ders": []
+          },
+          "beckn:fulfillmentAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+            "@type": "EnergyEnrollment",
+            "credentials": [
+              {
+                "credentialId": "vc-meter-ownership-001",
+                "type": "MeterOwnershipCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiTWV0ZXJPd25lcnNoaXBDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsIm1ldGVySWQiOiJ1bWlkLTAwMSIsInV0aWxpdHlJZCI6InV0aWxpdHktZXhhbXBsZS0wMDEiLCJvd25lcnNoaXBTdGF0dXMiOiJPV05FUiIsInZhbGlkRnJvbSI6IjIwMjQtMDEtMDFUMDA6MDA6MDBaIiwidmFsaWRVbnRpbCI6IjIwMjUtMTItMzFUMjM6NTk6NTlaIn19LCJpc3MiOiJkaWQ6ZXhhbXBsZTp1dGlsaXR5LWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
+                "verificationUrl": "https://utility-example-001.com/verify/vc-meter-ownership-001"
+              },
+              {
+                "credentialId": "vc-program-eligibility-001",
+                "type": "ProgramEligibilityCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVsaWdpYmlsaXR5Q3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpleGFtcGxlOnVzZXItMTIzNDUiLCJwcm9ncmFtSWQiOiJwcm9ncmFtLWZsZXgtZGVtYW5kLXJlc3BvbnNlLTAwMSIsImVsaWdpYmlsaXR5U3RhdHVzIjoiRUxJR0lCTEUiLCJjcml0ZXJpYU1ldCI6WyJBQ0NPVU5UX1NUQU5ESU5HIiwiR0VPR1JBUEhJQ19FTElHSUJJTElUWSIsIk1FVEVSX1RZUEUiXX19LCJpc3MiOiJkaWQ6ZXhhbXBsZTpwcm9ncmFtLWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
+                "verificationUrl": "https://vpp-program-owner.example.com/verify/vc-program-eligibility-001"
+              }
+            ],
+            "existingEnrollments": [
+              {
+                "credentialId": "vc:enrollment:existing-001",
+                "type": "ProgramEnrollmentCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpleGFtcGxlOnVzZXItMTIzNDUiLCJlbnJvbGxtZW50SWQiOiJlbnJvbGxtZW50LWV4aXN0aW5nLTAwMSIsInByb2dyYW1JZCI6InByb2dyYW0tZmxleC1vdGhlci0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDIiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0wOS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0wOS0wMVQwMDowMDowMFoifX19.signature"
+              }
+            ]
+          }
+        }
+      ]
     }
   }
 }
+
 ```
+</details>
+
+**Key Fields**:
+- `fulfillment.fulfillmentAttributes.credentials[]`: Array of VCs proving meter ownership, program eligibility, etc.
+- `fulfillment.fulfillmentAttributes.existingEnrollments[]`: Array of existing enrollment credentials for conflict checking
+- BPP verifies these credentials and checks for conflicts
+
+#### Example: Prosumer with Solar and Battery
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/init-request-prosumer-solar-battery.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T11:00:00Z",
+    "message_id": "msg-init-prosumer-001",
+    "transaction_id": "txn-onboard-prosumer-001",
+    "bap_id": "ea-portal.example.com",
+    "bap_uri": "https://ea-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-prosumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-p2p-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-vpp-p2p-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-prosumer-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:customer": {
+            "beckn:id": "did:example:prosumer-789"
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-002",
+                "beckn:utilityId": "utility-example-001"
+              }
+            ],
+            "ders": [
+              {
+                "beckn:id": "der-solar-001",
+                "beckn:type": "SOLAR_PV",
+                "beckn:capacity": {
+                  "value": 10.0,
+                  "unit": "kW"
+                }
+              },
+              {
+                "beckn:id": "der-battery-001",
+                "beckn:type": "BATTERY_STORAGE",
+                "beckn:capacity": {
+                  "value": 15.0,
+                  "unit": "kWh"
+                }
+              }
+            ]
+          },
+          "beckn:fulfillmentAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+            "@type": "EnergyEnrollment",
+            "credentials": [
+              {
+                "credentialId": "vc-meter-ownership-002",
+                "type": "MeterOwnershipCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+              },
+              {
+                "credentialId": "vc-program-eligibility-002",
+                "type": "ProgramEligibilityCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+              },
+              {
+                "credentialId": "vc-der-cert-solar-001",
+                "type": "DERCertificationCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "derId": "der-solar-001"
+              },
+              {
+                "credentialId": "vc-der-cert-battery-001",
+                "type": "DERCertificationCredential",
+                "format": "VC-JWT",
+                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "derId": "der-battery-001"
+              }
+            ],
+            "existingEnrollments": []
+          }
+        }
+      ]
+    }
+  }
+}
+
+```
+</details>
+
+### 17.2 On_Init Response
+
+The BPP verifies the provided credentials and checks for conflicts with existing enrollments. It returns either a rejection (with error) or proceeds to confirm.
+
+#### Example: Successful Verification, No Conflicts
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/on-init-response-success.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:status": "PENDING",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:state": {
+            "beckn:descriptor": {
+              "schema:name": "PENDING_CONFIRM"
+            }
+          },
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345"
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001",
+                "beckn:credentialVerified": true
+              }
+            ],
+            "ders": []
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "credentialVerification": {
+          "status": "VERIFIED",
+          "verifiedCredentials": [
+            {
+              "credentialId": "vc-meter-ownership-001",
+              "status": "VERIFIED",
+              "verifiedAt": "2024-10-15T10:30:05Z"
+            },
+            {
+              "credentialId": "vc-program-eligibility-001",
+              "status": "VERIFIED",
+              "verifiedAt": "2024-10-15T10:30:05Z"
+            }
+          ]
+        },
+        "conflictCheck": {
+          "hasConflict": false,
+          "checkedAt": "2024-10-15T10:30:05Z",
+          "message": "No conflicts found with existing enrollments"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+#### Example: Enrollment Conflict Detected
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/on-init-response-conflict.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-conflict-001",
+    "transaction_id": "txn-onboard-conflict-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-conflict-001",
+      "beckn:status": "REJECTED",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-conflict-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:state": {
+            "beckn:descriptor": {
+              "schema:name": "REJECTED"
+            }
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "credentialVerification": {
+          "status": "VERIFIED"
+        },
+        "conflictCheck": {
+          "hasConflict": true,
+          "conflictingEnrollments": [
+            {
+              "enrollmentId": "enrollment-existing-001",
+              "programId": "program-flex-other-001",
+              "conflictReason": "Meter umid-001 is already enrolled in program-flex-other-001 from 2024-09-01 to 2025-09-01",
+              "conflictType": "METER_ALREADY_ENROLLED"
+            }
+          ],
+          "checkedAt": "2024-10-15T10:30:05Z"
+        }
+      },
+      "error": {
+        "type": "ENROLLMENT_ERROR",
+        "code": "ENROLLMENT_CONFLICT",
+        "message": "Enrollment conflicts with existing enrollment. Meter umid-001 is already enrolled in another program.",
+        "path": "message.order.orderAttributes.conflictCheck",
+        "details": {
+          "conflictingEnrollmentId": "enrollment-existing-001",
+          "conflictEndDate": "2025-09-01T00:00:00Z"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+### 17.3 Confirm Request
+
+The confirm request includes the desired enrollment start and end dates, along with any required consents.
+
+#### Example: Confirm with Enrollment Dates
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/confirm-request.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:35:00Z",
+    "message_id": "msg-confirm-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345"
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001"
+              }
+            ],
+            "ders": []
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z"
+      }
+    }
+  }
+}
+
+```
+</details>
+
+### 17.4 On_Confirm Response
+
+The BPP returns a signed enrollment credential with start and end dates, and logs the enrollment.
+
+#### Example: Successful Enrollment with Credential
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/on-confirm-response-success.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:35:05Z",
+    "message_id": "msg-on-confirm-consumer-001",
+    "transaction_id": "txn-onboard-consumer-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:status": "CONFIRMED",
+      "beckn:orderNumber": "ENR-2024-001234",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:state": {
+            "beckn:descriptor": {
+              "schema:name": "ENROLLED"
+            }
+          },
+          "beckn:customer": {
+            "beckn:id": "did:example:user-12345"
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001",
+                "beckn:enrollmentStatus": "ENROLLED"
+              }
+            ],
+            "ders": []
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "enrollmentId": "enrollment-consumer-001",
+        "status": "ACTIVE",
+        "programId": "program-flex-demand-response-001",
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z",
+        "enrolledAt": "2024-10-15T10:35:05Z",
+        "credential": {
+          "credentialId": "vc:enrollment:consumer-001",
+          "type": "ProgramEnrollmentCredential",
+          "format": "VC-JWT",
+          "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:consumer-001",
+          "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:consumer-001",
+          "issuedAt": "2024-10-15T10:35:05Z",
+          "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVucm9sbG1lbnRDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsImVucm9sbG1lbnRJZCI6ImVucm9sbG1lbnQtY29uc3VtZXItMDAxIiwicHJvZ3JhbUlkIjoicHJvZ3JhbS1mbGV4LWRlbWFuZC1yZXNwb25zZS0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDEiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0xMS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0xMC0zMVQyMzo1OTo1OVoifSwiaXNzdWFuY2VEYXRlIjoiMjAyNC0xMC0xNVQxMDozNTowNVoiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMTAtMzFUMjM6NTk6NTlaIn0sImlzcyI6ImRpZDpleGFtcGxlOnZwcC1wcm9ncmFtLW93bmVyIiwiaWF0IjoxNzI5MDk3NzA1fQ.signature"
+        },
+        "loggedAt": "2024-10-15T10:35:05Z",
+        "logReference": "log-enrollment-consumer-001"
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.startDate`: When enrollment becomes active
+- `orderAttributes.endDate`: When enrollment expires
+- `orderAttributes.credential`: Signed Verifiable Credential proving enrollment
+- `orderAttributes.loggedAt`: Timestamp when enrollment was logged
+- `orderAttributes.logReference`: Reference to enrollment log entry
+
+### 17.5 Error Response Example
+
+#### Example: Credential Verification Failed
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/on-init-response-error.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-error-001",
+    "transaction_id": "txn-onboard-error-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-error-001",
+      "beckn:status": "REJECTED",
+      "error": {
+        "type": "CREDENTIAL_ERROR",
+        "code": "CREDENTIAL_VERIFICATION_FAILED",
+        "message": "Meter ownership credential could not be verified",
+        "path": "message.order.fulfillments[0].fulfillmentAttributes.credentials[0]",
+        "details": {
+          "credentialId": "vc-meter-ownership-001",
+          "reason": "Invalid signature or expired credential"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Note**: For vocabulary definitions of new terms and slotted attributes, see `outputs_onboarding_guide/Vocabulary_Definitions.md`.
+
+### 17.6 Consent Revocation
+
+Users can revoke consent at any time after enrollment. The revocation uses the Beckn `update` action and updates the W3C VC status list to mark the consent credential as revoked.
+
+#### Example: Consent Revocation Request
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/update-request-consent-revocation.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "update",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-11-20T14:30:00Z",
+    "message_id": "msg-update-consent-revoke-001",
+    "transaction_id": "txn-revoke-consent-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "updateType": "CONSENT_REVOCATION",
+        "consentRevocation": {
+          "consentCredentialId": "https://vpp-program-owner.example.com/credentials/vc:consent:consumer-001",
+          "consentType": "DATA_COLLECTION",
+          "reason": "USER_REQUESTED",
+          "revokedAt": "2024-11-20T14:30:00Z",
+          "effectiveDate": "2024-11-20T14:30:00Z"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.updateType`: Set to `CONSENT_REVOCATION`
+- `orderAttributes.consentRevocation.consentCredentialId`: ID of the consent VC to revoke
+- `orderAttributes.consentRevocation.consentType`: Type of consent being revoked
+- `orderAttributes.consentRevocation.reason`: Reason for revocation
+
+#### Example: Consent Revocation Response
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/on-update-response-consent-revocation.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_update",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-11-20T14:30:05Z",
+    "message_id": "msg-on-update-consent-revoke-001",
+    "transaction_id": "txn-revoke-consent-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:status": "ACTIVE",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "enrollmentId": "enrollment-consumer-001",
+        "status": "ACTIVE",
+        "updateType": "CONSENT_REVOCATION",
+        "consentRevocation": {
+          "consentCredentialId": "https://vpp-program-owner.example.com/credentials/vc:consent:consumer-001",
+          "status": "REVOKED",
+          "revokedAt": "2024-11-20T14:30:05Z",
+          "statusListUrl": "https://vpp-program-owner.example.com/status/consent-list",
+          "statusListIndex": "94567",
+          "message": "Consent has been revoked and added to revocation status list. Future verifications will fail."
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.consentRevocation.status`: `REVOKED` when processed
+- `orderAttributes.consentRevocation.statusListUrl`: URL of the W3C VC status list
+- `orderAttributes.consentRevocation.statusListIndex`: Index in the status list
+- Verifiers check this status list to verify if consent is still valid
+
+### 17.7 Unenrollment
+
+Users can unenroll from a program at any time. Unenrollment revokes the enrollment credential and optionally all associated consent credentials.
+
+#### Example: Unenrollment Request
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/update-request-unenrollment.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "update",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-11-20T15:00:00Z",
+    "message_id": "msg-update-unenroll-001",
+    "transaction_id": "txn-unenroll-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "updateType": "UNENROLLMENT",
+        "unenrollment": {
+          "enrollmentId": "enrollment-consumer-001",
+          "reason": "USER_REQUESTED",
+          "effectiveDate": "2024-11-20T15:00:00Z",
+          "revokeAllConsents": true
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.updateType`: Set to `UNENROLLMENT`
+- `orderAttributes.unenrollment.enrollmentId`: ID of the enrollment to cancel
+- `orderAttributes.unenrollment.revokeAllConsents`: Whether to revoke all associated consents
+- `orderAttributes.unenrollment.effectiveDate`: When the unenrollment becomes effective
+
+#### Example: Unenrollment Response
+
+<details>
+<summary><a href="../../../../examples/v2/enrollment/on-update-response-unenrollment.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_update",
+    "domain": "energy.enrollment",
+    "timestamp": "2024-11-20T15:00:05Z",
+    "message_id": "msg-on-update-unenroll-001",
+    "transaction_id": "txn-unenroll-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-consumer-001",
+      "beckn:status": "CANCELLED",
+      "beckn:provider": {
+        "beckn:id": "vpp-program-flex-001"
+      },
+      "beckn:items": [
+        {
+          "beckn:id": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillments": [
+        {
+          "beckn:id": "fulfillment-onboard-001",
+          "beckn:type": "PROGRAM_ENROLLMENT",
+          "beckn:state": {
+            "beckn:descriptor": {
+              "schema:name": "CANCELLED"
+            }
+          },
+          "beckn:instrument": {
+            "meters": [
+              {
+                "beckn:id": "umid-001",
+                "beckn:enrollmentStatus": "CANCELLED"
+              }
+            ]
+          }
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "enrollmentId": "enrollment-consumer-001",
+        "status": "CANCELLED",
+        "updateType": "UNENROLLMENT",
+        "unenrollment": {
+          "enrollmentId": "enrollment-consumer-001",
+          "status": "CANCELLED",
+          "cancelledAt": "2024-11-20T15:00:05Z",
+          "enrollmentCredentialStatus": {
+            "statusListUrl": "https://vpp-program-owner.example.com/status/enrollment-list",
+            "statusListIndex": "12345",
+            "revoked": true
+          },
+          "consentsRevoked": [
+            {
+              "consentCredentialId": "https://vpp-program-owner.example.com/credentials/vc:consent:consumer-001",
+              "statusListUrl": "https://vpp-program-owner.example.com/status/consent-list",
+              "statusListIndex": "94567",
+              "revoked": true
+            }
+          ],
+          "message": "Enrollment and all associated consents have been revoked. Enrollment credential and consent credentials have been added to revocation status lists."
+        },
+        "loggedAt": "2024-11-20T15:00:05Z",
+        "logReference": "log-unenrollment-consumer-001"
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `order.status`: Set to `CANCELLED`
+- `orderAttributes.status`: Set to `CANCELLED`
+- `orderAttributes.unenrollment.enrollmentCredentialStatus`: Status list details for enrollment VC revocation
+- `orderAttributes.unenrollment.consentsRevoked[]`: Array of revoked consent credentials with their status list details
+- All credentials are added to W3C VC status lists for verification
+
+**Revocation Mechanism**:
+- BPP updates W3C VC status lists (BitstringStatusList) to mark credentials as revoked
+- Verifiers check status lists before accepting credentials
+- Status lists use bitstrings for efficient and privacy-preserving revocation checks
 
 ---
 
