@@ -34,32 +34,22 @@
       "beckn:provider": {
         "beckn:id": "provider-solar-farm-001"
       },
-      "beckn:quote": {
-        "@type": "beckn:Quotation",
-        "beckn:price": {
-          "@type": "schema:PriceSpecification",
-          "schema:price": 1.5,
-          "schema:priceCurrency": "USD",
-          "schema:unitText": "kWh"
-        },
-        "beckn:breakup": [
+      "beckn:orderValue": {
+        "@type": "schema:PriceSpecification",
+        "schema:price": 4.0,
+        "schema:priceCurrency": "USD",
+        "components": [
           {
-            "@type": "beckn:Breakup",
-            "beckn:title": "Energy Cost (10 kWh @ $0.15/kWh)",
-            "beckn:price": {
-              "@type": "schema:PriceSpecification",
-              "schema:price": 1.5,
-              "schema:priceCurrency": "USD"
-            }
+            "type": "UNIT",
+            "value": 1.5,
+            "currency": "USD",
+            "description": "Energy Cost (10 kWh @ $0.15/kWh)"
           },
           {
-            "@type": "beckn:Breakup",
-            "beckn:title": "Wheeling Charges",
-            "beckn:price": {
-              "@type": "schema:PriceSpecification",
-              "schema:price": 2.5,
-              "schema:priceCurrency": "USD"
-            }
+            "type": "FEE",
+            "value": 2.5,
+            "currency": "USD",
+            "description": "Wheeling Charges"
           }
         ]
       }

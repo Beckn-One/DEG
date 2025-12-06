@@ -44,6 +44,7 @@ Version 0.1 (Non-Normative)
   - [10.4. Confirm Flow](#104-confirm-flow)
     - [10.4.1. Cascaded Init Example (Utility Registration)](#1041-cascaded-init-example-utility-registration)
   - [10.5. Confirm Flow](#105-confirm-flow)
+    - [10.5.1. Cascaded Confirm Example (Utility Trade Logging)](#1051-cascaded-confirm-example-utility-trade-logging)
   - [10.6. Status Flow](#106-status-flow)
 - [11. Additional Resources](#11-additional-resources)
     - [11.0.1. **Integrating with your software**](#1101-integrating-with-your-software)
@@ -194,11 +195,12 @@ Request: [select-request.json](../../../../examples/v2/P2P_Trading/select-reques
 **3. Init** - Consumer provides meter IDs (`100200300` → `98765456`), time window, and payment details. BPP may cascade to Utility for load verification and wheeling charges.  
 Request: [init-request.json](../../../../examples/v2/P2P_Trading/init-request.json) | Response: [init-response.json](../../../../examples/v2/P2P_Trading/init-response.json)  
 Cascaded Flow: [cascaded-init-request.json](../../../../examples/v2/P2P_Trading/cascaded-init-request.json) | [cascaded-on-init-response.json](../../../../examples/v2/P2P_Trading/cascaded-on-init-response.json)  
-*Result: Order initialized, contract PENDING*
+*Result: Order initialized, contract PENDING. Utility BPP responds with wheeling charges in `orderValue.components` and remaining trading limits in `orderAttributes.remainingTradingLimit`.*
 
-**4. Confirm** - Consumer confirms order to activate contract.  
+**4. Confirm** - Consumer confirms order to activate contract. BPP may cascade to Utility to log the trade and deduct from trading limits.  
 Request: [confirm-request.json](../../../../examples/v2/P2P_Trading/confirm-request.json) | Response: [confirm-response.json](../../../../examples/v2/P2P_Trading/confirm-response.json)  
-*Result: Contract ACTIVE, settlement cycle `settle-2024-10-04-001` created*
+Cascaded Flow: [cascaded-confirm-request.json](../../../../examples/v2/P2P_Trading/cascaded-confirm-request.json) | [cascaded-on-confirm-response.json](../../../../examples/v2/P2P_Trading/cascaded-on-confirm-response.json)  
+*Result: Contract ACTIVE, settlement cycle `settle-2024-10-04-001` created. Utility BPP logs trade and responds with updated remaining trading limits in `orderAttributes.remainingTradingLimit`.*
 
 **5. Status (In Progress)** - Consumer monitors delivery progress. BPP updates meter readings and telemetry every 15-30 minutes.  
 Request: [status-request.json](../../../../examples/v2/P2P_Trading/status-request.json) | Response: [status-response.json](../../../../examples/v2/P2P_Trading/status-response.json)  
@@ -791,32 +793,22 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "beckn:provider": {
         "beckn:id": "provider-solar-farm-001"
       },
-      "beckn:quote": {
-        "@type": "beckn:Quotation",
-        "beckn:price": {
-          "@type": "schema:PriceSpecification",
-          "schema:price": 1.5,
-          "schema:priceCurrency": "USD",
-          "schema:unitText": "kWh"
-        },
-        "beckn:breakup": [
+      "beckn:orderValue": {
+        "@type": "schema:PriceSpecification",
+        "schema:price": 4.0,
+        "schema:priceCurrency": "USD",
+        "components": [
           {
-            "@type": "beckn:Breakup",
-            "beckn:title": "Energy Cost (10 kWh @ $0.15/kWh)",
-            "beckn:price": {
-              "@type": "schema:PriceSpecification",
-              "schema:price": 1.5,
-              "schema:priceCurrency": "USD"
-            }
+            "type": "UNIT",
+            "value": 1.5,
+            "currency": "USD",
+            "description": "Energy Cost (10 kWh @ $0.15/kWh)"
           },
           {
-            "@type": "beckn:Breakup",
-            "beckn:title": "Wheeling Charges",
-            "beckn:price": {
-              "@type": "schema:PriceSpecification",
-              "schema:price": 2.5,
-              "schema:priceCurrency": "USD"
-            }
+            "type": "FEE",
+            "value": 2.5,
+            "currency": "USD",
+            "description": "Wheeling Charges"
           }
         ]
       }
@@ -1076,6 +1068,15 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 
 This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the Utility Company (Transmission BPP) to register the trade and calculate wheeling charges.
 
+**Request Flow**: P2P Trading BPP sends a cascaded `init` request to the Utility BPP with the order details (items, offers, fulfillments, payments).
+
+**Response Flow**: Utility BPP responds with `on_init` containing:
+- **Wheeling charges**: Provided in `orderValue` with breakdown in `components` array (type: `FEE`)
+- **Remaining trading limits**: Provided in `orderAttributes.remainingTradingLimit` including:
+  - `remainingQuantity`: Remaining tradable quantity in kWh
+  - `sanctionedLoad`: Breakdown of total, used, and remaining sanctioned load
+  - `validUntil`: Validity timestamp for the limit information
+
 <details>
 <summary><a href="../../../../examples/v2/P2P_Trading/cascaded-init-request.json">Cascaded Request Example</a></summary>
 
@@ -1092,55 +1093,43 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
     "bpp_id": "example-transmission-bpp.com",
     "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
     "ttl": "PT30S",
-    "domain": "energy-trade",
-    "location": {
-      "city": {
-        "code": "std:522",
-        "name": "Lucknow"
-      },
-      "country": {
-        "code": "IND",
-        "name": "India"
-      }
-    }
+    "domain": "energy-trade"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:provider": {
-        "@type": "beckn:Provider",
-        "beckn:id": "provider-uppcl-001",
-        "beckn:descriptor": {
-          "@type": "beckn:Descriptor",
-          "schema:name": "UPPCL"
+      "beckn:items": [
+        {
+          "beckn:id": "energy-resource-solar-001",
+          "quantity": {
+            "count": 10.0,
+            "unit": "kWh"
+          }
         }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-energy-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "provider-solar-farm-001"
       },
       "beckn:fulfillments": [
         {
           "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-utility-registration-001",
+          "beckn:id": "fulfillment-energy-001",
           "beckn:type": "ENERGY_DELIVERY",
-          "beckn:customer": {
-            "@type": "beckn:Customer",
-            "beckn:person": {
-              "@type": "schema:Person",
-              "schema:name": "Raj"
-            },
-            "beckn:contact": {
-              "@type": "schema:ContactPoint",
-              "schema:telephone": "+91-1276522222"
-            }
-          },
           "beckn:stops": [
             {
               "@type": "beckn:Stop",
-              "beckn:id": "stop-source-utility-001",
+              "beckn:id": "stop-start-001",
               "beckn:type": "START",
               "beckn:location": {
                 "@type": "beckn:Location",
-                "beckn:address": "92982739"
+                "beckn:address": "100200300"
               },
               "beckn:time": {
                 "@type": "beckn:Time",
@@ -1152,7 +1141,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
             },
             {
               "@type": "beckn:Stop",
-              "beckn:id": "stop-target-utility-001",
+              "beckn:id": "stop-end-001",
               "beckn:type": "END",
               "beckn:location": {
                 "@type": "beckn:Location",
@@ -1169,22 +1158,20 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
           ]
         }
       ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
-        "@type": "EnergyTradeContract",
-        "contractStatus": "PENDING",
-        "sourceMeterId": "92982739",
-        "targetMeterId": "98765456",
-        "contractedQuantity": 10.0,
-        "tradeStartTime": "2024-10-04T10:00:00Z",
-        "tradeEndTime": "2024-10-04T18:00:00Z",
-        "sourceType": "SOLAR"
-      },
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-energy-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
       "beckn:billing": {
         "@type": "beckn:Billing",
-        "beckn:name": "p2p-Trading-BPP",
-        "beckn:email": "p2tbpp@example.com",
-        "beckn:phone": "+91-1276522222"
+        "beckn:name": "Energy Consumer",
+        "beckn:email": "consumer@example.com",
+        "beckn:phone": "+1-555-0100"
       }
     }
   }
@@ -1226,68 +1213,83 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:provider": {
-        "@type": "beckn:Provider",
-        "beckn:id": "provider-uppcl-001",
-        "beckn:descriptor": {
-          "@type": "beckn:Descriptor",
-          "schema:name": "UPPCL"
+      "beckn:items": [
+        {
+          "beckn:id": "energy-resource-solar-001",
+          "quantity": {
+            "count": 10.0,
+            "unit": "kWh"
+          }
         }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-energy-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "provider-solar-farm-001"
       },
       "beckn:fulfillments": [
         {
           "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-utility-registration-001",
+          "beckn:id": "fulfillment-energy-001",
           "beckn:type": "ENERGY_DELIVERY",
-          "beckn:customer": {
-            "@type": "beckn:Customer",
-            "beckn:person": {
-              "@type": "schema:Person",
-              "schema:name": "Raj"
-            },
-            "beckn:contact": {
-              "@type": "schema:ContactPoint",
-              "schema:telephone": "+91-1276522222"
-            }
-          },
           "beckn:stops": [
             {
               "@type": "beckn:Stop",
-              "beckn:id": "stop-source-utility-001",
+              "beckn:id": "stop-start-001",
               "beckn:type": "START",
               "beckn:location": {
                 "@type": "beckn:Location",
-                "beckn:address": "92982739"
+                "beckn:address": "100200300"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
               }
             },
             {
               "@type": "beckn:Stop",
-              "beckn:id": "stop-target-utility-001",
+              "beckn:id": "stop-end-001",
               "beckn:type": "END",
               "beckn:location": {
                 "@type": "beckn:Location",
                 "beckn:address": "98765456"
+              },
+              "beckn:time": {
+                "@type": "beckn:Time",
+                "beckn:range": {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
               }
             }
           ]
         }
       ],
-      "beckn:quote": {
-        "@type": "beckn:Quotation",
-        "beckn:price": {
-          "@type": "schema:PriceSpecification",
-          "schema:price": 2.5,
-          "schema:priceCurrency": "INR"
-        },
-        "beckn:breakup": [
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-energy-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:orderValue": {
+        "@type": "schema:PriceSpecification",
+        "schema:price": 2.5,
+        "schema:priceCurrency": "INR",
+        "components": [
           {
-            "@type": "beckn:Breakup",
-            "beckn:title": "Wheeling Charge",
-            "beckn:price": {
-              "@type": "schema:PriceSpecification",
-              "schema:price": 2.5,
-              "schema:priceCurrency": "INR"
-            }
+            "type": "FEE",
+            "value": 2.5,
+            "currency": "INR",
+            "description": "Wheeling Charge"
           }
         ]
       },
@@ -1295,29 +1297,31 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
         "contractStatus": "PENDING",
-        "sourceMeterId": "92982739",
+        "sourceMeterId": "100200300",
         "targetMeterId": "98765456",
         "contractedQuantity": 10.0,
         "tradeStartTime": "2024-10-04T10:00:00Z",
         "tradeEndTime": "2024-10-04T18:00:00Z",
-        "sourceType": "SOLAR"
+        "sourceType": "SOLAR",
+        "remainingTradingLimit": {
+          "sourceMeterId": "100200300",
+          "remainingQuantity": 20.5,
+          "unit": "kWh",
+          "validUntil": "2024-10-04T23:59:59Z",
+          "sanctionedLoad": {
+            "total": 50.0,
+            "used": 29.5,
+            "remaining": 20.5,
+            "unit": "kWh"
+          }
+        }
       },
       "beckn:billing": {
         "@type": "beckn:Billing",
-        "beckn:name": "p2p-Trading-BPP",
-        "beckn:email": "p2ptbpp@example.com",
-        "beckn:phone": "+91-1276522222"
-      },
-      "beckn:cancellationTerms": [
-        {
-          "@type": "beckn:CancellationTerm",
-          "beckn:externalRef": {
-            "@type": "schema:MediaObject",
-            "schema:encodingFormat": "text/html",
-            "schema:contentUrl": "https://mvvnl.in/cancellation_terms.html"
-          }
-        }
-      ]
+        "beckn:name": "Energy Consumer",
+        "beckn:email": "consumer@example.com",
+        "beckn:phone": "+1-555-0100"
+      }
     }
   }
 }
@@ -1508,6 +1512,195 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 - Contract status changes from PENDING to ACTIVE
 - Settlement cycle is initialized
 - Order is now active and ready for fulfillment
+
+### 10.5.1. Cascaded Confirm Example (Utility Trade Logging)
+
+This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to the Utility Company (Transmission BPP) to log the trade and deduct from trading limits.
+
+**Request Flow**: P2P Trading BPP sends a cascaded `confirm` request to the Utility BPP with the order details to finalize the trade registration.
+
+**Response Flow**: Utility BPP responds with `on_confirm` containing:
+- **Contract activation**: Contract status set to `ACTIVE` in `orderAttributes.contractStatus`
+- **Settlement cycle**: Initialized settlement cycle in `orderAttributes.settlementCycles`
+- **Updated remaining trading limits**: Provided in `orderAttributes.remainingTradingLimit` with:
+  - `remainingQuantity`: Updated remaining tradable quantity (reduced by the contracted quantity)
+  - `sanctionedLoad`: Updated breakdown showing increased `used` and reduced `remaining` values after trade is logged
+  - `validUntil`: Validity timestamp for the limit information
+
+<details>
+<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-confirm-request.json">Cascaded Request Example</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "timestamp": "2024-10-04T10:25:00Z",
+    "message_id": "msg-cascaded-confirm-001",
+    "transaction_id": "txn-cascaded-energy-001",
+    "bap_id": "p2pTrading-bpp.com",
+    "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v2",
+    "bpp_id": "example-transmission-bpp.com",
+    "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-cascaded-utility-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-resource-solar-001",
+          "quantity": {
+            "count": 10.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-energy-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "provider-solar-farm-001"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-energy-001",
+          "beckn:type": "ENERGY_DELIVERY"
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-energy-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ]
+    }
+  }
+}
+
+
+```
+</details>
+
+<details>
+<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-on-confirm-response.json">Cascaded asynchronous Response Example: `on_confirm`</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "timestamp": "2024-10-04T10:25:05Z",
+    "message_id": "msg-cascaded-on-confirm-001",
+    "transaction_id": "txn-cascaded-energy-001",
+    "bap_id": "p2pTrading-bpp.com",
+    "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v2",
+    "bpp_id": "example-transmission-bpp.com",
+    "bpp_uri": "https://api.example-transmission-bpp.com/pilot/bpp/",
+    "ttl": "PT30S",
+    "domain": "energy-trade"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-cascaded-utility-001",
+      "beckn:items": [
+        {
+          "beckn:id": "energy-resource-solar-001",
+          "quantity": {
+            "count": 10.0,
+            "unit": "kWh"
+          }
+        }
+      ],
+      "beckn:offers": [
+        {
+          "beckn:id": "offer-energy-001"
+        }
+      ],
+      "beckn:provider": {
+        "beckn:id": "provider-solar-farm-001"
+      },
+      "beckn:fulfillments": [
+        {
+          "@type": "beckn:Fulfillment",
+          "beckn:id": "fulfillment-energy-001",
+          "beckn:type": "ENERGY_DELIVERY",
+          "beckn:state": {
+            "@type": "beckn:State",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "PENDING"
+            }
+          }
+        }
+      ],
+      "beckn:payments": [
+        {
+          "@type": "beckn:Payment",
+          "beckn:id": "payment-energy-001",
+          "beckn:type": "ON-FULFILLMENT",
+          "beckn:status": "NOT-PAID",
+          "beckn:collected_by": "BPP"
+        }
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
+        "@type": "EnergyTradeContract",
+        "contractStatus": "ACTIVE",
+        "sourceMeterId": "100200300",
+        "targetMeterId": "98765456",
+        "inverterId": "inv-12345",
+        "contractedQuantity": 10.0,
+        "tradeStartTime": "2024-10-04T10:00:00Z",
+        "tradeEndTime": "2024-10-04T18:00:00Z",
+        "sourceType": "SOLAR",
+        "certification": {
+          "status": "Carbon Offset Certified",
+          "certificates": [
+            "https://example.com/certs/solar-panel-cert.pdf"
+          ]
+        },
+        "settlementCycles": [
+          {
+            "cycleId": "settle-2024-10-04-001",
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-04T23:59:59Z",
+            "status": "PENDING",
+            "amount": 0.0,
+            "currency": "USD"
+          }
+        ],
+        "remainingTradingLimit": {
+          "sourceMeterId": "100200300",
+          "remainingQuantity": 10.5,
+          "unit": "kWh",
+          "validUntil": "2024-10-04T23:59:59Z",
+          "sanctionedLoad": {
+            "total": 50.0,
+            "used": 39.5,
+            "remaining": 10.5,
+            "unit": "kWh"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+```
+</details>
 
 ## 10.6. Status Flow
 

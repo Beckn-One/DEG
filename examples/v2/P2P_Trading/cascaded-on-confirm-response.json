@@ -1,9 +1,9 @@
 {
   "context": {
     "version": "2.0.0",
-    "action": "on_init",
-    "timestamp": "2024-10-04T10:20:05Z",
-    "message_id": "msg-cascaded-on-init-001",
+    "action": "on_confirm",
+    "timestamp": "2024-10-04T10:25:05Z",
+    "message_id": "msg-cascaded-on-confirm-001",
     "transaction_id": "txn-cascaded-energy-001",
     "bap_id": "p2pTrading-bpp.com",
     "bap_uri": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v2",
@@ -39,40 +39,13 @@
           "@type": "beckn:Fulfillment",
           "beckn:id": "fulfillment-energy-001",
           "beckn:type": "ENERGY_DELIVERY",
-          "beckn:stops": [
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-start-001",
-              "beckn:type": "START",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "100200300"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            },
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-end-001",
-              "beckn:type": "END",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "98765456"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
+          "beckn:state": {
+            "@type": "beckn:State",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "PENDING"
             }
-          ]
+          }
         }
       ],
       "beckn:payments": [
@@ -84,48 +57,47 @@
           "beckn:collected_by": "BPP"
         }
       ],
-      "beckn:orderValue": {
-        "@type": "schema:PriceSpecification",
-        "schema:price": 2.5,
-        "schema:priceCurrency": "INR",
-        "components": [
-          {
-            "type": "FEE",
-            "value": 2.5,
-            "currency": "INR",
-            "description": "Wheeling Charge"
-          }
-        ]
-      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
-        "contractStatus": "PENDING",
+        "contractStatus": "ACTIVE",
         "sourceMeterId": "100200300",
         "targetMeterId": "98765456",
+        "inverterId": "inv-12345",
         "contractedQuantity": 10.0,
         "tradeStartTime": "2024-10-04T10:00:00Z",
         "tradeEndTime": "2024-10-04T18:00:00Z",
         "sourceType": "SOLAR",
+        "certification": {
+          "status": "Carbon Offset Certified",
+          "certificates": [
+            "https://example.com/certs/solar-panel-cert.pdf"
+          ]
+        },
+        "settlementCycles": [
+          {
+            "cycleId": "settle-2024-10-04-001",
+            "startTime": "2024-10-04T00:00:00Z",
+            "endTime": "2024-10-04T23:59:59Z",
+            "status": "PENDING",
+            "amount": 0.0,
+            "currency": "USD"
+          }
+        ],
         "remainingTradingLimit": {
           "sourceMeterId": "100200300",
-          "remainingQuantity": 20.5,
+          "remainingQuantity": 10.5,
           "unit": "kWh",
           "validUntil": "2024-10-04T23:59:59Z",
           "sanctionedLoad": {
             "total": 50.0,
-            "used": 29.5,
-            "remaining": 20.5,
+            "used": 39.5,
+            "remaining": 10.5,
             "unit": "kWh"
           }
         }
-      },
-      "beckn:billing": {
-        "@type": "beckn:Billing",
-        "beckn:name": "Energy Consumer",
-        "beckn:email": "consumer@example.com",
-        "beckn:phone": "+1-555-0100"
       }
     }
   }
 }
+
