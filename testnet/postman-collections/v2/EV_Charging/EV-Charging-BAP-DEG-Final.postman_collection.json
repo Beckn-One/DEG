@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "a3e400b5-697c-49db-8e9e-239c54d6cc5d",
-		"name": "BAP-DEG:EV-Charging-Final",
+		"name": "EV-Charging:BAP-DEG",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20005936"
 	},

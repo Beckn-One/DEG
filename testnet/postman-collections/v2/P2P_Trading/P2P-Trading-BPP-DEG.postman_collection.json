@@ -1,7 +1,7 @@
 {
     "info": {
         "_postman_id": "bpp-deg-p2p-trading-collection",
-        "name": "BPP-DEG:P2P-Trading",
+        "name": "P2P-Trading:BPP-DEG",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "description": "Postman collection for BPP (Buyer Provider Platform) implementing P2P Energy Trading APIs based on Beckn Protocol v2"
     },
