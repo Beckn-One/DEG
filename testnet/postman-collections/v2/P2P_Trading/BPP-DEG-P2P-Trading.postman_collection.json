@@ -42,7 +42,7 @@
             "name": "on_select",
             "item": [
                 {
-                    "name": "on_select-energy-quote",
+                    "name": "on_select-energy-orderValue",
                     "request": {
                         "method": "POST",
                         "header": [],
@@ -268,7 +268,7 @@
         },
         {
             "key": "bpp_adapter_url",
-            "value": "http://localhost:3002/api/webhook/trigger"
+            "value": "http://localhost:8082/api/webhook/trigger"
         },
         {
             "key": "transaction_id",

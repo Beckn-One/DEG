@@ -69,6 +69,38 @@
                     "response": []
                 }
             ]
+        },
+        {
+            "name": "on_update",
+            "item": [
+                {
+                    "name": "cascaded-on_update-utility",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"on_update\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{cascaded_transaction_id}}\",\n    \"bap_id\": \"{{cascaded_bap_id}}\",\n    \"bap_uri\": \"{{cascaded_bap_uri}}\",\n    \"bpp_id\": \"{{cascaded_bpp_id}}\",\n    \"bpp_uri\": \"{{cascaded_bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-cascaded-utility-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      },\n      \"beckn:fulfillments\": [\n        {\n          \"@type\": \"beckn:Fulfillment\",\n          \"beckn:id\": \"fulfillment-energy-001\",\n          \"beckn:type\": \"ENERGY_DELIVERY\",\n          \"beckn:state\": {\n            \"@type\": \"beckn:State\",\n            \"beckn:descriptor\": {\n              \"@type\": \"beckn:Descriptor\",\n              \"schema:name\": \"COMPLETED\"\n            }\n          },\n          \"beckn:attributes\": {\n            \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld\",\n            \"@type\": \"EnergyTradeDelivery\",\n            \"deliveryStatus\": \"COMPLETED\",\n            \"deliveryMode\": \"GRID_INJECTION\",\n            \"deliveredQuantity\": 10.0,\n            \"deliveryStartTime\": \"2024-10-04T10:00:00Z\",\n            \"deliveryEndTime\": \"2024-10-04T18:00:00Z\",\n            \"meterReadings\": [\n              {\n                \"timestamp\": \"2024-10-04T18:00:00Z\",\n                \"sourceReading\": 1010.0,\n                \"targetReading\": 1000.0,\n                \"energyFlow\": 10.0\n              }\n            ]\n          }\n        }\n      ],\n      \"beckn:payments\": [\n        {\n          \"@type\": \"beckn:Payment\",\n          \"beckn:id\": \"payment-energy-001\",\n          \"beckn:type\": \"ON-FULFILLMENT\",\n          \"beckn:status\": \"NOT-PAID\",\n          \"beckn:collected_by\": \"BPP\"\n        }\n      ],\n      \"beckn:orderAttributes\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld\",\n        \"@type\": \"EnergyTradeContract\",\n        \"contractStatus\": \"COMPLETED\",\n        \"sourceMeterId\": \"100200300\",\n        \"targetMeterId\": \"98765456\",\n        \"inverterId\": \"inv-12345\",\n        \"contractedQuantity\": 10.0,\n        \"tradeStartTime\": \"2024-10-04T10:00:00Z\",\n        \"tradeEndTime\": \"2024-10-04T18:00:00Z\",\n        \"sourceType\": \"SOLAR\",\n        \"settlementCycles\": [\n          {\n            \"cycleId\": \"settle-2024-10-04-001\",\n            \"startTime\": \"2024-10-04T00:00:00Z\",\n            \"endTime\": \"2024-10-04T23:59:59Z\",\n            \"status\": \"SETTLED\",\n            \"amount\": 4.0,\n            \"currency\": \"USD\",\n            \"breakdown\": {\n              \"energyCost\": 1.5,\n              \"wheelingCharges\": 2.5\n            }\n          }\n        ],\n        \"lastUpdated\": \"2024-10-04T18:30:00Z\"\n      }\n    }\n  }\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{utilitybpp_adapter_url}}/on_update",
+                            "host": [
+                                "{{utilitybpp_adapter_url}}"
+                            ],
+                            "path": [
+                                "on_update"
+                            ]
+                        },
+                        "description": "Update from Utility Company (Transmission BPP) to P2P Trading BPP after fulfillment with updated delivery order details, actual delivered quantity, final meter readings, and settled settlement cycle."
+                    },
+                    "response": []
+                }
+            ]
         }
     ],
     "event": [
@@ -117,7 +149,7 @@
         },
         {
             "key": "utilitybpp_adapter_url",
-            "value": "http://localhost:3003/api/webhook/trigger"
+            "value": "http://localhost:8083/api/webhook/trigger"
         },
         {
             "key": "iso_date",
