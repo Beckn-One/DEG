@@ -37,7 +37,7 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: ev-charging.sandbox1.com
+            networkParticipant: p2p-trading.sandbox1.com
             keyId: 76EU7PktCXdPoNEZBjmg4Eb25A2egsd5MYJ67Qxza7bJQFvBHCYxgk
             signingPrivateKey: 9NBh67Pk/6v3irrkYZHlQ5E1qw+GivHdDFtKeCylzIM=
             signingPublicKey: Z3Hnc8FZDo/7dwWApeRVs6OV560gr7uxPsFUDGUMsBg=
@@ -86,7 +86,7 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: ev-charging.sandbox1.com
+            networkParticipant: p2p-trading.sandbox1.com
             keyId: 76EU7PktCXdPoNEZBjmg4Eb25A2egsd5MYJ67Qxza7bJQFvBHCYxgk
             signingPrivateKey: 9NBh67Pk/6v3irrkYZHlQ5E1qw+GivHdDFtKeCylzIM=
             signingPublicKey: Z3Hnc8FZDo/7dwWApeRVs6OV560gr7uxPsFUDGUMsBg=

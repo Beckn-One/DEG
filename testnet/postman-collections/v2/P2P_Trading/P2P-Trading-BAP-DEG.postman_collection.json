@@ -48,7 +48,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"select\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      }\n    }\n  }\n}",
+                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"select\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      }\n    }\n  }\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -80,7 +80,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"init\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      },\n      \"beckn:fulfillments\": [\n        {\n          \"@type\": \"beckn:Fulfillment\",\n          \"beckn:id\": \"fulfillment-energy-001\",\n          \"beckn:type\": \"ENERGY_DELIVERY\",\n          \"beckn:stops\": [\n            {\n              \"@type\": \"beckn:Stop\",\n              \"beckn:id\": \"stop-start-001\",\n              \"beckn:type\": \"START\",\n              \"beckn:location\": {\n                \"@type\": \"beckn:Location\",\n                \"beckn:address\": \"100200300\"\n              },\n              \"beckn:time\": {\n                \"@type\": \"beckn:Time\",\n                \"beckn:range\": {\n                  \"start\": \"2024-10-04T10:00:00Z\",\n                  \"end\": \"2024-10-04T18:00:00Z\"\n                }\n              }\n            },\n            {\n              \"@type\": \"beckn:Stop\",\n              \"beckn:id\": \"stop-end-001\",\n              \"beckn:type\": \"END\",\n              \"beckn:location\": {\n                \"@type\": \"beckn:Location\",\n                \"beckn:address\": \"98765456\"\n              },\n              \"beckn:time\": {\n                \"@type\": \"beckn:Time\",\n                \"beckn:range\": {\n                  \"start\": \"2024-10-04T10:00:00Z\",\n                  \"end\": \"2024-10-04T18:00:00Z\"\n                }\n              }\n            }\n          ]\n        }\n      ],\n      \"beckn:payments\": [\n        {\n          \"@type\": \"beckn:Payment\",\n          \"beckn:id\": \"payment-energy-001\",\n          \"beckn:type\": \"ON-FULFILLMENT\",\n          \"beckn:status\": \"NOT-PAID\",\n          \"beckn:collected_by\": \"BPP\"\n        }\n      ],\n      \"beckn:billing\": {\n        \"@type\": \"beckn:Billing\",\n        \"beckn:name\": \"Energy Consumer\",\n        \"beckn:email\": \"consumer@example.com\",\n        \"beckn:phone\": \"+1-555-0100\"\n      }\n    }\n  }\n}",
+                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"init\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      },\n      \"beckn:fulfillments\": [\n        {\n          \"@type\": \"beckn:Fulfillment\",\n          \"beckn:id\": \"fulfillment-energy-001\",\n          \"beckn:type\": \"ENERGY_DELIVERY\",\n          \"beckn:stops\": [\n            {\n              \"@type\": \"beckn:Stop\",\n              \"beckn:id\": \"stop-start-001\",\n              \"beckn:type\": \"START\",\n              \"beckn:location\": {\n                \"@type\": \"beckn:Location\",\n                \"beckn:address\": \"100200300\"\n              },\n              \"beckn:time\": {\n                \"@type\": \"beckn:Time\",\n                \"beckn:range\": {\n                  \"start\": \"2024-10-04T10:00:00Z\",\n                  \"end\": \"2024-10-04T18:00:00Z\"\n                }\n              }\n            },\n            {\n              \"@type\": \"beckn:Stop\",\n              \"beckn:id\": \"stop-end-001\",\n              \"beckn:type\": \"END\",\n              \"beckn:location\": {\n                \"@type\": \"beckn:Location\",\n                \"beckn:address\": \"98765456\"\n              },\n              \"beckn:time\": {\n                \"@type\": \"beckn:Time\",\n                \"beckn:range\": {\n                  \"start\": \"2024-10-04T10:00:00Z\",\n                  \"end\": \"2024-10-04T18:00:00Z\"\n                }\n              }\n            }\n          ]\n        }\n      ],\n      \"beckn:payments\": [\n        {\n          \"@type\": \"beckn:Payment\",\n          \"beckn:id\": \"payment-energy-001\",\n          \"beckn:type\": \"ON-FULFILLMENT\",\n          \"beckn:status\": \"NOT-PAID\",\n          \"beckn:collected_by\": \"BPP\"\n        }\n      ],\n      \"beckn:billing\": {\n        \"@type\": \"beckn:Billing\",\n        \"beckn:name\": \"Energy Consumer\",\n        \"beckn:email\": \"consumer@example.com\",\n        \"beckn:phone\": \"+1-555-0100\"\n      }\n    }\n  }\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -112,7 +112,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"confirm\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      },\n      \"beckn:fulfillments\": [\n        {\n          \"@type\": \"beckn:Fulfillment\",\n          \"beckn:id\": \"fulfillment-energy-001\",\n          \"beckn:type\": \"ENERGY_DELIVERY\"\n        }\n      ],\n      \"beckn:payments\": [\n        {\n          \"@type\": \"beckn:Payment\",\n          \"beckn:id\": \"payment-energy-001\",\n          \"beckn:type\": \"ON-FULFILLMENT\",\n          \"beckn:status\": \"NOT-PAID\",\n          \"beckn:collected_by\": \"BPP\"\n        }\n      ]\n    }\n  }\n}",
+                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"confirm\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\",\n      \"beckn:items\": [\n        {\n          \"beckn:id\": \"energy-resource-solar-001\",\n          \"quantity\": {\n            \"count\": 10.0,\n            \"unit\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:offers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\"\n        }\n      ],\n      \"beckn:provider\": {\n        \"beckn:id\": \"provider-solar-farm-001\"\n      },\n      \"beckn:fulfillments\": [\n        {\n          \"@type\": \"beckn:Fulfillment\",\n          \"beckn:id\": \"fulfillment-energy-001\",\n          \"beckn:type\": \"ENERGY_DELIVERY\"\n        }\n      ],\n      \"beckn:payments\": [\n        {\n          \"@type\": \"beckn:Payment\",\n          \"beckn:id\": \"payment-energy-001\",\n          \"beckn:type\": \"ON-FULFILLMENT\",\n          \"beckn:status\": \"NOT-PAID\",\n          \"beckn:collected_by\": \"BPP\"\n        }\n      ]\n    }\n  }\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -144,7 +144,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"status\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\"\n    }\n  }\n}",
+                            "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"status\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-energy-001\"\n    }\n  }\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -185,7 +185,7 @@
     "variable": [
         {
             "key": "domain",
-            "value": "energy-trade"
+            "value": "beckn.one:deg:p2p-trading:2.0.0"
         },
         {
             "key": "version",
@@ -193,19 +193,19 @@
         },
         {
             "key": "bap_id",
-            "value": "bap.energy-consumer.com"
+            "value": "p2p-trading.sandbox1.com"
         },
         {
             "key": "bap_uri",
-            "value": "https://bap.energy-consumer.com"
+            "value": "http://onix-bap:8081/bap/receiver"
         },
         {
             "key": "bpp_id",
-            "value": "bpp.energy-provider.com"
+            "value": "p2p-trading.sandbox2.com"
         },
         {
             "key": "bpp_uri",
-            "value": "https://bpp.energy-provider.com"
+            "value": "http://onix-bpp:8082/bpp/receiver"
         },
         {
             "key": "bap_adapter_url",
@@ -213,27 +213,7 @@
         },
         {
             "key": "transaction_id",
-            "value": "txn-energy-001"
-        },
-        {
-            "key": "cascaded_transaction_id",
-            "value": "txn-cascaded-energy-001"
-        },
-        {
-            "key": "cascaded_bap_id",
-            "value": "p2pTrading-bpp.com"
-        },
-        {
-            "key": "cascaded_bap_uri",
-            "value": "https://api.p2pTrading-bpp.com/pilot/bap/energy/v2"
-        },
-        {
-            "key": "cascaded_bpp_id",
-            "value": "example-transmission-bpp.com"
-        },
-        {
-            "key": "cascaded_bpp_uri",
-            "value": "https://api.example-transmission-bpp.com/pilot/bpp/"
+            "value": "3769776b-88b4-469d-9ee2-95044fe5dafc"
         },
         {
             "key": "iso_date",

@@ -37,7 +37,7 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: p2p-trading.utility.sandbox.com
+            networkParticipant: p2p-trading.sandbox3.com
             keyId: 76EU7UtilityBX74BMNTQJMcMYoTMSzU7k71owUF53fN4jdxmosxZrdjdDk
             signingPrivateKey: hnMdzvcZBnLJ6W1f4Y2ZCLlJo4phKMvs48ZbXjbS7/k=
             signingPublicKey: H1xM/ejGIJpH+DmAF1A9KjBBLJ74pZ8B0gnZ4z4DIkU=
@@ -81,7 +81,7 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: p2p-trading.utility.sandbox.com
+            networkParticipant: p2p-trading.sandbox3.com
             keyId: 76EU7UtilityBX74BMNTQJMcMYoTMSzU7k71owUF53fN4jdxmosxZrdjdDk
             signingPrivateKey: hnMdzvcZBnLJ6W1f4Y2ZCLlJo4phKMvs48ZbXjbS7/k=
             signingPublicKey: H1xM/ejGIJpH+DmAF1A9KjBBLJ74pZ8B0gnZ4z4DIkU=
