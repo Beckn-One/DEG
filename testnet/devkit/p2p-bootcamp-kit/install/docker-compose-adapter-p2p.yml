@@ -100,11 +100,13 @@ services:
     
   sandbox-bpp:
     container_name: sandbox-bpp
-    image: fidedocker/sandbox-2.0:latest
-    platform: linux/amd64
+    image: sandbox-2.0:local  # Changed from fidedocker/sandbox-2.0:latest
+    pull_policy: never 
+    # platform: linux/amd64
     environment:
       - NODE_ENV=production
       - PORT=3002
+      - PERSONA=bpp  # bpp persona
     ports:
       - "3002:3002"
     healthcheck:
@@ -118,11 +120,13 @@ services:
 
   sandbox-utilitybpp:
     container_name: sandbox-utilitybpp
-    image: fidedocker/sandbox-2.0:latest
-    platform: linux/amd64
+    image: sandbox-2.0:local  # Changed from fidedocker/sandbox-2.0:latest
+    pull_policy: never 
+    # platform: linux/amd64
     environment:
       - NODE_ENV=production
       - PORT=3003
+      - PERSONA=utility-bpp  # utility-bpp persona
     ports:
       - "3003:3003"
     healthcheck:

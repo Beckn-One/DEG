@@ -31,26 +31,28 @@ modules:
         registry:
           id: dediregistry
           config:
-            url: http://34.14.173.68:8080/dedi
+            url: http://api.testnet.beckn.one/registry/dedi
             registryName: subscribers.beckn.one
             timeout: 10
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: p2p-trading.sandbox1.com
-            keyId: 76EU7PktCXdPoNEZBjmg4Eb25A2egsd5MYJ67Qxza7bJQFvBHCYxgk
-            signingPrivateKey: 9NBh67Pk/6v3irrkYZHlQ5E1qw+GivHdDFtKeCylzIM=
-            signingPublicKey: Z3Hnc8FZDo/7dwWApeRVs6OV560gr7uxPsFUDGUMsBg=
-            encrPrivateKey: 9NBh67Pk/6v3irrkYZHlQ5E1qw+GivHdDFtKeCylzIM=
-            encrPublicKey: Z3Hnc8FZDo/7dwWApeRVs6OV560gr7uxPsFUDGUMsBg=
+            networkParticipant: p2p-trading-sandbox1-bap
+            keyId: 76EU8aUqHouww7gawT6EibH4bseMCumyDv3sgyXSKENGk8NDcdVwmQ
+            signingPrivateKey: Pc6dkYo5LeP0LkwvZXVRV9pcbeh8jDdtdHWymID5cjw=
+            signingPublicKey: KVYEWkQB2WwnttVMWfy7KrnqiD51ZDvi8vfCac2IwRE=
+            encrPrivateKey: Pc6dkYo5LeP0LkwvZXVRV9pcbeh8jDdtdHWymID5cjw=
+            encrPublicKey: KVYEWkQB2WwnttVMWfy7KrnqiD51ZDvi8vfCac2IwRE=
+        schemaValidator:
+          id: schemav2validator
+          config:
+            type: url
+            location: https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/api/beckn.yaml
+            cacheTTL: "3600"
         cache:
           id: cache
           config:
             addr: redis:6379
-        schemaValidator:
-          id: schemavalidator
-          config:
-            schemaDir: ./schemas
         signValidator:
           id: signvalidator
         router:
@@ -65,6 +67,7 @@ modules:
       steps:
         - validateSign
         - addRoute
+        - validateSchema
   
   - name: bapTxnCaller
     path: /bap/caller/
@@ -80,18 +83,24 @@ modules:
         registry:
           id: dediregistry
           config:
-            url: http://34.14.173.68:8080/dedi
+            url: http://api.testnet.beckn.one/registry/dedi
             registryName: subscribers.beckn.one
             timeout: 10
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: p2p-trading.sandbox1.com
+            networkParticipant: ev-charging.sandbox1.com
             keyId: 76EU7PktCXdPoNEZBjmg4Eb25A2egsd5MYJ67Qxza7bJQFvBHCYxgk
             signingPrivateKey: 9NBh67Pk/6v3irrkYZHlQ5E1qw+GivHdDFtKeCylzIM=
             signingPublicKey: Z3Hnc8FZDo/7dwWApeRVs6OV560gr7uxPsFUDGUMsBg=
             encrPrivateKey: 9NBh67Pk/6v3irrkYZHlQ5E1qw+GivHdDFtKeCylzIM=
             encrPublicKey: Z3Hnc8FZDo/7dwWApeRVs6OV560gr7uxPsFUDGUMsBg=
+        schemaValidator:
+          id: schemav2validator
+          config:
+            type: url
+            location: https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/api/beckn.yaml
+            cacheTTL: "3600"
         cache:
           id: cache
           config:
@@ -110,4 +119,4 @@ modules:
       steps:
         - addRoute
         - sign
-  
+        - validateSchema

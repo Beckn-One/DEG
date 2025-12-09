@@ -1,16 +1,9 @@
 routingRules:
-  - domain: "energy-trade"  # P2P Trading domain
-    version: "2.0.0"
-    targetType: "bpp"
+  - version: "2.0.0"
+    targetType: "bap"
     endpoints:
       - on_init  # response to cascaded init from P2P Trading BPP
       - on_confirm  # response to cascaded confirm from P2P Trading BPP
       - on_update  # update sent to P2P Trading BPP after fulfillment
 
-schemaValidator:
-  id: schemav2validator
-  config:
-    type: url
-    location: https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/api/beckn.yaml
-    cacheTTL: "3600"
 

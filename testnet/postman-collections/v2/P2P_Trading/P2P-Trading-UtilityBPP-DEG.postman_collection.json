@@ -129,15 +129,15 @@
         },
         {
             "key": "bap_id",
-            "value": "p2p-trading.sandbox2.com"
+            "value": "ev-charging.sandbox2.com"
         },
         {
             "key": "bap_uri",
-            "value": "http://onix-bpp:8082/bpp/receiver"
+            "value": "http://onix-bpp:8082/bap/receiver"
         },
         {
             "key": "bpp_id",
-            "value": "p2p-trading.utility.sandbox.com"
+            "value": "ev-charging.sandbox3.com"
         },
         {
             "key": "bpp_uri",
