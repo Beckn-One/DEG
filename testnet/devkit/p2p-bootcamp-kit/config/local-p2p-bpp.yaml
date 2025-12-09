@@ -43,14 +43,16 @@ modules:
             signingPublicKey: E9w4QejjJ6d+VODJlDKJcpI93RY3Bg4RQp4Rs1F9oQ8=
             encrPrivateKey: AC72WfPu5ly3T7rXfRHrLA/l++BxbsNwe0qitgT9u6U=
             encrPublicKey: E9w4QejjJ6d+VODJlDKJcpI93RY3Bg4RQp4Rs1F9oQ8=
+        schemaValidator:
+          id: schemav2validator
+          config:
+            type: url
+            location: https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/api/beckn.yaml
+            cacheTTL: "3600"
         cache:
           id: cache
           config:
             addr: redis:6379
-        schemaValidator:
-          id: schemavalidator
-          config:
-            schemaDir: ./schemas
         signValidator:
           id: signvalidator
         router:
@@ -60,6 +62,7 @@ modules:
       steps:
         - validateSign
         - addRoute
+        - validateSchema
   
   - name: bppTxnCaller
     path: /bpp/caller/
@@ -87,6 +90,12 @@ modules:
             signingPublicKey: H1xM/ejGIJpH+DmAF1A9KjBBLJ74pZ8B0gnZ4z4DIkU=
             encrPrivateKey: hnMdzvcZBnLJ6W1f4Y2ZCLlJo4phKMvs48ZbXjbS7/k=
             encrPublicKey: H1xM/ejGIJpH+DmAF1A9KjBBLJ74pZ8B0gnZ4z4DIkU=
+        schemaValidator:
+          id: schemav2validator
+          config:
+            type: url
+            location: https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/api/beckn.yaml
+            cacheTTL: "3600"
         cache:
           id: cache
           config:
@@ -105,3 +114,4 @@ modules:
       steps:
         - addRoute
         - sign
+        - validateSchema
