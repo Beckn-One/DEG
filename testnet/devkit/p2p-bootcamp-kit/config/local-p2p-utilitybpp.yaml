@@ -37,7 +37,7 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: p2p-trading-sandbox3-bpp
+            networkParticipant: p2p-trading-sandbox3.com
             keyId: 76EU8cNkz3dBEVaR5THuyCciMv9FbA2QqDADHX88WPyYP4v5Cp9ADD
             signingPrivateKey: YW0ObrW6Ca+RLi+rVoxavW6dsC3BuzAx2v9qfutFUcc=
             signingPublicKey: vSAbdarosQEp7CGf18oYIjdG9ewS1gESsmY3TmfzZog=
@@ -62,7 +62,7 @@ modules:
       steps:
         - validateSign
         - addRoute
-        - validateSchema
+        # - validateSchema
   
   - name: utilitybppTxnCaller
     path: /bpp/caller/
@@ -84,12 +84,12 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
-            networkParticipant: p2p-trading-sandbox3-bpp
-            keyId: 76EU7UtilityBX74BMNTQJMcMYoTMSzU7k71owUF53fN4jdxmosxZrdjdDk
-            signingPrivateKey: hnMdzvcZBnLJ6W1f4Y2ZCLlJo4phKMvs48ZbXjbS7/k=
-            signingPublicKey: H1xM/ejGIJpH+DmAF1A9KjBBLJ74pZ8B0gnZ4z4DIkU=
-            encrPrivateKey: hnMdzvcZBnLJ6W1f4Y2ZCLlJo4phKMvs48ZbXjbS7/k=
-            encrPublicKey: H1xM/ejGIJpH+DmAF1A9KjBBLJ74pZ8B0gnZ4z4DIkU=
+            networkParticipant: p2p-trading-sandbox3.com
+            keyId: 76EU8cNkz3dBEVaR5THuyCciMv9FbA2QqDADHX88WPyYP4v5Cp9ADD
+            signingPrivateKey: YW0ObrW6Ca+RLi+rVoxavW6dsC3BuzAx2v9qfutFUcc=
+            signingPublicKey: vSAbdarosQEp7CGf18oYIjdG9ewS1gESsmY3TmfzZog=
+            encrPrivateKey: YW0ObrW6Ca+RLi+rVoxavW6dsC3BuzAx2v9qfutFUcc=
+            encrPublicKey: vSAbdarosQEp7CGf18oYIjdG9ewS1gESsmY3TmfzZog=
         schemaValidator:
           id: schemav2validator
           config:
@@ -114,4 +114,4 @@ modules:
       steps:
         - addRoute
         - sign
-        - validateSchema
+        # - validateSchema

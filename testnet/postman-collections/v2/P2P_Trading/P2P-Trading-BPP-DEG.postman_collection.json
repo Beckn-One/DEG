@@ -252,7 +252,7 @@
         },
         {
             "key": "bap_id",
-            "value": "p2p-trading-sandbox1-bap"
+            "value": "p2p-trading-sandbox1.com"
         },
         {
             "key": "bap_uri",
@@ -260,7 +260,7 @@
         },
         {
             "key": "bpp_id",
-            "value": "p2p-trading-sandbox2-bpp"
+            "value": "p2p-trading-sandbox2.com"
         },
         {
             "key": "bpp_uri",
@@ -268,7 +268,7 @@
         },
         {
             "key": "utility_bpp_id",
-            "value": "p2p-trading-sandbox3-bpp"
+            "value": "p2p-trading-sandbox3.com"
         },
         {
             "key": "utility_bpp_uri",
