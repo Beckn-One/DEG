@@ -503,7 +503,7 @@
 		},
 		{
 			"key": "bap_id",
-			"value": "ev-charging.sandbox1.com"
+			"value": "p2p-trading-sandbox1-bap"
 		},
 		{
 			"key": "bap_uri",
@@ -511,7 +511,7 @@
 		},
 		{
 			"key": "bpp_id",
-			"value": "ev-charging.sandbox2.com"
+			"value": "p2p-trading-sandbox2-bpp"
 		},
 		{
 			"key": "bpp_uri",
