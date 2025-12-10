@@ -12,8 +12,3 @@ routingRules:
       - on_rating
       - on_support
 
-  - version: "2.0.0"
-    targetType: "bpp"
-    endpoints:
-      - init # cascaded init to utility bpp
-      - confirm # cascaded confirm to utility bpp
