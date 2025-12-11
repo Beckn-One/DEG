@@ -61,7 +61,7 @@ services:
 
   sandbox-bap:
     container_name: sandbox-bap
-    image: sandbox-2.0:local
+    image: fidedocker/sandbox-2.0:latest
     # platform: linux/amd64
     environment:
       - NODE_ENV=production
@@ -79,7 +79,7 @@ services:
     
   sandbox-bpp:
     container_name: sandbox-bpp
-    image: sandbox-2.0:local
+    image: fidedocker/sandbox-2.0:latest
     # platform: linux/amd64
     environment:
       - NODE_ENV=production
