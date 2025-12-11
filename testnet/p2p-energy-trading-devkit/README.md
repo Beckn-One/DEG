@@ -45,25 +45,29 @@ cd DEG/testnet/p2p-energy-trading-devkit/install
 ## Under the hood
 
 1. BAP `discover` calls are routed to Catalog Discovery Service url `https://34.93.141.21.sslip.io/beckn` defined [here](./config/local-p2p-routing-BAPCaller.yaml)
-2. Public keys from network participants are fetched from test Dedi registry `http://api.testnet.beckn.one/registry/dedi`, and are used to confirm that Beckn messages are sent by the trusted actor (and not by an imposter). The namespace and registry entries in Dedi are preconfigured in yaml files within config folder.
+2. Public keys from network participants are fetched from Beckn One registry service `http://api.testnet.beckn.one/registry/dedi` which acts as a cahe layer on top of Dedi registry, and are used to confirm that Beckn messages are sent by the trusted actor (and not by an imposter). The namespace and registry entries in Dedi are preconfigured in yaml files within config folder. The process of creating a DiDi namespace and registries is defined [here](https://beckn-labs.gitbook.io/beckn-labs-docs/beckn-registry/publishing-subscriber-details). For testing, it is recommended to create records in Dedi registry which are then cached by Beckn One registry service every hour. The registry records such as `p2p-trading-sandbox1.com` (BAP), `p2p-trading-sandbox2.com` (BPP), `p2p-trading-sandbox3.com` (utility BPP) were added beforehand, and used in this devkit. An example API call during runtime to registry service looks like [this](https://api.testnet.beckn.one/registry/dedi/lookup/p2p-trading-sandbox1.com/subscribers.beckn.one/76EU8aUqHouww7gawT6EibH4bseMCumyDv3sgyXSKENGk8NDcdVwmQ).
 3. Routing rules within each actor are defined in config for [BAP](./config/local-p2p-bap.yaml), [BPP](./config/local-p2p-bpp.yaml), [Utility BPP](./config/local-p2p-utilitybpp.yaml).
 4. Network between various actors is defined in docker-compose-adapter-p2p.yml
 5. Variables are preconfigured to following values.
-    | Variable Name               | Value                         | Notes                       |
-    | :-------------------------- | :---------------------------- | :-------------------------- |
-    | `domain`                    | `beckn.one:energy-trading`    |                             |
-    | `version`                   | `2.0.0`                       |                             |
-    | `bap_id`                    | `bap-energy-trading-001`      |                             |
-    | `bap_uri`                   | `http://localhost:8081/beckn` |                             |
-    | `bpp_id`                    | `bpp-energy-trading-001`      |                             |
-    | `bpp_uri`                   | `http://localhost:8082/beckn` |                             |
-    | `transaction_id`            | `txn-energy-001`              |                             |
-    | `iso_date`                  | `2025-01-01T10:00:00Z`        |                             |
-    | `utilitybpp_id`             | `bpp-utility-grid-001`        |                             |
-    | `utilitybpp_uri`            | `http://localhost:8083/beckn` |                             |
-    | `bpp_bapreceiver_uri`       | `http://localhost:8082/beckn` |                             |
-    | `bap_adapter_url`           | `http://localhost:9091`       | BAP collection only         |
-    | `bpp_adapter_url`           | `http://localhost:9092`       | BPP collection only         |
-    | `bpp_adapter_bapcaller_url` | `http://localhost:9092/beckn` | BPP collection only         |
-    | `utilitybpp_adapter_url`    | `http://localhost:9093`       | Utility BPP collection only |
-    | `cds_url`                   | `http://localhost:8080/beckn` | CDS Upload collection only  |
+    | Variable Name               | Value                                      | Notes                       |
+    | :-------------------------- | :----------------------------------------- | :-------------------------- |
+    | `domain`                    | `beckn.one:deg:p2p-trading:2.0.0`          |                             |
+    | `version`                   | `2.0.0`                                    |                             |
+    | `bap_id`                    | `p2p-trading-sandbox1.com`                 |                             |
+    | `bap_uri`                   | `http://onix-bap:8081/bap/receiver`        |                             |
+    | `bpp_id`                    | `p2p-trading-sandbox2.com`                 |                             |
+    | `bpp_uri`                   | `http://onix-bpp:8082/bpp/receiver`        |                             |
+    | `bpp_bapreceiver_uri`       | `http://onix-bpp:8082/bap/receiver`        |                             |
+    | `utilitybpp_id`             | `p2p-trading-sandbox3.com`                 |                             |
+    | `utilitybpp_uri`            | `http://onix-utilitybpp:8083/bpp/receiver` |                             |
+    | `bap_adapter_url`           | `http://localhost:8081/bap/caller`         | BAP collection only         |
+    | `bpp_adapter_url`           | `http://localhost:8082/bpp/caller`         | BPP collection only         |
+    | `bpp_adapter_bapcaller_url` | `http://localhost:8082/bap/caller`         | BPP collection only         |
+    | `utilitybpp_adapter_url`    | `http://localhost:8083/bpp/caller`         | Utility BPP collection only |
+    | `transaction_id`            | `3769776b-88b4-469d-9ee2-95044fe5dafc`     |                             |
+    | `iso_date`                  | `2025-01-01T10:00:00Z`                     |                             |
+    | `cds_url`                   | `https://34.93.141.21.sslip.io`            | CDS Upload collection only  |
+
+## Next steps towards a production network:
+
+TBD
