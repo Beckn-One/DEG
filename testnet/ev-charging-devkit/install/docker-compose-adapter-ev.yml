@@ -61,8 +61,8 @@ services:
 
   sandbox-bap:
     container_name: sandbox-bap
-    image: fidedocker/sandbox-2.0:latest
-    platform: linux/amd64
+    image: sandbox-2.0:local
+    # platform: linux/amd64
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -79,8 +79,8 @@ services:
     
   sandbox-bpp:
     container_name: sandbox-bpp
-    image: fidedocker/sandbox-2.0:latest
-    platform: linux/amd64
+    image: sandbox-2.0:local
+    # platform: linux/amd64
     environment:
       - NODE_ENV=production
       - PORT=3002

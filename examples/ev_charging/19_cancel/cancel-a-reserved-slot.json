@@ -17,7 +17,14 @@
         {
           "beckn:orderedItem": "pe-charging-01"
         }
-      ]
+      ],
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      },
+      "beckn:seller": "seller-placeholder"
     }
   }
 }

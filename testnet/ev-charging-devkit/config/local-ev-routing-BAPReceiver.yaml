@@ -12,3 +12,6 @@ routingRules:
       - on_status
       - on_update
       - on_cancel
+      - on_track
+      - on_rating
+      - on_support
