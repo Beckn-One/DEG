@@ -173,16 +173,16 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # 9. Terminology
 
-| Acronym | Full Form/Description | Description |
-| ----- | ----- | ----- |
-| BAP | Beckn Application Platform | Consumer-facing application that initiates transactions. Mapped to EV users and eMSPs. |
-| BPP | Beckn Provider Platform | Service provider platform that responds to BAP requests. Mapped to CPOs.  |
-| NFO | Network Facilitator Organization | Organization responsible for the adoption and growth of the network. Usually the custodian of the network’s registry. |
-| CDS | Catalog Discovery Service | Enables discovery of charging services from BPPs in the network. |
-| eMSP | e-Mobility Service Provider | Service provider that aggregates multiple CPOs. Generally onboarded by BAPs.  |
-| CPO | Charge Point Operator | Entity that owns and operates charging infrastructure. Generally onboarded by BPPs.  |
-| EVSE | Electric Vehicle Supply Equipment | Individual charging station unit. Owned and operated by CPOs |
-| OCPI | Open Charge Point Interface | Protocol for communication between eMSPs and CPOs. |
+| Acronym | Full Form/Description             | Description                                                                                                           |
+| ------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| BAP     | Beckn Application Platform        | Consumer-facing application that initiates transactions. Mapped to EV users and eMSPs.                                |
+| BPP     | Beckn Provider Platform           | Service provider platform that responds to BAP requests. Mapped to CPOs.                                              |
+| NFO     | Network Facilitator Organization  | Organization responsible for the adoption and growth of the network. Usually the custodian of the network’s registry. |
+| CDS     | Catalog Discovery Service         | Enables discovery of charging services from BPPs in the network.                                                      |
+| eMSP    | e-Mobility Service Provider       | Service provider that aggregates multiple CPOs. Generally onboarded by BAPs.                                          |
+| CPO     | Charge Point Operator             | Entity that owns and operates charging infrastructure. Generally onboarded by BPPs.                                   |
+| EVSE    | Electric Vehicle Supply Equipment | Individual charging station unit. Owned and operated by CPOs                                                          |
+| OCPI    | Open Charge Point Interface       | Protocol for communication between eMSPs and CPOs.                                                                    |
 
 > Note:
 > This document does not detail the mapping between Beckn Protocol and OCPI. Please refer to [this](../../../docs/implementation-guides/v1-EOS/DEG00x_Mapping-OCPI-and-Beckn-Protocol-for-EV-Charging-Interoperability.md) document for the same.
@@ -331,11 +331,11 @@ Each entity in the charging lifecycle — the service, the commercial terms, and
 
 ## 12.2. Semantic Model
 
-| EV Charging Domain Entity | Charging Example | Semantically maps to |
-| ----- | ----- | :---: |
-| Charging Service Listing | “DC Fast-Charging (60 kW CCS2)” | [Item](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingService/v1/attributes.yaml)  |
-| Charging service | “₹18 per kWh”, “₹150 per hour”, “₹999 monthly pass”, “Off-peak discount 2 AM–5 AM” | [Offer](https://github.com/beckn/protocol-specifications-new/blob/schema-reorg/schema/EvChargingOffer/v1/attributes.yaml) |
-| Charging Session | A specific booking or usage instance created when the user plugs in or reserves a slot | [Order](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingSession/v1/attributes.yaml) |
+| EV Charging Domain Entity | Charging Example                                                                       |                                                    Semantically maps to                                                     |
+| ------------------------- | -------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------: |
+| Charging Service Listing  | “DC Fast-Charging (60 kW CCS2)”                                                        | [Item](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingService/v1/attributes.yaml)  |
+| Charging service          | “₹18 per kWh”, “₹150 per hour”, “₹999 monthly pass”, “Off-peak discount 2 AM–5 AM”     |  [Offer](https://github.com/beckn/protocol-specifications-new/blob/schema-reorg/schema/EvChargingOffer/v1/attributes.yaml)  |
+| Charging Session          | A specific booking or usage instance created when the user plugs in or reserves a slot | [Order](https://github.com/beckn/protocol-specifications-new/tree/schema-reorg/schema/EvChargingSession/v1/attributes.yaml) |
 
 ## 12.3. Example Category Codes
 
@@ -344,7 +344,7 @@ The following section contains example category codes that can be
 Charger types
 
 | Code      | What it means                                                                              |
-|-----------|--------------------------------------------------------------------------------------------|
+| --------- | ------------------------------------------------------------------------------------------ |
 | AC\_SLOW  | AC charge points in the “slow” band (≈ 3–7 kW).                                            |
 | AC\_FAST  | AC “fast” public charging (≈ 7–22 kW; UK fast band 8–49 kW covers AC up to \~22 kW).       |
 | DC\_FAST  | DC “rapid/fast” typically \~50–149 kW.                                                     |
@@ -353,7 +353,7 @@ Charger types
 Connector types
 
 | Code    | What it means                                                                           |
-|---------|-----------------------------------------------------------------------------------------|
+| ------- | --------------------------------------------------------------------------------------- |
 | TYPE1   | Type 1 (SAE J1772) AC connector (North America/JP usage).                               |
 | TYPE2   | Type 2 (IEC 62196-2) AC connector; EU standard.                                         |
 | CCS2    | Combined Charging System “Combo 2” (IEC 62196 based) enabling high-power DC on Type 2\. |
@@ -363,7 +363,7 @@ Connector types
 Service types
 
 | Code                     | What it means                                                                                                                  |
-|--------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
 | GREEN\_ENERGY\_CERTIFIED | Flag that the site/session is supplied by verified green energy per catalog metadata (e.g., OCPI EnergyMix.is\_green\_energy). |
 | GO\_EU                   | Energy backed by EU Guarantees of Origin (GOs).                                                                                |
 | REGO\_UK                 | Energy backed by the UK Renewable Energy Guarantees of Origin (REGO) scheme.                                                   |
@@ -410,7 +410,7 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 - Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](../../../examples/ev_charging/01_discover/discovery-by-EVSE.json)
 
 <details>
-<summary><a href="../../../examples/ev_charging/01_discover/discovery-by-EVSE.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/01_discover/discovery-by-EVSE.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -465,7 +465,7 @@ Note: Users can discover the charging station through off-network channels (such
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/02_on_discover/specific-evse-catalog.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/02_on_discover/specific-evse-catalog.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -803,7 +803,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -917,7 +917,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1110,7 +1110,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1296,7 +1296,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1484,7 +1484,7 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/06_on_status_1/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/06_on_status_1/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1659,7 +1659,7 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1847,7 +1847,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2036,7 +2036,7 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2224,7 +2224,7 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2413,7 +2413,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2459,7 +2459,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2469,68 +2469,22 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
     "ttl": "PT30S"
   },
   "message": {
-    "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "INPROGRESS",
-      "beckn:orderItems": [
-        {
-          "beckn:lineId": "line-001",
-          "beckn:orderedItem": "pe-charging-01"
-        }
-      ],
-      "beckn:fulfillment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-001",
-        "beckn:mode": "RESERVATION",
-        "trackingAction": {
-          "@type": "schema:TrackAction",
-          "target": {
-            "@type": "schema:EntryPoint",
-            "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
-          },
-          "deliveryMethod": "RESERVATION",
-          "reservationId": "TRACK-SESSION-9876543210"
-        },
-        "deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
-          "@type": "ChargingSession",
-          "chargingTelemetry": [
-            {
-              "eventTime": "2025-01-27T17:00:00Z",
-              "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 62.5, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 18.4, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 10.2, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 392, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 47.0, "unitCode": "AMP" }
-              ]
-            },
-            {
-              "eventTime": "2025-01-27T17:05:00Z",
-              "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 65.0, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 17.1, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 11.1, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 388, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 44.2, "unitCode": "AMP" }
-              ]
-            }
-          ]
-        }
-      }
+    "tracking": {
+      "tl_method": "http/get",
+      "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210",
+      "trackingStatus": "ACTIVE",
+      "expires_at": "2025-01-28T17:00:40.065Z"
     }
   }
 }
-
 ```
 </details>
 
@@ -2555,7 +2509,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2753,7 +2707,7 @@ EV user reveives a notification in case of any error occuring during charging se
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2930,7 +2884,7 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
 - Request:
 
 <details>
-<summary><a href="../../../examples/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3128,7 +3082,7 @@ EV user receives the session details upon chargign session end: [Example](../../
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/15_rating/time-based-ev-charging-slot-rating.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/15_rating/time-based-ev-charging-slot-rating.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3180,7 +3134,7 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3231,7 +3185,7 @@ CPO accepts rating: [Example](../../../examples/ev_charging/16_on_rating/time-ba
 EV user contacts support: [Example](../../../examples/ev_charging/17_support/time-based-ev-charging-slot-support.json)
 
 <details>
-<summary><a href="../../../examples/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3274,7 +3228,7 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3360,13 +3314,13 @@ Adam taps **Reserve Slot → 12:45–13:15 PM**.
 
 The app displays the **session terms**:
 
-| Term | Example |
-| ----- | ----- |
-| Tariff | ₹18 / kWh |
-| Grace period | 10 min post-session |
-| Idle fee policy | ₹2/min after grace |
+| Term               | Example                  |
+| ------------------ | ------------------------ |
+| Tariff             | ₹18 / kWh                |
+| Grace period       | 10 min post-session      |
+| Idle fee policy    | ₹2/min after grace       |
 | Cancellation rules | Free up to 15 min before |
-| Payment options | Hold, Pre-pay, Post-pay |
+| Payment options    | Hold, Pre-pay, Post-pay  |
 
 They confirm.
 
@@ -3414,7 +3368,7 @@ Consumers can search for EV charging stations with specific criteria including l
 ##### 13.2.1.1.1. Discovery of EV charging services within a circular boundary
 
 <details>
-<summary><a href="../../../examples/ev_charging/01_discover/discovery-within-a-circular-boundary.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/01_discover/discovery-within-a-circular-boundary.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3458,7 +3412,7 @@ Discovery of EV charging services within a circular boundary: [Example](../../..
 ##### 13.2.1.1.2. Discovery of EV charging stations along a route
 
 <details>
-<summary><a href="../../../examples/ev_charging/01_discover/discovery-along-route.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/01_discover/discovery-along-route.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3686,7 +3640,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev_charging/02_on_discover/time-based-ev-charging-slot-catalog.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/02_on_discover/time-based-ev-charging-slot-catalog.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4272,7 +4226,7 @@ Offer schema in the catalog:
 4. **ev:vehicle:** Includes the buyer’s EV details (make/model) to help the provider validate connector compatibility and charging capability.
 
 <details>
-<summary><a href="../../../examples/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4400,7 +4354,7 @@ Recommendations for BPP:
 1. on\_select payload MUST have a quotation with detailed breakup for the selected time slot based on the parameters provided by the user in the select request.
 
 <details>
-<summary><a href="../../../examples/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4680,7 +4634,7 @@ Recommendations for BAP:
 1. init payload MUST contain the billing details of the user in addition to the details which were part of the select request.
 
 <details>
-<summary><a href="../../../examples/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4883,7 +4837,7 @@ Recommendations for BAP:
 
 
 <details>
-<summary><a href="../../../examples/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5146,7 +5100,7 @@ Recommendations for BAP:
 
 
 <details>
-<summary><a href="../../../examples/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5345,7 +5299,7 @@ Recommendations for BAP:
   2. These details are in addition to the details which were part of the on\_init payload.
 
 <details>
-<summary><a href="../../../examples/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5555,7 +5509,7 @@ Once these physical steps are completed, the charging session can be initiated t
   * **beckn:purpose:** Human-readable explanation of why this authorization is needed — in this case, to verify the user at the EV station before starting the session.
 
 <details>
-<summary><a href="../../../examples/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5747,7 +5701,7 @@ Once these physical steps are completed, the charging session can be initiated t
   2. **ev:code:** "CHARGING-ACTIVE" — a standardized machine-readable code that BAPs can use to update the user interface, start timers, or calculate live charging duration.
 
 <details>
-<summary><a href="../../../examples/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5941,7 +5895,7 @@ Once these physical steps are completed, the charging session can be initiated t
   2. **beckn:track-fulfillment:** Boolean flag indicating whether live fulfillment tracking is enabled (true means the BPP should send periodic state updates to the callback URL).
 
 <details>
-<summary><a href="../../../examples/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6005,7 +5959,7 @@ Once these physical steps are completed, the charging session can be initiated t
   Timestamp showing when these readings were last recorded or pushed — helps synchronize live dashboards or notifications on the BAP side.
 
 <details>
-<summary><a href="../../../examples/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6015,68 +5969,22 @@ Once these physical steps are completed, the charging session can be initiated t
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
     "ttl": "PT30S"
   },
   "message": {
-    "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "INPROGRESS",
-      "beckn:orderItems": [
-        {
-          "beckn:lineId": "line-001",
-          "beckn:orderedItem": "pe-charging-01"
-        }
-      ],
-      "beckn:fulfillment": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-        "@type": "beckn:Fulfillment",
-        "beckn:id": "fulfillment-001",
-        "beckn:mode": "RESERVATION",
-        "trackingAction": {
-          "@type": "schema:TrackAction",
-          "target": {
-            "@type": "schema:EntryPoint",
-            "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
-          },
-          "deliveryMethod": "RESERVATION",
-          "reservationId": "TRACK-SESSION-9876543210"
-        },
-        "deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingService/v1/context.jsonld",
-          "@type": "ChargingSession",
-          "chargingTelemetry": [
-            {
-              "eventTime": "2025-01-27T17:00:00Z",
-              "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 62.5, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 18.4, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 10.2, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 392, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 47.0, "unitCode": "AMP" }
-              ]
-            },
-            {
-              "eventTime": "2025-01-27T17:05:00Z",
-              "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 65.0, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 17.1, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 11.1, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 388, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 44.2, "unitCode": "AMP" }
-              ]
-            }
-          ]
-        }
-      }
+    "tracking": {
+      "tl_method": "http/get",
+      "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210",
+      "trackingStatus": "ACTIVE",
+      "expires_at": "2025-01-28T17:00:40.065Z"
     }
   }
 }
-
 ```
 </details>
 
@@ -6166,7 +6074,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 - Request: EV user reveives details in case of any error during a charging session: [Example](../../../examples/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json)
 
 <details>
-<summary><a href="../../../examples/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6370,7 +6278,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
     Includes transaction identifiers, timestamps, payment provider, and invoice reference for settlement and customer records.
 
 <details>
-<summary><a href="../../../examples/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6548,7 +6456,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 - Request:
 
 <details>
-<summary><a href="../../../examples/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6888,7 +6796,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 - Request: CPO accepts rating: [Example](../../../examples/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json)
 
 <details>
-<summary><a href="../../../examples/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6936,7 +6844,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 - Request: EV user contacts support: [Example](../../../examples/ev_charging/17_support/time-based-ev-charging-slot-support.json)
 
 <details>
-<summary><a href="../../../examples/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6980,7 +6888,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 - Request: CPO returns support information: [Example](../../../examples/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json)
 
 <details>
-<summary><a href="../../../examples/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/v2/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
