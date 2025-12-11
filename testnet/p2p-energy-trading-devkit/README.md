@@ -68,6 +68,11 @@ cd DEG/testnet/p2p-energy-trading-devkit/install
     | `iso_date`                  | `2025-01-01T10:00:00Z`                     |                             |
     | `cds_url`                   | `https://34.93.141.21.sslip.io`            | CDS Upload collection only  |
 
+## Routing
+
+![P2P Routing Diagram](./assets/p2p-routing-diagram.png)
+
 ## Next steps towards a production network:
 
 TBD
+
