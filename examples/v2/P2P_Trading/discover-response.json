@@ -70,8 +70,6 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Daily Settlement Solar Energy Offer"
             },
-            "beckn:provider": "provider-solar-farm-001",
-            "beckn:items": ["energy-resource-solar-001"],
             "beckn:price": {
               "@type": "schema:PriceSpecification",
               "schema:price": 0.15,
@@ -94,6 +92,18 @@
                 "start": "2024-10-04T00:00:00Z",
                 "end": "2024-10-04T23:59:59Z"
               }
+            },
+            "beckn:orderItems": [
+              {
+                "beckn:lineId": "line-1"
+              }
+            ],
+            "beckn:seller": "provider-solar-farm-001",
+            "beckn:orderStatus": "CREATED",
+            "beckn:buyer": {
+              "beckn:id": "buyer-placeholder",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+              "@type": "beckn:Buyer"
             }
           }
         ]
@@ -101,4 +111,3 @@
     ]
   }
 }
-

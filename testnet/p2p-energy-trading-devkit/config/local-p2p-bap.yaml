@@ -67,7 +67,7 @@ modules:
       steps:
         - validateSign
         - addRoute
-        # - validateSchema
+        - validateSchema
   
   - name: bapTxnCaller
     path: /bap/caller/
@@ -119,4 +119,4 @@ modules:
       steps:
         - addRoute
         - sign
-        # - validateSchema
+        - validateSchema

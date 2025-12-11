@@ -168,7 +168,7 @@ modules:
       steps:
         - validateSign
         - addRoute
-        # - validateSchema
+        - validateSchema
   
   # This module sends cascaded requests TO utility BPP (init, confirm)
   - name: bapTxnCaller
@@ -221,4 +221,4 @@ modules:
       steps:
         - addRoute
         - sign
-        # - validateSchema
+        - validateSchema

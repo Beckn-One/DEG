@@ -17,46 +17,6 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:state": {
-            "@type": "beckn:State",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "PENDING"
-            }
-          }
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
@@ -96,8 +56,53 @@
             "unit": "kWh"
           }
         }
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:fulfillmentStatus": "PENDING",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-

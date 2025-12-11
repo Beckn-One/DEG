@@ -100,7 +100,7 @@ services:
     
   sandbox-bpp:
     container_name: sandbox-bpp
-    image: sandbox-2.0:local  # Changed from fidedocker/sandbox-2.0:latest
+    image: fidedocker/sandbox-2.0:latest
     pull_policy: never 
     # platform: linux/amd64
     environment:
@@ -120,7 +120,7 @@ services:
 
   sandbox-utilitybpp:
     container_name: sandbox-utilitybpp
-    image: sandbox-2.0:local  # Changed from fidedocker/sandbox-2.0:latest
+    image: fidedocker/sandbox-2.0:latest
     pull_policy: never 
     # platform: linux/amd64
     environment:

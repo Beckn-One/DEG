@@ -62,7 +62,7 @@ modules:
       steps:
         - validateSign
         - addRoute
-        # - validateSchema
+        - validateSchema
   
   - name: utilitybppTxnCaller
     path: /bpp/caller/
@@ -114,4 +114,4 @@ modules:
       steps:
         - addRoute
         - sign
-        # - validateSchema
+        - validateSchema

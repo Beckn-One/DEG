@@ -17,40 +17,51 @@
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
           }
         }
       ],
-      "beckn:offers": [
+      "beckn:acceptedOffers": [
         {
-          "beckn:id": "offer-energy-001"
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
         }
       ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
       },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY"
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ]
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      }
     }
   }
 }
-
