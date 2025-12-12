@@ -9,9 +9,10 @@ It is a *batteries included* sandbox environment that requires minimal setup, an
 1. Install [docker desktop](https://www.docker.com/products/docker-desktop) & run it in background.
 2. Install [git](https://git-scm.com/downloads) ensure that git is added to your system path.
 3. Install [postman](https://www.postman.com/downloads/)
-4. Clone this repository using git command line interface and navigate to the install directory
+4. Clone this repository using git command line interface and navigate to the install directory. (TODO: branch p2p-trading needs to be removed after merge to main from the following command)
+
 ```
-git clone https://github.com/Beckn-One/DEG.git
+git clone -b p2p-trading https://github.com/Beckn-One/DEG.git
 cd DEG/testnet/p2p-energy-trading-devkit/install
 ```
 
