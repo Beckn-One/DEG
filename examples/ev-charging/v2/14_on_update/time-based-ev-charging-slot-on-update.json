@@ -3,8 +3,8 @@
     "version": "2.0.0",
     "action": "on_update",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "32f67afe-3d8c-4faa-bc2e-93b0791dcb02",
     "timestamp": "2025-01-27T11:45:00Z",
@@ -23,16 +23,8 @@
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
-        "beckn:name": "Ravi Kumar",
-        "beckn:organization": {
-          "descriptor": {
-            "name": "GreenCharge Pvt Ltd"
-          }
-        },
-        "beckn:address": "Apartment 123, MG Road, Bengaluru, Karnataka, 560001, India",
-        "beckn:email": "ravi.kumar@greencharge.com",
-        "beckn:phone": "+918765432100",
-        "beckn:taxId": "GSTIN29ABCDE1234F1Z5"
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
       },
       "beckn:orderItems": [
         {
@@ -43,9 +35,14 @@
             "@type": "beckn:Offer",
             "beckn:id": "offer-001",
             "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
               "name": "EV Charging Session Offer",
               "short_desc": "Fast charging session with CCS2 connector"
             },
+            "beckn:items": [
+              "pe-charging-01"
+            ],
+            "beckn:provider": "cpo1.com",
             "beckn:price": {
               "currency": "INR",
               "value": 18.0,
@@ -144,6 +141,7 @@
           "connectorType": "CCS2",
           "maxPowerKW": 50,
           "authorizationMode": "OTP",
+          "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
@@ -166,21 +164,6 @@
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }

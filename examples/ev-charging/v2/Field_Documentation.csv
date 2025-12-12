@@ -73,7 +73,7 @@ beckn:itemAttributes.socketCount,Socket Count,Integer,Yes,Number of sockets,2,on
 beckn:itemAttributes.reservationSupported,Reservation Supported,Boolean,Yes,Whether reservations allowed,true,on_discover,Advance booking capability
 beckn:itemAttributes.acceptedPaymentMethod,Accepted Payment Methods,Array[String],Yes,"Payment types accepted","[schema:UPI, schema:CreditCard, schema:Wallet]",on_discover,Supported payment methods
 beckn:itemAttributes.serviceLocation,Service Location,Object,Yes,Location details,{geo address},on_discover,Where service is provided
-beckn:itemAttributes.amenityFeature,Amenity Features,Array[String],No,Available amenities,"[Restaurant, Restroom, Wi-Fi]",on_discover,Facilities at location
+beckn:itemAttributes.amenityFeature,Amenity Features,Array[String],No,Available amenities,"[RESTAURANT, RESTROOM, WI-FI]",on_discover,Facilities at location
 beckn:itemAttributes.ocppId,OCPP ID,String,No,Open Charge Point Protocol ID,IN-ECO-BTM-01,on_discover,OCPP station identifier
 beckn:itemAttributes.evseId,EVSE ID,String,No,Electric Vehicle Supply Equipment ID,IN*ECO*BTM*01*CCS2*A,on_discover,ISO 15118 format
 beckn:itemAttributes.roamingNetwork,Roaming Network,String,No,Roaming network name,GreenRoam,on_discover,Interoperability network
