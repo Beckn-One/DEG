@@ -410,7 +410,7 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 - Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](../../../examples/ev_charging/01_discover/discovery-by-EVSE.json)
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/01_discover/discovery-by-EVSE.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/01_discover/discovery-by-EVSE.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -465,7 +465,7 @@ Note: Users can discover the charging station through off-network channels (such
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/02_on_discover/specific-evse-catalog.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/02_on_discover/specific-evse-catalog.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -803,7 +803,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -917,7 +917,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1110,7 +1110,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1296,7 +1296,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1484,7 +1484,7 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/06_on_status_1/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/06_on_status_1/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1659,7 +1659,7 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1847,7 +1847,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2036,7 +2036,7 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2224,7 +2224,7 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2413,7 +2413,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2459,7 +2459,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2509,7 +2509,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2707,7 +2707,7 @@ EV user reveives a notification in case of any error occuring during charging se
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -2884,7 +2884,7 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
 - Request:
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3082,7 +3082,7 @@ EV user receives the session details upon chargign session end: [Example](../../
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/15_rating/time-based-ev-charging-slot-rating.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/15_rating/time-based-ev-charging-slot-rating.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3134,7 +3134,7 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3185,7 +3185,7 @@ CPO accepts rating: [Example](../../../examples/ev_charging/16_on_rating/time-ba
 EV user contacts support: [Example](../../../examples/ev_charging/17_support/time-based-ev-charging-slot-support.json)
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3228,7 +3228,7 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3368,7 +3368,7 @@ Consumers can search for EV charging stations with specific criteria including l
 ##### 13.2.1.1.1. Discovery of EV charging services within a circular boundary
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/01_discover/discovery-within-a-circular-boundary.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/01_discover/discovery-within-a-circular-boundary.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3412,7 +3412,7 @@ Discovery of EV charging services within a circular boundary: [Example](../../..
 ##### 13.2.1.1.2. Discovery of EV charging stations along a route
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/01_discover/discovery-along-route.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/01_discover/discovery-along-route.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -3640,7 +3640,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
 - Request: 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/02_on_discover/time-based-ev-charging-slot-catalog.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/02_on_discover/time-based-ev-charging-slot-catalog.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4226,7 +4226,7 @@ Offer schema in the catalog:
 4. **ev:vehicle:** Includes the buyer’s EV details (make/model) to help the provider validate connector compatibility and charging capability.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/03_select/time-based-ev-charging-slot-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4354,7 +4354,7 @@ Recommendations for BPP:
 1. on\_select payload MUST have a quotation with detailed breakup for the selected time slot based on the parameters provided by the user in the select request.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/04_on_select/time-based-ev-charging-slot-on-select.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4634,7 +4634,7 @@ Recommendations for BAP:
 1. init payload MUST contain the billing details of the user in addition to the details which were part of the select request.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/05_init/time-based-ev-charging-slot-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4837,7 +4837,7 @@ Recommendations for BAP:
 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/06_on_init/time-based-ev-charging-slot-on-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5100,7 +5100,7 @@ Recommendations for BAP:
 
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/07_confirm/time-based-ev-charging-slot-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5299,7 +5299,7 @@ Recommendations for BAP:
   2. These details are in addition to the details which were part of the on\_init payload.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/08_on_confirm/time-based-ev-charging-slot-on-confirm.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5509,7 +5509,7 @@ Once these physical steps are completed, the charging session can be initiated t
   * **beckn:purpose:** Human-readable explanation of why this authorization is needed — in this case, to verify the user at the EV station before starting the session.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/09_update/ev-charging-session-start-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5701,7 +5701,7 @@ Once these physical steps are completed, the charging session can be initiated t
   2. **ev:code:** "CHARGING-ACTIVE" — a standardized machine-readable code that BAPs can use to update the user interface, start timers, or calculate live charging duration.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/10_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5895,7 +5895,7 @@ Once these physical steps are completed, the charging session can be initiated t
   2. **beckn:track-fulfillment:** Boolean flag indicating whether live fulfillment tracking is enabled (true means the BPP should send periodic state updates to the callback URL).
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/11_track/time-based-ev-charging-slot-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -5959,7 +5959,7 @@ Once these physical steps are completed, the charging session can be initiated t
   Timestamp showing when these readings were last recorded or pushed — helps synchronize live dashboards or notifications on the BAP side.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/12_on_track/time-based-ev-charging-slot-on-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6074,7 +6074,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 - Request: EV user reveives details in case of any error during a charging session: [Example](../../../examples/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json)
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/13_on_status/time-based-ev-charging-slot-on-status.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6278,7 +6278,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
     Includes transaction identifiers, timestamps, payment provider, and invoice reference for settlement and customer records.
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/09_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6456,7 +6456,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 - Request:
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/14_on_update/time-based-ev-charging-slot-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6796,7 +6796,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 - Request: CPO accepts rating: [Example](../../../examples/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json)
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/16_on_rating/time-based-ev-charging-slot-on-rating.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6844,7 +6844,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 - Request: EV user contacts support: [Example](../../../examples/ev_charging/17_support/time-based-ev-charging-slot-support.json)
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/17_support/time-based-ev-charging-slot-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -6888,7 +6888,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
 - Request: CPO returns support information: [Example](../../../examples/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json)
 
 <details>
-<summary><a href="../../../../examples/v2/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/v2/ev_charging/18_on_support/time-based-ev-charging-slot-on-support.json">Example json :rocket:</a></summary>
 
 ```json
 {
