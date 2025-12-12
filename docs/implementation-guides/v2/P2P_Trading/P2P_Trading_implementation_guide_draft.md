@@ -517,7 +517,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - **Note**: v2 does not support `intent` object. All search parameters are expressed via JSONPath filters.
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/discover-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/discover-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -569,7 +569,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/discover-response.json">Async Response Example: `on_discover`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/discover-response.json">Async Response Example: `on_discover`</a></summary>
 
 ```json
 {
@@ -644,8 +644,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "beckn:Descriptor",
               "schema:name": "Daily Settlement Solar Energy Offer"
             },
-            "beckn:provider": "provider-solar-farm-001",
-            "beckn:items": ["energy-resource-solar-001"],
             "beckn:price": {
               "@type": "schema:PriceSpecification",
               "schema:price": 0.15,
@@ -668,6 +666,18 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
                 "start": "2024-10-04T00:00:00Z",
                 "end": "2024-10-04T23:59:59Z"
               }
+            },
+            "beckn:orderItems": [
+              {
+                "beckn:lineId": "line-1"
+              }
+            ],
+            "beckn:seller": "provider-solar-farm-001",
+            "beckn:orderStatus": "CREATED",
+            "beckn:buyer": {
+              "beckn:id": "buyer-placeholder",
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+              "@type": "beckn:Buyer"
             }
           }
         ]
@@ -675,8 +685,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
     ]
   }
 }
-
-
 ```
 </details>
 
@@ -696,7 +704,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 **Endpoint**: `POST /select`
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/select-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/select-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -718,28 +726,41 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
           }
         }
       ],
-      "beckn:offers": [
+      "beckn:acceptedOffers": [
         {
-          "beckn:id": "offer-energy-001"
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
         }
       ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -754,7 +775,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 </details>
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/select-response.json">Asynchronous Response Example: `on_select`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/select-response.json">Asynchronous Response Example: `on_select`</a></summary>
 
 ```json
 {
@@ -776,23 +797,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
       "beckn:orderValue": {
         "@type": "schema:PriceSpecification",
         "schema:price": 4.0,
@@ -811,12 +815,42 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
             "description": "Wheeling Charges"
           }
         ]
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -837,7 +871,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 - v1 `Order.attributes.*` → v2 `Order.orderAttributes.*` (path change)
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/init-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/init-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -859,84 +893,54 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
           }
         }
       ],
-      "beckn:offers": [
+      "beckn:acceptedOffers": [
         {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:stops": [
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-start-001",
-              "beckn:type": "START",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "100200300"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            },
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-end-001",
-              "beckn:type": "END",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "98765456"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            }
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
           ]
         }
       ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
-      "beckn:billing": {
-        "@type": "beckn:Billing",
-        "beckn:name": "Energy Consumer",
-        "beckn:email": "consumer@example.com",
-        "beckn:phone": "+1-555-0100"
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -951,7 +955,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 </details>
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/init-response.json">Asynchronous Response Example: `on_init`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/init-response.json">Asynchronous Response Example: `on_init`</a></summary>
 
 ```json
 {
@@ -973,59 +977,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:stops": [
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-start-001",
-              "beckn:type": "START",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "100200300"
-              }
-            },
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-end-001",
-              "beckn:type": "END",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "98765456"
-              }
-            }
-          ]
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
@@ -1043,12 +994,55 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
             "https://example.com/certs/solar-panel-cert.pdf"
           ]
         }
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -1078,7 +1072,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
   - `validUntil`: Validity timestamp for the limit information
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-init-request.json">Cascaded Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/cascaded-init-request.json">Cascaded Request Example</a></summary>
 
 ```json
 {
@@ -1100,83 +1094,54 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
           }
         }
       ],
-      "beckn:offers": [
+      "beckn:acceptedOffers": [
         {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:stops": [
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-start-001",
-              "beckn:type": "START",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "100200300"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            },
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-end-001",
-              "beckn:type": "END",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "98765456"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            }
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
           ]
         }
       ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
-      "beckn:billing": {
-        "@type": "beckn:Billing",
-        "beckn:name": "Energy Consumer",
-        "beckn:email": "consumer@example.com",
-        "beckn:phone": "+1-555-0100"
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
 ```
 </details>
 
@@ -1191,7 +1156,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 </details>
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-on-init-response.json">Cascaded asynchronous Response Example: `on_init`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/cascaded-on-init-response.json">Cascaded asynchronous Response Example: `on_init`</a></summary>
 
 ```json
 {
@@ -1213,73 +1178,6 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:stops": [
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-start-001",
-              "beckn:type": "START",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "100200300"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            },
-            {
-              "@type": "beckn:Stop",
-              "beckn:id": "stop-end-001",
-              "beckn:type": "END",
-              "beckn:location": {
-                "@type": "beckn:Location",
-                "beckn:address": "98765456"
-              },
-              "beckn:time": {
-                "@type": "beckn:Time",
-                "beckn:range": {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
-                }
-              }
-            }
-          ]
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
       "beckn:orderValue": {
         "@type": "schema:PriceSpecification",
         "schema:price": 2.5,
@@ -1316,16 +1214,54 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
           }
         }
       },
-      "beckn:billing": {
-        "@type": "beckn:Billing",
-        "beckn:name": "Energy Consumer",
-        "beckn:email": "consumer@example.com",
-        "beckn:phone": "+1-555-0100"
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
 ```
 </details>
 
@@ -1336,7 +1272,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 **Endpoint**: `POST /confirm`
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/confirm-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/confirm-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1358,44 +1294,54 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
           }
         }
       ],
-      "beckn:offers": [
+      "beckn:acceptedOffers": [
         {
-          "beckn:id": "offer-energy-001"
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
         }
       ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
       },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY"
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ]
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -1410,7 +1356,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
 </details>
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/confirm-response.json">Asynchronous Response Example: `on_confirm`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/confirm-response.json">Asynchronous Response Example: `on_confirm`</a></summary>
 
 ```json
 {
@@ -1432,46 +1378,6 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:state": {
-            "@type": "beckn:State",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "PENDING"
-            }
-          }
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
@@ -1499,12 +1405,56 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
             "currency": "USD"
           }
         ]
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:fulfillmentStatus": "PENDING",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -1528,7 +1478,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
   - `validUntil`: Validity timestamp for the limit information
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-confirm-request.json">Cascaded Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/cascaded-confirm-request.json">Cascaded Request Example</a></summary>
 
 ```json
 {
@@ -1550,49 +1500,59 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
           }
         }
       ],
-      "beckn:offers": [
+      "beckn:acceptedOffers": [
         {
-          "beckn:id": "offer-energy-001"
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
         }
       ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
       },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY"
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ]
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      }
     }
   }
 }
-
-
 ```
 </details>
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/cascaded-on-confirm-response.json">Cascaded asynchronous Response Example: `on_confirm`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/cascaded-on-confirm-response.json">Cascaded asynchronous Response Example: `on_confirm`</a></summary>
 
 ```json
 {
@@ -1614,46 +1574,6 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:state": {
-            "@type": "beckn:State",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "PENDING"
-            }
-          }
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
@@ -1693,12 +1613,56 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
             "unit": "kWh"
           }
         }
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:fulfillmentStatus": "PENDING",
+        "beckn:mode": "DELIVERY",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
@@ -1709,7 +1673,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
 **Endpoint**: `POST /status`
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/status-request.json">Request Example</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/status-request.json">Request Example</a></summary>
 
 ```json
 {
@@ -1728,14 +1692,10 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
       "beckn:id": "order-energy-001"
     }
   }
 }
-
-
 ```
 </details>
 
@@ -1750,7 +1710,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
 </details>
 
 <details>
-<summary><a href="../../../../examples/v2/P2P_Trading/status-response.json">Asynchronous Response Example: `on_status`</a></summary>
+<summary><a href="../../../../examples/p2p-trading/v2/status-response.json">Asynchronous Response Example: `on_status`</a></summary>
 
 ```json
 {
@@ -1772,99 +1732,6 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
-      "beckn:items": [
-        {
-          "beckn:id": "energy-resource-solar-001",
-          "quantity": {
-            "count": 10.0,
-            "unit": "kWh"
-          }
-        }
-      ],
-      "beckn:offers": [
-        {
-          "beckn:id": "offer-energy-001"
-        }
-      ],
-      "beckn:provider": {
-        "beckn:id": "provider-solar-farm-001"
-      },
-      "beckn:fulfillments": [
-        {
-          "@type": "beckn:Fulfillment",
-          "beckn:id": "fulfillment-energy-001",
-          "beckn:type": "ENERGY_DELIVERY",
-          "beckn:state": {
-            "@type": "beckn:State",
-            "beckn:descriptor": {
-              "@type": "beckn:Descriptor",
-              "schema:name": "IN_PROGRESS"
-            }
-          },
-          "beckn:attributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeDelivery/v0.2/context.jsonld",
-            "@type": "EnergyTradeDelivery",
-            "deliveryStatus": "IN_PROGRESS",
-            "deliveryMode": "GRID_INJECTION",
-            "deliveredQuantity": 9.8,
-            "deliveryStartTime": "2024-10-04T10:00:00Z",
-            "deliveryEndTime": null,
-            "meterReadings": [
-              {
-                "timestamp": "2024-10-04T10:00:00Z",
-                "sourceReading": 1000.0,
-                "targetReading": 990.0,
-                "energyFlow": 10.0
-              },
-              {
-                "timestamp": "2024-10-04T12:00:00Z",
-                "sourceReading": 1000.5,
-                "targetReading": 990.3,
-                "energyFlow": 10.2
-              },
-              {
-                "timestamp": "2024-10-04T14:00:00Z",
-                "sourceReading": 1001.0,
-                "targetReading": 990.8,
-                "energyFlow": 10.2
-              }
-            ],
-            "telemetry": [
-              {
-                "eventTime": "2024-10-04T12:00:00Z",
-                "metrics": [
-                  {
-                    "name": "ENERGY",
-                    "value": 5.8,
-                    "unitCode": "KWH"
-                  },
-                  {
-                    "name": "POWER",
-                    "value": 2.5,
-                    "unitCode": "KW"
-                  },
-                  {
-                    "name": "VOLTAGE",
-                    "value": 240.0,
-                    "unitCode": "VLT"
-                  }
-                ]
-              }
-            ],
-            "settlementCycleId": "settle-2024-10-04-001",
-            "lastUpdated": "2024-10-04T15:30:00Z"
-          }
-        }
-      ],
-      "beckn:payments": [
-        {
-          "@type": "beckn:Payment",
-          "beckn:id": "payment-energy-001",
-          "beckn:type": "ON-FULFILLMENT",
-          "beckn:status": "NOT-PAID",
-          "beckn:collected_by": "BPP"
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeContract/v0.2/context.jsonld",
         "@type": "EnergyTradeContract",
@@ -1893,12 +1760,109 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
           }
         ],
         "lastUpdated": "2024-10-04T15:30:00Z"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          }
+        }
+      ],
+      "beckn:acceptedOffers": [
+        {
+          "beckn:id": "offer-energy-001",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+          "@type": "beckn:Offer",
+          "beckn:descriptor": {
+            "@type": "beckn:Descriptor",
+            "schema:name": "Offer Descriptor"
+          },
+          "beckn:provider": "provider-solar-farm-001",
+          "beckn:items": [
+            "dummy-item-1"
+          ]
+        }
+      ],
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:fulfillment": {
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:fulfillmentStatus": "IN_PROGRESS",
+        "beckn:mode": "DELIVERY",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+          "@type": "EnergyTradeDelivery",
+          "deliveryStatus": "IN_PROGRESS",
+          "deliveryMode": "GRID_INJECTION",
+          "deliveredQuantity": 9.8,
+          "deliveryStartTime": "2024-10-04T10:00:00Z",
+          "deliveryEndTime": null,
+          "meterReadings": [
+            {
+              "timestamp": "2024-10-04T10:00:00Z",
+              "sourceReading": 1000.0,
+              "targetReading": 990.0,
+              "energyFlow": 10.0
+            },
+            {
+              "timestamp": "2024-10-04T12:00:00Z",
+              "sourceReading": 1000.5,
+              "targetReading": 990.3,
+              "energyFlow": 10.2
+            },
+            {
+              "timestamp": "2024-10-04T14:00:00Z",
+              "sourceReading": 1001.0,
+              "targetReading": 990.8,
+              "energyFlow": 10.2
+            }
+          ],
+          "telemetry": [
+            {
+              "eventTime": "2024-10-04T12:00:00Z",
+              "metrics": [
+                {
+                  "name": "ENERGY",
+                  "value": 5.8,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "POWER",
+                  "value": 2.5,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 240.0,
+                  "unitCode": "VLT"
+                }
+              ]
+            }
+          ],
+          "settlementCycleId": "settle-2024-10-04-001",
+          "lastUpdated": "2024-10-04T15:30:00Z"
+        },
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:payment": {
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-energy-001",
+        "beckn:paymentStatus": "PENDING",
+        "beckn:beneficiary": "BPP",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld"
+      },
+      "beckn:orderStatus": "CREATED",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
       }
     }
   }
 }
-
-
 ```
 </details>
 
