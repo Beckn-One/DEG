@@ -6,8 +6,10 @@
     "timestamp": "2024-01-15T10:30:00Z",
     "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
