@@ -11,8 +11,27 @@ import os
 import re
 import uuid
 import argparse
+import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
+
+# Import validation functions from validate_schema
+try:
+    # Try importing as module (if scripts directory is in path)
+    from validate_schema import get_schema_store, process_file
+except ImportError:
+    # If running as a script, import from same directory
+    import importlib.util
+    validate_schema_path = Path(__file__).parent / "validate_schema.py"
+    if validate_schema_path.exists():
+        spec = importlib.util.spec_from_file_location("validate_schema", validate_schema_path)
+        validate_schema = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(validate_schema)
+        get_schema_store = validate_schema.get_schema_store
+        process_file = validate_schema.process_file
+    else:
+        get_schema_store = None
+        process_file = None
 
 
 # Configuration for different devkits
@@ -564,6 +583,8 @@ def generate_collection(
     print(f"\n✓ Generated Postman collection: {output_path}")
     print(f"  Total folders: {len(collection_items)}")
     print(f"  Total requests: {sum(len(item['item']) for item in collection_items)}")
+    
+    return output_path
 
 
 def main():
@@ -610,6 +631,18 @@ def main():
         default=None,
         help="Collection description (default: auto-generated)"
     )
+    parser.add_argument(
+        "--validate",
+        action="store_true",
+        default=True,
+        help="Validate generated collection against schema (default: True)"
+    )
+    parser.add_argument(
+        "--no-validate",
+        dest="validate",
+        action="store_false",
+        help="Skip schema validation"
+    )
     
     args = parser.parse_args()
     
@@ -638,7 +671,7 @@ def main():
     print("=" * 60)
     print()
     
-    generate_collection(
+    output_path = generate_collection(
         examples_dir=examples_dir,
         output_path=output_path,
         devkit=args.devkit,
@@ -646,6 +679,22 @@ def main():
         collection_name=collection_name,
         collection_description=args.description
     )
+    
+    # Validate collection if requested
+    if args.validate:
+        if get_schema_store is None or process_file is None:
+            print("\n⚠ Warning: Schema validation module not available, skipping validation")
+        else:
+            print("\n" + "=" * 60)
+            print("Validating Postman collection against schema...")
+            print("=" * 60)
+            try:
+                schema_store, attributes_schema = get_schema_store()
+                process_file(str(output_path), schema_store, attributes_schema)
+                print("\n✓ Schema validation completed")
+            except Exception as e:
+                print(f"\n⚠ Warning: Schema validation failed: {e}")
+                print("  Collection was still generated successfully")
 
 
 if __name__ == "__main__":
