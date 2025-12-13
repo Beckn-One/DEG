@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "b964264f-d487-442d-a258-b8b51f2d65c9",
+    "_postman_id": "b2cfd1ae-fa4a-44de-9b81-7d1d6687dbea",
     "name": "ev-charging:BAP-DEG",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "Postman collection for Buyer Application Platform implementing ev-charging APIs based on Beckn Protocol v2"
