@@ -689,11 +689,13 @@ def main():
             print("Validating Postman collection against schema...")
             print("=" * 60)
             try:
-                schema_store, attributes_schema = get_schema_store()
-                process_file(str(output_path), schema_store, attributes_schema)
+                schema_store, attributes_schema, attribute_schemas_map = get_schema_store()
+                process_file(str(output_path), schema_store, attributes_schema, attribute_schemas_map)
                 print("\n✓ Schema validation completed")
             except Exception as e:
                 print(f"\n⚠ Warning: Schema validation failed: {e}")
+                import traceback
+                traceback.print_exc()
                 print("  Collection was still generated successfully")
 
 
