@@ -480,7 +480,9 @@ Note: Users can discover the charging station through off-network channels (such
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-cds.com",
+    "bpp_uri": "https://example-cds.com/pilot/cds/energy/v2"
   },
   "message": {
     "catalogs": [
@@ -785,7 +787,6 @@ Note: Users can discover the charging station through off-network channels (such
     ]
   }
 }
-
 ```
 </details>
 
@@ -821,6 +822,8 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
     "timestamp": "2024-01-15T10:30:00Z",
     "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "ttl": "PT30S"
@@ -937,7 +940,9 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -1092,7 +1097,6 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
     }
   }
 }
-
 ```
 </details>
 
@@ -1130,7 +1134,9 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "order": {
@@ -1313,7 +1319,9 @@ EV user requests final quote with payment terms by providing billing details: [E
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -1498,7 +1506,9 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "d4da89d5-2e42-4c36-9139-7f5682d5f104",
     "timestamp": "2025-01-27T10:05:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -1670,7 +1680,9 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "order": {
@@ -1855,7 +1867,9 @@ EV user confirms reservation of a slot at a particular charging station at a par
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -2036,6 +2050,8 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
     "version": "2.0.0",
     "action": "update",
     "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
@@ -2226,7 +2242,9 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:30Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -2480,7 +2498,9 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -2526,21 +2546,61 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
             {
               "eventTime": "2025-01-27T17:00:00Z",
               "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 62.5, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 18.4, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 10.2, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 392, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 47.0, "unitCode": "AMP" }
+                {
+                  "name": "STATE_OF_CHARGE",
+                  "value": 62.5,
+                  "unitCode": "PERCENTAGE"
+                },
+                {
+                  "name": "POWER",
+                  "value": 18.4,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "ENERGY",
+                  "value": 10.2,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 392,
+                  "unitCode": "VLT"
+                },
+                {
+                  "name": "CURRENT",
+                  "value": 47.0,
+                  "unitCode": "AMP"
+                }
               ]
             },
             {
               "eventTime": "2025-01-27T17:05:00Z",
               "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 65.0, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 17.1, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 11.1, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 388, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 44.2, "unitCode": "AMP" }
+                {
+                  "name": "STATE_OF_CHARGE",
+                  "value": 65.0,
+                  "unitCode": "PERCENTAGE"
+                },
+                {
+                  "name": "POWER",
+                  "value": 17.1,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "ENERGY",
+                  "value": 11.1,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 388,
+                  "unitCode": "VLT"
+                },
+                {
+                  "name": "CURRENT",
+                  "value": 44.2,
+                  "unitCode": "AMP"
+                }
               ]
             }
           ]
@@ -2549,7 +2609,6 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
     }
   }
 }
-
 ```
 </details>
 
@@ -2587,7 +2646,9 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T13:07:02Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -2782,7 +2843,9 @@ EV user reveives a notification in case of any error occuring during charging se
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "order": {
@@ -2956,7 +3019,9 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "32f67afe-3d8c-4faa-bc2e-93b0791dcb02",
     "timestamp": "2025-01-27T11:45:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -3151,7 +3216,9 @@ EV user receives the session details upon chargign session end: [Example](../../
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "89ee20fe-b592-48b0-a5c5-e38f6b90e569",
     "timestamp": "2025-01-27T12:00:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "id": "fulfillment-001",
@@ -3161,11 +3228,16 @@ EV user receives the session details upon chargign session end: [Example](../../
     "category": "fulfillment",
     "feedback": {
       "comments": "Excellent charging experience! The station was clean, easy to find, and the charging was fast and reliable. The staff was helpful and the payment process was smooth.",
-      "tags": ["fast-charging", "easy-to-use", "clean-station", "helpful-staff", "smooth-payment"]
+      "tags": [
+        "fast-charging",
+        "easy-to-use",
+        "clean-station",
+        "helpful-staff",
+        "smooth-payment"
+      ]
     }
   }
 }
-
 ```
 </details>
 
@@ -3203,7 +3275,9 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "89ee20fe-b592-48b0-a5c5-e38f6b90e569",
     "timestamp": "2025-01-27T12:00:30Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "received": true,
@@ -3214,7 +3288,6 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
     }
   }
 }
-
 ```
 </details>
 
@@ -3254,14 +3327,15 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "ref_id": "order-bpp-789012",
     "ref_type": "order"
   }
 }
-
 ```
 </details>
 - Successful Response: 
@@ -3297,7 +3371,9 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:30Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "support": {
@@ -3305,7 +3381,7 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
       "phone": "18001080",
       "email": "support@bluechargenet-aggregator.io",
       "url": "https://support.bluechargenet-aggregator.io/ticket/SUP-20250730-001",
-      "hours": "Mon–Sun 24/7 IST",
+      "hours": "Mon\u2013Sun 24/7 IST",
       "channels": [
         "PHONE",
         "EMAIL",
@@ -3713,7 +3789,9 @@ Discovering chargers in a specific circular area, a specific connector type and 
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-cds.com",
+    "bpp_uri": "https://example-cds.com/pilot/cds/energy/v2"
   },
   "message": {
     "catalogs": [
@@ -4164,7 +4242,6 @@ Discovering chargers in a specific circular area, a specific connector type and 
     ]
   }
 }
-
 ```
 </details>
 
@@ -4297,6 +4374,8 @@ Offer schema in the catalog:
     "timestamp": "2024-01-15T10:30:00Z",
     "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "ttl": "PT30S"
@@ -4427,7 +4506,9 @@ Recommendations for BPP:
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -4582,7 +4663,6 @@ Recommendations for BPP:
     }
   }
 }
-
 ```
 </details>
 
@@ -4707,7 +4787,9 @@ Recommendations for BAP:
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "order": {
@@ -4907,7 +4989,9 @@ Recommendations for BAP:
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -5167,7 +5251,9 @@ Recommendations for BAP:
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "order": {
@@ -5363,7 +5449,9 @@ Recommendations for BAP:
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -5565,6 +5653,8 @@ Once these physical steps are completed, the charging session can be initiated t
     "version": "2.0.0",
     "action": "update",
     "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
     "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
@@ -5759,7 +5849,9 @@ Once these physical steps are completed, the charging session can be initiated t
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:30Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -6036,7 +6128,9 @@ Once these physical steps are completed, the charging session can be initiated t
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -6082,21 +6176,61 @@ Once these physical steps are completed, the charging session can be initiated t
             {
               "eventTime": "2025-01-27T17:00:00Z",
               "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 62.5, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 18.4, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 10.2, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 392, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 47.0, "unitCode": "AMP" }
+                {
+                  "name": "STATE_OF_CHARGE",
+                  "value": 62.5,
+                  "unitCode": "PERCENTAGE"
+                },
+                {
+                  "name": "POWER",
+                  "value": 18.4,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "ENERGY",
+                  "value": 10.2,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 392,
+                  "unitCode": "VLT"
+                },
+                {
+                  "name": "CURRENT",
+                  "value": 47.0,
+                  "unitCode": "AMP"
+                }
               ]
             },
             {
               "eventTime": "2025-01-27T17:05:00Z",
               "metrics": [
-                { "name": "STATE_OF_CHARGE", "value": 65.0, "unitCode": "PERCENTAGE" },
-                { "name": "POWER", "value": 17.1, "unitCode": "KWH" },
-                { "name": "ENERGY", "value": 11.1, "unitCode": "KW" },
-                { "name": "VOLTAGE", "value": 388, "unitCode": "VLT" },
-                { "name": "CURRENT", "value": 44.2, "unitCode": "AMP" }
+                {
+                  "name": "STATE_OF_CHARGE",
+                  "value": 65.0,
+                  "unitCode": "PERCENTAGE"
+                },
+                {
+                  "name": "POWER",
+                  "value": 17.1,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "ENERGY",
+                  "value": 11.1,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 388,
+                  "unitCode": "VLT"
+                },
+                {
+                  "name": "CURRENT",
+                  "value": 44.2,
+                  "unitCode": "AMP"
+                }
               ]
             }
           ]
@@ -6105,7 +6239,6 @@ Once these physical steps are completed, the charging session can be initiated t
     }
   }
 }
-
 ```
 </details>
 
@@ -6208,7 +6341,9 @@ API Implementation: The above under and overcharge scenarios are supported throu
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T13:07:02Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -6409,7 +6544,9 @@ API Implementation: The above under and overcharge scenarios are supported throu
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "order": {
@@ -6584,7 +6721,9 @@ API Implementation: The above under and overcharge scenarios are supported throu
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "32f67afe-3d8c-4faa-bc2e-93b0791dcb02",
     "timestamp": "2025-01-27T11:45:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
@@ -6921,7 +7060,9 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "89ee20fe-b592-48b0-a5c5-e38f6b90e569",
     "timestamp": "2025-01-27T12:00:30Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "received": true,
@@ -6932,7 +7073,6 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     }
   }
 }
-
 ```
 </details>
 
@@ -6969,14 +7109,15 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
   },
   "message": {
     "ref_id": "order-bpp-789012",
     "ref_type": "order"
   }
 }
-
 ```
 </details>
 
@@ -7013,7 +7154,9 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:30Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "support": {
@@ -7021,7 +7164,7 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
       "phone": "18001080",
       "email": "support@bluechargenet-aggregator.io",
       "url": "https://support.bluechargenet-aggregator.io/ticket/SUP-20250730-001",
-      "hours": "Mon–Sun 24/7 IST",
+      "hours": "Mon\u2013Sun 24/7 IST",
       "channels": [
         "PHONE",
         "EMAIL",

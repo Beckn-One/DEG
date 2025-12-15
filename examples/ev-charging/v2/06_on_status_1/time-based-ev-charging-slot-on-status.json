@@ -8,7 +8,9 @@
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "d4da89d5-2e42-4c36-9139-7f5682d5f104",
     "timestamp": "2025-01-27T10:05:00Z",
-    "ttl": "PT30S"
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
