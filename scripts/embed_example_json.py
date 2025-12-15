@@ -5,12 +5,13 @@ To use this, embed following structure in your markdown file.
 You can use either absolute paths (from the repository root) or paths relative to the markdown file:
 
 <details>
-  <summary><a href="path/to/example.json">Example JSON</a></summary>
+  <summary><a href="path/to/example.json">Example</a></summary>
 
   <!-- Existing content will be replaced -->
 </details>
 
-and run this script to replace the content with the contents of the referenced JSON files.
+The script will match any <details> block where the href link contains "json" (case-insensitive).
+Run this script to replace the content with the contents of the referenced JSON files.
 
 from the repository root, run:
   python3 scripts/embed_example_json.py path/to/markdown_file.md
@@ -26,10 +27,10 @@ from pathlib import Path
 from typing import Callable
 
 
-# Regex pattern to match <details> blocks whose summary anchor text contains "json".
+# Regex pattern to match <details> blocks whose href link contains "json".
 DETAILS_PATTERN = re.compile(
-    r"(?P<header><details>\s*<summary>\s*<a\s+href=(?P<quote>[\"'])(?P<link>[^\"']+)(?P=quote)[^>]*>"
-    r"(?P<label>[^<]*json[^<]*)</a>\s*</summary>)"
+    r"(?P<header><details>\s*<summary>\s*<a\s+href=(?P<quote>[\"'])(?P<link>[^\"']*json[^\"']*)(?P=quote)[^>]*>"
+    r"(?P<label>[^<]*)</a>\s*</summary>)"
     r"(?P<gap>\s*)"
     r"(?P<body>.*?)(?P<suffix></details>)",
     re.DOTALL | re.IGNORECASE,
@@ -106,7 +107,7 @@ def main() -> None:
     """
     Command-line interface for embedding example JSON into markdown files.
     - Looks for <details> blocks whose summary is an anchor (<summary><a ...>...</a></summary>)
-      where the anchor text contains the word "json" (case-insensitive).
+      where the href link contains the word "json" (case-insensitive).
       Replaces block content with JSON file contents.
     - json_file_link can be an absolute path (from repo root) or relative to the markdown file.
     - Supports dry-run mode to preview changes.

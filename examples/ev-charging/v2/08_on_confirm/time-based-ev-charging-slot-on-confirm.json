@@ -5,8 +5,6 @@
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -157,22 +155,6 @@
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }

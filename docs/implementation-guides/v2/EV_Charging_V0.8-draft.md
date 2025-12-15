@@ -480,8 +480,6 @@ Note: Users can discover the charging station through off-network channels (such
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
-    "bpp_id": "example-cds.com",
-    "bpp_uri": "https://example-cds.com/pilot/cds/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
@@ -818,10 +816,8 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
     "timestamp": "2024-01-15T10:30:00Z",
     "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
@@ -832,7 +828,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -894,15 +890,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }
@@ -944,8 +932,6 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
@@ -956,7 +942,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
       "beckn:orderStatus": "PENDING",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -1134,10 +1120,8 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
     "version": "2.0.0",
     "action": "init",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
@@ -1284,19 +1268,6 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        }      
       }
     }
   }
@@ -1337,8 +1308,6 @@ EV user requests final quote with payment terms by providing billing details: [E
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
@@ -1487,20 +1456,6 @@ EV user requests final quote with payment terms by providing billing details: [E
           "WALLET"
         ],
         "beckn:paymentStatus": "INITIATED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1541,8 +1496,6 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "d4da89d5-2e42-4c36-9139-7f5682d5f104",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -1691,20 +1644,6 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
           "vehicleModel": "Nexon EV",
           "sessionStatus": "PENDING"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1730,10 +1669,8 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
     "version": "2.0.0",
     "action": "confirm",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -1883,22 +1820,6 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -1938,8 +1859,6 @@ EV user confirms reservation of a slot at a particular charging station at a par
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -2090,22 +2009,6 @@ EV user confirms reservation of a slot at a particular charging station at a par
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -2143,10 +2046,8 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
     "version": "2.0.0",
     "action": "update",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:00Z",
@@ -2297,21 +2198,6 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2350,8 +2236,6 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:30Z",
@@ -2502,21 +2386,6 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2554,10 +2423,8 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
     "version": "2.0.0",
     "action": "track",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
@@ -2565,27 +2432,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "INPROGRESS",
-      "beckn:seller": "cpo1.com",
-      "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:id": "user-123"
-      },
-      "beckn:orderItems": [
-        {
-          "beckn:lineId": "line-001",
-          "beckn:orderedItem": "pe-charging-01",
-          "beckn:quantity": {
-            "unitText": "Kilowatt Hour",
-            "unitCode": "KWH",
-            "unitQuantity": 1
-          }
-        }
-      ]
+      "beckn:id": "order-bpp-789012"
     }
   }
 }
@@ -2623,9 +2470,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
     "action": "on_track",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
@@ -2733,8 +2578,6 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T13:07:02Z",
@@ -2894,21 +2737,6 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -2946,10 +2774,8 @@ EV user reveives a notification in case of any error occuring during charging se
     "version": "2.0.0",
     "action": "update",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:00Z",
@@ -3100,21 +2926,6 @@ EV user reveives a notification in case of any error occuring during charging se
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3142,8 +2953,6 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "32f67afe-3d8c-4faa-bc2e-93b0791dcb02",
     "timestamp": "2025-01-27T11:45:00Z",
@@ -3303,21 +3112,6 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -3355,10 +3149,8 @@ EV user receives the session details upon chargign session end: [Example](../../
     "version": "2.0.0",
     "action": "rating",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "89ee20fe-b592-48b0-a5c5-e38f6b90e569",
     "timestamp": "2025-01-27T12:00:00Z",
@@ -3411,8 +3203,6 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "89ee20fe-b592-48b0-a5c5-e38f6b90e569",
     "timestamp": "2025-01-27T12:00:30Z",
@@ -3462,10 +3252,8 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
     "version": "2.0.0",
     "action": "support",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:00Z",
@@ -3509,8 +3297,6 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/tim
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:30Z",
@@ -3930,8 +3716,6 @@ Discovering chargers in a specific circular area, a specific connector type and 
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
-    "bpp_id": "example-cds.com",
-    "bpp_uri": "https://example-cds.com/pilot/cds/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
@@ -4516,10 +4300,8 @@ Offer schema in the catalog:
     "timestamp": "2024-01-15T10:30:00Z",
     "message_id": "bb9f86db-9a3d-4e9c-8c11-81c8f1a7b901",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
@@ -4530,7 +4312,7 @@ Offer schema in the catalog:
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -4592,15 +4374,7 @@ Offer schema in the catalog:
             }
           }
         }
-      ],
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "buyerFinderFee": {
-          "feeType": "PERCENTAGE",
-          "feeValue": 2.5
-        }
-      }
+      ]
     }
   }
 }
@@ -4656,8 +4430,6 @@ Recommendations for BPP:
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
@@ -4668,7 +4440,7 @@ Recommendations for BPP:
       "beckn:orderStatus": "PENDING",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -4933,10 +4705,8 @@ Recommendations for BAP:
     "version": "2.0.0",
     "action": "init",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
@@ -5083,19 +4853,6 @@ Recommendations for BAP:
           "vehicleMake": "Tata",
           "vehicleModel": "Nexon EV"
         }
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        }      
       }
     }
   }
@@ -5153,8 +4910,6 @@ Recommendations for BAP:
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T10:00:00Z",
@@ -5303,20 +5058,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "INITIATED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5430,10 +5171,8 @@ Recommendations for BAP:
     "version": "2.0.0",
     "action": "confirm",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -5583,22 +5322,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5649,8 +5372,6 @@ Recommendations for BAP:
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
     "timestamp": "2025-01-27T10:05:00Z",
@@ -5801,22 +5522,6 @@ Recommendations for BAP:
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order",
-        "sessionStatus": "PENDING"
       }
     }
   }
@@ -5875,10 +5580,8 @@ Once these physical steps are completed, the charging session can be initiated t
     "version": "2.0.0",
     "action": "update",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:00Z",
@@ -6029,21 +5732,6 @@ Once these physical steps are completed, the charging session can be initiated t
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6086,8 +5774,6 @@ Once these physical steps are completed, the charging session can be initiated t
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:30Z",
@@ -6238,21 +5924,6 @@ Once these physical steps are completed, the charging session can be initiated t
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6295,10 +5966,8 @@ Once these physical steps are completed, the charging session can be initiated t
     "version": "2.0.0",
     "action": "track",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
@@ -6306,27 +5975,7 @@ Once these physical steps are completed, the charging session can be initiated t
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-      "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
-      "beckn:orderStatus": "INPROGRESS",
-      "beckn:seller": "cpo1.com",
-      "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:id": "user-123"
-      },
-      "beckn:orderItems": [
-        {
-          "beckn:lineId": "line-001",
-          "beckn:orderedItem": "pe-charging-01",
-          "beckn:quantity": {
-            "unitText": "Kilowatt Hour",
-            "unitCode": "KWH",
-            "unitQuantity": 1
-          }
-        }
-      ]
+      "beckn:id": "order-bpp-789012"
     }
   }
 }
@@ -6382,9 +6031,7 @@ Once these physical steps are completed, the charging session can be initiated t
     "action": "on_track",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
@@ -6557,8 +6204,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6743e9e2-4fb5-487c-92b7-13ba8018f176",
     "timestamp": "2025-01-27T13:07:02Z",
@@ -6718,21 +6363,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6776,10 +6406,8 @@ API Implementation: The above under and overcharge scenarios are supported throu
     "version": "2.0.0",
     "action": "update",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
     "timestamp": "2025-01-27T10:15:00Z",
@@ -6930,21 +6558,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -6973,8 +6586,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "32f67afe-3d8c-4faa-bc2e-93b0791dcb02",
     "timestamp": "2025-01-27T11:45:00Z",
@@ -7134,21 +6745,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
           "WALLET"
         ],
         "beckn:paymentStatus": "COMPLETED"
-      },
-      "beckn:orderAttributes": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
-        "@type": "ChargingSession",
-        "sessionPreferences": {
-          "preferredStartTime": "2025-01-27T10:00:00Z",
-          "preferredEndTime": "2025-01-27T11:30:00Z",
-          "notificationPreferences": {
-            "email": true,
-            "sms": true,
-            "push": false
-          }
-        },
-        "authorizationMode": "OTP",
-        "authorizationOtpHint": "OTP will be shared to the user's registered number to confirm order"
       }
     }
   }
@@ -7330,8 +6926,6 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "89ee20fe-b592-48b0-a5c5-e38f6b90e569",
     "timestamp": "2025-01-27T12:00:30Z",
@@ -7378,10 +6972,8 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     "version": "2.0.0",
     "action": "support",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:00Z",
@@ -7426,8 +7018,6 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "dee432d9-36c9-4146-ad21-2f5bcac9b6a9",
     "timestamp": "2025-01-27T12:15:30Z",

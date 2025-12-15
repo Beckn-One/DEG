@@ -8,8 +8,6 @@
     "message_id": "a1eabf26-29f5-4a01-9d4e-4c5c9d1a3d02",
     "bap_id": "app.example.com",
     "bap_uri": "https://app.example.com/bap",
-    "bpp_id": "example-cds.com",
-    "bpp_uri": "https://example-cds.com/pilot/cds/energy/v2",
     "ttl": "PT30S"
   },
   "message": {
