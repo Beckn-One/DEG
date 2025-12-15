@@ -485,8 +485,9 @@ Note: Users can discover the charging station through off-network channels (such
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
+        "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
           "@type": "beckn:Descriptor",
           "schema:name": "EV Charging Services Network",
@@ -501,7 +502,7 @@ Note: Users can discover the charging station through off-network channels (such
         },
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -533,11 +534,13 @@ Note: Users can discover the charging station through off-network channels (such
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "06:00:00",
-              "schema:endTime": "22:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "22:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -597,7 +600,7 @@ Note: Users can discover the charging station through off-network channels (such
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -629,11 +632,13 @@ Note: Users can discover the charging station through off-network channels (such
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "06:00:00",
-              "schema:endTime": "22:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "22:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -1176,12 +1181,10 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -1272,7 +1275,6 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
     }
   }
 }
-
 ```
 </details>
 
@@ -1363,12 +1365,10 @@ EV user requests final quote with payment terms by providing billing details: [E
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -1460,7 +1460,6 @@ EV user requests final quote with payment terms by providing billing details: [E
     }
   }
 }
-
 ```
 </details>
 
@@ -1551,12 +1550,10 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -1648,7 +1645,6 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
     }
   }
 }
-
 ```
 </details>
 
@@ -1726,12 +1722,10 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -1824,7 +1818,6 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
     }
   }
 }
-
 ```
 </details>
 
@@ -1914,12 +1907,10 @@ EV user confirms reservation of a slot at a particular charging station at a par
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -2013,7 +2004,6 @@ EV user confirms reservation of a slot at a particular charging station at a par
     }
   }
 }
-
 ```
 </details>
 
@@ -2103,12 +2093,10 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -2202,7 +2190,6 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_on_
     }
   }
 }
-
 ```
 </details>
 
@@ -2291,12 +2278,10 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -2390,7 +2375,6 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
     }
   }
 }
-
 ```
 </details>
 
@@ -2423,8 +2407,10 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
     "version": "2.0.0",
     "action": "track",
     "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
@@ -2432,7 +2418,27 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
   },
   "message": {
     "order": {
-      "beckn:id": "order-bpp-789012"
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "INPROGRESS",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 1
+          }
+        }
+      ]
     }
   }
 }
@@ -2633,12 +2639,10 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -2741,7 +2745,6 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
     }
   }
 }
-
 ```
 </details>
 
@@ -2831,12 +2834,10 @@ EV user reveives a notification in case of any error occuring during charging se
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -2930,7 +2931,6 @@ EV user reveives a notification in case of any error occuring during charging se
     }
   }
 }
-
 ```
 </details>
 
@@ -3008,12 +3008,10 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -3116,7 +3114,6 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/09_u
     }
   }
 }
-
 ```
 </details>
 
@@ -3721,7 +3718,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
@@ -3738,7 +3735,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
         },
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -3837,7 +3834,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-002",
             "beckn:descriptor": {
@@ -3937,7 +3934,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-type2-001",
             "beckn:descriptor": {
@@ -4038,7 +4035,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
         ],
         "beckn:offers": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-60kw-kwh",
             "beckn:descriptor": {
@@ -4079,7 +4076,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             "beckn:provider": "ecopower-charging"
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-120kw-kwh",
             "beckn:descriptor": {
@@ -4121,7 +4118,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             "beckn:provider": "greencharge-koramangala"
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-type2-22kw-kwh",
             "beckn:descriptor": {
@@ -4761,12 +4758,10 @@ Recommendations for BAP:
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -4857,7 +4852,6 @@ Recommendations for BAP:
     }
   }
 }
-
 ```
 </details>
 
@@ -4965,12 +4959,10 @@ Recommendations for BAP:
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -5062,7 +5054,6 @@ Recommendations for BAP:
     }
   }
 }
-
 ```
 </details>
 
@@ -5228,12 +5219,10 @@ Recommendations for BAP:
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -5326,7 +5315,6 @@ Recommendations for BAP:
     }
   }
 }
-
 ```
 </details>
 
@@ -5427,12 +5415,10 @@ Recommendations for BAP:
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -5526,7 +5512,6 @@ Recommendations for BAP:
     }
   }
 }
-
 ```
 </details>
 
@@ -5637,12 +5622,10 @@ Once these physical steps are completed, the charging session can be initiated t
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -5736,7 +5719,6 @@ Once these physical steps are completed, the charging session can be initiated t
     }
   }
 }
-
 ```
 </details>
 - Successful Response: 
@@ -5829,12 +5811,10 @@ Once these physical steps are completed, the charging session can be initiated t
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -5928,7 +5908,6 @@ Once these physical steps are completed, the charging session can be initiated t
     }
   }
 }
-
 ```
 </details>
 
@@ -5966,8 +5945,10 @@ Once these physical steps are completed, the charging session can be initiated t
     "version": "2.0.0",
     "action": "track",
     "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
     "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2",
     "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
     "message_id": "6ace310b-6440-4421-a2ed-b484c7548bd5",
     "timestamp": "2025-01-27T17:00:40.065Z",
@@ -5975,7 +5956,27 @@ Once these physical steps are completed, the charging session can be initiated t
   },
   "message": {
     "order": {
-      "beckn:id": "order-bpp-789012"
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-bpp-789012",
+      "beckn:orderStatus": "INPROGRESS",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-001",
+          "beckn:orderedItem": "pe-charging-01",
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 1
+          }
+        }
+      ]
     }
   }
 }
@@ -6259,12 +6260,10 @@ API Implementation: The above under and overcharge scenarios are supported throu
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -6367,7 +6366,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
     }
   }
 }
-
 ```
 </details>
 - Successful Response: 
@@ -6463,12 +6461,10 @@ API Implementation: The above under and overcharge scenarios are supported throu
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -6562,7 +6558,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
     }
   }
 }
-
 ```
 </details>
 
@@ -6641,12 +6636,10 @@ API Implementation: The above under and overcharge scenarios are supported throu
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {
@@ -6749,7 +6742,6 @@ API Implementation: The above under and overcharge scenarios are supported throu
     }
   }
 }
-
 ```
 </details>
 
