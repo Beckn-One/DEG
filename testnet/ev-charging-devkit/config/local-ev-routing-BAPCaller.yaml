@@ -16,7 +16,7 @@ routingRules:
   - domain: "beckn.one:deg:ev-charging:2.0.0"  # Retail domain
     version: "2.0.0"
     targetType: "url"
-    target:
-      url: "https://34.93.141.21.sslip.io/beckn"
+    target: # URL of Catalog Discovery Service
+      url: "https://FILL_ME_CATALOG_DISCOVERY_SERVICE_URL/beckn"
     endpoints:
       - discover
