@@ -1,9 +1,51 @@
 #!/usr/bin/env python3
 """
-Generate Postman collection from example JSONs for predefined devkit and role.
+Beckn Postman Collection Generator
 
-This script scans example directories and generates Postman collections with context
-macros for correct routing within testnet devkits.
+This script builds Postman collections from the example JSON flows in this repo for a
+given devkit (e.g., ev-charging) and role (BAP or BPP). It wires in context macros so
+requests route correctly within the devkit testnets, and can optionally validate the
+resulting collection against Beckn schemas.
+
+WHAT IT DOES
+------------
+1) Discovers example JSON files under a devkit-specific examples directory
+2) Builds Postman items for each API flow, adding environment macros for BAP/BPP IDs and URIs
+3) Writes a Postman collection JSON to the requested output directory
+4) Optionally validates the generated collection using the local `validate_schema.py`
+
+KEY FUNCTIONS
+-------------
+- `generate_collection(...)`: Core builder; converts example flows to Postman items
+- `build_item(...)`: Creates a Postman item with request, headers, and body
+- `attach_env_macros(...)`: Injects {{bap_id}}, {{bap_uri}}, {{bpp_id}}, {{bpp_uri}}
+  placeholders so the same collection works across environments
+- `main()`: CLI entry point (parses args, resolves paths, runs generation, optional validation)
+
+CLI USAGE
+---------
+python3 scripts/generate_postman_collection.py \\
+  --devkit ev-charging \\
+  --role BAP \\
+  --output-dir testnet/ev-charging-devkit/postman \\
+  --examples examples/ev-charging/v2 \\
+  --name ev-charging:BAP-DEG \\
+  --description \"EV Charging BAP flows\" \\
+  --validate
+
+Arguments:
+- --devkit        Devkit key (e.g., ev-charging)
+- --role          Role in the flows (BAP or BPP)
+- --output-dir    Where to write the Postman collection
+- --examples      Root path to example JSONs (defaults from devkit config)
+- --name          Collection name (default: <devkit>:<role>-DEG)
+- --description   Collection description (optional)
+- --validate      Run schema validation on the generated collection using validate_schema.py
+
+OUTPUT
+------
+Writes a Postman collection JSON with environment macros for IDs/URIs, suitable for
+importing into Postman or running via newman with environment files.
 """
 
 import json
