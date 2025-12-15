@@ -60,12 +60,10 @@
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld",
               "@type": "ChargingOffer",
-              "offerType": "CHARGING_SESSION",
               "buyerFinderFee": {
                 "feeType": "PERCENTAGE",
                 "feeValue": 2.0
-              },
-              "discountPercentage": 20.0
+              }
             }
           },
           "beckn:quantity": {

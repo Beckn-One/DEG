@@ -45,6 +45,9 @@ python3 scripts/validate_schema.py examples/ev-charging/v2/03_select/time-based-
 # Validate multiple files:
 python3 scripts/validate_schema.py examples/ev-charging/v2/**/*.json
 
+# Validate only core Beckn objects (skip domain-specific attributes):
+python3 scripts/validate_schema.py --core-only examples/ev-charging/v2/03_select/time-based-ev-charging-slot-select.json
+
 # Validate Postman collection:
 python3 scripts/validate_schema.py testnet/ev-charging-devkit/postman/ev-charging:BAP-DEG.postman_collection.json
 
@@ -288,7 +291,7 @@ def get_schema_store():
     attribute_schemas_map = {}
     return [registry], None, attribute_schemas_map
 
-def validate_payload(payload, registry_list, attributes_schema, attribute_schemas_map=None):
+def validate_payload(payload, registry_list, attributes_schema, attribute_schemas_map=None, core_only=False):
     """
     Validate JSON payload against Beckn protocol schemas.
     
@@ -302,6 +305,7 @@ def validate_payload(payload, registry_list, attributes_schema, attribute_schema
         registry_list: List containing referencing Registry with all loaded schemas
         attributes_schema: Unused, kept for compatibility (None)
         attribute_schemas_map: Dict mapping @context URLs to (schema_name, schema_data, schema_url)
+        core_only: If True, only validate core Beckn objects, skip domain-specific attributes
     
     Returns:
         list: List of validation error messages (empty if validation passes)
@@ -358,25 +362,29 @@ def validate_payload(payload, registry_list, attributes_schema, attribute_schema
                 
                 # Handle non-core domain-specific attribute objects
                 else:
-                    if context_url not in attribute_schemas_map:
-                        load_schema_for_context_url(context_url, attribute_schemas_map, registry_list)
-                    
-                    if context_url in attribute_schemas_map:
-                        schema_name, schema_data, schema_url = attribute_schemas_map[context_url]
-                        schema_type = obj_type.split(":")[-1] if ":" in obj_type else obj_type
+                    if core_only:
+                        # Skip domain-specific attribute validation when --core-only flag is set
+                        pass
+                    else:
+                        if context_url not in attribute_schemas_map:
+                            load_schema_for_context_url(context_url, attribute_schemas_map, registry_list)
                         
-                        if "components" in schema_data and "schemas" in schema_data["components"]:
-                            schemas = schema_data["components"]["schemas"]
+                        if context_url in attribute_schemas_map:
+                            schema_name, schema_data, schema_url = attribute_schemas_map[context_url]
+                            schema_type = obj_type.split(":")[-1] if ":" in obj_type else obj_type
                             
-                            # Try exact match first
-                            if schema_type in schemas:
-                                _validate_attribute_object(data, schemas[schema_type], schema_type, schema_name, path, errors, registry_list)
-                            else:
-                                # Try case-insensitive match
-                                for schema_key, schema_def in schemas.items():
-                                    if schema_key.lower() == schema_type.lower():
-                                        _validate_attribute_object(data, schema_def, schema_key, schema_name, path, errors, registry_list)
-                                        break
+                            if "components" in schema_data and "schemas" in schema_data["components"]:
+                                schemas = schema_data["components"]["schemas"]
+                                
+                                # Try exact match first
+                                if schema_type in schemas:
+                                    _validate_attribute_object(data, schemas[schema_type], schema_type, schema_name, path, errors, registry_list)
+                                else:
+                                    # Try case-insensitive match
+                                    for schema_key, schema_def in schemas.items():
+                                        if schema_key.lower() == schema_type.lower():
+                                            _validate_attribute_object(data, schema_def, schema_key, schema_name, path, errors, registry_list)
+                                            break
             
             # Recursively check children
             for key, value in data.items():
@@ -388,7 +396,7 @@ def validate_payload(payload, registry_list, attributes_schema, attribute_schema
     find_and_validate_objects(payload)
     return errors
 
-def process_file(filepath, registry_list, attributes_schema, attribute_schemas_map=None):
+def process_file(filepath, registry_list, attributes_schema, attribute_schemas_map=None, core_only=False):
     """
     Process and validate a JSON file or Postman collection.
     
@@ -401,6 +409,7 @@ def process_file(filepath, registry_list, attributes_schema, attribute_schemas_m
         registry_list: List containing referencing Registry
         attributes_schema: Unused, kept for compatibility (None)
         attribute_schemas_map: Dict mapping @context URLs to schema info
+        core_only: If True, only validate core Beckn objects, skip domain-specific attributes
     """
     print(f"Processing {filepath}...")
     try:
@@ -411,13 +420,13 @@ def process_file(filepath, registry_list, attributes_schema, attribute_schemas_m
         
         if is_postman:
             print("  Identified as Postman collection.")
-            _traverse_postman_items(data.get("item", []), registry_list, attributes_schema, attribute_schemas_map)
+            _traverse_postman_items(data.get("item", []), registry_list, attributes_schema, attribute_schemas_map, core_only)
         else:
-            validate_payload(data, registry_list, attributes_schema, attribute_schemas_map)
+            validate_payload(data, registry_list, attributes_schema, attribute_schemas_map, core_only)
     except Exception as e:
         print(f"  Error processing {filepath}: {e}")
 
-def _traverse_postman_items(items, registry_list, attributes_schema, attribute_schemas_map):
+def _traverse_postman_items(items, registry_list, attributes_schema, attribute_schemas_map, core_only=False):
     """
     Recursively traverse Postman collection items and validate JSON request bodies.
     
@@ -426,16 +435,17 @@ def _traverse_postman_items(items, registry_list, attributes_schema, attribute_s
         registry_list: List containing referencing Registry
         attributes_schema: Unused, kept for compatibility (None)
         attribute_schemas_map: Dict mapping @context URLs to schema info
+        core_only: If True, only validate core Beckn objects, skip domain-specific attributes
     """
     for item in items:
         if "item" in item:
-            _traverse_postman_items(item["item"], registry_list, attributes_schema, attribute_schemas_map)
+            _traverse_postman_items(item["item"], registry_list, attributes_schema, attribute_schemas_map, core_only)
         if "request" in item and "body" in item["request"]:
             body = item["request"]["body"]
             if body.get("mode") == "raw":
                 try:
                     json_body = json.loads(body["raw"])
-                    validate_payload(json_body, registry_list, attributes_schema, attribute_schemas_map)
+                    validate_payload(json_body, registry_list, attributes_schema, attribute_schemas_map, core_only)
                 except json.JSONDecodeError:
                     pass
 
@@ -447,9 +457,15 @@ if __name__ == "__main__":
         epilog="Example: python3 scripts/validate_schema.py examples/ev-charging/v2/**/*.json"
     )
     parser.add_argument("files", nargs="+", help="JSON files or Postman collections to validate")
+    parser.add_argument(
+        "--core-only",
+        action="store_true",
+        default=False,
+        help="Only validate core Beckn objects (beckn:Order, beckn:Offer, etc.), skip domain-specific attribute objects"
+    )
     
     args = parser.parse_args()
     registry, attributes_schema, attribute_schemas_map = get_schema_store()
     
     for file in args.files:
-        process_file(file, registry, attributes_schema, attribute_schemas_map)
+        process_file(file, registry, attributes_schema, attribute_schemas_map, core_only=args.core_only)

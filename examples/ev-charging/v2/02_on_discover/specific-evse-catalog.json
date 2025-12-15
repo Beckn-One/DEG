@@ -13,8 +13,9 @@
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
+        "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
           "@type": "beckn:Descriptor",
           "schema:name": "EV Charging Services Network",
@@ -29,7 +30,7 @@
         },
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -61,11 +62,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "06:00:00",
-              "schema:endTime": "22:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "22:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
@@ -125,7 +128,7 @@
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "ev-charger-ccs2-001",
             "beckn:descriptor": {
@@ -157,11 +160,13 @@
                 }
               }
             ],
-            "beckn:availabilityWindow": {
-              "@type": "beckn:TimePeriod",
-              "schema:startTime": "06:00:00",
-              "schema:endTime": "22:00:00"
-            },
+            "beckn:availabilityWindow": [
+              {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "22:00:00"
+              }
+            ],
             "beckn:rateable": true,
             "beckn:rating": {
               "@type": "beckn:Rating",
