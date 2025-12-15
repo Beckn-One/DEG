@@ -14,7 +14,7 @@
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderAttributes": {
@@ -84,7 +84,6 @@
           "deliveryMode": "GRID_INJECTION",
           "deliveredQuantity": 9.8,
           "deliveryStartTime": "2024-10-04T10:00:00Z",
-          "deliveryEndTime": null,
           "meterReadings": [
             {
               "timestamp": "2024-10-04T10:00:00Z",

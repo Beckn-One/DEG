@@ -18,6 +18,8 @@
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-energy-001",
+        "beckn:bppId": "bpp.energy-provider.com",
+        "beckn:bppUri": "https://bpp.energy-provider.com",
         "beckn:descriptor": {
           "@type": "beckn:Descriptor",
           "schema:name": "Solar Energy Trading Catalog"
@@ -34,8 +36,11 @@
               "beckn:longDesc": "High-quality solar energy from verified source with carbon offset certification"
             },
             "beckn:provider": {
-              "@type": "beckn:Provider",
-              "beckn:id": "provider-solar-farm-001"
+              "beckn:id": "provider-solar-farm-001",
+              "beckn:descriptor": {
+                "@type": "beckn:Descriptor",
+                "schema:name": "Solar Farm 001"
+              }
             },
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyResource/v0.2/context.jsonld",
@@ -46,10 +51,12 @@
               "meterId": "100200300",
               "inverterId": "inv-12345",
               "availableQuantity": 30.5,
-              "productionWindow": {
-                "start": "2024-10-04T10:00:00Z",
-                "end": "2024-10-04T18:00:00Z"
-              },
+              "productionWindow": [
+                {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              ],
               "sourceVerification": {
                 "verified": true,
                 "verificationDate": "2024-09-01T00:00:00Z",
@@ -76,6 +83,10 @@
               "schema:priceCurrency": "USD",
               "schema:unitText": "kWh"
             },
+            "beckn:provider": "provider-solar-farm-001",
+            "beckn:items": [
+              "energy-resource-solar-001"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
               "@type": "EnergyTradeOffer",
@@ -92,18 +103,6 @@
                 "start": "2024-10-04T00:00:00Z",
                 "end": "2024-10-04T23:59:59Z"
               }
-            },
-            "beckn:orderItems": [
-              {
-                "beckn:lineId": "line-1"
-              }
-            ],
-            "beckn:seller": "provider-solar-farm-001",
-            "beckn:orderStatus": "CREATED",
-            "beckn:buyer": {
-              "beckn:id": "buyer-placeholder",
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-              "@type": "beckn:Buyer"
             }
           }
         ]

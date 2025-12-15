@@ -400,7 +400,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 **Example**:
 ```json
 {
-  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyResource/v0.2/context.jsonld",
   "@type": "EnergyResource",
   "sourceType": "SOLAR",
   "deliveryMode": "GRID_INJECTION",
@@ -428,7 +428,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 **Example**:
 ```json
 {
-  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeOffer/v0.2/context.jsonld",
   "@type": "EnergyTradeOffer",
   "pricingModel": "PER_KWH",
   "settlementType": "DAILY",
@@ -458,7 +458,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 **Example**:
 ```json
 {
-  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeContract/v0.2/context.jsonld",
   "@type": "EnergyTradeContract",
   "contractStatus": "ACTIVE",
   "sourceMeterId": "100200300",
@@ -484,7 +484,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
 **Example**:
 ```json
 {
-  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeDelivery/v0.2/context.jsonld",
   "@type": "EnergyTradeDelivery",
   "deliveryStatus": "IN_PROGRESS",
   "deliveryMode": "GRID_INJECTION",
@@ -592,6 +592,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-energy-001",
+        "beckn:bppId": "bpp.energy-provider.com",
+        "beckn:bppUri": "https://bpp.energy-provider.com",
         "beckn:descriptor": {
           "@type": "beckn:Descriptor",
           "schema:name": "Solar Energy Trading Catalog"
@@ -608,8 +610,11 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "beckn:longDesc": "High-quality solar energy from verified source with carbon offset certification"
             },
             "beckn:provider": {
-              "@type": "beckn:Provider",
-              "beckn:id": "provider-solar-farm-001"
+              "beckn:id": "provider-solar-farm-001",
+              "beckn:descriptor": {
+                "@type": "beckn:Descriptor",
+                "schema:name": "Solar Farm 001"
+              }
             },
             "beckn:itemAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyResource/v0.2/context.jsonld",
@@ -620,10 +625,12 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "meterId": "100200300",
               "inverterId": "inv-12345",
               "availableQuantity": 30.5,
-              "productionWindow": {
-                "start": "2024-10-04T10:00:00Z",
-                "end": "2024-10-04T18:00:00Z"
-              },
+              "productionWindow": [
+                {
+                  "start": "2024-10-04T10:00:00Z",
+                  "end": "2024-10-04T18:00:00Z"
+                }
+              ],
               "sourceVerification": {
                 "verified": true,
                 "verificationDate": "2024-09-01T00:00:00Z",
@@ -650,6 +657,10 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "schema:priceCurrency": "USD",
               "schema:unitText": "kWh"
             },
+            "beckn:provider": "provider-solar-farm-001",
+            "beckn:items": [
+              "energy-resource-solar-001"
+            ],
             "beckn:offerAttributes": {
               "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
               "@type": "EnergyTradeOffer",
@@ -666,18 +677,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
                 "start": "2024-10-04T00:00:00Z",
                 "end": "2024-10-04T23:59:59Z"
               }
-            },
-            "beckn:orderItems": [
-              {
-                "beckn:lineId": "line-1"
-              }
-            ],
-            "beckn:seller": "provider-solar-farm-001",
-            "beckn:orderStatus": "CREATED",
-            "beckn:buyer": {
-              "beckn:id": "buyer-placeholder",
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-              "@type": "beckn:Buyer"
             }
           }
         ]
@@ -723,7 +722,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderItems": [
@@ -794,7 +793,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderValue": {
@@ -890,7 +889,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderItems": [
@@ -974,7 +973,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderAttributes": {
@@ -1091,7 +1090,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
       "beckn:orderItems": [
@@ -1175,7 +1174,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
       "beckn:orderValue": {
@@ -1291,7 +1290,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderItems": [
@@ -1375,7 +1374,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderAttributes": {
@@ -1497,7 +1496,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
       "beckn:orderItems": [
@@ -1571,7 +1570,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-cascaded-utility-001",
       "beckn:orderAttributes": {
@@ -1729,7 +1728,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
       "beckn:orderAttributes": {
@@ -1799,7 +1798,6 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
           "deliveryMode": "GRID_INJECTION",
           "deliveredQuantity": 9.8,
           "deliveryStartTime": "2024-10-04T10:00:00Z",
-          "deliveryEndTime": null,
           "meterReadings": [
             {
               "timestamp": "2024-10-04T10:00:00Z",

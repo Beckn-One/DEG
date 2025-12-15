@@ -52,7 +52,7 @@
 **Item with EnergyResource**:
 ```json
 {
-  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+  "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
   "@type": "beckn:Item",
   "beckn:id": "energy-resource-solar-001",
   "beckn:descriptor": {
@@ -60,7 +60,7 @@
     "schema:name": "Solar Energy - 30.5 kWh"
   },
   "beckn:itemAttributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "deliveryMode": "GRID_INJECTION",
@@ -75,7 +75,7 @@
   "@type": "beckn:Offer",
   "beckn:id": "offer-energy-001",
   "beckn:offerAttributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeOffer/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeOffer/v0.2/context.jsonld",
     "@type": "EnergyTradeOffer",
     "pricingModel": "PER_KWH",
     "settlementType": "DAILY"
@@ -89,7 +89,7 @@
   "@type": "beckn:Order",
   "beckn:id": "order-energy-001",
   "beckn:orderAttributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeContract/v0.2/context.jsonld",
     "@type": "EnergyTradeContract",
     "contractStatus": "ACTIVE",
     "sourceMeterId": "100200300",
@@ -104,7 +104,7 @@
   "@type": "beckn:Fulfillment",
   "beckn:id": "fulfillment-energy-001",
   "beckn:attributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeDelivery/v0.2/context.jsonld",
     "@type": "EnergyTradeDelivery",
     "deliveryStatus": "IN_PROGRESS",
     "meterReadings": [...]
@@ -219,7 +219,7 @@ Use JSONPath filters to search by energy attributes:
 {
   "@type": "beckn:Item",
   "beckn:itemAttributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "meterId": "100200300"
@@ -316,7 +316,7 @@ For developers familiar with v1, here's a quick mapping guide:
 {
   "@type": "beckn:Item",
   "beckn:itemAttributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyResource/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyResource/v0.2/context.jsonld",
     "@type": "EnergyResource",
     "sourceType": "SOLAR",
     "meterId": "100200300",
@@ -350,7 +350,7 @@ For developers familiar with v1, here's a quick mapping guide:
 {
   "@type": "beckn:Order",
   "beckn:orderAttributes": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/EnergyTradeContract/v0.2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EnergyTradeContract/v0.2/context.jsonld",
     "@type": "EnergyTradeContract",
     "sourceMeterId": "100200300",
     "targetMeterId": "98765456",

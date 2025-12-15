@@ -1,0 +1,163 @@
+{
+  "info": {
+    "_postman_id": "fb97217a-1ebb-4e1b-8799-01a95f742f28",
+    "name": "p2p-trading:UtilityBPP-DEG",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for Utility BPP (Transmission/Grid Provider Platform) implementing p2p-trading APIs based on Beckn Protocol v2"
+  },
+  "item": [
+    {
+      "name": "cancel",
+      "item": []
+    },
+    {
+      "name": "confirm",
+      "item": [
+        {
+          "name": "cascaded-confirm-request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"confirm\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-cascaded-utility-001\",\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-1\",\n          \"beckn:orderedItem\": \"energy-resource-solar-001\",\n          \"beckn:quantity\": {\n            \"unitQuantity\": 10.0,\n            \"unitText\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:acceptedOffers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\",\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n          \"@type\": \"beckn:Offer\",\n          \"beckn:descriptor\": {\n            \"@type\": \"beckn:Descriptor\",\n            \"schema:name\": \"Offer Descriptor\"\n          },\n          \"beckn:provider\": \"provider-solar-farm-001\",\n          \"beckn:items\": [\n            \"dummy-item-1\"\n          ]\n        }\n      ],\n      \"beckn:seller\": \"provider-solar-farm-001\",\n      \"beckn:fulfillment\": {\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-energy-001\",\n        \"beckn:mode\": \"DELIVERY\",\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\"\n      },\n      \"beckn:payment\": {\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-energy-001\",\n        \"beckn:paymentStatus\": \"PENDING\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\"\n      },\n      \"beckn:orderStatus\": \"CREATED\",\n      \"beckn:buyer\": {\n        \"beckn:id\": \"buyer-placeholder\",\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bpp_adapter_url}}/confirm",
+              "host": [
+                "{{bpp_adapter_url}}"
+              ],
+              "path": [
+                "confirm"
+              ]
+            },
+            "description": "Confirm request: cascaded-confirm-request"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "discover",
+      "item": []
+    },
+    {
+      "name": "init",
+      "item": [
+        {
+          "name": "cascaded-init-request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"init\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\",\n    \"domain\": \"{{domain}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-cascaded-utility-001\",\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-1\",\n          \"beckn:orderedItem\": \"energy-resource-solar-001\",\n          \"beckn:quantity\": {\n            \"unitQuantity\": 10.0,\n            \"unitText\": \"kWh\"\n          }\n        }\n      ],\n      \"beckn:acceptedOffers\": [\n        {\n          \"beckn:id\": \"offer-energy-001\",\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n          \"@type\": \"beckn:Offer\",\n          \"beckn:descriptor\": {\n            \"@type\": \"beckn:Descriptor\",\n            \"schema:name\": \"Offer Descriptor\"\n          },\n          \"beckn:provider\": \"provider-solar-farm-001\",\n          \"beckn:items\": [\n            \"dummy-item-1\"\n          ]\n        }\n      ],\n      \"beckn:seller\": \"provider-solar-farm-001\",\n      \"beckn:fulfillment\": {\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-energy-001\",\n        \"beckn:mode\": \"DELIVERY\",\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\"\n      },\n      \"beckn:payment\": {\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-energy-001\",\n        \"beckn:paymentStatus\": \"PENDING\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\"\n      },\n      \"beckn:orderStatus\": \"CREATED\",\n      \"beckn:buyer\": {\n        \"beckn:id\": \"buyer-placeholder\",\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bpp_adapter_url}}/init",
+              "host": [
+                "{{bpp_adapter_url}}"
+              ],
+              "path": [
+                "init"
+              ]
+            },
+            "description": "Init request: cascaded-init-request"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "rating",
+      "item": []
+    },
+    {
+      "name": "select",
+      "item": []
+    },
+    {
+      "name": "status",
+      "item": []
+    },
+    {
+      "name": "support",
+      "item": []
+    },
+    {
+      "name": "track",
+      "item": []
+    },
+    {
+      "name": "update",
+      "item": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pure JS pre-request script to replace moment()",
+          "// 1) ISO 8601 timestamp without needing moment",
+          "const isoTimestamp = new Date().toISOString();",
+          "pm.collectionVariables.set('iso_date', isoTimestamp);",
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "domain",
+      "value": "beckn.one:deg:p2p-trading:2.0.0"
+    },
+    {
+      "key": "version",
+      "value": "2.0.0"
+    },
+    {
+      "key": "bap_id",
+      "value": "p2p-trading-sandbox1.com"
+    },
+    {
+      "key": "bap_uri",
+      "value": "http://onix-bap:8081/bap/receiver"
+    },
+    {
+      "key": "bpp_id",
+      "value": "p2p-trading-sandbox2.com"
+    },
+    {
+      "key": "bpp_uri",
+      "value": "http://onix-bpp:8082/bpp/receiver"
+    },
+    {
+      "key": "transaction_id",
+      "value": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002"
+    },
+    {
+      "key": "iso_date",
+      "value": ""
+    },
+    {
+      "key": "bpp_adapter_url",
+      "value": "http://localhost:8082/bpp/caller"
+    },
+    {
+      "key": "bap_adapter_url",
+      "value": "http://localhost:8081/bap/caller"
+    }
+  ]
+}
