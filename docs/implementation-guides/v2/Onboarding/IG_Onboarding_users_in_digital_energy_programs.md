@@ -491,7 +491,7 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
 #### 18.1.1. Example: Simple Consumer with Single Meter
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/init-request-simple-consumer.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/init-request-simple-consumer.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -590,7 +590,7 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
 #### 18.1.2. Example: Prosumer with Solar and Battery
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/init-request-prosumer-solar-battery.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/init-request-prosumer-solar-battery.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -702,7 +702,7 @@ The BPP verifies the provided credentials and checks for conflicts with existing
 #### 18.2.1. Example: Successful Verification, No Conflicts
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/on-init-response-success.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/on-init-response-success.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -790,7 +790,7 @@ The BPP verifies the provided credentials and checks for conflicts with existing
 #### 18.2.2. Example: Enrollment Conflict Detected
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/on-init-response-conflict.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/on-init-response-conflict.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -875,7 +875,7 @@ The confirm request includes the desired enrollment start and end dates, along w
 #### 18.3.1. Example: Confirm with Enrollment Dates
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/confirm-request.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/confirm-request.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -942,7 +942,7 @@ The BPP returns a signed enrollment credential with start and end dates, and log
 #### 18.4.1. Example: Successful Enrollment with Credential
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/on-confirm-response-success.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/on-confirm-response-success.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1037,7 +1037,7 @@ The BPP returns a signed enrollment credential with start and end dates, and log
 #### 18.5.1. Example: Credential Verification Failed
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/on-init-response-error.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/on-init-response-error.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1086,7 +1086,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
 #### 18.6.1. Example: Consent Revocation Request
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/update-request-consent-revocation.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/update-request-consent-revocation.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1144,7 +1144,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
 #### 18.6.2. Example: Consent Revocation Response
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/on-update-response-consent-revocation.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/on-update-response-consent-revocation.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1210,7 +1210,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
 #### 18.7.1. Example: Unenrollment Request
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/update-request-unenrollment.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/update-request-unenrollment.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -1267,7 +1267,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
 #### 18.7.2. Example: Unenrollment Response
 
 <details>
-<summary><a href="../../../../examples/v2/enrollment/on-update-response-unenrollment.json">Example json :rocket:</a></summary>
+<summary><a href="../../../../examples/enrollment/v2/on-update-response-unenrollment.json">Example json :rocket:</a></summary>
 
 ```json
 {
