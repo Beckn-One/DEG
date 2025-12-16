@@ -1,0 +1,571 @@
+{
+  "info": {
+    "_postman_id": "01b10caf-98a1-4ee4-8137-d97404761cfc",
+    "name": "ev-charging:BAP-DEG",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for Buyer Application Platform implementing ev-charging APIs based on Beckn Protocol v2"
+  },
+  "item": [
+    {
+      "name": "cancel",
+      "item": [
+        {
+          "name": "cancel-a-reserved-slot",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"domain\": \"{{domain}}\",\n    \"action\": \"cancel\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": [\n      {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Order\",\n        \"beckn:id\": \"b989c9a9-f603-4d44-b38d-26fd72286b38\",\n        \"beckn:orderStatus\": \"CONFIRMED\",\n        \"beckn:seller\": \"cpo1.com\",\n        \"beckn:buyer\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n          \"@type\": \"beckn:Buyer\",\n          \"beckn:id\": \"user-123\"\n        },\n        \"beckn:orderItems\": [\n          {\n            \"beckn:lineId\": \"line-001\",\n            \"beckn:orderedItem\": \"pe-charging-01\",\n            \"beckn:quantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 1\n            }\n          }\n        ]\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/cancel",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "cancel"
+              ]
+            },
+            "description": "Cancel request: cancel-a-reserved-slot"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "confirm",
+      "item": [
+        {
+          "name": "time-based-ev-charging-slot-confirm",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"confirm\",\n    \"domain\": \"{{domain}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-123456\",\n      \"beckn:orderStatus\": \"PENDING\",\n      \"beckn:orderNumber\": \"ORD-2025-001\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-001\",\n          \"beckn:orderedItem\": \"pe-charging-01\",\n          \"beckn:acceptedOffer\": {\n            \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n            \"@type\": \"beckn:Offer\",\n            \"beckn:id\": \"offer-001\",\n            \"beckn:descriptor\": {\n              \"@type\": \"beckn:Descriptor\",\n              \"name\": \"EV Charging Session Offer\",\n              \"short_desc\": \"Fast charging session with CCS2 connector\"\n            },\n            \"beckn:items\": [\n              \"pe-charging-01\"\n            ],\n            \"beckn:provider\": \"cpo1.com\",\n            \"beckn:price\": {\n              \"currency\": \"INR\",\n              \"value\": 18.0,\n              \"applicableQuantity\": {\n                \"unitText\": \"Kilowatt Hour\",\n                \"unitCode\": \"KWH\",\n                \"unitQuantity\": 1\n              }\n            },\n            \"beckn:validity\": {\n              \"@type\": \"beckn:TimePeriod\",\n              \"schema:startDate\": \"2025-01-27T00:00:00Z\",\n              \"schema:endDate\": \"2025-04-27T23:59:59Z\"\n            },\n            \"beckn:offerAttributes\": {\n              \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld\",\n              \"@type\": \"ChargingOffer\",\n              \"buyerFinderFee\": {\n                \"feeType\": \"PERCENTAGE\",\n                \"feeValue\": 2.0\n              }\n            }\n          },\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 5\n          },\n          \"beckn:price\": {\n            \"currency\": \"INR\",\n            \"value\": 90.0,\n            \"applicableQuantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 5\n            }\n          }\n        }\n      ],\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 128.64,\n        \"components\": [\n          {\n            \"type\": \"UNIT\",\n            \"value\": 100.0,\n            \"currency\": \"INR\",\n            \"description\": \"Base charging session cost (100 INR)\"\n          },\n          {\n            \"type\": \"SURCHARGE\",\n            \"value\": 20.0,\n            \"currency\": \"INR\",\n            \"description\": \"Surge price (20%)\"\n          },\n          {\n            \"type\": \"DISCOUNT\",\n            \"value\": -15.0,\n            \"currency\": \"INR\",\n            \"description\": \"Offer discount (15%)\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 10.0,\n            \"currency\": \"INR\",\n            \"description\": \"Service fee\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 13.64,\n            \"currency\": \"INR\",\n            \"description\": \"Overcharge estimation\"\n          }\n        ]\n      },\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"connectorType\": \"CCS2\",\n          \"maxPowerKW\": 50,\n          \"authorizationMode\": \"OTP\",\n          \"authorizationOtpHint\": \"OTP will be shared to the user's registered number to confirm order\",\n          \"vehicleMake\": \"Tata\",\n          \"vehicleModel\": \"Nexon EV\",\n          \"sessionStatus\": \"PENDING\"\n        }\n      },\n      \"beckn:payment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-123e4567-e89b-12d3-a456-426614174000\",\n        \"beckn:amount\": {\n          \"currency\": \"INR\",\n          \"value\": 128.64\n        },\n        \"beckn:paymentURL\": \"https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount\",\n        \"beckn:txnRef\": \"TXN-123456789\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"beckn:acceptedPaymentMethod\": [\n          \"BANK_TRANSFER\",\n          \"UPI\",\n          \"WALLET\"\n        ],\n        \"beckn:paymentStatus\": \"COMPLETED\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/confirm",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "confirm"
+              ]
+            },
+            "description": "Confirm request: time-based-ev-charging-slot-confirm"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "discover",
+      "item": [
+        {
+          "name": "discovery-along-route",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"spatial\": [\n      {\n        \"op\": \"s_dwithin\",\n        \"targets\": \"$['beckn:availableAt'][*]['geo']\",\n        \"geometry\": {\n          \"type\": \"LineString\",\n          \"coordinates\": [\n            [\n              77.5946,\n              12.9716\n            ],\n            [\n              76.6394,\n              12.2958\n            ]\n          ]\n        },\n        \"distanceMeters\": 5000\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-along-route"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-by-EVSE",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"filters\": {\n      \"type\": \"jsonpath\",\n      \"expression\": \"$[?(@.beckn:itemAttributes.evseId == 'IN*ECO*BTM*01*CCS2*A')]\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-by-EVSE"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-services-by-a-cpo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"filters\": {\n      \"type\": \"jsonpath\",\n      \"expression\": \"$[?(@.beckn:provider.beckn:id == 'ecopower-charging')]\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-services-by-a-cpo"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-services-by-a-station",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"filters\": {\n      \"type\": \"jsonpath\",\n      \"expression\": \"$[?(@.beckn:id=='ev-charger-ccs2-001')]\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-services-by-a-station"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-within-a-circular-boundary",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"spatial\": [\n      {\n        \"op\": \"s_dwithin\",\n        \"targets\": \"$['beckn:availableAt'][*]['geo']\",\n        \"geometry\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            77.59,\n            12.94\n          ]\n        },\n        \"distanceMeters\": 10000\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-within-a-circular-boundary"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-within-a-timerange",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"filters\": {\n      \"type\": \"jsonpath\",\n      \"expression\": \"$[?(@.beckn:itemAttributes.connectorType == 'Type2' && @.beckn:availabilityWindow.schema:startTime <= '11:30:00' && @.beckn:availabilityWindow.schema:endTime >= '14:30:00')]\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-within-a-timerange"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-within-boundary-with-connection-spec",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"filters\": {\n      \"type\": \"jsonpath\",\n      \"expression\": \"$[?(@.beckn:itemAttributes.connectorType == 'CCS2' && @.beckn:itemAttributes.maxPowerKW >= 50)]\"\n    },\n    \"spatial\": [\n      {\n        \"op\": \"s_dwithin\",\n        \"targets\": \"$['beckn:availableAt'][*]['geo']\",\n        \"geometry\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            77.59,\n            12.94\n          ]\n        },\n        \"distanceMeters\": 10000\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-within-boundary-with-connection-spec"
+          },
+          "response": []
+        },
+        {
+          "name": "discovery-within-boundary-with-vehicle-spec",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"discover\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"schema_context\": [\n      \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld\"\n    ]\n  },\n  \"message\": {\n    \"filters\": {\n      \"type\": \"jsonpath\",\n      \"expression\": \"$[?(@.beckn:fulfillment.beckn:deliveryAttributes.vehicle.make == 'Tata' && @.beckn:fulfillment.beckn:deliveryAttributes.vehicle.model == 'Nexon-EV' )]\"\n    },\n    \"spatial\": [\n      {\n        \"op\": \"s_dwithin\",\n        \"targets\": \"$['beckn:availableAt'][*]['geo']\",\n        \"geometry\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            77.6,\n            12.95\n          ]\n        },\n        \"distanceMeters\": 8000\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/discover",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "discover"
+              ]
+            },
+            "description": "Discover request: discovery-within-boundary-with-vehicle-spec"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "init",
+      "item": [
+        {
+          "name": "time-based-ev-charging-slot-init",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"init\",\n    \"domain\": \"{{domain}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-123456\",\n      \"beckn:orderStatus\": \"PENDING\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-001\",\n          \"beckn:orderedItem\": \"pe-charging-01\",\n          \"beckn:acceptedOffer\": {\n            \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n            \"@type\": \"beckn:Offer\",\n            \"beckn:id\": \"offer-001\",\n            \"beckn:descriptor\": {\n              \"@type\": \"beckn:Descriptor\",\n              \"name\": \"EV Charging Session Offer\",\n              \"short_desc\": \"Fast charging session with CCS2 connector\"\n            },\n            \"beckn:items\": [\n              \"pe-charging-01\"\n            ],\n            \"beckn:provider\": \"cpo1.com\",\n            \"beckn:price\": {\n              \"currency\": \"INR\",\n              \"value\": 18.0,\n              \"applicableQuantity\": {\n                \"unitText\": \"Kilowatt Hour\",\n                \"unitCode\": \"KWH\",\n                \"unitQuantity\": 1\n              }\n            },\n            \"beckn:validity\": {\n              \"@type\": \"beckn:TimePeriod\",\n              \"schema:startDate\": \"2025-01-27T00:00:00Z\",\n              \"schema:endDate\": \"2025-04-27T23:59:59Z\"\n            },\n            \"beckn:offerAttributes\": {\n              \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld\",\n              \"@type\": \"ChargingOffer\",\n              \"buyerFinderFee\": {\n                \"feeType\": \"PERCENTAGE\",\n                \"feeValue\": 2.0\n              }\n            }\n          },\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 5\n          },\n          \"beckn:price\": {\n            \"currency\": \"INR\",\n            \"value\": 90.0,\n            \"applicableQuantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 5\n            }\n          }\n        }\n      ],\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 128.64,\n        \"components\": [\n          {\n            \"type\": \"UNIT\",\n            \"value\": 100.0,\n            \"currency\": \"INR\",\n            \"description\": \"Base charging session cost (100 INR)\"\n          },\n          {\n            \"type\": \"SURCHARGE\",\n            \"value\": 20.0,\n            \"currency\": \"INR\",\n            \"description\": \"Surge price (20%)\"\n          },\n          {\n            \"type\": \"DISCOUNT\",\n            \"value\": -15.0,\n            \"currency\": \"INR\",\n            \"description\": \"Offer discount (15%)\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 10.0,\n            \"currency\": \"INR\",\n            \"description\": \"Service fee\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 13.64,\n            \"currency\": \"INR\",\n            \"description\": \"Overcharge estimation\"\n          }\n        ]\n      },\n      \"beckn:payment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-123e4567-e89b-12d3-a456-426614174000\",\n        \"beckn:amount\": {\n          \"currency\": \"INR\",\n          \"value\": 128.64\n        },\n        \"beckn:paymentURL\": \"https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount\",\n        \"beckn:txnRef\": \"TXN-123456789\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"beckn:acceptedPaymentMethod\": [\n          \"BANK_TRANSFER\",\n          \"UPI\",\n          \"WALLET\"\n        ],\n        \"beckn:paymentStatus\": \"INITIATED\"\n      },\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"sessionStatus\": \"PENDING\",\n          \"connectorType\": \"CCS2\",\n          \"maxPowerKW\": 50,\n          \"vehicleMake\": \"Tata\",\n          \"vehicleModel\": \"Nexon EV\"\n        }\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/init",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "init"
+              ]
+            },
+            "description": "Init request: time-based-ev-charging-slot-init"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "rating",
+      "item": [
+        {
+          "name": "time-based-ev-charging-slot-rating",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"rating\",\n    \"domain\": \"{{domain}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\"\n  },\n  \"message\": {\n    \"id\": \"fulfillment-001\",\n    \"ratingValue\": 5,\n    \"bestRating\": 5,\n    \"worstRating\": 1,\n    \"category\": \"fulfillment\",\n    \"feedback\": {\n      \"comments\": \"Excellent charging experience! The station was clean, easy to find, and the charging was fast and reliable. The staff was helpful and the payment process was smooth.\",\n      \"tags\": [\n        \"fast-charging\",\n        \"easy-to-use\",\n        \"clean-station\",\n        \"helpful-staff\",\n        \"smooth-payment\"\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/rating",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "rating"
+              ]
+            },
+            "description": "Rating request: time-based-ev-charging-slot-rating"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "item": [
+        {
+          "name": "time-based-ev-charging-slot-select",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"select\",\n    \"domain\": \"{{domain}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-ev-charging-001\",\n      \"beckn:orderStatus\": \"CREATED\",\n      \"beckn:seller\": \"ecopower-charging\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 100.0\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-001\",\n          \"beckn:orderedItem\": \"ev-charger-ccs2-001\",\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 2.5\n          },\n          \"beckn:acceptedOffer\": {\n            \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n            \"@type\": \"beckn:Offer\",\n            \"beckn:id\": \"offer-ccs2-60kw-kwh\",\n            \"beckn:descriptor\": {\n              \"@type\": \"beckn:Descriptor\",\n              \"schema:name\": \"Per-kWh Tariff - CCS2 60kW\"\n            },\n            \"beckn:items\": [\n              \"ev-charger-ccs2-001\"\n            ],\n            \"beckn:provider\": \"ecopower-charging\",\n            \"beckn:price\": {\n              \"currency\": \"INR\",\n              \"value\": 18.0,\n              \"applicableQuantity\": {\n                \"unitText\": \"Kilowatt Hour\",\n                \"unitCode\": \"KWH\",\n                \"unitQuantity\": 1\n              }\n            },\n            \"beckn:validity\": {\n              \"@type\": \"beckn:TimePeriod\",\n              \"schema:startDate\": \"2024-10-01T00:00:00Z\",\n              \"schema:endDate\": \"2025-01-15T23:59:59Z\"\n            },\n            \"beckn:acceptedPaymentMethod\": [\n              \"UPI\",\n              \"CREDIT_CARD\",\n              \"WALLET\"\n            ],\n            \"beckn:offerAttributes\": {\n              \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld\",\n              \"@type\": \"ChargingOffer\",\n              \"buyerFinderFee\": {\n                \"feeType\": \"PERCENTAGE\",\n                \"feeValue\": 2.5\n              },\n              \"idleFeePolicy\": \"\\u20b92/min after 10 min post-charge\"\n            }\n          }\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/select",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "select"
+              ]
+            },
+            "description": "Select request: time-based-ev-charging-slot-select"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "item": []
+    },
+    {
+      "name": "support",
+      "item": [
+        {
+          "name": "time-based-ev-charging-slot-support",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"support\",\n    \"domain\": \"{{domain}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\"\n  },\n  \"message\": {\n    \"ref_id\": \"order-bpp-789012\",\n    \"ref_type\": \"order\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/support",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "support"
+              ]
+            },
+            "description": "Support request: time-based-ev-charging-slot-support"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "track",
+      "item": [
+        {
+          "name": "time-based-ev-charging-slot-track",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"track\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-bpp-789012\",\n      \"beckn:orderStatus\": \"INPROGRESS\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-001\",\n          \"beckn:orderedItem\": \"pe-charging-01\",\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 1\n          }\n        }\n      ]\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/track",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "track"
+              ]
+            },
+            "description": "Track request: time-based-ev-charging-slot-track"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "update",
+      "item": [
+        {
+          "name": "ev-charging-session-end-update",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"update\",\n    \"domain\": \"{{domain}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-bpp-789012\",\n      \"beckn:orderStatus\": \"INPROGRESS\",\n      \"beckn:orderNumber\": \"ORD-2025-001\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-001\",\n          \"beckn:orderedItem\": \"pe-charging-01\",\n          \"beckn:acceptedOffer\": {\n            \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n            \"@type\": \"beckn:Offer\",\n            \"beckn:id\": \"offer-001\",\n            \"beckn:descriptor\": {\n              \"@type\": \"beckn:Descriptor\",\n              \"name\": \"EV Charging Session Offer\",\n              \"short_desc\": \"Fast charging session with CCS2 connector\"\n            },\n            \"beckn:items\": [\n              \"pe-charging-01\"\n            ],\n            \"beckn:provider\": \"cpo1.com\",\n            \"beckn:price\": {\n              \"currency\": \"INR\",\n              \"value\": 18.0,\n              \"applicableQuantity\": {\n                \"unitText\": \"Kilowatt Hour\",\n                \"unitCode\": \"KWH\",\n                \"unitQuantity\": 1\n              }\n            },\n            \"beckn:validity\": {\n              \"@type\": \"beckn:TimePeriod\",\n              \"schema:startDate\": \"2025-01-27T00:00:00Z\",\n              \"schema:endDate\": \"2025-04-27T23:59:59Z\"\n            },\n            \"beckn:offerAttributes\": {\n              \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld\",\n              \"@type\": \"ChargingOffer\",\n              \"buyerFinderFee\": {\n                \"feeType\": \"PERCENTAGE\",\n                \"feeValue\": 2.0\n              }\n            }\n          },\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 5\n          },\n          \"beckn:price\": {\n            \"currency\": \"INR\",\n            \"value\": 90.0,\n            \"applicableQuantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 5\n            }\n          }\n        }\n      ],\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 128.64,\n        \"components\": [\n          {\n            \"type\": \"UNIT\",\n            \"value\": 100.0,\n            \"currency\": \"INR\",\n            \"description\": \"Base charging session cost (100 INR)\"\n          },\n          {\n            \"type\": \"SURCHARGE\",\n            \"value\": 20.0,\n            \"currency\": \"INR\",\n            \"description\": \"Surge price (20%)\"\n          },\n          {\n            \"type\": \"DISCOUNT\",\n            \"value\": -15.0,\n            \"currency\": \"INR\",\n            \"description\": \"Offer discount (15%)\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 10.0,\n            \"currency\": \"INR\",\n            \"description\": \"Service fee\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 13.64,\n            \"currency\": \"INR\",\n            \"description\": \"Overcharge estimation\"\n          }\n        ]\n      },\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"sessionStatus\": \"COMPLETED\",\n          \"connectorType\": \"CCS2\",\n          \"maxPowerKW\": 50,\n          \"authorizationMode\": \"OTP\",\n          \"authorizationOtpHint\": \"OTP will be shared to the user's registered number to confirm order\",\n          \"vehicleMake\": \"Tata\",\n          \"vehicleModel\": \"Nexon EV\"\n        }\n      },\n      \"beckn:payment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-123e4567-e89b-12d3-a456-426614174000\",\n        \"beckn:amount\": {\n          \"currency\": \"INR\",\n          \"value\": 128.64\n        },\n        \"beckn:paymentURL\": \"https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount\",\n        \"beckn:txnRef\": \"TXN-123456789\",\n        \"beckn:paidAt\": \"2025-01-27T10:05:00Z\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"beckn:acceptedPaymentMethod\": [\n          \"BANK_TRANSFER\",\n          \"UPI\",\n          \"WALLET\"\n        ],\n        \"beckn:paymentStatus\": \"COMPLETED\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/update",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "update"
+              ]
+            },
+            "description": "Update request: ev-charging-session-end-update"
+          },
+          "response": []
+        },
+        {
+          "name": "ev-charging-session-start-update",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"update\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-bpp-789012\",\n      \"beckn:orderStatus\": \"INPROGRESS\",\n      \"beckn:orderNumber\": \"ORD-2025-001\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:lineId\": \"line-001\",\n          \"beckn:orderedItem\": \"pe-charging-01\",\n          \"beckn:acceptedOffer\": {\n            \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n            \"@type\": \"beckn:Offer\",\n            \"beckn:id\": \"offer-001\",\n            \"beckn:descriptor\": {\n              \"@type\": \"beckn:Descriptor\",\n              \"name\": \"EV Charging Session Offer\",\n              \"short_desc\": \"Fast charging session with CCS2 connector\"\n            },\n            \"beckn:items\": [\n              \"pe-charging-01\"\n            ],\n            \"beckn:provider\": \"cpo1.com\",\n            \"beckn:price\": {\n              \"currency\": \"INR\",\n              \"value\": 18.0,\n              \"applicableQuantity\": {\n                \"unitText\": \"Kilowatt Hour\",\n                \"unitCode\": \"KWH\",\n                \"unitQuantity\": 1\n              }\n            },\n            \"beckn:validity\": {\n              \"@type\": \"beckn:TimePeriod\",\n              \"schema:startDate\": \"2025-01-27T00:00:00Z\",\n              \"schema:endDate\": \"2025-04-27T23:59:59Z\"\n            },\n            \"beckn:offerAttributes\": {\n              \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingOffer/v1/context.jsonld\",\n              \"@type\": \"ChargingOffer\",\n              \"buyerFinderFee\": {\n                \"feeType\": \"PERCENTAGE\",\n                \"feeValue\": 2.0\n              }\n            }\n          },\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 5\n          },\n          \"beckn:price\": {\n            \"currency\": \"INR\",\n            \"value\": 90.0,\n            \"applicableQuantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 5\n            }\n          }\n        }\n      ],\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 128.64,\n        \"components\": [\n          {\n            \"type\": \"UNIT\",\n            \"value\": 100.0,\n            \"currency\": \"INR\",\n            \"description\": \"Base charging session cost (100 INR)\"\n          },\n          {\n            \"type\": \"SURCHARGE\",\n            \"value\": 20.0,\n            \"currency\": \"INR\",\n            \"description\": \"Surge price (20%)\"\n          },\n          {\n            \"type\": \"DISCOUNT\",\n            \"value\": -15.0,\n            \"currency\": \"INR\",\n            \"description\": \"Offer discount (15%)\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 10.0,\n            \"currency\": \"INR\",\n            \"description\": \"Service fee\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 13.64,\n            \"currency\": \"INR\",\n            \"description\": \"Overcharge estimation\"\n          }\n        ]\n      },\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"sessionStatus\": \"PENDING\",\n          \"connectorType\": \"CCS2\",\n          \"maxPowerKW\": 50,\n          \"authorizationMode\": \"OTP\",\n          \"authorizationOtpHint\": \"OTP will be shared to the user's registered number to confirm order\",\n          \"vehicleMake\": \"Tata\",\n          \"vehicleModel\": \"Nexon EV\"\n        }\n      },\n      \"beckn:payment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-123e4567-e89b-12d3-a456-426614174000\",\n        \"beckn:amount\": {\n          \"currency\": \"INR\",\n          \"value\": 128.64\n        },\n        \"beckn:paymentURL\": \"https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount\",\n        \"beckn:txnRef\": \"TXN-123456789\",\n        \"beckn:paidAt\": \"2025-01-27T10:05:00Z\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"beckn:acceptedPaymentMethod\": [\n          \"BANK_TRANSFER\",\n          \"UPI\",\n          \"WALLET\"\n        ],\n        \"beckn:paymentStatus\": \"COMPLETED\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/update",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "update"
+              ]
+            },
+            "description": "Update request: ev-charging-session-start-update"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pure JS pre-request script to replace moment()",
+          "// 1) ISO 8601 timestamp without needing moment",
+          "const isoTimestamp = new Date().toISOString();",
+          "pm.collectionVariables.set('iso_date', isoTimestamp);",
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "domain",
+      "value": "beckn.one:deg:ev-charging:2.0.0"
+    },
+    {
+      "key": "version",
+      "value": "2.0.0"
+    },
+    {
+      "key": "bap_id",
+      "value": "ev-charging.sandbox1.com"
+    },
+    {
+      "key": "bap_uri",
+      "value": "http://onix-bap:8081/bap/receiver"
+    },
+    {
+      "key": "bpp_id",
+      "value": "ev-charging.sandbox2.com"
+    },
+    {
+      "key": "bpp_uri",
+      "value": "http://onix-bpp:8082/bpp/receiver"
+    },
+    {
+      "key": "transaction_id",
+      "value": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002"
+    },
+    {
+      "key": "iso_date",
+      "value": ""
+    },
+    {
+      "key": "bap_adapter_url",
+      "value": "http://localhost:8081/bap/caller"
+    }
+  ]
+}
