@@ -113,8 +113,6 @@ This guide does not redefine schemas or protocol rules; those remain in the Tech
 
 Below is a consolidated terminology set used throughout this guide.
 
-Here is the **terminology section regenerated cleanly as a table**, with no special formatting beyond what you asked for.
-
 ---
 
 ## 4. Terminology
