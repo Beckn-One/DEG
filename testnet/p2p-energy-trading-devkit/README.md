@@ -96,7 +96,7 @@ TBD
 
 ## Setting up Dedi registry
 
-A more complete documentation is located [here](https://beckn-labs.gitbook.io/beckn-labs-docs/beckn-registry/publishing-subscriber-details). Here are just the steps taken to create a dummy registry for this testnet.
+A more complete documentation is located [here](https://beckn-labs.gitbook.io/beckn-labs-docs/beckn-registry/publishing-subscriber-details), which also includes a [video walk-through](https://www.loom.com/share/e0293309701348dc95719a98b957d12c?sid=04b8dc00-51de-46ac-82ce-adc1a0060409). Here are just the steps taken to create a dummy registry for this testnet.
 
 
 - Registered in the DeDi [dev website](https://publish-test.dedi.global/) and created two
@@ -142,4 +142,5 @@ A more complete documentation is located [here](https://beckn-labs.gitbook.io/be
   ![Utility BPP sandbox 3 registry record](./assets/dedi-utility-registry-record-utilitybpp.png)
   
   </details>
-
+- Within the beckn-onix configuration (`config/*.yaml` files) use the `networkParticipant` (`subscriber_id` from DeDi setup), `keyId` (Record ID from DeDi setup) along with the signing & encryption private and public keys.
+- Finally enable caching of the DeDi registry  by registry service by completeing last step from [these instructions](https://beckn-labs.gitbook.io/beckn-labs-docs/beckn-registry/publishing-subscriber-details).
