@@ -284,7 +284,7 @@ For developers familiar with v1, here's a quick mapping guide:
     "text_search": "solar energy grid injection",
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.itemAttributes.sourceType == 'SOLAR' && @.itemAttributes.deliveryMode == 'GRID_INJECTION' && @.itemAttributes.availableQuantity >= 10.0 && @.itemAttributes.productionWindow.start <= '2024-10-04T10:00:00Z' && @.itemAttributes.productionWindow.end >= '2024-10-04T18:00:00Z')]"
+      "expression": "$[?(@.beckn:itemAttributes.sourceType == 'SOLAR' && @.beckn:itemAttributes.deliveryMode == 'GRID_INJECTION' && @.beckn:itemAttributes.availableQuantity >= 10.0 && @.beckn:itemAttributes.productionWindow.start <= '2024-10-04T10:00:00Z' && @.beckn:itemAttributes.productionWindow.end >= '2024-10-04T18:00:00Z')]"
     }
   }
 }
