@@ -13,22 +13,21 @@
     "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/composed/p2p-trading/v2/context.jsonld",
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-energy-001",
-      "beckn:orderStatus": "CREATED",
-      "beckn:seller": "provider-solar-farm-001",
-      "beckn:buyer": {
-        "beckn:id": "buyer-placeholder",
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer"
+      "id": "order-energy-001",
+      "orderStatus": "CREATED",
+      "seller": "provider-solar-farm-001",
+      "buyer": {
+        "@type": "beckn:Buyer",
+        "id": "buyer-placeholder"
       },
-      "beckn:orderItems": [
+      "orderItems": [
         {
-          "beckn:lineId": "line-1",
-          "beckn:orderedItem": "energy-resource-solar-001",
-          "beckn:quantity": {
+          "lineId": "line-1",
+          "orderedItem": "energy-resource-solar-001",
+          "quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
           }

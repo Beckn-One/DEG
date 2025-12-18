@@ -13,8 +13,9 @@
     "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/composed/p2p-trading/v2/context.jsonld",
     "order": {
-      "beckn:id": "order-energy-001"
+      "id": "order-energy-001"
     }
   }
 }

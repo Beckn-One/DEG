@@ -23,6 +23,7 @@
     }
   },
   "message": {
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/composed/p2p-trading/v2/context.jsonld",
     "text_search": "solar energy grid injection",
     "filters": {
       "type": "jsonpath",
@@ -30,4 +31,3 @@
     }
   }
 }
-

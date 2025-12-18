@@ -13,34 +13,32 @@
     "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/composed/p2p-trading/v2/context.jsonld",
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
-        "beckn:id": "catalog-energy-001",
-        "beckn:bppId": "bpp.energy-provider.com",
-        "beckn:bppUri": "https://bpp.energy-provider.com",
-        "beckn:descriptor": {
+        "id": "catalog-energy-001",
+        "bppId": "bpp.energy-provider.com",
+        "bppUri": "https://bpp.energy-provider.com",
+        "descriptor": {
           "@type": "beckn:Descriptor",
           "schema:name": "Solar Energy Trading Catalog"
         },
-        "beckn:items": [
+        "items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
-            "beckn:id": "energy-resource-solar-001",
-            "beckn:descriptor": {
+            "id": "energy-resource-solar-001",
+            "descriptor": {
               "@type": "beckn:Descriptor",
               "schema:name": "Solar Energy - 30.5 kWh"
             },
-            "beckn:provider": {
-              "beckn:id": "provider-solar-farm-001",
-              "beckn:descriptor": {
+            "provider": {
+              "id": "provider-solar-farm-001",
+              "descriptor": {
                 "@type": "beckn:Descriptor",
                 "schema:name": "Solar Farm 001"
               },
-              "beckn:providerAttributes": {
-                "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyProvider/v0.2/context.jsonld",
+              "providerAttributes": {
                 "@type": "EnergyProvider",
                 "sourceMeterId": "der://meter/100200300",
                 "sourceType": "SOLAR",
@@ -50,10 +48,10 @@
                     "https://example.com/certs/solar-panel-cert.pdf"
                   ]
                 }
-              }
+              },
+              "@type": "beckn:Provider"
             },
-            "beckn:itemAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyResource/v0.2/context.jsonld",
+            "itemAttributes": {
               "@type": "EnergyResource",
               "sourceType": "SOLAR",
               "deliveryMode": "GRID_INJECTION",
@@ -77,21 +75,33 @@
             }
           }
         ],
-        "beckn:offers": [
+        "offers": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
-            "beckn:id": "offer-morning-001",
-            "beckn:descriptor": {
+            "id": "offer-morning-001",
+            "descriptor": {
               "@type": "beckn:Descriptor",
               "schema:name": "Morning Solar Energy Offer - 6am-12pm"
             },
-            "beckn:provider": "provider-solar-farm-001",
-            "beckn:items": [
+            "provider": {
+              "id": "provider-solar-farm-001",
+              "@type": "beckn:Provider",
+              "providerAttributes": {
+                "@type": "EnergyProvider",
+                "sourceMeterId": "der://meter/100200300",
+                "sourceType": "SOLAR",
+                "certification": {
+                  "status": "Carbon Offset Certified",
+                  "certificates": [
+                    "https://example.com/certs/solar-panel-cert.pdf"
+                  ]
+                }
+              }
+            },
+            "items": [
               "energy-resource-solar-001"
             ],
-            "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
+            "offerAttributes": {
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
@@ -124,19 +134,31 @@
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
-            "beckn:id": "offer-afternoon-001",
-            "beckn:descriptor": {
+            "id": "offer-afternoon-001",
+            "descriptor": {
               "@type": "beckn:Descriptor",
               "schema:name": "Afternoon Solar Energy Offer - 12pm-6pm"
             },
-            "beckn:provider": "provider-solar-farm-001",
-            "beckn:items": [
+            "provider": {
+              "id": "provider-solar-farm-001",
+              "@type": "beckn:Provider",
+              "providerAttributes": {
+                "@type": "EnergyProvider",
+                "sourceMeterId": "der://meter/100200300",
+                "sourceType": "SOLAR",
+                "certification": {
+                  "status": "Carbon Offset Certified",
+                  "certificates": [
+                    "https://example.com/certs/solar-panel-cert.pdf"
+                  ]
+                }
+              }
+            },
+            "items": [
               "energy-resource-solar-001"
             ],
-            "beckn:offerAttributes": {
-              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
+            "offerAttributes": {
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
