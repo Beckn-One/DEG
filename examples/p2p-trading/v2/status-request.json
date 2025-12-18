@@ -10,7 +10,7 @@
     "bpp_id": "bpp.energy-provider.com",
     "bpp_uri": "https://bpp.energy-provider.com",
     "ttl": "PT30S",
-    "domain": "energy-trade"
+    "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
     "order": {

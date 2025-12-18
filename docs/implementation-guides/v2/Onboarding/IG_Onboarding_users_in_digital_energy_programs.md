@@ -496,7 +496,7 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
   "context": {
     "version": "2.0.0",
     "action": "init",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:00Z",
     "message_id": "msg-init-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -595,7 +595,7 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
   "context": {
     "version": "2.0.0",
     "action": "init",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T11:00:00Z",
     "message_id": "msg-init-prosumer-001",
     "transaction_id": "txn-onboard-prosumer-001",
@@ -707,7 +707,7 @@ The BPP verifies the provided credentials and checks for conflicts with existing
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -795,7 +795,7 @@ The BPP verifies the provided credentials and checks for conflicts with existing
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-conflict-001",
     "transaction_id": "txn-onboard-conflict-001",
@@ -880,7 +880,7 @@ The confirm request includes the desired enrollment start and end dates, along w
   "context": {
     "version": "2.0.0",
     "action": "confirm",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:35:00Z",
     "message_id": "msg-confirm-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -947,7 +947,7 @@ The BPP returns a signed enrollment credential with start and end dates, and log
   "context": {
     "version": "2.0.0",
     "action": "on_confirm",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:35:05Z",
     "message_id": "msg-on-confirm-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -1042,7 +1042,7 @@ The BPP returns a signed enrollment credential with start and end dates, and log
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-error-001",
     "transaction_id": "txn-onboard-error-001",
@@ -1091,7 +1091,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
   "context": {
     "version": "2.0.0",
     "action": "update",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-11-20T14:30:00Z",
     "message_id": "msg-update-consent-revoke-001",
     "transaction_id": "txn-revoke-consent-001",
@@ -1149,7 +1149,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
   "context": {
     "version": "2.0.0",
     "action": "on_update",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-11-20T14:30:05Z",
     "message_id": "msg-on-update-consent-revoke-001",
     "transaction_id": "txn-revoke-consent-001",
@@ -1215,7 +1215,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
   "context": {
     "version": "2.0.0",
     "action": "update",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-11-20T15:00:00Z",
     "message_id": "msg-update-unenroll-001",
     "transaction_id": "txn-unenroll-001",
@@ -1272,7 +1272,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
   "context": {
     "version": "2.0.0",
     "action": "on_update",
-    "domain": "energy.enrollment",
+    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
     "timestamp": "2024-11-20T15:00:05Z",
     "message_id": "msg-on-update-unenroll-001",
     "transaction_id": "txn-unenroll-001",

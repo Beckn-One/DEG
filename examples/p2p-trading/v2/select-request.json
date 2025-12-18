@@ -10,13 +10,20 @@
     "bpp_id": "bpp.energy-provider.com",
     "bpp_uri": "https://bpp.energy-provider.com",
     "ttl": "PT30S",
-    "domain": "energy-trade"
+    "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-energy-001",
+      "beckn:orderStatus": "CREATED",
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:buyer": {
+        "beckn:id": "buyer-placeholder",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      },
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-1",
@@ -26,29 +33,7 @@
             "unitText": "kWh"
           }
         }
-      ],
-      "beckn:acceptedOffers": [
-        {
-          "beckn:id": "offer-energy-001",
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-          "@type": "beckn:Offer",
-          "beckn:descriptor": {
-            "@type": "beckn:Descriptor",
-            "schema:name": "Offer Descriptor"
-          },
-          "beckn:provider": "provider-solar-farm-001",
-          "beckn:items": [
-            "dummy-item-1"
-          ]
-        }
-      ],
-      "beckn:seller": "provider-solar-farm-001",
-      "beckn:orderStatus": "CREATED",
-      "beckn:buyer": {
-        "beckn:id": "buyer-placeholder",
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer"
-      }
+      ]
     }
   }
 }
