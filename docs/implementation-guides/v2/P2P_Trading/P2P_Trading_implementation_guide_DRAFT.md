@@ -74,6 +74,7 @@ This implementation guide provides comprehensive instructions for implementing P
 - [14. Examples](#14-examples)
   - [14.1. Complete Examples](#141-complete-examples)
   - [14.2. Example Scenarios](#142-example-scenarios)
+  - [14.3. Inter-energy retailer P2P trading](https://github.com/Beckn-One/DEG/blob/main/docs/implementation-guides/v2/P2P_Trading/Inter%20energy%20retailer%20P2P%20trading_draft.md)
 - [15. Additional Resources](#15-additional-resources)
 - [16. Support](#16-support)
 
@@ -2084,6 +2085,9 @@ All examples are available in:
 4. **Telemetry Monitoring**: Monitor energy delivery with real-time telemetry
 
 ---
+
+## 14.3. Inter energy retailer P2P trading 
+This is a specific scenario of P2P trading where the participants come under differnet energy retailers and distribution utilities and engages in direct energy trade. Here, nuances of financial settlement, dispute resolution, energy accounting etc will have to be thought through without affecting ease of participation. More information can be found here [Inter-retailer P2P energy trading](https://github.com/Beckn-One/DEG/blob/main/docs/implementation-guides/v2/P2P_Trading/Inter%20energy%20retailer%20P2P%20trading_draft.md)
 
 # 15. Additional Resources
 
