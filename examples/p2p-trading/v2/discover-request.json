@@ -26,7 +26,7 @@
     "text_search": "solar energy grid injection",
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.beckn:itemAttributes.sourceType == 'SOLAR' && @.beckn:itemAttributes.deliveryMode == 'GRID_INJECTION' && @.beckn:itemAttributes.availableQuantity >= 10.0 && @.beckn:itemAttributes.productionWindow.start <= '2024-10-04T10:00:00Z' && @.beckn:itemAttributes.productionWindow.end >= '2024-10-04T18:00:00Z')]"
+      "expression": "$[?(@.beckn:itemAttributes.sourceType == 'SOLAR' && @.beckn:itemAttributes.deliveryMode == 'GRID_INJECTION' && @.beckn:itemAttributes.availableQuantity >= 10.0 && @.beckn:itemAttributes.productionWindow[?(@['schema:startTime'] <= '10:00:00' && @['schema:endTime'] >= '18:00:00')])]"
     }
   }
 }

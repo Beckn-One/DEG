@@ -54,6 +54,7 @@
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -66,8 +67,8 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }

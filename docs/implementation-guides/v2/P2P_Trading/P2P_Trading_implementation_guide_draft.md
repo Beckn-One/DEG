@@ -548,7 +548,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
     "text_search": "solar energy grid injection",
     "filters": {
       "type": "jsonpath",
-      "expression": "$[?(@.itemAttributes.sourceType == 'SOLAR' && @.itemAttributes.deliveryMode == 'GRID_INJECTION' && @.itemAttributes.availableQuantity >= 10.0 && @.itemAttributes.productionWindow.start <= '2024-10-04T10:00:00Z' && @.itemAttributes.productionWindow.end >= '2024-10-04T18:00:00Z')]"
+      "expression": "$[?(@.beckn:itemAttributes.sourceType == 'SOLAR' && @.beckn:itemAttributes.deliveryMode == 'GRID_INJECTION' && @.beckn:itemAttributes.availableQuantity >= 10.0 && @.beckn:itemAttributes.productionWindow[?(@['schema:startTime'] <= '10:00:00' && @['schema:endTime'] >= '18:00:00')])]"
     }
   }
 }
@@ -589,7 +589,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-energy-001",
         "beckn:bppId": "bpp.energy-provider.com",
@@ -600,7 +600,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         },
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "energy-resource-solar-001",
             "beckn:descriptor": {
@@ -636,8 +636,9 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "availableQuantity": 30.5,
               "productionWindow": [
                 {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
+                  "@type": "beckn:TimePeriod",
+                  "schema:startTime": "10:00:00",
+                  "schema:endTime": "18:00:00"
                 }
               ],
               "sourceVerification": {
@@ -653,7 +654,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         ],
         "beckn:offers": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-morning-001",
             "beckn:descriptor": {
@@ -669,6 +670,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "wheelingCharges": {
                 "amount": 2.5,
                 "currency": "USD",
@@ -677,8 +679,9 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "minimumQuantity": 1.0,
               "maximumQuantity": 100.0,
               "validityWindow": {
-                "start": "2024-10-04T00:00:00Z",
-                "end": "2024-10-04T23:59:59Z"
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "00:00:00",
+                "schema:endTime": "23:59:59"
               },
               "beckn:price": {
                 "value": 0.15,
@@ -692,13 +695,13 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-afternoon-001",
             "beckn:descriptor": {
@@ -714,6 +717,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "wheelingCharges": {
                 "amount": 2.5,
                 "currency": "USD",
@@ -722,8 +726,9 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "minimumQuantity": 1.0,
               "maximumQuantity": 100.0,
               "validityWindow": {
-                "start": "2024-10-04T00:00:00Z",
-                "end": "2024-10-04T23:59:59Z"
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "00:00:00",
+                "schema:endTime": "23:59:59"
               },
               "beckn:price": {
                 "value": 0.18,
@@ -737,8 +742,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }
@@ -878,6 +883,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -890,8 +896,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -980,6 +986,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -992,8 +999,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1022,6 +1029,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.18,
                 "currency": "USD",
@@ -1034,8 +1042,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }
@@ -1124,6 +1132,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1136,8 +1145,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1166,6 +1175,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.18,
                 "currency": "USD",
@@ -1178,8 +1188,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }
@@ -1283,6 +1293,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1295,8 +1306,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1385,6 +1396,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1397,8 +1409,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1483,6 +1495,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1495,8 +1508,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1525,6 +1538,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.18,
                 "currency": "USD",
@@ -1537,8 +1551,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }
@@ -1627,6 +1641,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1639,8 +1654,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1669,6 +1684,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.18,
                 "currency": "USD",
@@ -1681,8 +1697,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }
@@ -1780,6 +1796,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1792,8 +1809,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -1872,6 +1889,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -1884,8 +1902,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -2007,6 +2025,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -2019,8 +2038,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           }
@@ -2049,6 +2068,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.18,
                 "currency": "USD",
@@ -2061,8 +2081,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }

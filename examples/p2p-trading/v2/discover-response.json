@@ -15,7 +15,7 @@
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-energy-001",
         "beckn:bppId": "bpp.energy-provider.com",
@@ -26,7 +26,7 @@
         },
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "energy-resource-solar-001",
             "beckn:descriptor": {
@@ -62,8 +62,9 @@
               "availableQuantity": 30.5,
               "productionWindow": [
                 {
-                  "start": "2024-10-04T10:00:00Z",
-                  "end": "2024-10-04T18:00:00Z"
+                  "@type": "beckn:TimePeriod",
+                  "schema:startTime": "10:00:00",
+                  "schema:endTime": "18:00:00"
                 }
               ],
               "sourceVerification": {
@@ -79,7 +80,7 @@
         ],
         "beckn:offers": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-morning-001",
             "beckn:descriptor": {
@@ -95,6 +96,7 @@
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "wheelingCharges": {
                 "amount": 2.5,
                 "currency": "USD",
@@ -103,8 +105,9 @@
               "minimumQuantity": 1.0,
               "maximumQuantity": 100.0,
               "validityWindow": {
-                "start": "2024-10-04T00:00:00Z",
-                "end": "2024-10-04T23:59:59Z"
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "00:00:00",
+                "schema:endTime": "23:59:59"
               },
               "beckn:price": {
                 "value": 0.15,
@@ -118,13 +121,13 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
               }
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-afternoon-001",
             "beckn:descriptor": {
@@ -140,6 +143,7 @@
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "wheelingCharges": {
                 "amount": 2.5,
                 "currency": "USD",
@@ -148,8 +152,9 @@
               "minimumQuantity": 1.0,
               "maximumQuantity": 100.0,
               "validityWindow": {
-                "start": "2024-10-04T00:00:00Z",
-                "end": "2024-10-04T23:59:59Z"
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "00:00:00",
+                "schema:endTime": "23:59:59"
               },
               "beckn:price": {
                 "value": 0.18,
@@ -163,8 +168,8 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T12:00:00Z",
-                "schema:endDate": "2024-10-04T18:00:00Z"
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
               }
             }
           }
