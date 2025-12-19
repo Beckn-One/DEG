@@ -17,7 +17,7 @@
       {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Order",
-        "beckn:id": "b989c9a9-f603-4d44-b38d-26fd72286b38",
+        "beckn:id": "order-ev-charging-001",
         "beckn:orderStatus": "CONFIRMED",
         "beckn:seller": "cpo1.com",
         "beckn:buyer": {
@@ -27,12 +27,11 @@
         },
         "beckn:orderItems": [
           {
-            "beckn:lineId": "line-001",
-            "beckn:orderedItem": "pe-charging-01",
+            "beckn:orderedItem": "IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A",
             "beckn:quantity": {
               "unitText": "Kilowatt Hour",
               "unitCode": "KWH",
-              "unitQuantity": 1
+              "unitQuantity": 2.5
             }
           }
         ]
