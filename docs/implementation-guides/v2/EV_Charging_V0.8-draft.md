@@ -406,8 +406,8 @@ Note: The API calls and schema for walk-in charging are identical to the [advanc
 #### 13.1.2.1. `action: discover`
 
 - Method: POST
-- Use Cases: Raghav scans QR code on charger using his BAP user app
-- Request: Fetching details of a specific charger (EVSE) after reaching site (using its identifier): [Example](../../../examples/ev_charging/01_discover/discovery-by-EVSE.json)
+- Use Cases: Raghav scans QR code on Charging Point Connector using his BAP user app
+- Request: Fetching details of a specific Charging Point Connector (EVSE) after reaching site (using its identifier): [Example](../../../examples/ev_charging/v2/01_discover/discovery-by-EVSE.json)
 
 <details>
 <summary><a href="../../../examples/ev-charging/v2/01_discover/discovery-by-EVSE.json">Example json :rocket:</a></summary>
@@ -751,7 +751,7 @@ Note: Users can discover the charging station through off-network channels (such
 ```
 </details>
 
-CPO returns details of a specific charger: [Example](../../../examples/ev_charging/02_on_discover/ev-charging-specific-evse-catalog.json)
+CPO returns details of a specific charger: [Example](../../../examples/ev_charging/v2/02_on_discover/ev-charging-specific-evse-catalog.json)
 - Successful Response: 
 
 <details>
@@ -768,7 +768,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
 #### 13.1.2.3. `action: select`
 
 - Method: POST
-- Use Cases: Raghav selects a service offering from the options he gets. He chooses a 100 INR top-up.
+- Use Cases: Raghav selects a service offering from the options he gets. He chooses a 2.5 KWH top-up and requests for a preferred time slot.
 - Request: 
 
 <details>
@@ -856,7 +856,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
 ```
 </details>
 
-EV user requests charge worth specific amount in currency: [Example](../../../examples/ev_charging/03_select/ev-charging-select.json)
+EV user requests charge worth in KWH: [Example](../../../examples/ev_charging/v2/03_select/ev-charging-select.json)
 - Successful Response: 
 
 <details>
@@ -1011,7 +1011,7 @@ EV user requests charge worth specific amount in currency: [Example](../../../ex
 ```
 </details>
 
-CPO responds with dynamically calculated quote: [Example](../../../examples/ev_charging/04_on_select/ev-charging-on-select.json)
+CPO responds with dynamically calculated quote: [Example](../../../examples/ev_charging/v2/04_on_select/ev-charging-on-select.json)
 - Successful Response: 
 
 <details>
@@ -1028,7 +1028,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
 #### 13.1.2.5. `action: init`
 
 - Method: POST
-- Use Cases: Raghav provides his billing information.
+- Use Cases: Raghav reviews charger tariff, idle fee window, cancellation rules etc. BAP initiates the payment on Raghav’s behalf, with the BPP acting as the payment collector. BAP sends payment settlement account information for future reconciliation.
 - Request: 
 
 <details>
@@ -1156,7 +1156,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
 ```
 </details>
 
-EV user requests final quote with payment terms by providing billing details: [Example](../../../examples/ev_charging/05_init/ev-charging-bpp-payment-init.json)
+EV user requests for payment information: [Example](../../../examples/ev_charging/v2/05_init/ev-charging-bpp-payment-init.json)
 - Successful Response: 
 
 <details>
@@ -1173,8 +1173,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 #### 13.1.2.6. `action: on_init`
 
 - Method: POST
-- Use Cases: Raghav receives the charging session terms(rate, idle fee window, cancellation rules, payment terms etc). 
-  He reviews the terms. He chooses UPI and authorizes payment (or an authorization hold, as supported)
+- Use Cases: Raghav receives the charging session order ID and payment link, reviews the terms, selects UPI, and authorizes the payment (or an authorization hold, if supported).
 - Request: 
 
 <details>
@@ -1319,7 +1318,7 @@ EV user requests final quote with payment terms by providing billing details: [E
 ```
 </details>
 
-CPO responds with final quote with payment terms: [Example](../../../examples/ev_charging/06_on_init/ev-charging-bpp-payment-on-init.json)
+CPO responds with the payment link for the user to authorize payment: [Example](../../../examples/ev_charging/v2/06_on_init/ev-charging-bpp-payment-on-init.json)
 
 - Successful Response: 
 
@@ -1456,7 +1455,7 @@ CPO responds with final quote with payment terms: [Example](../../../examples/ev
 ```
 </details>
 
-CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_on_status_1/ev-charging-bpp-payment-check-on-status.json)
+CPO sends the status of the payment: [Example](../../../examples/ev_charging/v2/06_on_status_1/ev-charging-bpp-payment-check-on-status.json)
 
 #### 13.1.2.7. `action: confirm`
 
@@ -1580,7 +1579,7 @@ CPO sends the status of the payment: [Example](../../../examples/ev_charging/06_
 ```
 </details>
 
-EV user confirms reservation of a slot at a particular charging station at a particular time: [Example](../../../examples/ev_charging/07_confirm/ev-charging-confirm.json)
+EV user confirms reservation of a slot at a particular charging station at a particular time: [Example](../../../examples/ev_charging/v2/07_confirm/ev-charging-confirm.json)
 - Successful Response: 
 
 <details>
@@ -1597,7 +1596,7 @@ EV user confirms reservation of a slot at a particular charging station at a par
 #### 13.1.2.8. `action: on_confirm`
 
 - Method: POST
-- Use Cases: The app returns a booking/transaction ID along with the other charging session details.
+- Use Cases: The CPO confirms the order along with the charging session fulfillment details.
 - Request: 
 
 <details>
@@ -1729,7 +1728,292 @@ EV user confirms reservation of a slot at a particular charging station at a par
 ```
 </details>
 
-CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_00_on_confirm/ev-charging-on-confirm.json)
+CPO responds with confirmed slot: [Example](../../../examples/ev_charging/v2/08_00_on_confirm/ev-charging-on-confirm.json)
+- Successful Response: 
+
+<details>
+<summary>Example json :rocket:</summary>
+
+```json
+{
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
+}
+```
+</details>
+
+#### 13.1.2.8.1. `action: status`
+
+- Method: POST
+- Use Cases: Raghav connects the charging gun and checks the status of the charging connector.
+- Request: 
+
+<details>
+<summary><a href="../../../examples/ev-charging/v2/08_01_status/ev-charging-connector-status.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "status",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
+    "timestamp": "2025-01-27T10:05:00Z",
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-ev-charging-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:telephone": "+91-9876543210",
+        "beckn:email": "ravi.kumar@example.com",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A",
+          "beckn:quantity": {
+            "unitText": "Kilowatt Hour",
+            "unitCode": "KWH",
+            "unitQuantity": 2.5
+          },
+          "beckn:price": {
+            "currency": "INR",
+            "value": 45.0,
+            "applicableQuantity": {
+              "unitText": "Kilowatt Hour",
+              "unitCode": "KWH",
+              "unitQuantity": 1
+            }
+          }
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 143.95,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 112.5,
+            "currency": "INR",
+            "description": "Base charging session cost (45 INR/kWh × 2.5 kWh)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          },
+          {
+            "type": "FEE",
+            "value": 2.81,
+            "currency": "INR",
+            "description": "Buyer finder fee (2.5%)"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
+          "@type": "ChargingSession",
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "sessionStatus": "PENDING"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 143.95
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-12-19T10:05:00Z",
+        "beckn:beneficiary": "BPP",
+        "beckn:paymentStatus": "COMPLETED"
+      }
+    }
+  }
+}
+```
+</details>
+
+The user checks the status of charging connector: [Example](../../../examples/ev_charging/v2/08_01_status/v2/ev-charging-connector-status.json)
+- Successful Response: 
+
+<details>
+<summary>Example json :rocket:</summary>
+
+```json
+{
+  "ack_status": "ACK",
+  "timestamp": "2025-10-14T07:33:05Z"
+}
+```
+</details>
+
+#### 13.1.2.8.2. `action: on_status`
+
+- Method: POST
+- Use Cases: The CPO responds with the connector status PREPARING, indicating readiness to supply power.
+- Request: 
+
+<details>
+<summary><a href="../../../examples/ev-charging/v2/08_02_on_status/ev-charging-connector-on-status.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_status",
+    "domain": "beckn.one:deg:ev-charging:*",
+    "bap_id": "example-bap.com",
+    "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "c69b4c1e-fb7e-469d-ae90-00f4d5e82b64",
+    "timestamp": "2025-01-27T10:05:00Z",
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-ev-charging-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "cpo1.com",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-123",
+        "beckn:role": "BUYER",
+        "beckn:displayName": "Ravi Kumar",
+        "beckn:telephone": "+91-9876543210",
+        "beckn:email": "ravi.kumar@example.com",
+        "beckn:taxID": "GSTIN29ABCDE1234F1Z5"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A"
+        }
+      ],
+      "beckn:orderValue": {
+        "currency": "INR",
+        "value": 143.95,
+        "components": [
+          {
+            "type": "UNIT",
+            "value": 112.5,
+            "currency": "INR",
+            "description": "Base charging session cost (45 INR/kWh × 2.5 kWh)"
+          },
+          {
+            "type": "SURCHARGE",
+            "value": 20.0,
+            "currency": "INR",
+            "description": "Surge price (20%)"
+          },
+          {
+            "type": "DISCOUNT",
+            "value": -15.0,
+            "currency": "INR",
+            "description": "Offer discount (15%)"
+          },
+          {
+            "type": "FEE",
+            "value": 10.0,
+            "currency": "INR",
+            "description": "Service fee"
+          },
+          {
+            "type": "FEE",
+            "value": 13.64,
+            "currency": "INR",
+            "description": "Overcharge estimation"
+          },
+          {
+            "type": "FEE",
+            "value": 2.81,
+            "currency": "INR",
+            "description": "Buyer finder fee (2.5%)"
+          }
+        ]
+      },
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-001",
+        "beckn:mode": "RESERVATION",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
+          "@type": "ChargingSession",
+          "connectorType": "CCS2",
+          "maxPowerKW": 50,
+          "sessionStatus": "PENDING",
+          "connectorStatus": "PREPARING"
+        }
+      },
+      "beckn:payment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
+        "beckn:amount": {
+          "currency": "INR",
+          "value": 143.95
+        },
+        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
+        "beckn:txnRef": "TXN-123456789",
+        "beckn:paidAt": "2025-12-19T10:05:00Z",
+        "beckn:beneficiary": "BPP",
+        "beckn:paymentStatus": "COMPLETED"
+      }
+    }
+  }
+}
+```
+</details>
+
+The CPO response with the status of the charging connector: [Example](../../../examples/ev_charging/v2/08_02_status/v2/ev-charging-connector-on-status.json)
 - Successful Response: 
 
 <details>
@@ -1746,7 +2030,7 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_00_
 #### 13.1.2.9. `action: update` (start charging)
 
 - Method: POST
-- Use Cases: Raghav plugs in and starts the session from the app.
+- Use Cases: Raghav starts the session from the app.
 - Request: 
 
 <details>
@@ -1864,7 +2148,7 @@ CPO responds with confirmed slot: [Example](../../../examples/ev_charging/08_00_
 ```
 </details>
 
-EV user starts a charging session: [Example](../../../examples/ev_charging/09_update/ev-charging-01-session-start-update.json)
+EV user starts a charging session: [Example](../../../examples/ev_charging/v2/09_update/ev-charging-01-session-start-update.json)
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -1880,7 +2164,7 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
 #### 13.1.2.10. `action: on_update` (start charging)
 
 - Method: POST
-- Use Cases: Response for the charging session initiation.
+- Use Cases: Response for the charging session initiation. The sessionStatus changes to ACTIVE from PENDING.
 - Request: 
 
 <details>
@@ -1998,7 +2282,7 @@ EV user starts a charging session: [Example](../../../examples/ev_charging/09_up
 ```
 </details>
 
-CPO responds with confirmed start of charging session: [Example](../../../examples/ev_charging/10_on_update/ev-charging-session-on-update.json)
+CPO responds with confirmed start of charging session: [Example](../../../examples/ev_charging/v2/10_on_update/ev-charging-session-on-update.json)
 - Successful Response: 
 
 <details>
@@ -2060,7 +2344,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 ```
 </details>
 
-EV User tracks a live charging session in real-time: [Example](../../../examples/ev_charging/11_track/ev-charging-session-track.json)
+EV User tracks a live charging session in real-time: [Example](../../../examples/ev_charging/v2/11_track/ev-charging-session-track.json)
 - Successful Response: 
 
 <details>
@@ -2201,7 +2485,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 ```
 </details>
 
-EV User receives a live charging session in real-time: [Example](../../../examples/ev_charging/12_on_track/ev-charging-session-on-track.json)
+EV User receives a live charging session in real-time: [Example](../../../examples/ev_charging/v2/12_on_track/ev-charging-session-on-track.json)
 - Successful Response: 
 
 <details>
@@ -2218,7 +2502,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
 #### 13.1.2.13. async `action: on_status`
 
 - Method: POST
-- Use Cases: Raghav receives a notification if there is any error during the charging session.
+- Use Cases: Raghav receives a notification if there is any error/interruption during the charging session.
 - Request: 
 
 <details>
@@ -2329,7 +2613,7 @@ EV User receives a live charging session in real-time: [Example](../../../exampl
 ```
 </details>
 
-EV user reveives a notification in case of any error occuring during charging session: [Example](../../../examples/ev_charging/13_on_status/ev-charging-session-interrupt-on-status.json)
+EV user reveives a notification in case of any error occuring during charging session: [Example](../../../examples/ev_charging/v2/13_on_status/ev-charging-session-interrupt-on-status.json)
 - Successful Response: 
 
 <details>
@@ -2346,7 +2630,7 @@ EV user reveives a notification in case of any error occuring during charging se
 #### 13.1.2.14. `action: on_update` (stop-charging)
 
 - Method: POST
-- Use Cases: Raghav initiates a stop chargig request when his requirement is met. Note: In practive it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
+- Use Cases: Raghav initiates a stop chargig request when his requirement is met. Note: In practice it is not necessary that an EV user initiates a charging session stop. Based on actual scenario, a charging session can be stopped by the CPO as well.
 - Request: 
 
 <details>
@@ -2462,7 +2746,7 @@ EV user reveives a notification in case of any error occuring during charging se
 ```
 </details>
 
-EV user stops the charging session: [Example](../../../examples/ev_charging/14_01_update/ev-charging-session-end-update.json)
+EV user stops the charging session: [Example](../../../examples/ev_charging/v2/14_01_update/ev-charging-session-end-update.json)
 
 #### 13.1.2.15. async `action: on_update` (stop-charging)
 
@@ -2583,7 +2867,7 @@ EV user stops the charging session: [Example](../../../examples/ev_charging/14_0
 ```
 </details>
 
-EV user receives the session details upon chargign session end: [Example](../../../examples/ev_charging/14_02_on_update/ev-charging-session-complete-on-update.json)
+EV user receives the session details upon chargign session end: [Example](../../../examples/ev_charging/v2/14_02_on_update/ev-charging-session-complete-on-update.json)
 - Successful Response: 
 
 <details>
@@ -2648,7 +2932,7 @@ EV user receives the session details upon chargign session end: [Example](../../
 ```
 </details>
 
-EV user rates charging service experience: [Example](../../../examples/ev_charging/15_rating/ev-charging-session-rating.json)
+EV user rates charging service experience: [Example](../../../examples/ev_charging/v2/15_rating/ev-charging-session-rating.json)
 - Successful Response: 
 
 <details>
@@ -2665,7 +2949,7 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
 #### 13.1.2.17. `action: on_rating`
 
 - Method: POST
-- Use Cases: Raghav receives an achievement after providing a rating.
+- Use Cases: Raghav receives an acknowledgement after rating the charging session.
 - Request: 
 
 <details>
@@ -2698,7 +2982,7 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
 ```
 </details>
 
-CPO accepts rating: [Example](../../../examples/ev_charging/16_on_rating/ev-charging-session-on-rating.json)
+CPO accepts rating: [Example](../../../examples/ev_charging/v2/16_on_rating/ev-charging-session-on-rating.json)
 - Successful Response: 
 
 <details>
@@ -2718,7 +3002,7 @@ CPO accepts rating: [Example](../../../examples/ev_charging/16_on_rating/ev-char
 - Use Cases: Raghav reaches out for support.
 - Request: 
 
-EV user contacts support: [Example](../../../examples/ev_charging/17_support/ev-charging-session-support.json)
+EV user contacts support: [Example](../../../examples/ev_charging/v2/17_support/ev-charging-session-support.json)
 
 <details>
 <summary><a href="../../../examples/ev-charging/v2/17_support/ev-charging-session-support.json">Example json :rocket:</a></summary>
@@ -2813,7 +3097,7 @@ EV user contacts support: [Example](../../../examples/ev_charging/17_support/ev-
 ```
 </details>
 
-CPO returns support information: [Example](../../../examples/ev_charging/18_on_support/ev-charging-session-on-support.json)
+CPO returns support information: [Example](../../../examples/ev_charging/v2/18_on_support/ev-charging-session-on-support.json)
 - Successful Response: 
 
 <details>
@@ -3569,8 +3853,7 @@ This section outlines the catalogs array, returned in on\_discover, containing p
    * **@context / @type**: JSON-LD schema references for Item.  
    * **beckn:id**: Charger identifier.  
    * **beckn:descriptor**: Display data (schema:name, optional beckn:shortDesc).  
-   * **beckn:category**: Classification (schema:codeValue, schema:name).  
-   * **beckn:availableAt**: Site/location (beckn:gps.schema:latitude / schema:longitude, beckn:address).  
+   * **beckn:category**: Classification (schema:codeValue, schema:name).
    * **beckn:rateable**: Whether ratings apply.  
    * **beckn:rating**: Aggregate rating (beckn:ratingValue, beckn:ratingCount).  
    * **beckn:networkId**: Network tags.  
@@ -3578,9 +3861,9 @@ This section outlines the catalogs array, returned in on\_discover, containing p
    * **beckn:itemAttributes**: EV-charging specifics:  
      * **@context / @type**: Schema refs for attributes.  
      * **ev:connectorType** (e.g., CCS2).  
-     * **ev:currentType** (AC/DC).  
+     * **ev:powerType** (AC/DC).  
      * **ev:maxPowerKW** (number).  
-     * **ev:availability** (e.g., AVAILABLE).  
+     * **beckn:chargingStation.serviceLocation**: Charging Station location (beckn:gps.schema:latitude / schema:longitude, beckn:address).  
      * **ev:providerTags** (e.g., SPOT).  
      * **ev:tariff**: pricing block (schema:price, schema:priceCurrency, ev:pricingUnit).
 - Successful Response: 
@@ -3660,11 +3943,11 @@ Offer schema in the catalog:
 
 - Method: POST
 - Use Cases: Adam selects a charging session slot. 
-- Request: EV user requests charge worth specific amount in currency: [Example](../../../examples/ev_charging/v2/03_select/ev-charging-select.json)
+- Request: EV user requests charge worth specific KWH: [Example](../../../examples/ev_charging/v2/03_select/ev-charging-select.json)
 
 1. **beckn:orderItems:**  
    1. Defines what the buyer has chosen to purchase or book — in this case, the EV charging service.  
-   2. Each entry captures the specific charger (pe-charging-01) and quantity requested (5 kWh), representing the intended energy consumption for that session.  
+   2. Each entry captures the specific charger (pe-charging-01) and quantity requested (2.5 kWh), representing the intended energy consumption for that session.  
 2. **Beckn:fulfillment:**  
    1. Describes the *intended charging session details* for scheduling and compatibility checks.  
 3. **ev:starttime / ev:endtime:** Proposed charging window chosen by the user or system.  
@@ -3776,14 +4059,12 @@ Offer schema in the catalog:
 
 1. **beckn:orderItemAttributes:**  
    1. Returned by the BPP to confirm item-specific technical and commercial details.  
-   2. It validates that the selected charger (pe-charging-01) supports the requested specifications —connector type (CCS2), power (30 kW), current type (AC), and tariff (₹18 / kWh).  
+   2. It validates that the selected charger (pe-charging-01) supports the requested specifications —connector type (CCS2), power (30 kW), current type (AC), and tariff (₹45 / kWh).  
    3. This ensures that the buyer and provider are aligned before moving to booking.  
 2. **Beckn:totals:**  
    1. Contains the computed **estimated price summary** based on the selection.  
    2. It includes total cost and detailed **breakup** of charges such as session cost and service fee.  
-   3. This is a **pre-confirmation cost estimate**, enabling the buyer to review pricing before proceeding to init.  
-3. **Beckn:fulfillment:**  
-   1. Reaffirms the session slot (start and end time) and vehicle details, confirming charger compatibility and availability window as validated by the provider.
+   3. This is a **pre-confirmation cost estimate**, enabling the buyer to review pricing before proceeding to init.
 
 Recommendations for BPP:
 
@@ -3956,41 +4237,43 @@ The app highlights this surcharge in:
 Session preview  
 Before starting, the app shows the full estimated cost with the same components used in the canonical example:
 
-* Base session cost (5 kWh bundle): ₹100.00  
+* Base session cost (45 INR/kWh × 2.5 kWh): ₹112.50  
 * Surge pricing uplift (20%): ₹20.00  
 * Service fee: ₹10.00  
 * Overcharge estimation buffer: ₹13.64  
 * Promotional discount (15% offer): -₹15.00  
-* Estimated total: ₹128.64
+* Buyer finder fee (2.5%): ₹2.81  
+* Estimated total: ₹143.95
 
 Mid-session  
 While charging (e.g., after 3.4 kWh delivered), the UI keeps a running tally so the user can see how surge pricing is influencing the bill:
 
-* Base energy accrued: ~₹68.00 (3.4 kWh of the ₹100 base bundle)  
-* Surge uplift (20% of accrued base): ~₹13.60  
-* Running subtotal so far: ~₹81.60 (service fee, buffer, and discount are applied at session close)
+* Base energy accrued: ₹67.50 (3.4 kWh of the 45 INR/kWh)  
+* Surge uplift (20% of accrued base): ₹13.50  
+* Running subtotal so far: ₹81.00 (service fee, buffer, discount, and buyer finder fee are applied at session close)
 
 Post-charging  
 When the session completes, Srilekha receives an itemized receipt that matches the quotation components:
 
 * Energy Delivered: 5.0 kWh (bundle)  
-* Base session cost: ₹100.00  
+* Base session cost: ₹112.50 (45 INR/kWh × 2.5 kWh)  
 * Surge pricing uplift (20%): ₹20.00  
 * Service fee: ₹10.00  
 * Overcharge estimation buffer: ₹13.64  
 * Offer discount (15%): -₹15.00  
-* Total Payable: ₹128.64
+* Buyer finder fee (2.5%): ₹2.81  
+* Total Payable: ₹143.95
 
 Quote Information:
 
-* message.order["beckn:orderValue"].value: Total estimated price for the service (e.g., "128.64" INR after applying offer discount and fees)  
+* message.order["beckn:orderValue"].value: Total estimated price for the service (e.g., "143.95" INR after applying offer discount and fees)  
 * message.order["beckn:orderValue"].currency: Currency of the total estimated price (e.g., "INR")  
 * message.order["beckn:orderValue"].components: Itemized breakdown of the total estimated price reflecting the components below (mirrors the canonical example in section 4.6.3):  
-  * title: Description of the charge (e.g., "Base charging session cost", "Surge price (20%)", "Service fee", "Overcharge estimation", "Offer discount (15%)")  
+  * title: Description of the charge (e.g., "Base charging session cost", "Surge price (20%)", "Service fee", "Overcharge estimation", "Offer discount (15%)", "Buyer finder fee (2.5%)")  
   * item.id: Identifier of the item the charge applies to (if applicable)  
   * price.value: Value of the individual charge in the breakup (positive for charges, negative for discounts)  
   * price.currency: Currency of the individual charge in the breakup  
-  * Breakup typically includes: base charge = 100.00 INR, surge = 20.00 INR, service fee = 10.00 INR, overcharge estimation = 13.64 INR, and offer discount = -15.00 INR
+  * Breakup typically includes: base charge = 112.50 INR (45 INR/kWh × 2.5 kWh), surge = 20.00 INR, service fee = 10.00 INR, overcharge estimation = 13.64 INR, offer discount = -15.00 INR, and buyer finder fee = 2.81 INR
 
 #### 13.2.1.5. `action: init`
 
@@ -4016,14 +4299,14 @@ Example B2B Fleet Approach:
 Note: These are example implementation approaches. Different networks may choose alternative methods for loyalty program integration, such as QR code scanning, app-based authentication, RFID cards, or other identification mechanisms depending on their technical infrastructure and business requirements.
 
 - Method: POST
-- Use Cases: Adam provides his billing details.
-- Request: EV user requests final quote with payment terms by providing billing details: [Example](../../../examples/ev_charging/v2/05_init/ev-charging-bpp-payment-init.json)
+- Use Cases: The BAP agrees to collect the payment and sends the payload along with its settlement account details for reconciliation.
+- Request: The BAP app requests the final quote and payment terms by submitting billing details along with approval from the BPP to collect the payment: [Example](../../../examples/ev_charging/v2/05_init/ev-charging-bap-payment-init.json)
 
-1. **beckn:orderItemAttributes:**  
+1. **order.beckn:id:**
+   When the BAP collects the payment, it generates the orderId and includes it in the init payload sent to the BPP.
+2. **beckn:orderItemAttributes:**  
    Echoes back the confirmed item specifications from the provider, ensuring both BAP and BPP have an agreed reference for pricing, connector type, and charger characteristics at the time of selection.  
-2. **beckn:fulfillment:**  
-   Confirms the actual fulfillment context — this binds the selected item to a specific charging slot and the vehicle details, making it ready for booking or scheduling.  
-3. **beckn:totals:**  
+2. **beckn:totals:**  
    Represents a computed price summary returned by the BPP after selection, consolidating all applicable charges.  
    1. The **breakup** array itemizes each cost component (e.g., session cost, service fee) to enable transparency in pricing and later reconciliation.
 
@@ -4032,7 +4315,7 @@ Recommendations for BAP:
 1. init payload MUST contain the billing details of the user in addition to the details which were part of the select request.
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/05_init/ev-charging-bpp-payment-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/05_init/ev-charging-bap-payment-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4053,6 +4336,7 @@ Recommendations for BAP:
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
+      "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
@@ -4129,11 +4413,12 @@ Recommendations for BAP:
       "beckn:payment": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Payment",
+        "beckn:id": "payment-123e4567-e89b-12d3-a456-426614174000",
         "beckn:amount": {
           "currency": "INR",
           "value": 143.95
         },
-        "beckn:beneficiary": "BPP",
+        "beckn:beneficiary": "BAP",
         "beckn:paymentStatus": "INITIATED",
         "beckn:paymentAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/PaymentSettlement/v1/context.jsonld",
@@ -4172,8 +4457,8 @@ Recommendations for BAP:
 #### 13.2.1.6. `action: on_init`
 
 - Method: POST
-- Use Cases: Adam receives the terms of the order(payment, cancellation, overcharge etc) and available payment methods.
-- Request: CPO responds with final quote with payment terms: [Example](../../../examples/ev_charging/v2/06_on_init/ev-charging-bpp-payment-on-init.json)
+- Use Cases: The BAP receives approval for payment collection on the behalf of BPP.
+- Request: The CPO confirms acceptance of BAP-led payment collection and shares the BPP’s settlement account details: [Example](../../../examples/ev_charging/v2/06_on_init/ev-charging-bpp-payment-on-init.json)
 
   1. **beckn:payment:**  
       Represents the finalized payment details returned by the BPP after the init stage — this confirms how the user can complete payment before order confirmation.  
@@ -4189,13 +4474,10 @@ Recommendations for BAP:
 
   Recommendations for BPP:
 
-  1. on\_init payload MUST have the payment details as well as the available payment methods in addition to the details which were part of the on\_select payload.
-
-  If authorization is required for confirming the order, the BPP will share it inside the **beckn:fulfillment.beckn:authorisation**. This can be defined in the EV domain specific fulfilment schema. The BAP will get the authorization data from the user and transmit the same in the confirm API.
-
+  1. on\_init payload MUST have the settlement account payment details of the BPP in addition to the details which were part of the on\_select payload.
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/06_on_init/ev-charging-bpp-payment-on-init.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/06_on_init/ev-charging-bap-payment-on-init.json">Example json :rocket:</a></summary>
 
 ```json
 {
@@ -4298,14 +4580,7 @@ Recommendations for BAP:
           "currency": "INR",
           "value": 143.95
         },
-        "beckn:paymentURL": "https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount",
-        "beckn:txnRef": "TXN-123456789",
-        "beckn:beneficiary": "BPP",
-        "beckn:acceptedPaymentMethod": [
-          "BANK_TRANSFER",
-          "UPI",
-          "WALLET"
-        ],
+        "beckn:beneficiary": "BAP",
         "beckn:paymentStatus": "INITIATED",
         "beckn:paymentAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/PaymentSettlement/v1/context.jsonld",
@@ -4339,6 +4614,8 @@ Recommendations for BAP:
 
 
 - Successful Response: In cases where BPP is collecting payment directly using a payment link and the payment terms dictate that the payment needs to be completed PRE-ORDER, once the payment completion event happens at the BPP’s payment gateway, the BPP may send an unsolicited on\_status call to the BAP with payment.status changed to PAID. Once the BAP receives the same they can trigger the confirm API with payment.status as PAID.
+
+However, when the BAP collects the payment, an unsolicited on\_status call is not required.
 
 <details>
 <summary>Example json :rocket:</summary>
@@ -4564,7 +4841,7 @@ Recommendations for BAP:
 #### 13.2.1.9. `action: on_confirm`
 
 - Method: POST
-- Use Cases: Adam receives a reservation ID and QR code, plus a navigation link to the charging site.
+- Use Cases: Adam receives an order ID and QR code, plus a navigation link to the charging site.
 - Request: 
   CPO responds with confirmed slot: [Example](../../../examples/ev_charging/v2/08_00_on_confirm/ev-charging-on-confirm.json)
 
@@ -4735,7 +5012,7 @@ Once these physical steps are completed, the charging session can be initiated t
 
 - Method: POST
 - Use Cases: On arrival, Adam scans the charger’s **QR code**. The backend matches it to her **reservation ID**, verifies her **OTP authorization**, and starts charging.
-- Request: EV user starts a charging session: [Example](../../../examples/ev_charging/v2/09_update/ev-charging-01-session-start-update.json)
+- Request: EV user starts a charging session: [Example](../../../examples/v2/ev_charging/v2/09_update/ev-charging-01-session-start-update.json)
   **beckn:[fulfillment.ev](http://fulfillment.ev):fulfillmentstate:** Communicates the *real-time operational status* of the charging session.
 
   * "Charging Active" / code "CHARGING-ACTIVE" indicates that the EV charging session has started and energy delivery is in progress.  
@@ -4880,7 +5157,7 @@ Once these physical steps are completed, the charging session can be initiated t
 
 - Method: POST
 - Use Cases: Adam receives an acknowledgement on charging initialisation.
-- Request: CPO starts a charging session: [Example](../../../examples/ev_charging/v2/10_on_update/ev-charging-session-on-update.json)
+- Request: CPO starts a charging session: [Example](../../../examples/v2/ev_charging/v2/10_on_update/ev-charging-session-on-update.json)
 
   **Ev:fulfillmentstate:** Communicates the *real-time charging session state* as sent back by the BPP.
 
@@ -5436,7 +5713,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
 #### 13.2.1.15. Asynchronous `action: on_update` (stop charging)
 
 - Method: POST
-- Use Cases: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
+- Use Cases: Use Cases: Adam receives an update when the charging session ends. This might reflect payment adjustment as per use.
 - Request: EV user receives final order details after the charging session ends: [Example](../../../examples/ev_charging/v2/14_02_on_update/ev-charging-sesion-complete-on-update.json)
 
   1. **ev:fulfillmentstate:**  
@@ -5448,29 +5725,29 @@ API Implementation: The above under and overcharge scenarios are supported throu
     Includes transaction identifiers, timestamps, payment provider, and invoice reference for settlement and customer records.
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/14_01_update/ev-charging-session-end-update.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/14_02_on_update/ev-charging-session-complete-on-update.json">Example json :rocket:</a></summary>
 
 ```json
 {
   "context": {
     "version": "2.0.0",
-    "action": "update",
+    "action": "on_update",
     "domain": "beckn.one:deg:ev-charging:*",
-    "bpp_id": "example-bpp.com",
-    "bpp_uri": "https://example-bpp.com/pilot/bap/energy/v2",
-    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
-    "message_id": "6bd7be5b-ac21-4a5c-a787-5ec6980317e6",
-    "timestamp": "2025-01-27T10:15:00Z",
-    "ttl": "PT30S",
     "bap_id": "example-bap.com",
-    "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2"
+    "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
+    "transaction_id": "2b4d69aa-22e4-4c78-9f56-5a7b9e2b2002",
+    "message_id": "32f67afe-3d8c-4faa-bc2e-93b0791dcb02",
+    "timestamp": "2025-01-27T11:45:00Z",
+    "ttl": "PT30S",
+    "bpp_id": "example-bpp.com",
+    "bpp_uri": "https://example-bpp.com/pilot/bpp/energy/v2"
   },
   "message": {
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-ev-charging-001",
-      "beckn:orderStatus": "INPROGRESS",
+      "beckn:orderStatus": "COMPLETED",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
@@ -5537,7 +5814,7 @@ API Implementation: The above under and overcharge scenarios are supported throu
         "beckn:deliveryAttributes": {
           "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
-          "sessionStatus": "STOP"
+          "sessionStatus": "COMPLETED"
         }
       },
       "beckn:payment": {
