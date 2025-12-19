@@ -42,21 +42,7 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Morning Solar Energy Offer"
             },
-            "provider": {
-              "id": "provider-solar-farm-001",
-              "@type": "beckn:Provider",
-              "providerAttributes": {
-                "@type": "EnergyProvider",
-                "sourceMeterId": "der://meter/100200300",
-                "sourceType": "SOLAR",
-                "certification": {
-                  "status": "Carbon Offset Certified",
-                  "certificates": [
-                    "https://example.com/certs/solar-panel-cert.pdf"
-                  ]
-                }
-              }
-            },
+            "provider": "provider-solar-farm-001",
             "items": [
               "energy-resource-solar-001"
             ],
@@ -64,6 +50,7 @@
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -76,8 +63,8 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "2024-10-04T06:00:00Z",
+                "schema:endTime": "2024-10-04T12:00:00Z"
               }
             }
           }

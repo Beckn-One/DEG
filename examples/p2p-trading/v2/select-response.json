@@ -13,7 +13,7 @@
     "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/composed/p2p-trading/v2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/scratch-p2p-trading-use-composed-schema-ameetdesh/schema/composed/p2p-trading/v2/context.jsonld",
     "order": {
       "@type": "beckn:Order",
       "id": "order-energy-001",
@@ -38,21 +38,7 @@
               "@type": "beckn:Descriptor",
               "schema:name": "Morning Solar Energy Offer"
             },
-            "provider": {
-              "id": "provider-solar-farm-001",
-              "@type": "beckn:Provider",
-              "providerAttributes": {
-                "@type": "EnergyProvider",
-                "sourceMeterId": "der://meter/100200300",
-                "sourceType": "SOLAR",
-                "certification": {
-                  "status": "Carbon Offset Certified",
-                  "certificates": [
-                    "https://example.com/certs/solar-panel-cert.pdf"
-                  ]
-                }
-              }
-            },
+            "provider": "provider-solar-farm-001",
             "items": [
               "energy-resource-solar-001"
             ],
@@ -60,6 +46,7 @@
               "@type": "EnergyTradeOffer",
               "pricingModel": "PER_KWH",
               "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
               "beckn:price": {
                 "value": 0.15,
                 "currency": "USD",
@@ -72,8 +59,8 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startDate": "2024-10-04T06:00:00Z",
-                "schema:endDate": "2024-10-04T12:00:00Z"
+                "schema:startTime": "2024-10-04T06:00:00Z",
+                "schema:endTime": "2024-10-04T12:00:00Z"
               }
             }
           }

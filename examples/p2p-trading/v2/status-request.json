@@ -13,7 +13,7 @@
     "domain": "beckn.one:deg:p2p-trading:2.0.0"
   },
   "message": {
-    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/composed/p2p-trading/v2/context.jsonld",
+    "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/scratch-p2p-trading-use-composed-schema-ameetdesh/schema/composed/p2p-trading/v2/context.jsonld",
     "order": {
       "id": "order-energy-001"
     }

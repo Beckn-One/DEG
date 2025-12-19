@@ -23,7 +23,11 @@ HOW IT WORKS:
    and across schema files. Core objects use $ref to the full schema document to ensure
    internal references resolve correctly.
 
-5. Validation: Validates objects against their corresponding schemas, handling both core
+5. Context Expansion: Automatically expands JSON-LD context mappings to transform short
+   property names (e.g., "id", "orderStatus") to full names (e.g., "beckn:id", "beckn:orderStatus")
+   before validation. This ensures compatibility with schemas that expect the full property names.
+
+6. Validation: Validates objects against their corresponding schemas, handling both core
    Beckn objects and domain-specific attribute objects with different validation strategies.
    
 Note: Schemas are loaded from the exact branch specified in the @context URL. If a schema
@@ -92,14 +96,17 @@ DEPENDENCIES:
 
 JSON-LD SUPPORT:
 ---------------
-When a composed context is detected (e.g., schema/composed/p2p-trading/v2/context.jsonld),
-the validator can optionally expand the JSON-LD using pyld library to:
-1. Expand all CURIE mappings
-2. Resolve all @context references
-3. Validate JSON-LD structure
-4. Then validate against OpenAPI schemas
+The validator automatically expands JSON-LD context mappings before validation:
+1. Loads @context from the payload
+2. Extracts property name mappings (e.g., "id" -> "beckn:id")
+3. Recursively transforms the payload to use full property names
+4. Validates against schemas that expect the full property names
 
-Use --jsonld flag to enable JSON-LD expansion and validation.
+This ensures that JSON using short property names (e.g., "id", "orderStatus") is automatically
+transformed to use full names (e.g., "beckn:id", "beckn:orderStatus") before schema validation.
+
+Optional: Use --jsonld flag for full JSON-LD expansion (useful for composed contexts with
+complex CURIE mappings and nested context references).
 """
 
 import json
@@ -601,6 +608,196 @@ def _find_root_context(payload):
     
     return None
 
+def _strip_json_comments(text):
+    """
+    Strip JavaScript-style comments from JSON text.
+    
+    Removes single-line comments (//) and multi-line comments (/* */)
+    to allow parsing of JSON files that contain comments.
+    
+    Args:
+        text: JSON text that may contain comments
+    
+    Returns:
+        str: JSON text with comments removed
+    """
+    lines = text.split('\n')
+    result = []
+    in_multiline_comment = False
+    
+    for line in lines:
+        # Handle multi-line comments
+        if '/*' in line:
+            if '*/' in line:
+                # Comment starts and ends on same line
+                start = line.find('/*')
+                end = line.find('*/') + 2
+                line = line[:start] + line[end:]
+            else:
+                # Comment starts on this line
+                start = line.find('/*')
+                line = line[:start]
+                in_multiline_comment = True
+        
+        if in_multiline_comment:
+            if '*/' in line:
+                # Comment ends on this line
+                end = line.find('*/') + 2
+                line = line[end:]
+                in_multiline_comment = False
+            else:
+                # Still in comment, skip this line
+                continue
+        
+        # Remove single-line comments
+        if '//' in line:
+            comment_pos = line.find('//')
+            # Check if // is inside a string (basic check)
+            before_comment = line[:comment_pos]
+            if before_comment.count('"') % 2 == 0:  # Even number of quotes = not in string
+                line = before_comment.rstrip()
+        
+        result.append(line)
+    
+    return '\n'.join(result)
+
+def _load_context_mapping(context_url):
+    """
+    Load JSON-LD context and extract property name mappings.
+    
+    Args:
+        context_url: URL to context.jsonld file
+    
+    Returns:
+        dict: Mapping of short property names to full names (e.g., {"id": "beckn:id"})
+    """
+    try:
+        response = requests.get(context_url)
+        response.raise_for_status()
+        text = response.text
+        
+        # Strip comments (some context files contain // comments)
+        text = _strip_json_comments(text)
+        
+        context_doc = json.loads(text)
+        context = context_doc.get("@context", {}) if isinstance(context_doc, dict) else context_doc
+        
+        # Extract property mappings from context
+        # Context maps short names to full names (e.g., "id": "beckn:id")
+        mapping = {}
+        if isinstance(context, dict):
+            for key, value in context.items():
+                # Skip special JSON-LD keywords and namespace prefixes
+                if key.startswith("@") or key in ["schema", "rdf", "rdfs", "xsd", "owl", "beckn"]:
+                    continue
+                # If value is a string, it's a direct mapping
+                if isinstance(value, str):
+                    mapping[key] = value
+                # If value is a dict with @id, use the @id as the mapping target
+                elif isinstance(value, dict) and "@id" in value:
+                    mapping[key] = value["@id"]
+        
+        return mapping
+    except Exception as e:
+        print(f"  Warning: Failed to load context from {context_url}: {e}")
+        return {}
+
+def _apply_context_mapping(data, context_mapping, inherited_context_mapping=None, inherited_context_url=None):
+    """
+    Recursively apply JSON-LD context mapping to transform property names.
+    
+    Transforms short property names (e.g., "id") to full names (e.g., "beckn:id")
+    based on the context mapping. Preserves @context and @type fields, and inherits
+    @context for objects with @type that don't have their own @context.
+    
+    Args:
+        data: JSON data structure (dict, list, or primitive)
+        context_mapping: Dict mapping short names to full names from current @context
+        inherited_context_mapping: Dict from parent context (for nested contexts)
+        inherited_context_url: Context URL from parent (to inherit for objects with @type)
+    
+    Returns:
+        Transformed data structure with property names expanded
+    """
+    if isinstance(data, dict):
+        result = {}
+        current_mapping = context_mapping or inherited_context_mapping or {}
+        current_context_url = None
+        
+        # Check if this object has its own @context
+        if "@context" in data:
+            context_url = data.get("@context")
+            if isinstance(context_url, str):
+                current_context_url = context_url
+                # Load context mapping for this object
+                current_mapping = _load_context_mapping(context_url)
+                # Merge with inherited mapping (current takes precedence)
+                if inherited_context_mapping:
+                    current_mapping = {**inherited_context_mapping, **current_mapping}
+        elif "@type" in data and inherited_context_url:
+            # Object has @type but no @context - inherit from parent
+            current_context_url = inherited_context_url
+            result["@context"] = inherited_context_url
+        else:
+            # No @context and no @type, or no inherited context - use inherited URL for children
+            current_context_url = inherited_context_url
+        
+        # Process all properties
+        for key, value in data.items():
+            # Preserve @context and @type as-is
+            if key in ["@context", "@type"]:
+                result[key] = value
+            else:
+                # Map property name if mapping exists, otherwise keep original
+                mapped_key = current_mapping.get(key, key)
+                # Recursively process value, passing context URL for inheritance
+                result[mapped_key] = _apply_context_mapping(value, None, current_mapping, current_context_url)
+        
+        return result
+    elif isinstance(data, list):
+        # Process each item in the list
+        current_mapping = context_mapping or inherited_context_mapping or {}
+        return [_apply_context_mapping(item, None, current_mapping, inherited_context_url) for item in data]
+    else:
+        # Primitive value, return as-is
+        return data
+
+def _expand_jsonld_context(payload):
+    """
+    Expand JSON-LD context by applying property name mappings.
+    
+    This transforms short property names (e.g., "id", "orderStatus") to full
+    names (e.g., "beckn:id", "beckn:orderStatus") based on the @context mappings.
+    This must happen before schema validation since schemas expect the full names.
+    
+    Args:
+        payload: JSON payload (dict or list)
+    
+    Returns:
+        tuple: (expanded_payload, errors) - payload with expanded property names
+    """
+    errors = []
+    
+    try:
+        # Find root context
+        root_context = _find_root_context(payload)
+        if not root_context:
+            # No context found, return payload as-is
+            return payload, errors
+        
+        # Load root context mapping
+        root_mapping = _load_context_mapping(root_context)
+        if not root_mapping:
+            # No mapping found, return payload as-is
+            return payload, errors
+        
+        # Apply context mapping recursively, passing root context URL for inheritance
+        expanded = _apply_context_mapping(payload, root_mapping, None, root_context)
+        return expanded, errors
+    except Exception as e:
+        errors.append(f"JSON-LD context expansion failed: {e}")
+        return payload, errors
+
 def _infer_core_context_url_from_composed(composed_context_url):
     """Infer core context URL from composed context URL (same branch and version)."""
     match = re.search(r'(https://raw\.githubusercontent\.com/[^/]+/[^/]+/refs/heads/[^/]+)/schema/composed/[^/]+/([^/]+)/context\.jsonld', composed_context_url)
@@ -708,13 +905,17 @@ def validate_payload(payload, registry_list, attributes_schema, attribute_schema
     Supports both core Beckn objects (beckn:Order, etc.) and domain-specific attribute
     objects (ChargingOffer, etc.).
     
+    The validator automatically expands JSON-LD context mappings to transform short
+    property names (e.g., "id") to full names (e.g., "beckn:id") before validation,
+    ensuring compatibility with schemas that expect the full property names.
+    
     Args:
         payload: JSON payload to validate (dict or list)
         registry_list: List containing referencing Registry with all loaded schemas
         attributes_schema: Unused, kept for compatibility (None)
         attribute_schemas_map: Dict mapping @context URLs to (schema_name, schema_data, schema_url)
         core_only: If True, only validate core Beckn objects, skip domain-specific attributes
-        jsonld_mode: If True, expand JSON-LD using composed contexts before validation
+        jsonld_mode: If True, also perform full JSON-LD expansion (for composed contexts)
     
     Returns:
         list: List of validation error messages (empty if validation passes)
@@ -727,16 +928,26 @@ def validate_payload(payload, registry_list, attributes_schema, attribute_schema
     if root_context and is_composed_context_url(root_context):
         domain_constraints = load_domain_constraints(root_context)
     
-    # JSON-LD expansion if enabled
+    # Always expand JSON-LD context mappings to transform property names
+    # This ensures short names (e.g., "id") are expanded to full names (e.g., "beckn:id")
+    # before schema validation, since schemas expect the full property names.
+    expanded, context_errors = _expand_jsonld_context(payload)
+    if context_errors:
+        errors.extend(context_errors)
+        print(f"  Warning: JSON-LD context expansion had issues, continuing with original payload")
+    else:
+        payload = expanded
+    
+    # Optional: Full JSON-LD expansion for composed contexts (if --jsonld flag is used)
     if jsonld_mode and root_context and is_composed_context_url(root_context):
-        print(f"  Detected composed context: {root_context}")
+        print(f"  Performing full JSON-LD expansion for composed context: {root_context}")
         expanded, jsonld_errors = expand_jsonld_with_composed_context(payload, root_context, registry_list)
         errors.extend(jsonld_errors)
         if not jsonld_errors:
-            print(f"  JSON-LD expansion successful")
+            print(f"  Full JSON-LD expansion successful")
             payload = expanded
         else:
-            print(f"  JSON-LD expansion failed, continuing with original payload")
+            print(f"  Full JSON-LD expansion failed, continuing with context-mapped payload")
     
     def find_and_validate_objects(data, path="", inherited_context=None):
         """Recursively find and validate objects with @type in the payload."""
