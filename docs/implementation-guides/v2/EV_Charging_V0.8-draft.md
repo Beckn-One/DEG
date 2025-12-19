@@ -513,24 +513,6 @@ Note: Users can discover the charging station through off-network channels (such
               "schema:codeValue": "ev-charging",
               "schema:name": "EV Charging"
             },
-            "beckn:availableAt": [
-              {
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [
-                    77.5946,
-                    12.9716
-                  ]
-                },
-                "address": {
-                  "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
-                  "addressLocality": "Bengaluru",
-                  "addressRegion": "Karnataka",
-                  "postalCode": "560076",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
             "beckn:availabilityWindow": [
               {
                 "@type": "beckn:TimePeriod",
@@ -607,24 +589,6 @@ Note: Users can discover the charging station through off-network channels (such
               "schema:codeValue": "ev-charging",
               "schema:name": "EV Charging"
             },
-            "beckn:availableAt": [
-              {
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [
-                    77.5946,
-                    12.9716
-                  ]
-                },
-                "address": {
-                  "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
-                  "addressLocality": "Bengaluru",
-                  "addressRegion": "Karnataka",
-                  "postalCode": "560076",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
             "beckn:availabilityWindow": [
               {
                 "@type": "beckn:TimePeriod",
@@ -701,7 +665,7 @@ Note: Users can discover the charging station through off-network channels (such
             ],
             "beckn:price": {
               "currency": "INR",
-              "value": 18.0,
+              "value": 45.0,
               "applicableQuantity": {
                 "unitText": "Kilowatt Hour",
                 "unitCode": "KWH",
@@ -2979,7 +2943,7 @@ Consumers can search for EV charging stations with specific criteria including l
     "spatial": [
       {
         "op": "s_dwithin",
-        "targets": "$['beckn:availableAt'][*]['geo']",
+        "targets": "$['beckn:itemAttributes.chargingStation.serviceLocation.geo']",
         "geometry": {
           "type": "Point",
           "coordinates": [
@@ -3016,7 +2980,7 @@ Discovery of EV charging services within a circular boundary: [Example](../../..
     "spatial": [
       {
         "op": "s_dwithin",
-        "targets": "$['beckn:availableAt'][*]['geo']",
+        "targets": "$['beckn:itemAttributes.chargingStation.serviceLocation.geo']",
         "geometry": { "type": "Point", "coordinates": [ 77.59, 12.94 ] },
         "distanceMeters": 10000
       }
@@ -3047,7 +3011,7 @@ Discovery of EV Charging stations within a circular boundary using connector spe
     "spatial": [
       {
         "op": "s_dwithin",
-        "targets": "$['beckn:availableAt'][*]['geo']",
+        "targets": "$['beckn:itemAttributes.chargingStation.serviceLocation.geo']",
         "geometry": { "type": "Point", "coordinates": [ 77.6, 12.95 ] },
         "distanceMeters": 8000
       }
@@ -3225,25 +3189,6 @@ Discovering chargers in a specific circular area, a specific connector type and 
               "schema:codeValue": "ev-charging",
               "schema:name": "EV Charging"
             },
-            "beckn:availableAt": [
-              {
-                "@type": "beckn:Location",
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [
-                    77.5946,
-                    12.9716
-                  ]
-                },
-                "address": {
-                  "streetAddress": "EcoPower BTM Hub, 100 Ft Rd",
-                  "addressLocality": "Bengaluru",
-                  "addressRegion": "Karnataka",
-                  "postalCode": "560076",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
             "beckn:availabilityWindow": [
               {
                 "@type": "beckn:TimePeriod",
@@ -3320,25 +3265,6 @@ Discovering chargers in a specific circular area, a specific connector type and 
               "schema:codeValue": "ev-charging",
               "schema:name": "EV Charging"
             },
-            "beckn:availableAt": [
-              {
-                "@type": "beckn:Location",
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [
-                    77.6104,
-                    12.9153
-                  ]
-                },
-                "address": {
-                  "streetAddress": "GreenCharge Koramangala, 80 Ft Rd",
-                  "addressLocality": "Bengaluru",
-                  "addressRegion": "Karnataka",
-                  "postalCode": "560034",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
             "beckn:availabilityWindow": [
               {
                 "@type": "beckn:TimePeriod",
@@ -3416,25 +3342,6 @@ Discovering chargers in a specific circular area, a specific connector type and 
               "schema:codeValue": "ev-charging",
               "schema:name": "EV Charging"
             },
-            "beckn:availableAt": [
-              {
-                "@type": "beckn:Location",
-                "geo": {
-                  "type": "Point",
-                  "coordinates": [
-                    77.6254,
-                    12.9716
-                  ]
-                },
-                "address": {
-                  "streetAddress": "PowerGrid Indiranagar, 100 Ft Rd",
-                  "addressLocality": "Bengaluru",
-                  "addressRegion": "Karnataka",
-                  "postalCode": "560008",
-                  "addressCountry": "IN"
-                }
-              }
-            ],
             "beckn:availabilityWindow": [
               {
                 "@type": "beckn:TimePeriod",
@@ -3511,7 +3418,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             ],
             "beckn:price": {
               "currency": "INR",
-              "value": 18.0,
+              "value": 45.0,
               "applicableQuantity": {
                 "unitText": "Kilowatt Hour",
                 "unitCode": "KWH",
