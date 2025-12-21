@@ -57,42 +57,20 @@
                 }
               }
             ]
-          },
-          "beckn:fulfillmentAttributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
-            "@type": "EnergyEnrollment",
-            "credentials": [
-              {
-                "credentialId": "vc-meter-ownership-002",
-                "type": "MeterOwnershipCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
-              },
-              {
-                "credentialId": "vc-program-eligibility-002",
-                "type": "ProgramEligibilityCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
-              },
-              {
-                "credentialId": "vc-der-cert-solar-001",
-                "type": "DERCertificationCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
-                "derId": "der-solar-001"
-              },
-              {
-                "credentialId": "vc-der-cert-battery-001",
-                "type": "DERCertificationCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
-                "derId": "der-battery-001"
-              }
-            ],
-            "existingEnrollments": []
           }
         }
-      ]
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "meterOwnershipCredential": {
+          "credentialId": "vc-meter-ownership-002",
+          "type": "MeterOwnershipCredential",
+          "format": "VC-JWT",
+          "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "verificationUrl": "https://utility-example-001.com/verify/vc-meter-ownership-002"
+        }
+      }
     }
   }
 }

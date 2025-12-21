@@ -113,6 +113,13 @@ This guide does not redefine schemas or protocol rules; those remain in the Tech
 
 Below is a consolidated terminology set used throughout this guide.
 
+### 3.1. Acronyms
+
+| Acronym | Full Form | Definition |
+|---------|-----------|------------|
+| **Utility IdP** | Utility Identity Provider | The OIDC-based identity provider operated by or on behalf of a utility. Handles user authentication (OTP, password, etc.) and issues OAuth2 tokens and Verifiable Credentials. |
+| **Program Owner BPP** | Program Owner Beckn Provider Platform | The BPP implementation operated by the Program Owner (utility or energy program operator). Also referred to as UtilityBPP or Orchestrator in some contexts. Handles enrollment flows and issues Program Enrollment Credentials. |
+
 ---
 
 ## 4. Terminology
@@ -121,7 +128,9 @@ Below is a consolidated terminology set used throughout this guide.
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | User / End User                        | A person or organization participating in a digital energy program (consumer, prosumer, EV owner, business).          |
 | Utility                                | An electricity provider responsible for metering, billing, and grid operations.                                       |
-| Program Owner                          | The entity offering a digital energy program (P2P, Flex, VPP). Acts as the BPP in Beckn flows.                        |
+| Program Owner                          | The entity offering a digital energy program (P2P, Flex, VPP). Operates the Program Owner BPP (also called UtilityBPP/Orchestrator) for enrollment flows.                        |
+| Utility IdP                            | Utility Identity Provider. OIDC-based identity provider that handles user authentication and issues OAuth2 tokens and Verifiable Credentials. |
+| Program Owner BPP                      | Program Owner Beckn Provider Platform. The BPP implementation that handles enrollment flows and issues Program Enrollment Credentials. Also referred to as UtilityBPP or Orchestrator. |
 | Enrolment Agency (EA)                  | A utility-certified entity authorized to onboard users, either via self-service or assisted flows.                    |
 | Network Participant                    | Any Beckn-enabled application (BAP, BPP, NFO, EV app, DER app) that can trigger onboarding but is not a certified EA. |
 | Network Facilitator Organization (NFO) | A neutral governance or orchestration entity in a digital energy network. Does not make eligibility decisions.        |
@@ -140,7 +149,7 @@ Below is a consolidated terminology set used throughout this guide.
 | Consent                                | Authorization for data sharing, telemetry, control rights, or cross-utility interactions.                             |
 | BAP (Beckn Application Platform)       | A consumer-facing Beckn application.                                                                                  |
 | BPP (Beckn Provider Platform)          | A provider system responding to Beckn calls. The Program Owner serves as a BPP for onboarding.                        |
-| Search / Select / Init / Confirm       | The four core Beckn workflow steps used for onboarding.                                                               |
+| Discover / Select / Init / Confirm     | The four core Beckn workflow steps used for onboarding.                                                               |
 | Context Object                         | Beckn metadata (transaction ID, timestamp, domain, signature info).                                                   |
 | Utility Portal                         | User-facing portal run by a utility for onboarding.                                                                   |
 | Enrolment Agency Portal                | A certified EA’s portal for onboarding users.                                                                         |
@@ -164,7 +173,7 @@ Below is a consolidated terminology set used throughout this guide.
    identity → meters → DERs → program evaluation → enrollment.
 3. Eligibility criteria must be fetched dynamically from the Program Owner.
 4. All telemetry, cross-utility, and DER control actions require explicit consent.
-5. Beckn search/select/init/confirm flows should be reused without deviation.
+5. Beckn discover/select/init/confirm flows should be reused without deviation.
 6. User inputs should be minimized through auto-discovery where possible.
 
 ---
@@ -209,12 +218,277 @@ graph TD
 
 ## 7. Identity and Authentication Implementation
 
-* Use a central OIDC Identity Provider.
-* Support multiple login types: national ID, utility ID, meter-based ID.
-* Return consistent identity tokens with subject_id.
-* Use federation when multiple utilities have separate IdPs.
-* Avoid storing national identity numbers unless required by law.
-* Use short-lived access tokens and HTTPS exclusively.
+The Utility IdP and Program Owner BPP work together to provide a seamless authentication and enrollment experience. Authentication can be integrated with the Beckn enrollment flow in two ways:
+
+### 7.1. Authentication Flow
+
+User initiates program discovery by providing mobile number. Authentication happens at the beginning of the flow:
+
+1. User provides mobile number to BAP/Portal/SDK
+2. BAP calls Utility IdP SDK to generate OTP
+3. User enters OTP for verification
+4. Utility IdP validates the user and returns OAuth2 token with user's meter information
+5. If user has multiple meters, BAP displays all meters and user selects which meter(s) to use for enrollment
+6. If user has only one meter, it is automatically used for the discover flow
+7. BAP proceeds with Beckn enrollment flow using the selected meter(s)
+
+### 7.2. OAuth2 Token Usage
+
+**OAuth2 tokens are transmitted in HTTP `Authorization` headers, not in Beckn message payloads.**
+
+**Example HTTP Request with OAuth2 Token:**
+```http
+POST /beckn/discover HTTP/1.1
+Host: program-owner-bpp.example.com
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXhhbXBsZTp1c2VyLTEyMzQ1IiwiYXVkIjoicHJvZ3JhbS1vd25lci1icHAiLCJpc3MiOiJodHRwczovL3V0aWxpdHktaWRwLmV4YW1wbGUuY29tIiwiaWF0IjoxNzA0MDY3MjAwLCJleHAiOjE3MDQwNzAzMDAsIm5vbmNlIjoiYWJjMTIzIiwiYWNyIjoiMiIsImFtciI6WyJvdHAiXSwibWV0ZXJJZCI6InVtaWQtMDAxIiwiY2FOdW1iZXIiOiJDQTEyMzQ1Njc4OSJ9.signature
+Content-Type: application/json
+
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "discover",
+    ...
+  },
+  "message": {
+    ...
+  }
+}
+```
+
+**Example OAuth2 Token Payload (decoded JWT):**
+```json
+{
+  "sub": "did:example:user-12345",
+  "aud": "program-owner-bpp",
+  "iss": "https://utility-idp.example.com",
+  "iat": 1704067200,
+  "exp": 1704070300,
+  "nonce": "abc123",
+  "acr": "2",
+  "amr": ["otp"],
+  "meterId": "umid-001",
+  "caNumber": "CA123456789"
+}
+```
+
+**Standard OAuth2 Token Fields:**
+- `sub`: Subject identifier (user's unique ID)
+- `aud`: Audience (intended recipient, e.g., Program Owner BPP)
+- `iss`: Issuer (Utility IdP URL)
+- `iat`: Issued at (Unix timestamp)
+- `exp`: Expiration time (Unix timestamp)
+- `nonce`: Random value to prevent replay attacks
+- `acr`: Authentication Context Class Reference (assurance level)
+- `amr`: Authentication Methods References (e.g., ["otp", "password"])
+
+**Custom Claims (Utility-Specific):**
+- `meterId`: Meter identifier (UMID)
+- `caNumber`: Customer account number
+- Additional utility-specific claims as needed
+
+### 7.3. Utility IdP API Examples
+
+The Utility IdP provides APIs for OTP generation, verification, and consumer validation. These APIs are typically called via an IdP SDK embedded in the BAP/Portal/SDK. The exact API structure may vary by utility, but the following represents common patterns:
+
+**Generic OTP Generation Request:**
+```http
+POST /api/v1/otp/generate
+Authorization: Bearer <api_token>
+Content-Type: application/json
+
+{
+  "mobileNumber": "+1234567890",
+  "requestId": "req-12345-67890"
+}
+```
+
+**Generic OTP Generation Response:**
+```json
+{
+  "status": "success",
+  "requestId": "req-12345-67890",
+  "otpSessionId": "session-abc123",
+  "expiresIn": 300,
+  "message": "OTP sent to registered mobile number"
+}
+```
+
+**Generic OTP Verification Request:**
+```http
+POST /api/v1/otp/verify
+Authorization: Bearer <api_token>
+Content-Type: application/json
+
+{
+  "otpSessionId": "session-abc123",
+  "otp": "123456",
+  "mobileNumber": "+1234567890"
+}
+```
+
+**Generic OTP Verification Response:**
+```json
+{
+  "status": "success",
+  "verified": true,
+  "accessToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "meters": [
+    {
+      "meterId": "umid-001",
+      "caNumber": "CA123456789",
+      "meterNumber": "METER987654321",
+      "address": "123 Main Street"
+    },
+    {
+      "meterId": "umid-002",
+      "caNumber": "CA123456790",
+      "meterNumber": "METER987654322",
+      "address": "456 Oak Avenue"
+    }
+  ],
+  "meterOwnershipCredential": {
+    "credentialId": "vc-meter-ownership-001",
+    "type": "MeterOwnershipCredential",
+    "format": "VC-JWT",
+    "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+**Generic Consumer Validation Request:**
+```http
+POST /api/v1/consumer/validate
+Authorization: Bearer <api_token>
+Content-Type: application/json
+
+{
+  "caNumber": "CA123456789",
+  "mobileNumber": "+1234567890",
+  "userType": "CONSUMER"
+}
+```
+
+**Generic Consumer Validation Response:**
+```json
+{
+  "status": "success",
+  "consumer": {
+    "caNumber": "CA123456789",
+    "meterNumber": "METER987654321",
+    "name": "John Doe",
+    "address": "123 Main Street",
+    "connectionStatus": "ACTIVE",
+    "sanctionLoad": 5.0,
+    "meterType": "SMART_METER"
+  }
+}
+```
+
+### 7.4. MeterOwnershipCredential VC Issuance
+
+After successful OTP verification and consumer validation, the Utility IdP issues a `MeterOwnershipCredential` Verifiable Credential. This VC is then included in the Beckn `init` request's `orderAttributes.meterOwnershipCredential` field.
+
+**Example MeterOwnershipCredential VC (decoded JWT payload):**
+```json
+{
+  "vc": {
+    "@context": ["https://www.w3.org/2018/credentials/v1"],
+    "type": ["VerifiableCredential", "MeterOwnershipCredential"],
+    "credentialSubject": {
+      "id": "did:example:user-12345",
+      "meterId": "umid-001",
+      "utilityId": "utility-example-001",
+      "caNumber": "CA123456789",
+      "meterNumber": "METER987654321",
+      "ownershipStatus": "OWNER",
+      "validFrom": "2024-01-01T00:00:00Z",
+      "validUntil": "2025-12-31T23:59:59Z"
+    },
+    "issuanceDate": "2024-10-15T10:25:00Z"
+  },
+  "iss": "did:example:utility-idp",
+  "iat": 1704067200
+}
+```
+
+This VC proves that the user (identified by `subject_id` from OAuth2 token) owns the specified meter/CA, as verified through the OTP flow with the Utility IdP.
+
+### 7.5. Example Utility API Implementation
+
+For reference, the following section shows an example of how a specific utility might implement these APIs. **Note:** This is for illustration only; actual utility implementations may vary.
+
+<details>
+<summary>Example Utility API Implementation (Click to expand)</summary>
+
+**Example: Utility-Specific OTP API**
+
+Some utilities may require field-level encryption for security. The following shows an example pattern:
+
+**GenerateOTP Request (with encryption):**
+```http
+POST /api/integration/otp/generate
+Content-Type: application/json
+
+{
+  "sms_id": "ENC[base64_encrypted_sms_id]",
+  "mobile_no": "ENC[base64_encrypted_mobile_number]",
+  "username": "ENC[base64_encrypted_username]"
+}
+```
+
+**GenerateOTP Response:**
+```json
+{
+  "message": "SUCCESS",
+  "Response_code": "200",
+  "sessionId": "session-12345-67890"
+}
+```
+
+**VerifyOTP Request (with encryption):**
+```http
+POST /api/integration/otp/verify
+Content-Type: application/json
+
+{
+  "sms_id": "ENC[base64_encrypted_sms_id]",
+  "mobile_no": "ENC[base64_encrypted_mobile_number]",
+  "username": "ENC[base64_encrypted_username]",
+  "sessionId": "session-12345-67890",
+  "otp": "ENC[base64_encrypted_otp]"
+}
+```
+
+**ValidateConsumer Request (with encryption):**
+```http
+POST /api/integration/consumer/validate
+Content-Type: application/json
+
+{
+  "cano": "ENC[base64_encrypted_ca_number]",
+  "mobile_no": "ENC[base64_encrypted_mobile_number]",
+  "USERTYPE": "ENC[base64_encrypted_user_type]",
+  "FLAG": "ENC[base64_encrypted_flag]",
+  "ADDTNL1": "ENC[base64_encrypted_additional1]",
+  "ADDTNL2": "ENC[base64_encrypted_additional2]"
+}
+```
+
+**ValidateConsumer Response (decrypted):**
+```json
+{
+  "CA": "CA123456789",
+  "METER": "METER987654321",
+  "NAME": "John Doe",
+  "ADDRESS": "123 Main Street",
+  "CON_STATUS": "ACTIVE",
+  "Sanction_load": 5.0
+}
+```
+
+**Note:** Field-level encryption (AES-256-CBC) may be required by some utilities for compliance. The encryption keys and algorithms are typically provided by the utility as part of the integration documentation.
+
+</details>
 
 ---
 
@@ -250,8 +524,8 @@ Typical integrations:
 
 ### 9.1. 8.1 Standard Beckn Flow
 
-1. search
-2. on_search
+1. discover
+2. on_discover
 3. select
 4. on_select
 5. init
@@ -261,28 +535,44 @@ Typical integrations:
 
 ### 9.2. 8.2 Enrollment Flow Diagram
 
+The complete enrollment flow includes OIDC authentication, OTP verification (for utilities that require it), and the Beckn protocol flow:
+
 ```mermaid
 sequenceDiagram
   participant User
   participant Portal as Portal/SDK
-  participant IDP as Identity Provider
-  participant BPP as Program Owner BPP
+  participant UtilityIdP as Utility IdP
+  participant ProgramOwnerBPP as Program Owner BPP
 
-  User->>Portal: Start onboarding
-  Portal->>IDP: Login
-  IDP-->>Portal: ID token
-  Portal->>BPP: /search
-  BPP-->>Portal: /on_search
+  Note over User,ProgramOwnerBPP: Authentication Phase
+  User->>Portal: Request program discovery<br/>(mobile number)
+  Portal->>UtilityIdP: Call IdP SDK: generateOTP(mobile)
+  UtilityIdP->>User: SMS with OTP
+  User->>Portal: Enter OTP
+  Portal->>UtilityIdP: Call IdP SDK: verifyOTP(mobile, otp)
+  UtilityIdP->>UtilityIdP: Validate consumer (meter, status)
+  UtilityIdP-->>Portal: OAuth2 token<br/>(with user's meter list)
+  
+  alt Multiple Meters
+    Portal->>User: Show all meters belonging to user
+    User->>Portal: Select meter(s) for enrollment
+  else Single Meter
+    Note over Portal: Use single meter for discover flow
+  end
+
+  Note over User,ProgramOwnerBPP: Beckn Enrollment Phase
+  Portal->>ProgramOwnerBPP: POST /discover<br/>(Authorization: Bearer <oauth_token>)
+  ProgramOwnerBPP-->>Portal: /on_discover<br/>(meter-specific programs)
   Portal->>User: Show programs
   User->>Portal: Choose program
-  Portal->>BPP: /select
-  BPP-->>Portal: /on_select
-  Portal->>BPP: /init (identity, meters, DERs)
-  BPP-->>Portal: /on_init (criteria)
-  Portal->>User: Show requirements
-  User->>Portal: Submit consents and documents
-  Portal->>BPP: /confirm
-  BPP-->>Portal: /on_confirm (credential)
+  Portal->>ProgramOwnerBPP: POST /select
+  ProgramOwnerBPP-->>Portal: /on_select
+  Portal->>ProgramOwnerBPP: POST /init<br/>(orderAttributes includes<br/>MeterOwnershipCredential VC)
+  ProgramOwnerBPP-->>Portal: /on_init<br/>(requiredCredentials, requiredConsents, verification results)
+  Portal->>User: Show requirements & consents
+  User->>Portal: Submit consents
+  Portal->>ProgramOwnerBPP: POST /confirm<br/>(orderAttributes with consents)
+  ProgramOwnerBPP-->>Portal: /on_confirm<br/>(fulfillmentAttributes.credential:<br/>ProgramEnrollmentCredential VC)
   Portal-->>User: Enrollment result
 ```
 
@@ -484,7 +774,16 @@ graph TD
 
 ### 18.1. 17.1 Init Request
 
-The init request includes Verifiable Credentials (VCs) provided by the calling entity (Portal/BAP) that prove meter ownership, program eligibility, and DER certifications. The BPP verifies these credentials and checks for conflicts with existing enrollments.
+The init request includes Verifiable Credentials (VCs) provided by the calling entity (Portal/BAP) that prove meter ownership, program eligibility, and DER certifications. 
+
+**Credential Placement:**
+- **Meter ownership credentials** are placed in `orderAttributes.meterOwnershipCredential` (single object, not array)
+- **Program eligibility and DER certification credentials** are placed in `fulfillmentAttributes.credentials[]` (array)
+- **Existing enrollments** for conflict checking are placed in `fulfillmentAttributes.existingEnrollments[]` (array)
+
+For utilities requiring OTP verification, the `MeterOwnershipCredential` VC is issued by the Utility IdP after successful OTP verification and is included in `orderAttributes`.
+
+The Program Owner BPP verifies these credentials and checks for conflicts with existing enrollments.
 
 #### 18.1.1. Example: Simple Consumer with Single Meter
 
@@ -542,37 +841,20 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
               }
             ],
             "ders": []
-          },
-          "beckn:fulfillmentAttributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
-            "@type": "EnergyEnrollment",
-            "credentials": [
-              {
-                "credentialId": "vc-meter-ownership-001",
-                "type": "MeterOwnershipCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiTWV0ZXJPd25lcnNoaXBDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsIm1ldGVySWQiOiJ1bWlkLTAwMSIsInV0aWxpdHlJZCI6InV0aWxpdHktZXhhbXBsZS0wMDEiLCJvd25lcnNoaXBTdGF0dXMiOiJPV05FUiIsInZhbGlkRnJvbSI6IjIwMjQtMDEtMDFUMDA6MDA6MDBaIiwidmFsaWRVbnRpbCI6IjIwMjUtMTItMzFUMjM6NTk6NTlaIn19LCJpc3MiOiJkaWQ6ZXhhbXBsZTp1dGlsaXR5LWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
-                "verificationUrl": "https://utility-example-001.com/verify/vc-meter-ownership-001"
-              },
-              {
-                "credentialId": "vc-program-eligibility-001",
-                "type": "ProgramEligibilityCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVsaWdpYmlsaXR5Q3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpleGFtcGxlOnVzZXItMTIzNDUiLCJwcm9ncmFtSWQiOiJwcm9ncmFtLWZsZXgtZGVtYW5kLXJlc3BvbnNlLTAwMSIsImVsaWdpYmlsaXR5U3RhdHVzIjoiRUxJR0lCTEUiLCJjcml0ZXJpYU1ldCI6WyJBQ0NPVU5UX1NUQU5ESU5HIiwiR0VPR1JBUEhJQ19FTElHSUJJTElUWSIsIk1FVEVSX1RZUEUiXX19LCJpc3MiOiJkaWQ6ZXhhbXBsZTpwcm9ncmFtLWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
-                "verificationUrl": "https://vpp-program-owner.example.com/verify/vc-program-eligibility-001"
-              }
-            ],
-            "existingEnrollments": [
-              {
-                "credentialId": "vc:enrollment:existing-001",
-                "type": "ProgramEnrollmentCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDpleGFtcGxlOnVzZXItMTIzNDUiLCJlbnJvbGxtZW50SWQiOiJlbnJvbGxtZW50LWV4aXN0aW5nLTAwMSIsInByb2dyYW1JZCI6InByb2dyYW0tZmxleC1vdGhlci0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDIiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0wOS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0wOS0wMVQwMDowMDowMFoifX19.signature"
-              }
-            ]
           }
         }
-      ]
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "meterOwnershipCredential": {
+          "credentialId": "vc-meter-ownership-001",
+          "type": "MeterOwnershipCredential",
+          "format": "VC-JWT",
+          "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiTWV0ZXJPd25lcnNoaXBDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsIm1ldGVySWQiOiJ1bWlkLTAwMSIsInV0aWxpdHlJZCI6InV0aWxpdHktZXhhbXBsZS0wMDEiLCJvd25lcnNoaXBTdGF0dXMiOiJPV05FUiIsInZhbGlkRnJvbSI6IjIwMjQtMDEtMDFUMDA6MDA6MDBaIiwidmFsaWRVbnRpbCI6IjIwMjUtMTItMzFUMjM6NTk6NTlaIn19LCJpc3MiOiJkaWQ6ZXhhbXBsZTp1dGlsaXR5LWNyZWRlbnRpYWwtaXNzdWVyIiwiaWF0IjoxNzA0MDY3MjAwfQ.signature",
+          "verificationUrl": "https://utility-example-001.com/verify/vc-meter-ownership-001"
+        }
+      }
     }
   }
 }
@@ -581,9 +863,13 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
 </details>
 
 **Key Fields**:
-- `fulfillment.fulfillmentAttributes.credentials[]`: Array of VCs proving meter ownership, program eligibility, etc.
+- `order.orderAttributes.meterOwnershipCredential`: Meter ownership credential (single object) proving ownership of the meter/CA, verified through OTP flow with Utility IdP
+  - The credential's `verificationUrl` points to the utility's verification endpoint
+- `fulfillment.fulfillmentAttributes.credentials[]`: Array of VCs proving program eligibility, DER certifications, etc.
 - `fulfillment.fulfillmentAttributes.existingEnrollments[]`: Array of existing enrollment credentials for conflict checking
-- BPP verifies these credentials and checks for conflicts
+- Program Owner BPP verifies these credentials and checks for conflicts
+
+**Note**: Meter ownership credentials are placed in `orderAttributes` because they are meter-specific attributes tied to the order. Program eligibility and DER certification credentials remain in `fulfillmentAttributes.credentials[]` as they relate to fulfillment requirements.
 
 #### 18.1.2. Example: Prosumer with Solar and Battery
 
@@ -650,42 +936,20 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
                 }
               }
             ]
-          },
-          "beckn:fulfillmentAttributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
-            "@type": "EnergyEnrollment",
-            "credentials": [
-              {
-                "credentialId": "vc-meter-ownership-002",
-                "type": "MeterOwnershipCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
-              },
-              {
-                "credentialId": "vc-program-eligibility-002",
-                "type": "ProgramEligibilityCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
-              },
-              {
-                "credentialId": "vc-der-cert-solar-001",
-                "type": "DERCertificationCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
-                "derId": "der-solar-001"
-              },
-              {
-                "credentialId": "vc-der-cert-battery-001",
-                "type": "DERCertificationCredential",
-                "format": "VC-JWT",
-                "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
-                "derId": "der-battery-001"
-              }
-            ],
-            "existingEnrollments": []
           }
         }
-      ]
+      ],
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "meterOwnershipCredential": {
+          "credentialId": "vc-meter-ownership-002",
+          "type": "MeterOwnershipCredential",
+          "format": "VC-JWT",
+          "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "verificationUrl": "https://utility-example-001.com/verify/vc-meter-ownership-002"
+        }
+      }
     }
   }
 }
@@ -695,7 +959,14 @@ The init request includes Verifiable Credentials (VCs) provided by the calling e
 
 ### 18.2. 17.2 On_Init Response
 
-The BPP verifies the provided credentials and checks for conflicts with existing enrollments. It returns either a rejection (with error) or proceeds to confirm.
+The BPP verifies the provided credentials and checks for conflicts with existing enrollments. The response includes:
+
+* **`credentialVerification`**: Results of credential verification (status and verified credentials)
+* **`conflictCheck`**: Results of conflict checking with existing enrollments
+* **`requiredCredentials`**: List of credential types that are required for enrollment (with status indicating if provided)
+* **`requiredConsents`**: List of consent types that are required for enrollment (with indication of which are required vs optional)
+
+The BPP returns either a rejection (with error) or proceeds to confirm. The `requiredCredentials` and `requiredConsents` inform the BAP/Portal what must be collected before the `confirm` request.
 
 #### 18.2.1. Example: Successful Verification, No Conflicts
 
@@ -731,29 +1002,6 @@ The BPP verifies the provided credentials and checks for conflicts with existing
           "beckn:id": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:state": {
-            "beckn:descriptor": {
-              "schema:name": "PENDING_CONFIRM"
-            }
-          },
-          "beckn:customer": {
-            "beckn:id": "did:example:user-12345"
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-001",
-                "beckn:credentialVerified": true
-              }
-            ],
-            "ders": []
-          }
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -776,7 +1024,36 @@ The BPP verifies the provided credentials and checks for conflicts with existing
           "hasConflict": false,
           "checkedAt": "2024-10-15T10:30:05Z",
           "message": "No conflicts found with existing enrollments"
-        }
+        },
+        "requiredCredentials": [
+          {
+            "type": "MeterOwnershipCredential",
+            "description": "Proof of meter ownership verified through utility OTP verification",
+            "status": "PROVIDED"
+          },
+          {
+            "type": "ProgramEligibilityCredential",
+            "description": "Proof of program eligibility based on meter type and location",
+            "status": "PROVIDED"
+          }
+        ],
+        "requiredConsents": [
+          {
+            "type": "DATA_COLLECTION",
+            "description": "Consent to collect and share meter data for program participation",
+            "required": true
+          },
+          {
+            "type": "DER_CONTROL",
+            "description": "Consent to control DER devices for demand response (if applicable)",
+            "required": false
+          },
+          {
+            "type": "CROSS_UTILITY_SHARING",
+            "description": "Consent to share data across utilities (if applicable)",
+            "required": false
+          }
+        ]
       }
     }
   }
@@ -819,17 +1096,6 @@ The BPP verifies the provided credentials and checks for conflicts with existing
           "beckn:id": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-conflict-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:state": {
-            "beckn:descriptor": {
-              "schema:name": "REJECTED"
-            }
-          }
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -868,7 +1134,13 @@ The BPP verifies the provided credentials and checks for conflicts with existing
 
 ### 18.3. 17.3 Confirm Request
 
-The confirm request includes the desired enrollment start and end dates, along with any required consents.
+The confirm request includes the desired enrollment start and end dates, along with any required consents. **Consents are placed in `orderAttributes.consents[]`**, not in `fulfillmentAttributes`. 
+
+The consents should match the `requiredConsents` specified in the `on_init` response. Each consent indicates:
+* `type`: The type of consent (DATA_COLLECTION, DER_CONTROL, CROSS_UTILITY_SHARING)
+* `granted`: Boolean indicating if consent was granted
+* `grantedAt`: Timestamp when consent was granted
+* `description`: Human-readable description of what the consent covers
 
 #### 18.3.1. Example: Confirm with Enrollment Dates
 
@@ -903,28 +1175,24 @@ The confirm request includes the desired enrollment start and end dates, along w
           "beckn:id": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:customer": {
-            "beckn:id": "did:example:user-12345"
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-001"
-              }
-            ],
-            "ders": []
-          }
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
         "startDate": "2024-11-01T00:00:00Z",
-        "endDate": "2025-10-31T23:59:59Z"
+        "endDate": "2025-10-31T23:59:59Z",
+        "consents": [
+          {
+            "type": "DATA_COLLECTION",
+            "granted": true,
+            "grantedAt": "2024-10-15T10:33:00Z",
+            "description": "Consent to collect and share meter data for program participation"
+          },
+          {
+            "type": "DER_CONTROL",
+            "granted": false,
+            "description": "Consent to control DER devices for demand response (not applicable for this enrollment)"
+          }
+        ]
       }
     }
   }
@@ -935,7 +1203,7 @@ The confirm request includes the desired enrollment start and end dates, along w
 
 ### 18.4. 17.4 On_Confirm Response
 
-The BPP returns a signed enrollment credential with start and end dates, and logs the enrollment.
+The Program Owner BPP returns a signed Program Enrollment Credential as a Verifiable Credential. **The credential is placed in `fulfillmentAttributes.credential`**, not in `orderAttributes`. The `orderAttributes` contains enrollment metadata (enrollmentId, status, dates, audit logs).
 
 #### 18.4.1. Example: Successful Enrollment with Credential
 
@@ -992,6 +1260,19 @@ The BPP returns a signed enrollment credential with start and end dates, and log
               }
             ],
             "ders": []
+          },
+          "beckn:fulfillmentAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+            "@type": "EnergyEnrollment",
+            "credential": {
+              "credentialId": "vc:enrollment:consumer-001",
+              "type": "ProgramEnrollmentCredential",
+              "format": "VC-JWT",
+              "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:consumer-001",
+              "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:consumer-001",
+              "issuedAt": "2024-10-15T10:35:05Z",
+              "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVucm9sbG1lbnRDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsImVucm9sbG1lbnRJZCI6ImVucm9sbG1lbnQtY29uc3VtZXItMDAxIiwicHJvZ3JhbUlkIjoicHJvZ3JhbS1mbGV4LWRlbWFuZC1yZXNwb25zZS0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDEiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0xMS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0xMC0zMVQyMzo1OTo1OVoifSwiaXNzdWFuY2VEYXRlIjoiMjAyNC0xMC0xNVQxMDozNTowNVoiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMTAtMzFUMjM6NTk6NTlaIn0sImlzcyI6ImRpZDpleGFtcGxlOnZwcC1wcm9ncmFtLW93bmVyIiwiaWF0IjoxNzI5MDk3NzA1fQ.signature"
+            }
           }
         }
       ],
@@ -1004,15 +1285,6 @@ The BPP returns a signed enrollment credential with start and end dates, and log
         "startDate": "2024-11-01T00:00:00Z",
         "endDate": "2025-10-31T23:59:59Z",
         "enrolledAt": "2024-10-15T10:35:05Z",
-        "credential": {
-          "credentialId": "vc:enrollment:consumer-001",
-          "type": "ProgramEnrollmentCredential",
-          "format": "VC-JWT",
-          "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:consumer-001",
-          "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:consumer-001",
-          "issuedAt": "2024-10-15T10:35:05Z",
-          "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVucm9sbG1lbnRDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsImVucm9sbG1lbnRJZCI6ImVucm9sbG1lbnQtY29uc3VtZXItMDAxIiwicHJvZ3JhbUlkIjoicHJvZ3JhbS1mbGV4LWRlbWFuZC1yZXNwb25zZS0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDEiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0xMS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0xMC0zMVQyMzo1OTo1OVoifSwiaXNzdWFuY2VEYXRlIjoiMjAyNC0xMC0xNVQxMDozNTowNVoiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMTAtMzFUMjM6NTk6NTlaIn0sImlzcyI6ImRpZDpleGFtcGxlOnZwcC1wcm9ncmFtLW93bmVyIiwiaWF0IjoxNzI5MDk3NzA1fQ.signature"
-        },
         "loggedAt": "2024-10-15T10:35:05Z",
         "logReference": "log-enrollment-consumer-001"
       }

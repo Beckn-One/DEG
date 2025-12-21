@@ -26,17 +26,6 @@
           "beckn:id": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-conflict-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:state": {
-            "beckn:descriptor": {
-              "schema:name": "REJECTED"
-            }
-          }
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",

@@ -25,28 +25,24 @@
           "beckn:id": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:customer": {
-            "beckn:id": "did:example:user-12345"
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-001"
-              }
-            ],
-            "ders": []
-          }
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
         "startDate": "2024-11-01T00:00:00Z",
-        "endDate": "2025-10-31T23:59:59Z"
+        "endDate": "2025-10-31T23:59:59Z",
+        "consents": [
+          {
+            "type": "DATA_COLLECTION",
+            "granted": true,
+            "grantedAt": "2024-10-15T10:33:00Z",
+            "description": "Consent to collect and share meter data for program participation"
+          },
+          {
+            "type": "DER_CONTROL",
+            "granted": false,
+            "description": "Consent to control DER devices for demand response (not applicable for this enrollment)"
+          }
+        ]
       }
     }
   }
