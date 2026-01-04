@@ -38,18 +38,6 @@
               "beckn:descriptor": {
                 "@type": "beckn:Descriptor",
                 "schema:name": "Solar Farm 001"
-              },
-              "beckn:providerAttributes": {
-                "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyProvider/v0.2/context.jsonld",
-                "@type": "EnergyProvider",
-                "sourceMeterId": "der://meter/100200300",
-                "sourceType": "SOLAR",
-                "certification": {
-                  "status": "Carbon Offset Certified",
-                  "certificates": [
-                    "https://example.com/certs/solar-panel-cert.pdf"
-                  ]
-                }
               }
             },
             "beckn:itemAttributes": {

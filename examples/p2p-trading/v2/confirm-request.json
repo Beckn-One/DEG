@@ -22,12 +22,7 @@
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {

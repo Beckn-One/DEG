@@ -6,10 +6,16 @@ Version 0.2 (Non-Normative)
 - [1. Introduction](#1-introduction)
 - [2. Scope](#2-scope)
 - [3. Terminology](#3-terminology)
+  - [3.1. Acronyms](#31-acronyms)
 - [4. Terminology](#4-terminology)
 - [5. Implementation Principles](#5-implementation-principles)
 - [6. System Architecture Overview](#6-system-architecture-overview)
 - [7. Identity and Authentication Implementation](#7-identity-and-authentication-implementation)
+  - [7.1. Authentication Flow](#71-authentication-flow)
+  - [7.2. OAuth2 Token Usage](#72-oauth2-token-usage)
+  - [7.3. Utility IdP API Examples](#73-utility-idp-api-examples)
+  - [7.4. MeterOwnershipCredential VC Issuance](#74-meterownershipcredential-vc-issuance)
+  - [7.5. Example Utility API Implementation](#75-example-utility-api-implementation)
 - [8. Asset Mapping and Data Integration](#8-asset-mapping-and-data-integration)
   - [8.1. Meter Discovery](#81-meter-discovery)
   - [8.2. DER Discovery](#82-der-discovery)
@@ -1134,7 +1140,7 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
 
 ### 18.3. 17.3 Confirm Request
 
-The confirm request includes the desired enrollment start and end dates, along with any required consents. **Consents are placed in `orderAttributes.consents[]`**, not in `fulfillmentAttributes`. 
+The confirm request includes the desired enrollment start and end dates, along with any required consents. 
 
 The consents should match the `requiredConsents` specified in the `on_init` response. Each consent indicates:
 * `type`: The type of consent (DATA_COLLECTION, DER_CONTROL, CROSS_UTILITY_SHARING)

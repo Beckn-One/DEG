@@ -612,18 +612,6 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "beckn:descriptor": {
                 "@type": "beckn:Descriptor",
                 "schema:name": "Solar Farm 001"
-              },
-              "beckn:providerAttributes": {
-                "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyProvider/v0.2/context.jsonld",
-                "@type": "EnergyProvider",
-                "sourceMeterId": "der://meter/100200300",
-                "sourceType": "SOLAR",
-                "certification": {
-                  "status": "Carbon Offset Certified",
-                  "certificates": [
-                    "https://example.com/certs/solar-panel-cert.pdf"
-                  ]
-                }
               }
             },
             "beckn:itemAttributes": {
@@ -954,17 +942,17 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
           "beckn:lineId": "line-1",
           "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
@@ -1008,6 +996,11 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         {
           "beckn:lineId": "line-2",
           "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
           "beckn:quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
@@ -1100,12 +1093,7 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1114,6 +1102,11 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -1157,6 +1150,11 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
           "beckn:quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-afternoon-001",
@@ -1261,12 +1259,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1275,6 +1268,11 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -1364,12 +1362,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1378,6 +1371,11 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -1463,12 +1461,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1609,12 +1602,7 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1623,6 +1611,11 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -1666,6 +1659,11 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
           "beckn:quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-afternoon-001",
@@ -1764,12 +1762,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1778,6 +1771,11 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -1857,12 +1855,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -1871,6 +1864,11 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -1993,12 +1991,7 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
       "beckn:buyer": {
         "beckn:id": "buyer-001",
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
-        "@type": "beckn:Buyer",
-        "beckn:buyerAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyBuyer/v0.2/context.jsonld",
-          "@type": "EnergyBuyer",
-          "targetMeterId": "der://meter/98765456"
-        }
+                "@type": "beckn:Buyer"
       },
       "beckn:orderItems": [
         {
@@ -2007,6 +2000,11 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-morning-001",
@@ -2050,6 +2048,11 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
           "beckn:quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
           },
           "beckn:acceptedOffer": {
             "beckn:id": "offer-afternoon-001",
