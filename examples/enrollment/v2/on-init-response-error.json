@@ -2,7 +2,7 @@
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-error-001",
     "transaction_id": "txn-onboard-error-001",
@@ -19,11 +19,10 @@
       "beckn:id": "order-onboard-error-001",
       "beckn:status": "REJECTED",
       "error": {
-        "type": "CREDENTIAL_ERROR",
-        "code": "CREDENTIAL_VERIFICATION_FAILED",
+        "code": "SEC_CREDENTIAL_VERIFICATION_FAILED",
         "message": "Meter ownership credential could not be verified",
-        "path": "message.order.fulfillments[0].fulfillmentAttributes.credentials[0]",
         "details": {
+          "path": "$.message.order.fulfillments[0].fulfillmentAttributes.credentials[0]",
           "credentialId": "vc-meter-ownership-001",
           "reason": "Invalid signature or expired credential"
         }

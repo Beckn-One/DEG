@@ -2,7 +2,7 @@
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-conflict-001",
     "transaction_id": "txn-onboard-conflict-001",
@@ -46,11 +46,10 @@
         }
       },
       "error": {
-        "type": "ENROLLMENT_ERROR",
-        "code": "ENROLLMENT_CONFLICT",
+        "code": "BIZ_ENROLLMENT_CONFLICT",
         "message": "Enrollment conflicts with existing enrollment. Meter umid-001 is already enrolled in another program.",
-        "path": "message.order.orderAttributes.conflictCheck",
         "details": {
+          "path": "$.message.order.orderAttributes.conflictCheck",
           "conflictingEnrollmentId": "enrollment-existing-001",
           "conflictEndDate": "2025-09-01T00:00:00Z"
         }

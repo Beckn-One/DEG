@@ -2,7 +2,7 @@
   "context": {
     "version": "2.0.0",
     "action": "on_confirm",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:35:05Z",
     "message_id": "msg-on-confirm-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
