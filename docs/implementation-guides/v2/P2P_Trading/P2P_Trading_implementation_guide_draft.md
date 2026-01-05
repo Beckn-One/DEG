@@ -793,6 +793,11 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         {
           "beckn:lineId": "line-1",
           "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
           "beckn:quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
@@ -850,6 +855,11 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
         {
           "beckn:lineId": "line-1",
           "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
@@ -1467,6 +1477,11 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
         {
           "beckn:lineId": "line-1",
           "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
           "beckn:quantity": {
             "unitQuantity": 15.0,
             "unitText": "kWh"
@@ -1510,6 +1525,11 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
         {
           "beckn:lineId": "line-2",
           "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
           "beckn:quantity": {
             "unitQuantity": 10.0,
             "unitText": "kWh"
