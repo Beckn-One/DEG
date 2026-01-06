@@ -21,12 +21,16 @@ Version 0.2 (Non-Normative)
   - [8.2. DER Discovery](#82-der-discovery)
   - [8.3. Data Integration](#83-data-integration)
 - [9. Beckn-Based Enrollment Implementation](#9-beckn-based-enrollment-implementation)
-  - [9.1. 8.1 Standard Beckn Flow](#91-81-standard-beckn-flow)
-  - [9.2. 8.2 Enrollment Flow Diagram](#92-82-enrollment-flow-diagram)
+  - [9.1. Standard Beckn Flow](#91-standard-beckn-flow)
+  - [9.2. Enrollment Flow Diagram](#92-enrollment-flow-diagram)
+    - [9.2.1. High-Level Overview (Both Flows)](#921-high-level-overview-both-flows)
+    - [9.2.2. OTP-Based Enrollment Flow (Detailed)](#922-otp-based-enrollment-flow-detailed)
+    - [9.2.3. OAuth2/OIDC-Based Enrollment Flow (Detailed)](#923-oauth2oidc-based-enrollment-flow-detailed)
+    - [9.2.4. Error Handling: No Meter Specified](#924-error-handling-no-meter-specified)
 - [10. Channel-Specific Implementation Guides](#10-channel-specific-implementation-guides)
-  - [10.1. 9.1 Utility Portal](#101-91-utility-portal)
-  - [10.2. 9.2 Enrolment Agency Portal](#102-92-enrolment-agency-portal)
-  - [10.3. 9.3 Network Participant App using SDK](#103-93-network-participant-app-using-sdk)
+  - [10.1. Utility Portal (UtilityPortal/BAP)](#101-utility-portal-utilityportalbap)
+  - [10.2. Enrolment Agency Portal (EA/BAP)](#102-enrolment-agency-portal-eabap)
+  - [10.3. Network Participant App (BAP)](#103-network-participant-app-bap)
 - [11. Persona-Specific Implementation Guidance](#11-persona-specific-implementation-guidance)
   - [11.1. Consumer – Single Household, Single Meter](#111-consumer--single-household-single-meter)
   - [11.2. Consumer – Multiple Households, Multiple Meters](#112-consumer--multiple-households-multiple-meters)
@@ -43,22 +47,31 @@ Version 0.2 (Non-Normative)
 - [16. Deployment Topology Recommendations](#16-deployment-topology-recommendations)
 - [17. Developer Tooling and SDK Recommendations](#17-developer-tooling-and-sdk-recommendations)
 - [18. Appendix A – Sample Payloads](#18-appendix-a--sample-payloads)
-  - [18.1. 17.1 Init Request](#181-171-init-request)
-    - [18.1.1. Example: Simple Consumer with Single Meter](#1811-example-simple-consumer-with-single-meter)
-    - [18.1.2. Example: Prosumer with Solar and Battery](#1812-example-prosumer-with-solar-and-battery)
-  - [18.2. 17.2 On\_Init Response](#182-172-on_init-response)
-    - [18.2.1. Example: Successful Verification, No Conflicts](#1821-example-successful-verification-no-conflicts)
-    - [18.2.2. Example: Enrollment Conflict Detected](#1822-example-enrollment-conflict-detected)
-  - [18.3. 17.3 Confirm Request](#183-173-confirm-request)
-    - [18.3.1. Example: Confirm with Enrollment Dates](#1831-example-confirm-with-enrollment-dates)
-  - [18.4. 17.4 On\_Confirm Response](#184-174-on_confirm-response)
-    - [18.4.1. Example: Successful Enrollment with Credential](#1841-example-successful-enrollment-with-credential)
-  - [18.5. 17.5 Error Response Example](#185-175-error-response-example)
+  - [18.1. Init Request](#181-init-request)
+    - [18.1.1. Example: OTP-Based Init Request](#1811-example-otp-based-init-request)
+    - [18.1.2. Example: OAuth2/OIDC-Based Init Request](#1812-example-oauth2oidc-based-init-request)
+    - [18.1.3. Example: Simple Consumer with Single Meter](#1813-example-simple-consumer-with-single-meter)
+    - [18.1.4. Example: Prosumer with Solar and Battery](#1814-example-prosumer-with-solar-and-battery)
+  - [18.2. On\_Init Response](#182-on_init-response)
+    - [18.2.1. Example: OTP-Based On\_Init Response](#1821-example-otp-based-on_init-response)
+    - [18.2.2. Example: OAuth2/OIDC-Based On\_Init Response](#1822-example-oauth2oidc-based-on_init-response)
+    - [18.2.3. Example: Successful Verification, No Conflicts](#1823-example-successful-verification-no-conflicts)
+    - [18.2.4. Example: Enrollment Conflict Detected](#1824-example-enrollment-conflict-detected)
+  - [18.3. Confirm Request](#183-confirm-request)
+    - [18.3.1. Example: OTP-Based Confirm Request](#1831-example-otp-based-confirm-request)
+    - [18.3.2. Example: OAuth2/OIDC-Based Confirm Request](#1832-example-oauth2oidc-based-confirm-request)
+    - [18.3.3. Example: Confirm with Enrollment Dates](#1833-example-confirm-with-enrollment-dates)
+  - [18.4. On\_Confirm Response](#184-on_confirm-response)
+    - [18.4.1. Example: OTP-Based On\_Confirm Response (Success)](#1841-example-otp-based-on_confirm-response-success)
+    - [18.4.2. Example: OAuth2/OIDC-Based On\_Confirm Response (Success)](#1842-example-oauth2oidc-based-on_confirm-response-success)
+    - [18.4.3. Example: No Meter Specified Error](#1843-example-no-meter-specified-error)
+    - [18.4.4. Example: Successful Enrollment with Credential](#1844-example-successful-enrollment-with-credential)
+  - [18.5. Error Response Example](#185-error-response-example)
     - [18.5.1. Example: Credential Verification Failed](#1851-example-credential-verification-failed)
-  - [18.6. 17.6 Consent Revocation](#186-176-consent-revocation)
+  - [18.6. Consent Revocation](#186-consent-revocation)
     - [18.6.1. Example: Consent Revocation Request](#1861-example-consent-revocation-request)
     - [18.6.2. Example: Consent Revocation Response](#1862-example-consent-revocation-response)
-  - [18.7. 17.7 Unenrollment](#187-177-unenrollment)
+  - [18.7. Unenrollment](#187-unenrollment)
     - [18.7.1. Example: Unenrollment Request](#1871-example-unenrollment-request)
     - [18.7.2. Example: Unenrollment Response](#1872-example-unenrollment-response)
 - [19. Appendix B – Multi-Utility Interaction Patterns](#19-appendix-b--multi-utility-interaction-patterns)
@@ -228,35 +241,81 @@ The Utility IdP and Program Owner BPP work together to provide a seamless authen
 
 ### 7.1. Authentication Flow
 
-User initiates program discovery by providing mobile number. Authentication happens at the beginning of the flow:
+The enrollment flow supports two authentication methods, both embedded within the Beckn protocol messages.
 
-1. User provides mobile number to BAP/Portal/SDK
-2. BAP calls Utility IdP SDK to generate OTP
-3. User enters OTP for verification
-4. Utility IdP validates the user and returns OAuth2 token with user's meter information
-5. If user has multiple meters, BAP displays all meters and user selects which meter(s) to use for enrollment
-6. If user has only one meter, it is automatically used for the discover flow
-7. BAP proceeds with Beckn enrollment flow using the selected meter(s)
+**Important: Authentication is NOT required for /discover and /select.** Users can browse programs anonymously. Authentication is only required starting from `/init`.
+
+**Option 1: OTP-Based Authentication (BPP-Orchestrated)**
+1. User browses programs via `/discover` and `/select` (anonymous, no auth required)
+2. User decides to enroll → provides mobile number to UtilityPortal/BAP
+3. BAP sends `init` request with `userAuth: { authMethod: "OTP", mobile: "..." }`
+4. Program Owner BPP calls Utility IdP to generate OTP
+5. User receives OTP via SMS and enters it in the portal
+6. BAP sends `confirm` request with `userAuth: { authMethod: "OTP", mobile, nguid, otp }` and `meters` array
+7. Program Owner BPP calls Utility IdP to verify OTP and retrieve meter/p2pdetails
+8. BPP creates enrollment and returns credential
+
+**Option 2: OAuth2/OIDC Authentication (Deferred until /init)**
+1. User browses programs via `/discover` and `/select` (anonymous, no auth required)
+2. User decides to enroll → BAP redirects to Utility IdP for OAuth2/OIDC login
+3. User authenticates with Utility IdP (receives accessToken, idToken)
+4. BAP sends `init` request with `userAuth: { authMethod: "OIDC", accessToken, idToken }`
+5. Program Owner BPP validates token with Utility IdP, retrieves user's meters
+6. BPP returns meters list in `/on_init` response
+7. User selects meters → BAP sends `confirm` request with tokens and `meters` array
+8. BPP creates enrollment and returns credential
 
 ### 7.2. OAuth2 Token Usage
 
-**OAuth2 tokens are transmitted in HTTP `Authorization` headers, not in Beckn message payloads.**
+**IMPORTANT: OAuth2/OIDC tokens are transmitted in the Beckn message payload (`orderAttributes.userAuth`), NOT in HTTP Authorization headers.**
 
-**Example HTTP Request with OAuth2 Token:**
+This design ensures:
+- Authentication is part of the business flow, not transport layer
+- BPP can orchestrate authentication with multiple IdPs
+- Consistent handling across different authentication methods (OTP vs OAuth2)
+
+**Example Beckn Request with OAuth2 Token in Payload:**
 ```http
-POST /beckn/discover HTTP/1.1
+POST /beckn/init HTTP/1.1
 Host: program-owner-bpp.example.com
-Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXhhbXBsZTp1c2VyLTEyMzQ1IiwiYXVkIjoicHJvZ3JhbS1vd25lci1icHAiLCJpc3MiOiJodHRwczovL3V0aWxpdHktaWRwLmV4YW1wbGUuY29tIiwiaWF0IjoxNzA0MDY3MjAwLCJleHAiOjE3MDQwNzAzMDAsIm5vbmNlIjoiYWJjMTIzIiwiYWNyIjoiMiIsImFtciI6WyJvdHAiXSwibWV0ZXJJZCI6InVtaWQtMDAxIiwiY2FOdW1iZXIiOiJDQTEyMzQ1Njc4OSJ9.signature
 Content-Type: application/json
+X-Gateway-Authorization: <beckn_gateway_signature>
 
 {
   "context": {
-    "version": "2.0.0",
-    "action": "discover",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "action": "init",
     ...
   },
   "message": {
-    ...
+    "order": {
+      "orderAttributes": {
+        "@context": ".../EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OIDC",
+          "accessToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "idToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."
+        }
+      }
+    }
+  }
+}
+```
+
+**Example OTP-Based Request:**
+```json
+{
+  "message": {
+    "order": {
+      "orderAttributes": {
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OTP",
+          "mobile": "+919999999999"
+        }
+      }
+    }
   }
 }
 ```
@@ -294,7 +353,12 @@ Content-Type: application/json
 
 ### 7.3. Utility IdP API Examples
 
-The Utility IdP provides APIs for OTP generation, verification, and consumer validation. These APIs are typically called via an IdP SDK embedded in the BAP/Portal/SDK. The exact API structure may vary by utility, but the following represents common patterns:
+The Utility IdP provides APIs for OTP generation, verification, and consumer validation. **These APIs are called by the Program Owner BPP** (not the BAP) to orchestrate authentication. This design allows:
+- BPP to manage authentication flow centrally
+- Support for multiple Utility IdPs in multi-utility scenarios
+- Consistent authentication regardless of BAP implementation
+
+The exact API structure may vary by utility, but the following represents common patterns:
 
 **Generic OTP Generation Request:**
 ```http
@@ -337,21 +401,32 @@ Content-Type: application/json
 {
   "status": "success",
   "verified": true,
-  "accessToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "verifiedAt": "2024-10-15T10:35:05Z",
   "meters": [
     {
       "meterId": "umid-001",
       "caNumber": "CA123456789",
       "meterNumber": "METER987654321",
-      "address": "123 Main Street"
+      "address": "123 Main Street",
+      "sanctionedLoad": 5.0,
+      "connectionType": "residential"
     },
     {
       "meterId": "umid-002",
       "caNumber": "CA123456790",
       "meterNumber": "METER987654322",
-      "address": "456 Oak Avenue"
+      "address": "456 Oak Avenue",
+      "sanctionedLoad": 10.0,
+      "connectionType": "commercial"
     }
   ],
+  "p2pdetails": {
+    "usertype": "prosumer",
+    "isp2pactive": false,
+    "iscaactive": false,
+    "sdload": "5.0",
+    "cuflimit": "10.0"
+  },
   "meterOwnershipCredential": {
     "credentialId": "vc-meter-ownership-001",
     "type": "MeterOwnershipCredential",
@@ -360,6 +435,8 @@ Content-Type: application/json
   }
 }
 ```
+
+**Note:** The `accessToken` is optional in the response. The BPP may or may not receive an OAuth2 token from the Utility IdP. The critical data returned is the `meters` array and optional `p2pdetails` (additionalAttributes) which are passed to the BAP in the `on_confirm` response.
 
 **Generic Consumer Validation Request:**
 ```http
@@ -528,7 +605,7 @@ Typical integrations:
 
 ## 9. Beckn-Based Enrollment Implementation
 
-### 9.1. 8.1 Standard Beckn Flow
+### 9.1. Standard Beckn Flow
 
 1. discover
 2. on_discover
@@ -539,75 +616,246 @@ Typical integrations:
 7. confirm
 8. on_confirm
 
-### 9.2. 8.2 Enrollment Flow Diagram
+### 9.2. Enrollment Flow Diagram
 
-The complete enrollment flow includes OIDC authentication, OTP verification (for utilities that require it), and the Beckn protocol flow:
+The enrollment flow supports two authentication methods embedded within the Beckn protocol:
+1. **OTP-based authentication** - BPP orchestrates OTP flow with Utility IdP
+2. **OAuth2/OIDC authentication** - User authenticates at /init, token passed in message payload
+
+**Key Design Principles:**
+- **Anonymous discovery**: `/discover` and `/select` do NOT require authentication - users can browse programs freely
+- **Authentication at /init**: Authentication is only required when user decides to enroll (at `/init` call)
+- Authentication credentials (OTP or OAuth2 tokens) are passed in **message payload** (`orderAttributes.userAuth`), NOT in HTTP headers
+- Program Owner BPP orchestrates authentication by calling Utility IdP
+- `/on_init` response includes **list of user's meters** for selection
+- After verification, BPP returns meters array and optional p2pdetails (additionalAttributes)
+- If no meters specified in `/confirm`, error response includes available meters for user selection
+
+#### 9.2.1. High-Level Overview (Both Flows)
 
 ```mermaid
 sequenceDiagram
   participant User
-  participant Portal as Portal/SDK
-  participant UtilityIdP as Utility IdP
-  participant ProgramOwnerBPP as Program Owner BPP
+  participant BAP as UtilityPortal/BAP
+  participant BPP as Program Owner BPP
+  participant IdP as Utility IdP
 
-  Note over User,ProgramOwnerBPP: Authentication Phase
-  User->>Portal: Request program discovery<br/>(mobile number)
-  Portal->>UtilityIdP: Call IdP SDK: generateOTP(mobile)
-  UtilityIdP->>User: SMS with OTP
-  User->>Portal: Enter OTP
-  Portal->>UtilityIdP: Call IdP SDK: verifyOTP(mobile, otp)
-  UtilityIdP->>UtilityIdP: Validate consumer (meter, status)
-  UtilityIdP-->>Portal: OAuth2 token<br/>(with user's meter list)
-  
-  alt Multiple Meters
-    Portal->>User: Show all meters belonging to user
-    User->>Portal: Select meter(s) for enrollment
-  else Single Meter
-    Note over Portal: Use single meter for discover flow
+  rect rgb(240, 248, 255)
+    Note over User,IdP: Phase 1: Anonymous Discovery (common)
+    User->>BAP: Browse programs
+    BAP->>BPP: /discover, /select
+    BPP-->>BAP: Programs & details
   end
 
-  Note over User,ProgramOwnerBPP: Beckn Enrollment Phase
-  Portal->>ProgramOwnerBPP: POST /discover<br/>(Authorization: Bearer <oauth_token>)
-  ProgramOwnerBPP-->>Portal: /on_discover<br/>(meter-specific programs)
-  Portal->>User: Show programs
-  User->>Portal: Choose program
-  Portal->>ProgramOwnerBPP: POST /select
-  ProgramOwnerBPP-->>Portal: /on_select
-  Portal->>ProgramOwnerBPP: POST /init<br/>(orderAttributes includes<br/>MeterOwnershipCredential VC)
-  ProgramOwnerBPP-->>Portal: /on_init<br/>(requiredCredentials, requiredConsents, verification results)
-  Portal->>User: Show requirements & consents
-  User->>Portal: Submit consents
-  Portal->>ProgramOwnerBPP: POST /confirm<br/>(orderAttributes with consents)
-  ProgramOwnerBPP-->>Portal: /on_confirm<br/>(fulfillmentAttributes.credential:<br/>ProgramEnrollmentCredential VC)
-  Portal-->>User: Enrollment result
+  rect rgb(255, 250, 240)
+    Note over User,IdP: Phase 2: Authentication (at /init)
+    alt OTP Flow
+      BAP->>BPP: /init (mobile)
+      BPP->>IdP: generateOTP
+      IdP->>User: SMS OTP
+      BPP-->>BAP: /on_init (nguid)
+      User->>BAP: Enter OTP
+    else OAuth2/OIDC Flow
+      User->>IdP: Login (redirect)
+      IdP-->>BAP: Tokens
+      BAP->>BPP: /init (tokens)
+      BPP->>IdP: Validate
+      BPP-->>BAP: /on_init (meters list)
+    end
+  end
+
+  rect rgb(240, 255, 240)
+    Note over User,IdP: Phase 3: Enrollment (common)
+    User->>BAP: Select meters
+    BAP->>BPP: /confirm (userAuth + meters)
+    BPP->>IdP: Verify (OTP) or Validate (token)
+    BPP-->>BAP: /on_confirm (credential, p2pdetails)
+    BAP-->>User: Enrollment complete
+  end
 ```
+
+The detailed flows below show the full message payloads for each authentication method.
+
+#### 9.2.2. OTP-Based Enrollment Flow (Detailed)
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant BAP as UtilityPortal/BAP
+  participant BPP as Program Owner BPP
+  participant UtilityIdP as Utility IdP
+
+  Note over User,UtilityIdP: Phase 1: Discovery & Program Selection
+  User->>BAP: Request program discovery
+  BAP->>BPP: POST /discover
+  BPP-->>BAP: /on_discover (available programs)
+  BAP->>User: Show programs
+  User->>BAP: Select program
+  BAP->>BPP: POST /select
+  BPP-->>BAP: /on_select (program details)
+
+  Note over User,UtilityIdP: Phase 2: OTP Authentication (within Beckn init)
+  User->>BAP: Enter mobile number
+  BAP->>BPP: POST /init<br/>orderAttributes.userAuth: {<br/>  authMethod: "OTP",<br/>  mobile: "+919999999999"<br/>}
+  
+  BPP->>UtilityIdP: generateOTP(mobile)
+  UtilityIdP->>User: SMS with OTP
+  UtilityIdP-->>BPP: { nguid, expiresAt }
+  
+  BPP-->>BAP: /on_init<br/>orderAttributes.userAuth: {<br/>  authMethod: "OTP",<br/>  nguid: "session-token",<br/>  message: "OTP sent",<br/>  expiresAt: "..."<br/>}
+  
+  BAP->>User: Show OTP input
+  User->>BAP: Enter OTP
+
+  Note over User,UtilityIdP: Phase 3: OTP Verification & Enrollment (within Beckn confirm)
+  BAP->>BPP: POST /confirm<br/>orderAttributes: {<br/>  userAuth: {<br/>    authMethod: "OTP",<br/>    mobile: "+919999999999",<br/>    nguid: "session-token",<br/>    otp: "123456"<br/>  },<br/>  meters: [{ meterId: "umid-001" }]<br/>}
+  
+  BPP->>UtilityIdP: verifyOTP(mobile, nguid, otp)
+  UtilityIdP->>UtilityIdP: Validate consumer
+  UtilityIdP-->>BPP: { verified: true,<br/>meters: [...],<br/>p2pdetails: {...} }
+  
+  BPP->>BPP: Create enrollment,<br/>issue ProgramEnrollmentCredential
+  
+  BPP-->>BAP: /on_confirm<br/>orderAttributes: {<br/>  userAuth: { verified: true },<br/>  enrollmentId: "...",<br/>  credential: { ... },<br/>  additionalAttributes: { p2pdetails: {...} }<br/>}
+  
+  BAP-->>User: Enrollment successful
+```
+
+#### 9.2.3. OAuth2/OIDC-Based Enrollment Flow (Detailed)
+
+For OAuth2/OIDC flow, **authentication is NOT required for /discover and /select**. User can browse programs anonymously, then authenticate at /init:
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant BAP as UtilityPortal/BAP
+  participant BPP as Program Owner BPP
+  participant UtilityIdP as Utility IdP
+
+  Note over User,UtilityIdP: Phase 1: Anonymous Discovery (NO authentication required)
+  User->>BAP: Browse available programs
+  BAP->>BPP: POST /discover<br/>(no userAuth needed)
+  BPP-->>BAP: /on_discover (available programs)
+  BAP->>User: Show programs
+  User->>BAP: Select program
+  BAP->>BPP: POST /select<br/>(no userAuth needed)
+  BPP-->>BAP: /on_select (program details, requirements)
+  BAP->>User: Show program details
+
+  Note over User,UtilityIdP: Phase 2: User decides to enroll → Authentication at /init
+  User->>BAP: Click "Enroll" → Redirect to IdP
+  BAP->>UtilityIdP: OAuth2/OIDC login redirect
+  User->>UtilityIdP: Login (credentials)
+  UtilityIdP-->>BAP: accessToken, idToken (via callback)
+
+  Note over User,UtilityIdP: Phase 3: Init with OAuth2 tokens (first authenticated call)
+  BAP->>BPP: POST /init<br/>orderAttributes.userAuth: {<br/>  authMethod: "OIDC",<br/>  accessToken: "eyJ...",<br/>  idToken: "eyJ..."<br/>}
+  
+  BPP->>UtilityIdP: Validate token (introspection/JWKS)
+  UtilityIdP-->>BPP: { valid: true,<br/>subject: "user-123",<br/>meters: [...],<br/>p2pdetails: {...} }
+  
+  BPP-->>BAP: /on_init<br/>orderAttributes: {<br/>  userAuth: {<br/>    authMethod: "OIDC",<br/>    verified: true,<br/>    subject: "user-123",<br/>    issuer: "https://..."<br/>  },<br/>  meters: [<br/>    { meterId: "umid-001", sanctionedLoad: 5.0 },<br/>    { meterId: "umid-002", sanctionedLoad: 10.0 }<br/>  ]<br/>}
+  
+  BAP->>User: Show user's meters & consents
+
+  Note over User,UtilityIdP: Phase 4: Confirm enrollment with selected meters
+  User->>BAP: Select meters, accept consents
+  BAP->>BPP: POST /confirm<br/>orderAttributes: {<br/>  userAuth: {<br/>    authMethod: "OIDC",<br/>    accessToken: "eyJ..."<br/>  },<br/>  meters: [{ meterId: "umid-001" }]<br/>}
+  
+  BPP->>BPP: Create enrollment
+  
+  BPP-->>BAP: /on_confirm<br/>orderAttributes: {<br/>  enrollmentId: "...",<br/>  credential: { ... },<br/>  additionalAttributes: { p2pdetails: {...} }<br/>}
+  
+  BAP-->>User: Enrollment successful
+```
+
+**Key Points:**
+- `/discover` and `/select` are **anonymous** - no authentication required
+- Authentication happens at `/init` - this is when BPP validates token and retrieves user's meters
+- `/on_init` response includes the **list of meters** belonging to the user
+- BAP displays meters to user for selection before `/confirm`
+
+#### 9.2.4. Error Handling: No Meter Specified
+
+If `userAuth` is verified but `meters` array is empty or missing in confirm request, BPP returns an error **with the list of available meters** so the user can select:
+
+```mermaid
+sequenceDiagram
+  participant BAP as UtilityPortal/BAP
+  participant BPP as Program Owner BPP
+  
+  BAP->>BPP: POST /confirm<br/>orderAttributes: {<br/>  userAuth: { ... },<br/>  meters: []  // Empty!<br/>}
+  
+  BPP-->>BAP: /on_confirm<br/>error: {<br/>  code: "BIZ_NO_METER_SPECIFIED",<br/>  message: "No meter specified",<br/>  details: {<br/>    path: "$.message.order.orderAttributes.meters",<br/>    availableMeters: [<br/>      { meterId: "umid-001", sanctionedLoad: 5.0 },<br/>      { meterId: "umid-002", sanctionedLoad: 10.0 }<br/>    ]<br/>  }<br/>}
+  
+  BAP->>User: Show available meters<br/>for selection
+  User->>BAP: Select meter(s)
+  BAP->>BPP: POST /confirm (retry)<br/>meters: [{ meterId: "umid-001" }]
+```
+
+**Error Response JSON Example:**
+```json
+{
+  "error": {
+    "code": "BIZ_NO_METER_SPECIFIED",
+    "message": "No meter specified for enrollment. Please select from available meters.",
+    "details": {
+      "path": "$.message.order.orderAttributes.meters",
+      "availableMeters": [
+        {
+          "meterId": "umid-001",
+          "meterNumber": "METER987654321",
+          "address": "123 Main Street",
+          "sanctionedLoad": 5.0,
+          "connectionType": "residential"
+        },
+        {
+          "meterId": "umid-002",
+          "meterNumber": "METER987654322",
+          "address": "456 Oak Avenue",
+          "sanctionedLoad": 10.0,
+          "connectionType": "commercial"
+        }
+      ]
+    }
+  }
+}
+```
+
+This allows the BAP to display the user's meters and let them select which meter(s) to enroll, then retry the `/confirm` request.
 
 ---
 
 ## 10. Channel-Specific Implementation Guides
 
-### 10.1. 9.1 Utility Portal
+### 10.1. Utility Portal (UtilityPortal/BAP)
 
-* Handles authentication and orchestrates meter/DER discovery.
-* Responsible for direct integration with utility’s CIS, MDM, DER registry.
-* Must call BPP endpoints exactly as specified by Beckn.
-* Must display eligibility criteria dynamically based on BPP responses.
+The Utility Portal acts as a Beckn Application Platform (BAP) and is the primary user interface:
 
-### 10.2. 9.2 Enrolment Agency Portal
+* Collects user input (mobile number for OTP, or OAuth2 tokens)
+* Passes authentication credentials to BPP via `orderAttributes.userAuth`
+* **Does NOT directly call Utility IdP** for OTP generation/verification (BPP orchestrates this)
+* Displays meters returned from BPP after authentication
+* Collects meter selection from user for `meters` array in confirm request
+* Displays p2pdetails and enrollment results from BPP
 
-* Redirects user to IdP; does not authenticate users directly.
-* Calls BPP endpoints with EA identifier.
-* Must log all actions for audit.
-* Supports assisted onboarding for complex personas.
+### 10.2. Enrolment Agency Portal (EA/BAP)
 
-### 10.3. 9.3 Network Participant App using SDK
+* Acts as BAP on behalf of users
+* Collects user's mobile number for OTP flow
+* Passes authentication to BPP (BPP handles IdP integration)
+* Must log all actions for audit
+* Supports assisted onboarding for complex personas
 
-SDK responsibilities:
+### 10.3. Network Participant App (BAP)
 
-* Handle login redirection
-* Run Beckn flows
+BAP responsibilities:
+
+* Collect authentication credentials (mobile for OTP, or OAuth2 tokens)
+* Pass credentials to BPP in `orderAttributes.userAuth`
+* Run Beckn flows (discover → select → init → confirm)
 * Manage session and state
-* Collect consent
+* Display meters and collect user selection
 * Relay enrollment outcome to host app
 
 App responsibilities:
@@ -615,6 +863,7 @@ App responsibilities:
 * Trigger onboarding from appropriate context
 * Store only non-sensitive results
 * Never bypass BPP decisions
+* **Never call Utility IdP directly** (BPP orchestrates authentication)
 
 ---
 
@@ -778,7 +1027,7 @@ graph TD
 
 ## 18. Appendix A – Sample Payloads
 
-### 18.1. 17.1 Init Request
+### 18.1. Init Request
 
 The init request includes Verifiable Credentials (VCs) provided by the calling entity (Portal/BAP) that prove meter ownership, program eligibility, and DER certifications. 
 
@@ -791,7 +1040,139 @@ For utilities requiring OTP verification, the `MeterOwnershipCredential` VC is i
 
 The Program Owner BPP verifies these credentials and checks for conflicts with existing enrollments.
 
-#### 18.1.1. Example: Simple Consumer with Single Meter
+#### 18.1.1. Example: OTP-Based Init Request
+
+<details><summary><a href="../../../../examples/enrollment/v2/init-request-otp.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:30:00Z",
+    "message_id": "msg-init-otp-001",
+    "transaction_id": "txn-onboard-otp-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-otp-001",
+      "beckn:orderStatus": "CREATED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "pending-verification"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OTP",
+          "mobile": "+919999999999"
+        },
+        "customer": {
+          "name": "Rajesh Kumar"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields for OTP Flow**:
+- `orderAttributes.userAuth.authMethod`: Set to `"OTP"`
+- `orderAttributes.userAuth.mobile`: User's mobile number for OTP delivery
+
+#### 18.1.2. Example: OAuth2/OIDC-Based Init Request
+
+<details><summary><a href="../../../../examples/enrollment/v2/init-request-oauth2.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "init",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:30:00Z",
+    "message_id": "msg-init-oauth2-001",
+    "transaction_id": "txn-onboard-oauth2-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-oauth2-001",
+      "beckn:orderStatus": "CREATED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "pending-verification"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OIDC",
+          "accessToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTEyMzQ1IiwiYXVkIjoicHJvZ3JhbS1vd25lci1icHAiLCJpc3MiOiJodHRwczovL3V0aWxpdHktaWRwLmV4YW1wbGUuY29tIiwiaWF0IjoxNzI5MDAwMDAwLCJleHAiOjE3MjkwMDM2MDB9.signature",
+          "idToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTEyMzQ1IiwibmFtZSI6IlJhamVzaCBLdW1hciIsImVtYWlsIjoicmFqZXNoQGV4YW1wbGUuY29tIiwiaXNzIjoiaHR0cHM6Ly91dGlsaXR5LWlkcC5leGFtcGxlLmNvbSIsImlhdCI6MTcyOTAwMDAwMCwiZXhwIjoxNzI5MDAzNjAwfQ.signature"
+        },
+        "customer": {
+          "name": "Rajesh Kumar"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields for OAuth2 Flow**:
+- `orderAttributes.userAuth.authMethod`: Set to `"OIDC"`
+- `orderAttributes.userAuth.accessToken`: OAuth2 access token from Utility IdP
+- `orderAttributes.userAuth.idToken`: OIDC identity token (optional)
+
+#### 18.1.3. Example: Simple Consumer with Single Meter
 
 <details>
 <summary><a href="../../../../examples/enrollment/v2/init-request-simple-consumer.json">Example json :rocket:</a></summary>
@@ -801,7 +1182,7 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
   "context": {
     "version": "2.0.0",
     "action": "init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:00Z",
     "message_id": "msg-init-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -813,43 +1194,43 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001",
-        "beckn:descriptor": {
-          "schema:name": "Demand Flexibility Program"
+      "beckn:orderStatus": "CREATED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-flex-demand-response-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+          "@type": "EnergyEnrollment",
+          "customer": {
+            "name": "Rajesh Kumar",
+            "email": "rajesh.kumar@example.com"
+          },
+          "meters": [
+            {
+              "meterId": "umid-001",
+              "utilityId": "utility-example-001"
+            }
+          ],
+          "ders": []
         }
       },
-      "beckn:items": [
-        {
-          "beckn:id": "program-flex-demand-response-001"
-        }
-      ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:customer": {
-            "beckn:id": "did:example:user-12345",
-            "beckn:person": {
-              "schema:name": "Rajesh Kumar",
-              "schema:email": "rajesh.kumar@example.com"
-            }
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-001",
-                "beckn:utilityId": "utility-example-001",
-                "beckn:utilityCustomerId": "CUST-123456"
-              }
-            ],
-            "ders": []
-          }
-        }
-      ],
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -877,7 +1258,7 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
 
 **Note**: Meter ownership credentials are placed in `orderAttributes` because they are meter-specific attributes tied to the order. Program eligibility and DER certification credentials remain in `fulfillmentAttributes.credentials[]` as they relate to fulfillment requirements.
 
-#### 18.1.2. Example: Prosumer with Solar and Battery
+#### 18.1.4. Example: Prosumer with Solar and Battery
 
 <details>
 <summary><a href="../../../../examples/enrollment/v2/init-request-prosumer-solar-battery.json">Example json :rocket:</a></summary>
@@ -887,7 +1268,7 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
   "context": {
     "version": "2.0.0",
     "action": "init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T11:00:00Z",
     "message_id": "msg-init-prosumer-001",
     "transaction_id": "txn-onboard-prosumer-001",
@@ -899,52 +1280,52 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-prosumer-001",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-p2p-001"
+      "beckn:orderStatus": "CREATED",
+      "beckn:seller": "vpp-program-p2p-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:prosumer-789"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-vpp-p2p-001"
+          "beckn:orderedItem": "program-vpp-p2p-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-prosumer-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:customer": {
-            "beckn:id": "did:example:prosumer-789"
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-002",
-                "beckn:utilityId": "utility-example-001"
-              }
-            ],
-            "ders": [
-              {
-                "beckn:id": "der-solar-001",
-                "beckn:type": "SOLAR_PV",
-                "beckn:capacity": {
-                  "value": 10.0,
-                  "unit": "kW"
-                }
-              },
-              {
-                "beckn:id": "der-battery-001",
-                "beckn:type": "BATTERY_STORAGE",
-                "beckn:capacity": {
-                  "value": 15.0,
-                  "unit": "kWh"
-                }
-              }
-            ]
-          }
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-prosumer-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+          "@type": "EnergyEnrollment",
+          "meters": [
+            {
+              "meterId": "umid-002",
+              "utilityId": "utility-example-001"
+            }
+          ],
+          "ders": [
+            {
+              "derId": "der-solar-001",
+              "type": "SOLAR_PV",
+              "capacityValue": 10.0,
+              "capacityUnit": "kW"
+            },
+            {
+              "derId": "der-battery-001",
+              "type": "BATTERY_STORAGE",
+              "capacityValue": 15.0,
+              "capacityUnit": "kWh"
+            }
+          ]
         }
-      ],
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -963,7 +1344,7 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
 ```
 </details>
 
-### 18.2. 17.2 On_Init Response
+### 18.2. On_Init Response
 
 The BPP verifies the provided credentials and checks for conflicts with existing enrollments. The response includes:
 
@@ -974,7 +1355,173 @@ The BPP verifies the provided credentials and checks for conflicts with existing
 
 The BPP returns either a rejection (with error) or proceeds to confirm. The `requiredCredentials` and `requiredConsents` inform the BAP/Portal what must be collected before the `confirm` request.
 
-#### 18.2.1. Example: Successful Verification, No Conflicts
+#### 18.2.1. Example: OTP-Based On_Init Response
+
+When using OTP authentication, the BPP returns an `nguid` (session token) and expiration time. The user must enter the OTP received via SMS.
+
+<details><summary><a href="../../../../examples/enrollment/v2/on-init-response-otp.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-otp-001",
+    "transaction_id": "txn-onboard-otp-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-otp-001",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "pending-verification"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OTP",
+          "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
+          "message": "OTP sent to +91XXXXXX9999. Valid for 5 minutes.",
+          "expiresAt": "2024-10-15T10:35:00Z"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.userAuth.nguid`: Session token for OTP verification
+- `orderAttributes.userAuth.message`: Human-readable message about OTP delivery
+- `orderAttributes.userAuth.expiresAt`: When the OTP expires
+
+#### 18.2.2. Example: OAuth2/OIDC-Based On_Init Response
+
+When using OAuth2/OIDC, the BPP validates the token and returns the user's available meters for selection.
+
+<details><summary><a href="../../../../examples/enrollment/v2/on-init-response-oauth2.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_init",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:30:05Z",
+    "message_id": "msg-on-init-oauth2-001",
+    "transaction_id": "txn-onboard-oauth2-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-oauth2-001",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-12345"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OIDC",
+          "verified": true,
+          "verifiedAt": "2024-10-15T10:30:05Z",
+          "subject": "user-12345",
+          "issuer": "https://utility-idp.example.com",
+          "scope": "openid profile email meter:read",
+          "expiresAt": "2024-10-15T11:30:00Z",
+          "message": "Token verified successfully"
+        },
+        "meters": [
+          {
+            "meterId": "umid-001",
+            "meterNumber": "MTR-987654321",
+            "sanctionedLoad": 5.0,
+            "connectionType": "residential",
+            "utilityId": "utility-example-001"
+          },
+          {
+            "meterId": "umid-002",
+            "meterNumber": "MTR-987654322",
+            "sanctionedLoad": 10.0,
+            "connectionType": "commercial",
+            "utilityId": "utility-example-001"
+          }
+        ],
+        "requiredConsents": [
+          {
+            "type": "DATA_COLLECTION",
+            "description": "Consent to collect and share meter data for program participation",
+            "required": true
+          },
+          {
+            "type": "DER_CONTROL",
+            "description": "Consent to control DER devices for demand response (if applicable)",
+            "required": false
+          }
+        ]
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.userAuth.verified`: Token validation result
+- `orderAttributes.userAuth.subject`: User identifier from token
+- `orderAttributes.meters[]`: List of meters belonging to the user for selection
+
+#### 18.2.3. Example: Successful Verification, No Conflicts
 
 <details>
 <summary><a href="../../../../examples/enrollment/v2/on-init-response-success.json">Example json :rocket:</a></summary>
@@ -984,7 +1531,7 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -996,18 +1543,28 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:status": "PENDING",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -1068,7 +1625,7 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
 ```
 </details>
 
-#### 18.2.2. Example: Enrollment Conflict Detected
+#### 18.2.4. Example: Enrollment Conflict Detected
 
 <details>
 <summary><a href="../../../../examples/enrollment/v2/on-init-response-conflict.json">Example json :rocket:</a></summary>
@@ -1078,7 +1635,7 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-conflict-001",
     "transaction_id": "txn-onboard-conflict-001",
@@ -1090,18 +1647,28 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-conflict-001",
-      "beckn:status": "REJECTED",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "REJECTED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -1120,17 +1687,16 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
           ],
           "checkedAt": "2024-10-15T10:30:05Z"
         }
-      },
-      "error": {
-        "type": "ENROLLMENT_ERROR",
-        "code": "ENROLLMENT_CONFLICT",
-        "message": "Enrollment conflicts with existing enrollment. Meter umid-001 is already enrolled in another program.",
-        "path": "message.order.orderAttributes.conflictCheck",
-        "details": {
-          "conflictingEnrollmentId": "enrollment-existing-001",
-          "conflictEndDate": "2025-09-01T00:00:00Z"
-        }
       }
+    }
+  },
+  "error": {
+    "code": "BIZ_ENROLLMENT_CONFLICT",
+    "message": "Enrollment conflicts with existing enrollment. Meter umid-001 is already enrolled in another program.",
+    "details": {
+      "path": "$.message.order.orderAttributes.conflictCheck",
+      "conflictingEnrollmentId": "enrollment-existing-001",
+      "conflictEndDate": "2025-09-01T00:00:00Z"
     }
   }
 }
@@ -1138,7 +1704,7 @@ The BPP returns either a rejection (with error) or proceeds to confirm. The `req
 ```
 </details>
 
-### 18.3. 17.3 Confirm Request
+### 18.3. Confirm Request
 
 The confirm request includes the desired enrollment start and end dates, along with any required consents. 
 
@@ -1148,7 +1714,154 @@ The consents should match the `requiredConsents` specified in the `on_init` resp
 * `grantedAt`: Timestamp when consent was granted
 * `description`: Human-readable description of what the consent covers
 
-#### 18.3.1. Example: Confirm with Enrollment Dates
+#### 18.3.1. Example: OTP-Based Confirm Request
+
+The confirm request includes the OTP for verification along with the selected meters.
+
+<details><summary><a href="../../../../examples/enrollment/v2/confirm-request-otp.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:33:00Z",
+    "message_id": "msg-confirm-otp-001",
+    "transaction_id": "txn-onboard-otp-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-otp-001",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "pending-verification"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OTP",
+          "mobile": "+919999999999",
+          "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
+          "otp": "123456"
+        },
+        "meters": [
+          {
+            "meterId": "umid-001",
+            "meterNumber": "MTR-987654321",
+            "connectionType": "residential"
+          }
+        ],
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z"
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields for OTP Flow**:
+- `orderAttributes.userAuth.otp`: The OTP entered by the user
+- `orderAttributes.userAuth.nguid`: Session token from on_init response
+- `orderAttributes.meters[]`: Selected meters for enrollment
+
+#### 18.3.2. Example: OAuth2/OIDC-Based Confirm Request
+
+<details><summary><a href="../../../../examples/enrollment/v2/confirm-request-oauth2.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "confirm",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:35:00Z",
+    "message_id": "msg-confirm-oauth2-001",
+    "transaction_id": "txn-onboard-oauth2-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-oauth2-001",
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-12345"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OIDC",
+          "accessToken": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTEyMzQ1IiwiYXVkIjoicHJvZ3JhbS1vd25lci1icHAiLCJpc3MiOiJodHRwczovL3V0aWxpdHktaWRwLmV4YW1wbGUuY29tIiwiaWF0IjoxNzI5MDAwMDAwLCJleHAiOjE3MjkwMDM2MDB9.signature"
+        },
+        "meters": [
+          {
+            "meterId": "umid-001",
+            "meterNumber": "MTR-987654321",
+            "connectionType": "residential"
+          }
+        ],
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z"
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields for OAuth2 Flow**:
+- `orderAttributes.userAuth.accessToken`: OAuth2 access token (for re-validation)
+- `orderAttributes.meters[]`: Selected meters from the on_init response
+
+#### 18.3.3. Example: Confirm with Enrollment Dates
 
 <details>
 <summary><a href="../../../../examples/enrollment/v2/confirm-request.json">Example json :rocket:</a></summary>
@@ -1158,7 +1871,7 @@ The consents should match the `requiredConsents` specified in the `on_init` resp
   "context": {
     "version": "2.0.0",
     "action": "confirm",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:35:00Z",
     "message_id": "msg-confirm-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -1170,17 +1883,28 @@ The consents should match the `requiredConsents` specified in the `on_init` resp
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "PENDING",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -1207,11 +1931,283 @@ The consents should match the `requiredConsents` specified in the `on_init` resp
 ```
 </details>
 
-### 18.4. 17.4 On_Confirm Response
+### 18.4. On_Confirm Response
 
 The Program Owner BPP returns a signed Program Enrollment Credential as a Verifiable Credential. **The credential is placed in `fulfillmentAttributes.credential`**, not in `orderAttributes`. The `orderAttributes` contains enrollment metadata (enrollmentId, status, dates, audit logs).
 
-#### 18.4.1. Example: Successful Enrollment with Credential
+#### 18.4.1. Example: OTP-Based On_Confirm Response (Success)
+
+<details><summary><a href="../../../../examples/enrollment/v2/on-confirm-response-otp.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:33:05Z",
+    "message_id": "msg-on-confirm-otp-001",
+    "transaction_id": "txn-onboard-otp-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-otp-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:orderNumber": "ENR-2024-OTP-001234",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "CONFIRMED"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OTP",
+          "verified": true,
+          "verifiedAt": "2024-10-15T10:33:05Z",
+          "message": "OTP verification successful"
+        },
+        "enrollmentId": "enrollment-otp-001",
+        "status": "ACTIVE",
+        "programId": "program-p2p-trading-001",
+        "meters": [
+          {
+            "meterId": "umid-001",
+            "meterNumber": "MTR-987654321",
+            "sanctionedLoad": 5.0,
+            "connectionType": "residential"
+          }
+        ],
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z",
+        "enrolledAt": "2024-10-15T10:33:05Z",
+        "loggedAt": "2024-10-15T10:33:05Z",
+        "logReference": "log-enrollment-otp-001",
+        "credential": {
+          "credentialId": "vc:enrollment:otp-001",
+          "type": "ProgramEnrollmentCredential",
+          "format": "VC-JWT",
+          "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:otp-001",
+          "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:otp-001",
+          "issuedAt": "2024-10-15T10:33:05Z"
+        },
+        "p2pdetails": {
+          "usertype": "prosumer",
+          "isp2pactive": true,
+          "iscaactive": false,
+          "meternumber": "MTR-987654321",
+          "sdload": "5.0",
+          "cuflimit": "10.0"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `orderAttributes.userAuth.verified`: Indicates OTP was verified successfully
+- `orderAttributes.credential`: The issued Program Enrollment Credential
+- `orderAttributes.p2pdetails`: Additional utility-specific details (additionalAttributes)
+
+#### 18.4.2. Example: OAuth2/OIDC-Based On_Confirm Response (Success)
+
+<details><summary><a href="../../../../examples/enrollment/v2/on-confirm-response-oauth2.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:35:05Z",
+    "message_id": "msg-on-confirm-oauth2-001",
+    "transaction_id": "txn-onboard-oauth2-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-oauth2-001",
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:orderNumber": "ENR-2024-OAUTH-001234",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "CONFIRMED"
+      },
+      "beckn:orderAttributes": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+        "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OIDC",
+          "verified": true,
+          "verifiedAt": "2024-10-15T10:35:05Z",
+          "subject": "user-12345",
+          "issuer": "https://utility-idp.example.com",
+          "message": "Token verified successfully"
+        },
+        "enrollmentId": "enrollment-oauth2-001",
+        "status": "ACTIVE",
+        "programId": "program-p2p-trading-001",
+        "meters": [
+          {
+            "meterId": "umid-001",
+            "meterNumber": "MTR-987654321",
+            "sanctionedLoad": 5.0,
+            "connectionType": "residential"
+          }
+        ],
+        "startDate": "2024-11-01T00:00:00Z",
+        "endDate": "2025-10-31T23:59:59Z",
+        "enrolledAt": "2024-10-15T10:35:05Z",
+        "loggedAt": "2024-10-15T10:35:05Z",
+        "logReference": "log-enrollment-oauth2-001",
+        "credential": {
+          "credentialId": "vc:enrollment:oauth2-001",
+          "type": "ProgramEnrollmentCredential",
+          "format": "VC-JWT",
+          "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:oauth2-001",
+          "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:oauth2-001",
+          "issuedAt": "2024-10-15T10:35:05Z"
+        },
+        "p2pdetails": {
+          "usertype": "consumer",
+          "isp2pactive": true,
+          "iscaactive": false,
+          "meternumber": "MTR-987654321",
+          "sdload": "5.0",
+          "cuflimit": "10.0"
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+#### 18.4.3. Example: No Meter Specified Error
+
+When authentication succeeds but no meter is selected, the BPP returns available meters for the user to choose from.
+
+<details><summary><a href="../../../../examples/enrollment/v2/on-confirm-response-no-meter.json">Example json :rocket:</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_confirm",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
+    "timestamp": "2024-10-15T10:35:05Z",
+    "message_id": "msg-on-confirm-no-meter-001",
+    "transaction_id": "txn-onboard-oauth2-001",
+    "bap_id": "utility-portal.example.com",
+    "bap_uri": "https://utility-portal.example.com/beckn",
+    "bpp_id": "vpp-program-owner.example.com",
+    "bpp_uri": "https://vpp-program-owner.example.com/beckn",
+    "ttl": "PT30S"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-onboard-oauth2-001",
+      "beckn:orderStatus": "FAILED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "user-12345"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-p2p-trading-001"
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
+      }
+    }
+  },
+  "error": {
+    "code": "BIZ_NO_METER_SPECIFIED",
+    "message": "No meter specified for enrollment. Please select from available meters.",
+    "details": {
+      "path": "$.message.order.orderAttributes.meters",
+      "availableMeters": [
+        {
+          "meterId": "umid-001",
+          "meterNumber": "MTR-987654321",
+          "address": "123 Main Street, Bangalore",
+          "sanctionedLoad": 5.0,
+          "connectionType": "residential"
+        },
+        {
+          "meterId": "umid-002",
+          "meterNumber": "MTR-987654322",
+          "address": "456 Oak Avenue, Bangalore",
+          "sanctionedLoad": 10.0,
+          "connectionType": "commercial"
+        }
+      ]
+    }
+  }
+}
+
+```
+</details>
+
+**Key Fields**:
+- `error.code`: `BIZ_NO_METER_SPECIFIED`
+- `error.details.availableMeters[]`: List of meters the user can select from
+
+#### 18.4.4. Example: Successful Enrollment with Credential
 
 <details>
 <summary><a href="../../../../examples/enrollment/v2/on-confirm-response-success.json">Example json :rocket:</a></summary>
@@ -1221,7 +2217,7 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
   "context": {
     "version": "2.0.0",
     "action": "on_confirm",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:35:05Z",
     "message_id": "msg-on-confirm-consumer-001",
     "transaction_id": "txn-onboard-consumer-001",
@@ -1233,55 +2229,42 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:status": "CONFIRMED",
+      "beckn:orderStatus": "CONFIRMED",
       "beckn:orderNumber": "ENR-2024-001234",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:state": {
-            "beckn:descriptor": {
-              "schema:name": "ENROLLED"
-            }
-          },
-          "beckn:customer": {
-            "beckn:id": "did:example:user-12345"
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-001",
-                "beckn:enrollmentStatus": "ENROLLED"
-              }
-            ],
-            "ders": []
-          },
-          "beckn:fulfillmentAttributes": {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
-            "@type": "EnergyEnrollment",
-            "credential": {
-              "credentialId": "vc:enrollment:consumer-001",
-              "type": "ProgramEnrollmentCredential",
-              "format": "VC-JWT",
-              "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:consumer-001",
-              "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:consumer-001",
-              "issuedAt": "2024-10-15T10:35:05Z",
-              "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVucm9sbG1lbnRDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsImVucm9sbG1lbnRJZCI6ImVucm9sbG1lbnQtY29uc3VtZXItMDAxIiwicHJvZ3JhbUlkIjoicHJvZ3JhbS1mbGV4LWRlbWFuZC1yZXNwb25zZS0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDEiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0xMS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0xMC0zMVQyMzo1OTo1OVoifSwiaXNzdWFuY2VEYXRlIjoiMjAyNC0xMC0xNVQxMDozNTowNVoiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMTAtMzFUMjM6NTk6NTlaIn0sImlzcyI6ImRpZDpleGFtcGxlOnZwcC1wcm9ncmFtLW93bmVyIiwiaWF0IjoxNzI5MDk3NzA1fQ.signature"
-            }
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "CONFIRMED",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+          "@type": "EnergyEnrollment",
+          "credential": {
+            "credentialId": "vc:enrollment:consumer-001",
+            "type": "ProgramEnrollmentCredential",
+            "format": "VC-JWT",
+            "credentialUrl": "https://vpp-program-owner.example.com/credentials/vc:enrollment:consumer-001",
+            "verificationUrl": "https://vpp-program-owner.example.com/verify/vc:enrollment:consumer-001",
+            "issuedAt": "2024-10-15T10:35:05Z",
+            "credentialData": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ2YyI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHJvZ3JhbUVucm9sbG1lbnRDcmVkZW50aWFsIl0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiZGlkOmV4YW1wbGU6dXNlci0xMjM0NSIsImVucm9sbG1lbnRJZCI6ImVucm9sbG1lbnQtY29uc3VtZXItMDAxIiwicHJvZ3JhbUlkIjoicHJvZ3JhbS1mbGV4LWRlbWFuZC1yZXNwb25zZS0wMDEiLCJtZXRlcnMiOlsidW1pZC0wMDEiXSwic3RhdHVzIjoiQUNUSVZFIiwic3RhcnREYXRlIjoiMjAyNC0xMS0wMVQwMDowMDowMFoiLCJlbmREYXRlIjoiMjAyNS0xMC0zMVQyMzo1OTo1OVoifSwiaXNzdWFuY2VEYXRlIjoiMjAyNC0xMC0xNVQxMDozNTowNVoiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMTAtMzFUMjM6NTk6NTlaIn0sImlzcyI6ImRpZDpleGFtcGxlOnZwcC1wcm9ncmFtLW93bmVyIiwiaWF0IjoxNzI5MDk3NzA1fQ.signature"
           }
         }
-      ],
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -1308,7 +2291,7 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
 - `orderAttributes.loggedAt`: Timestamp when enrollment was logged
 - `orderAttributes.logReference`: Reference to enrollment log entry
 
-### 18.5. 17.5 Error Response Example
+### 18.5. Error Response Example
 
 #### 18.5.1. Example: Credential Verification Failed
 
@@ -1320,7 +2303,7 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
   "context": {
     "version": "2.0.0",
     "action": "on_init",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
     "message_id": "msg-on-init-error-001",
     "transaction_id": "txn-onboard-error-001",
@@ -1332,20 +2315,37 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-error-001",
-      "beckn:status": "REJECTED",
-      "error": {
-        "type": "CREDENTIAL_ERROR",
-        "code": "CREDENTIAL_VERIFICATION_FAILED",
-        "message": "Meter ownership credential could not be verified",
-        "path": "message.order.fulfillments[0].fulfillmentAttributes.credentials[0]",
-        "details": {
-          "credentialId": "vc-meter-ownership-001",
-          "reason": "Invalid signature or expired credential"
+      "beckn:orderStatus": "REJECTED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "pending-verification"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "PENDING"
       }
+    }
+  },
+  "error": {
+    "code": "SEC_CREDENTIAL_VERIFICATION_FAILED",
+    "message": "Meter ownership credential could not be verified",
+    "details": {
+      "path": "$.message.order.orderAttributes.meterOwnershipCredential",
+      "credentialId": "vc-meter-ownership-001",
+      "reason": "Invalid signature or expired credential"
     }
   }
 }
@@ -1355,7 +2355,7 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
 
 **Note**: For vocabulary definitions of new terms and slotted attributes, see `outputs_onboarding_guide/Vocabulary_Definitions.md`.
 
-### 18.6. 17.6 Consent Revocation
+### 18.6. Consent Revocation
 
 Users can revoke consent at any time after enrollment. The revocation uses the Beckn `update` action and updates the W3C VC status list to mark the consent credential as revoked.
 
@@ -1369,7 +2369,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
   "context": {
     "version": "2.0.0",
     "action": "update",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-11-20T14:30:00Z",
     "message_id": "msg-update-consent-revoke-001",
     "transaction_id": "txn-revoke-consent-001",
@@ -1381,15 +2381,19 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
       "beckn:orderAttributes": {
@@ -1427,7 +2431,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
   "context": {
     "version": "2.0.0",
     "action": "on_update",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-11-20T14:30:05Z",
     "message_id": "msg-on-update-consent-revoke-001",
     "transaction_id": "txn-revoke-consent-001",
@@ -1439,18 +2443,28 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:status": "ACTIVE",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "CONFIRMED"
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -1479,7 +2493,7 @@ Users can revoke consent at any time after enrollment. The revocation uses the B
 - `orderAttributes.consentRevocation.statusListIndex`: Index in the status list
 - Verifiers check this status list to verify if consent is still valid
 
-### 18.7. 17.7 Unenrollment
+### 18.7. Unenrollment
 
 Users can unenroll from a program at any time. Unenrollment revokes the enrollment credential and optionally all associated consent credentials.
 
@@ -1493,7 +2507,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
   "context": {
     "version": "2.0.0",
     "action": "update",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-11-20T15:00:00Z",
     "message_id": "msg-update-unenroll-001",
     "transaction_id": "txn-unenroll-001",
@@ -1505,15 +2519,19 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "CONFIRMED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
       "beckn:orderAttributes": {
@@ -1550,7 +2568,7 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
   "context": {
     "version": "2.0.0",
     "action": "on_update",
-    "domain": "beckn.one:deg:energy-enrollment:2.0.0",
+    "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-11-20T15:00:05Z",
     "message_id": "msg-on-update-unenroll-001",
     "transaction_id": "txn-unenroll-001",
@@ -1562,37 +2580,28 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
   },
   "message": {
     "order": {
-      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
       "beckn:id": "order-onboard-consumer-001",
-      "beckn:status": "CANCELLED",
-      "beckn:provider": {
-        "beckn:id": "vpp-program-flex-001"
+      "beckn:orderStatus": "CANCELLED",
+      "beckn:seller": "vpp-program-flex-001",
+      "beckn:buyer": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer",
+        "beckn:id": "did:example:user-12345"
       },
-      "beckn:items": [
+      "beckn:orderItems": [
         {
-          "beckn:id": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-flex-demand-response-001"
         }
       ],
-      "beckn:fulfillments": [
-        {
-          "beckn:id": "fulfillment-onboard-001",
-          "beckn:type": "PROGRAM_ENROLLMENT",
-          "beckn:state": {
-            "beckn:descriptor": {
-              "schema:name": "CANCELLED"
-            }
-          },
-          "beckn:instrument": {
-            "meters": [
-              {
-                "beckn:id": "umid-001",
-                "beckn:enrollmentStatus": "CANCELLED"
-              }
-            ]
-          }
-        }
-      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-onboard-001",
+        "beckn:mode": "DIGITAL",
+        "beckn:fulfillmentStatus": "CANCELLED"
+      },
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
@@ -1644,38 +2653,112 @@ Users can unenroll from a program at any time. Unenrollment revokes the enrollme
 
 ## 19. Appendix B – Multi-Utility Interaction Patterns
 
+For cross-utility enrollments (e.g., BTM devices connected to a different utility), the BPP orchestrates authentication with multiple Utility IdPs:
+
 ```mermaid
 sequenceDiagram
   participant User
-  participant SDK
+  participant BAP as UtilityPortal/BAP
+  participant BPP as Program Owner BPP
   participant IDP_A as Utility A IdP
   participant IDP_B as Utility B IdP
-  participant BPP
 
-  User->>SDK: Start cross-utility onboarding
-  SDK->>IDP_A: Login
-  IDP_A-->>SDK: Token A
-  SDK->>IDP_B: Login
-  IDP_B-->>SDK: Token B
-  SDK->>BPP: init with A and B identities
-  BPP->>BPP: Verify both utilities
-  BPP-->>SDK: on_init criteria
-  SDK->>User: Display consents
-  User->>SDK: Accept
-  SDK->>BPP: confirm
-  BPP-->>SDK: on_confirm enrollment credential
+  Note over User,IDP_B: Cross-Utility OTP Authentication
+  User->>BAP: Start cross-utility onboarding<br/>(mobile A, mobile B)
+  
+  BAP->>BPP: POST /init<br/>orderAttributes.userAuth: {<br/>  authMethod: "OTP",<br/>  mobile: "+91-A-number"<br/>}
+  
+  BPP->>IDP_A: generateOTP(mobile A)
+  IDP_A->>User: SMS OTP to mobile A
+  IDP_A-->>BPP: { nguid_A }
+  
+  BPP-->>BAP: /on_init { nguid_A, message: "OTP sent to Utility A" }
+  
+  User->>BAP: Enter OTP A
+  BAP->>BPP: POST /confirm (partial)<br/>{ userAuth: { otp_A }, secondaryAuth: { mobile_B } }
+  
+  BPP->>IDP_A: verifyOTP(mobile A, otp A)
+  IDP_A-->>BPP: { verified, meters_A, p2pdetails_A }
+  
+  BPP->>IDP_B: generateOTP(mobile B)
+  IDP_B->>User: SMS OTP to mobile B
+  IDP_B-->>BPP: { nguid_B }
+  
+  BPP-->>BAP: /on_confirm (partial)<br/>{ userAuth_A: verified, nguid_B }
+  
+  User->>BAP: Enter OTP B
+  BAP->>BPP: POST /confirm (final)<br/>{ meters: [...], otp_B }
+  
+  BPP->>IDP_B: verifyOTP(mobile B, otp B)
+  IDP_B-->>BPP: { verified, meters_B, p2pdetails_B }
+  
+  BPP->>BPP: Create cross-utility enrollment
+  BPP-->>BAP: /on_confirm<br/>{ enrollmentId, credential,<br/>additionalAttributes: { p2pdetails_A, p2pdetails_B } }
+  
+  BAP-->>User: Cross-utility enrollment successful
 ```
+
+**Note:** The exact multi-utility flow may vary based on implementation. Some utilities may support OAuth2/OIDC tokens instead of OTP. The BPP is responsible for orchestrating authentication with each utility's IdP.
 
 ---
 
 ## 20. Appendix C – Error Handling Patterns
 
-Examples:
+Error codes use a three-letter prefix to indicate the error layer:
 
-* METER_NOT_FOUND
-* DER_NOT_CERTIFIED
-* CROSS_UTILITY_CONSENT_REQUIRED
-* PROGRAM_NOT_AVAILABLE
-* EA_NOT_CERTIFIED
+| Prefix | Layer | Description |
+|--------|-------|-------------|
+| `SEC_` | Security | Authentication/authorization failures |
+| `BIZ_` | Business | Business rule violations |
+| `NET_` | Network | Communication/connectivity issues |
+| `SYS_` | System | Internal system errors |
 
-Each error must follow Beckn’s standard error object with code and message.
+**Authentication Errors (SEC_):**
+* `SEC_OTP_INVALID` - OTP verification failed
+* `SEC_OTP_EXPIRED` - OTP/nguid has expired
+* `SEC_TOKEN_INVALID` - OAuth2/OIDC token validation failed
+* `SEC_TOKEN_EXPIRED` - OAuth2/OIDC token has expired
+* `SEC_CREDENTIAL_VERIFICATION_FAILED` - Verifiable Credential validation failed
+
+**Business Errors (BIZ_):**
+* `BIZ_NO_METER_SPECIFIED` - No meter provided in confirm request
+* `BIZ_METER_NOT_FOUND` - Specified meter not found in utility system
+* `BIZ_ENROLLMENT_CONFLICT` - Meter already enrolled in conflicting program
+* `BIZ_DER_NOT_CERTIFIED` - DER certification missing or invalid
+* `BIZ_PROGRAM_NOT_AVAILABLE` - Program not available for this meter/utility
+* `BIZ_CROSS_UTILITY_CONSENT_REQUIRED` - Cross-utility consent needed
+* `BIZ_EA_NOT_CERTIFIED` - Enrollment Agency not certified
+
+**Example Error Responses:**
+
+```json
+// Authentication Error
+{
+  "error": {
+    "code": "SEC_OTP_INVALID",
+    "message": "OTP verification failed. Please check the OTP and try again.",
+    "details": {
+      "path": "$.message.order.orderAttributes.userAuth.otp"
+    }
+  }
+}
+```
+
+```json
+// No Meter Specified - includes available meters for selection
+{
+  "error": {
+    "code": "BIZ_NO_METER_SPECIFIED",
+    "message": "No meter specified for enrollment. Please select from available meters.",
+    "details": {
+      "path": "$.message.order.orderAttributes.meters",
+      "availableMeters": [
+        { "meterId": "umid-001", "meterNumber": "MTR-001", "sanctionedLoad": 5.0 },
+        { "meterId": "umid-002", "meterNumber": "MTR-002", "sanctionedLoad": 10.0 }
+      ]
+    }
+  }
+}
+```
+
+Each error must follow Beckn's standard error object structure with `code`, `message`, and optional `details`. The `details.availableMeters` field allows BAP to display user's meters for selection on retry.

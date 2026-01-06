@@ -4,8 +4,8 @@
     "action": "on_init",
     "domain": "beckn.one:deg:p2p-enrollment:2.0.0",
     "timestamp": "2024-10-15T10:30:05Z",
-    "message_id": "msg-on-init-consumer-001",
-    "transaction_id": "txn-onboard-consumer-001",
+    "message_id": "msg-on-init-oauth2-001",
+    "transaction_id": "txn-onboard-oauth2-001",
     "bap_id": "utility-portal.example.com",
     "bap_uri": "https://utility-portal.example.com/beckn",
     "bpp_id": "vpp-program-owner.example.com",
@@ -16,17 +16,17 @@
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-onboard-consumer-001",
+      "beckn:id": "order-onboard-oauth2-001",
       "beckn:orderStatus": "PENDING",
       "beckn:seller": "vpp-program-flex-001",
       "beckn:buyer": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
-        "beckn:id": "did:example:user-12345"
+        "beckn:id": "user-12345"
       },
       "beckn:orderItems": [
         {
-          "beckn:orderedItem": "program-flex-demand-response-001"
+          "beckn:orderedItem": "program-p2p-trading-001"
         }
       ],
       "beckn:fulfillment": {
@@ -39,36 +39,30 @@
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
-        "credentialVerification": {
-          "status": "VERIFIED",
-          "verifiedCredentials": [
-            {
-              "credentialId": "vc-meter-ownership-001",
-              "status": "VERIFIED",
-              "verifiedAt": "2024-10-15T10:30:05Z"
-            },
-            {
-              "credentialId": "vc-program-eligibility-001",
-              "status": "VERIFIED",
-              "verifiedAt": "2024-10-15T10:30:05Z"
-            }
-          ]
+        "userAuth": {
+          "authMethod": "OIDC",
+          "verified": true,
+          "verifiedAt": "2024-10-15T10:30:05Z",
+          "subject": "user-12345",
+          "issuer": "https://utility-idp.example.com",
+          "scope": "openid profile email meter:read",
+          "expiresAt": "2024-10-15T11:30:00Z",
+          "message": "Token verified successfully"
         },
-        "conflictCheck": {
-          "hasConflict": false,
-          "checkedAt": "2024-10-15T10:30:05Z",
-          "message": "No conflicts found with existing enrollments"
-        },
-        "requiredCredentials": [
+        "meters": [
           {
-            "type": "MeterOwnershipCredential",
-            "description": "Proof of meter ownership verified through utility OTP verification",
-            "status": "PROVIDED"
+            "meterId": "umid-001",
+            "meterNumber": "MTR-987654321",
+            "sanctionedLoad": 5.0,
+            "connectionType": "residential",
+            "utilityId": "utility-example-001"
           },
           {
-            "type": "ProgramEligibilityCredential",
-            "description": "Proof of program eligibility based on meter type and location",
-            "status": "PROVIDED"
+            "meterId": "umid-002",
+            "meterNumber": "MTR-987654322",
+            "sanctionedLoad": 10.0,
+            "connectionType": "commercial",
+            "utilityId": "utility-example-001"
           }
         ],
         "requiredConsents": [
@@ -80,11 +74,6 @@
           {
             "type": "DER_CONTROL",
             "description": "Consent to control DER devices for demand response (if applicable)",
-            "required": false
-          },
-          {
-            "type": "CROSS_UTILITY_SHARING",
-            "description": "Consent to share data across utilities (if applicable)",
             "required": false
           }
         ]
