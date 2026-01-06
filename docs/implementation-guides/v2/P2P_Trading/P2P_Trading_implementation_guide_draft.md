@@ -46,6 +46,9 @@ Version 0.1 (Non-Normative)
   - [10.5. Confirm Flow](#105-confirm-flow)
     - [10.5.1. Cascaded Confirm Example (Utility Trade Logging)](#1051-cascaded-confirm-example-utility-trade-logging)
   - [10.6. Status Flow](#106-status-flow)
+    - [10.6.1. Curtailed Trade Status](#1061-curtailed-trade-status)
+  - [10.7. Update Flow (Provider-Initiated)](#107-update-flow-provider-initiated)
+    - [10.7.1. Utility-Initiated Trade Curtailment](#1071-utility-initiated-trade-curtailment)
 - [11. Additional Resources](#11-additional-resources)
     - [11.0.1. **Integrating with your software**](#1101-integrating-with-your-software)
       - [11.0.1.1. **Integrating the BAP**](#11011-integrating-the-bap)
@@ -2181,6 +2184,407 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
 - Response includes EnergyTradeDelivery attributes (delivery status, meter readings, telemetry)
 - Meter readings show energy flow from source to target
 - Telemetry provides real-time energy metrics
+
+### 10.6.1. Curtailed Trade Status
+
+When a trade has been curtailed (e.g., due to grid outage), the status response includes curtailment information for payment reconciliation:
+
+<details>
+<summary><a href="../../../../examples/p2p-trading/v2/status-response-curtailed.json">Curtailed Status Response Example</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_status",
+    "timestamp": "2024-10-04T16:00:00Z",
+    "message_id": "msg-on-status-curtailed-001",
+    "transaction_id": "txn-energy-001",
+    "bap_id": "bap.energy-consumer.com",
+    "bap_uri": "https://bap.energy-consumer.com",
+    "bpp_id": "bpp.energy-provider.com",
+    "bpp_uri": "https://bpp.energy-provider.com",
+    "ttl": "PT30S",
+    "domain": "beckn.one:deg:p2p-trading:2.0.0"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-energy-001",
+      "beckn:orderStatus": "PARTIALLYFULFILLED",
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:buyer": {
+        "beckn:id": "buyer-001",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 15.0,
+            "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
+          "beckn:acceptedOffer": {
+            "beckn:id": "offer-morning-001",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Morning Solar Energy Offer"
+            },
+            "beckn:provider": "provider-solar-farm-001",
+            "beckn:items": [
+              "energy-resource-solar-001"
+            ],
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
+              "@type": "EnergyTradeOffer",
+              "pricingModel": "PER_KWH",
+              "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
+              "beckn:price": {
+                "value": 0.15,
+                "currency": "USD",
+                "unitText": "kWh"
+              },
+              "beckn:maxQuantity": {
+                "unitQuantity": 20.0,
+                "unitText": "kWh",
+                "unitCode": "KWH"
+              },
+              "beckn:timeWindow": {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
+              }
+            }
+          }
+        },
+        {
+          "beckn:lineId": "line-2",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 10.0,
+            "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
+          "beckn:acceptedOffer": {
+            "beckn:id": "offer-afternoon-001",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Afternoon Solar Energy Offer"
+            },
+            "beckn:provider": "provider-solar-farm-001",
+            "beckn:items": [
+              "energy-resource-solar-001"
+            ],
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
+              "@type": "EnergyTradeOffer",
+              "pricingModel": "PER_KWH",
+              "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
+              "beckn:price": {
+                "value": 0.18,
+                "currency": "USD",
+                "unitText": "kWh"
+              },
+              "beckn:maxQuantity": {
+                "unitQuantity": 15.0,
+                "unitText": "kWh",
+                "unitCode": "KWH"
+              },
+              "beckn:timeWindow": {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "12:00:00",
+                "schema:endTime": "18:00:00"
+              }
+            }
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+          "@type": "EnergyTradeDelivery",
+          "deliveryStatus": "COMPLETED",
+          "deliveryMode": "GRID_INJECTION",
+          "deliveredQuantity": 10.0,
+          "deliveryStartTime": "2024-10-04T06:00:00Z",
+          "deliveryEndTime": "2024-10-04T14:30:00Z",
+          "curtailedQuantity": 10.0,
+          "curtailmentReason": "GRID_OUTAGE",
+          "curtailmentTime": "2024-10-04T14:30:00Z",
+          "meterReadings": [
+            {
+              "timestamp": "2024-10-04T06:00:00Z",
+              "sourceReading": 1000.0,
+              "targetReading": 990.0,
+              "energyFlow": 0.0
+            },
+            {
+              "timestamp": "2024-10-04T12:00:00Z",
+              "sourceReading": 1008.5,
+              "targetReading": 998.5,
+              "energyFlow": 8.5
+            },
+            {
+              "timestamp": "2024-10-04T14:30:00Z",
+              "sourceReading": 1010.0,
+              "targetReading": 1000.0,
+              "energyFlow": 10.0
+            }
+          ],
+          "telemetry": [
+            {
+              "eventTime": "2024-10-04T16:00:00Z",
+              "metrics": [
+                {
+                  "name": "ENERGY",
+                  "value": 10.0,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "POWER",
+                  "value": 0.0,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 240.0,
+                  "unitCode": "VLT"
+                }
+              ]
+            }
+          ],
+          "settlementCycleId": "settle-2024-10-04-001",
+          "lastUpdated": "2024-10-04T16:00:00Z"
+        }
+      }
+    }
+  }
+}
+
+
+```
+</details>
+
+**Curtailment Fields for Payment Reconciliation**:
+- `curtailedQuantity`: Revised trade limit (kWh) - the billable quantity
+- `curtailmentReason`: Why curtailment occurred (`GRID_OUTAGE`, `EMERGENCY`, `CONGESTION`, `MAINTENANCE`, `OTHER`)
+- `curtailmentTime`: When the curtailment was issued
+
+**Payment Calculation**:
+- Original contracted: `orderItems[].quantity`
+- Actually delivered: `deliveredQuantity`
+- Billable amount: `min(deliveredQuantity, curtailedQuantity) × price`
+
+## 10.7. Update Flow (Provider-Initiated)
+
+**Purpose**: Notify BAP of changes to an active order initiated by the provider (BPP) or utility
+
+**Endpoint**: `POST /on_update` (unsolicited callback from BPP to BAP)
+
+In Beckn protocol, `on_update` can be sent **without a preceding `update` request** from BAP. This is the standard "push notification" pattern for provider-initiated changes such as:
+- Trade curtailment due to grid outages
+- Delivery interruptions
+- Settlement adjustments
+
+### 10.7.1. Utility-Initiated Trade Curtailment
+
+During active energy delivery, grid operators may need to curtail trades due to:
+- **Grid outages**: Unexpected failures requiring immediate load reduction
+- **Emergency conditions**: Frequency deviations, voltage issues
+- **Congestion**: Transmission capacity limits
+- **Scheduled maintenance**: Planned outages
+
+When this happens, the Utility Company sends an unsolicited `on_update` to the BPP, which forwards it to the BAP. This enables both parties to reconcile payments based on the revised trade quantity.
+
+```mermaid
+sequenceDiagram
+    participant Utility as Utility Grid Operator
+    participant BPP as P2P Trading BPP
+    participant BAP as P2P Trading BAP
+    
+    Note over Utility: Grid outage detected
+    Utility->>BPP: on_update (curtailment notification)
+    Note right of BPP: curtailedQuantity: 10kWh<br/>curtailmentReason: GRID_OUTAGE
+    BPP->>BAP: on_update (forwarded)
+    Note over BAP: Update UI, adjust payment
+```
+
+<details>
+<summary><a href="../../../../examples/p2p-trading/v2/on-update-response-curtailment.json">Curtailment Notification Example (`on_update`)</a></summary>
+
+```json
+{
+  "context": {
+    "version": "2.0.0",
+    "action": "on_update",
+    "timestamp": "2024-10-04T14:30:00Z",
+    "message_id": "msg-on-update-curtailment-001",
+    "transaction_id": "txn-energy-001",
+    "bap_id": "bap.energy-consumer.com",
+    "bap_uri": "https://bap.energy-consumer.com",
+    "bpp_id": "bpp.energy-provider.com",
+    "bpp_uri": "https://bpp.energy-provider.com",
+    "ttl": "PT30S",
+    "domain": "beckn.one:deg:p2p-trading:2.0.0"
+  },
+  "message": {
+    "order": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Order",
+      "beckn:id": "order-energy-001",
+      "beckn:orderStatus": "INPROGRESS",
+      "beckn:seller": "provider-solar-farm-001",
+      "beckn:buyer": {
+        "beckn:id": "buyer-001",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Buyer"
+      },
+      "beckn:orderItems": [
+        {
+          "beckn:lineId": "line-1",
+          "beckn:orderedItem": "energy-resource-solar-001",
+          "beckn:quantity": {
+            "unitQuantity": 15.0,
+            "unitText": "kWh"
+          },
+          "beckn:orderItemAttributes": {
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyCustomer/v0.1/context.jsonld",
+            "@type": "EnergyCustomer",
+            "meterId": "der://meter/98765456"
+          },
+          "beckn:acceptedOffer": {
+            "beckn:id": "offer-morning-001",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+            "@type": "beckn:Offer",
+            "beckn:descriptor": {
+              "@type": "beckn:Descriptor",
+              "schema:name": "Morning Solar Energy Offer"
+            },
+            "beckn:provider": "provider-solar-farm-001",
+            "beckn:items": [
+              "energy-resource-solar-001"
+            ],
+            "beckn:offerAttributes": {
+              "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeOffer/v0.2/context.jsonld",
+              "@type": "EnergyTradeOffer",
+              "pricingModel": "PER_KWH",
+              "settlementType": "DAILY",
+              "sourceMeterId": "der://meter/100200300",
+              "beckn:price": {
+                "value": 0.15,
+                "currency": "USD",
+                "unitText": "kWh"
+              },
+              "beckn:maxQuantity": {
+                "unitQuantity": 20.0,
+                "unitText": "kWh",
+                "unitCode": "KWH"
+              },
+              "beckn:timeWindow": {
+                "@type": "beckn:TimePeriod",
+                "schema:startTime": "06:00:00",
+                "schema:endTime": "12:00:00"
+              }
+            }
+          }
+        }
+      ],
+      "beckn:fulfillment": {
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+        "@type": "beckn:Fulfillment",
+        "beckn:id": "fulfillment-energy-001",
+        "beckn:mode": "DELIVERY",
+        "beckn:deliveryAttributes": {
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyTradeDelivery/v0.2/context.jsonld",
+          "@type": "EnergyTradeDelivery",
+          "deliveryStatus": "IN_PROGRESS",
+          "deliveryMode": "GRID_INJECTION",
+          "deliveredQuantity": 8.5,
+          "deliveryStartTime": "2024-10-04T06:00:00Z",
+          "curtailedQuantity": 10.0,
+          "curtailmentReason": "GRID_OUTAGE",
+          "curtailmentTime": "2024-10-04T14:30:00Z",
+          "meterReadings": [
+            {
+              "timestamp": "2024-10-04T06:00:00Z",
+              "sourceReading": 1000.0,
+              "targetReading": 990.0,
+              "energyFlow": 0.0
+            },
+            {
+              "timestamp": "2024-10-04T12:00:00Z",
+              "sourceReading": 1008.5,
+              "targetReading": 998.5,
+              "energyFlow": 8.5
+            },
+            {
+              "timestamp": "2024-10-04T14:30:00Z",
+              "sourceReading": 1008.5,
+              "targetReading": 998.5,
+              "energyFlow": 8.5
+            }
+          ],
+          "telemetry": [
+            {
+              "eventTime": "2024-10-04T14:30:00Z",
+              "metrics": [
+                {
+                  "name": "ENERGY",
+                  "value": 8.5,
+                  "unitCode": "KWH"
+                },
+                {
+                  "name": "POWER",
+                  "value": 0.0,
+                  "unitCode": "KW"
+                },
+                {
+                  "name": "VOLTAGE",
+                  "value": 0.0,
+                  "unitCode": "VLT"
+                }
+              ]
+            }
+          ],
+          "settlementCycleId": "settle-2024-10-04-001",
+          "lastUpdated": "2024-10-04T14:30:00Z"
+        }
+      }
+    }
+  }
+}
+
+
+```
+</details>
+
+**Key Points**:
+- `on_update` is **unsolicited** - no preceding `update` request needed
+- Contains `curtailedQuantity` for payment reconciliation
+- `curtailmentReason` provides audit trail for dispute resolution
+- BAP should update UI and adjust pending payment based on revised quantity
 
 
 # 11. Additional Resources
