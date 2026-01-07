@@ -16,7 +16,7 @@
     "order": {
       "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
       "@type": "beckn:Order",
-      "beckn:id": "order-bpp-789012",
+      "beckn:id": "order-ev-charging-001",
       "beckn:orderStatus": "INPROGRESS",
       "beckn:seller": "cpo1.com",
       "beckn:buyer": {
@@ -26,13 +26,7 @@
       },
       "beckn:orderItems": [
         {
-          "beckn:lineId": "line-001",
-          "beckn:orderedItem": "pe-charging-01",
-          "beckn:quantity": {
-            "unitText": "Kilowatt Hour",
-            "unitCode": "KWH",
-            "unitQuantity": 1
-          }
+          "beckn:orderedItem": "IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A"
         }
       ],
       "beckn:fulfillment": {
@@ -41,17 +35,16 @@
         "beckn:id": "fulfillment-001",
         "beckn:mode": "RESERVATION",
         "trackingAction": {
-          "@type": "schema:TrackAction",
+          "@type": "beckn:TrackAction",
           "target": {
             "@type": "schema:EntryPoint",
             "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
-          },
-          "deliveryMethod": "RESERVATION",
-          "reservationId": "TRACK-SESSION-9876543210"
+          }
         },
         "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
+          "sessionStatus": "ACTIVE",
           "chargingTelemetry": [
             {
               "eventTime": "2025-01-27T17:00:00Z",

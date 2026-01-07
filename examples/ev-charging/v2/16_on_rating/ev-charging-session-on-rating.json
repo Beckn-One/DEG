@@ -15,6 +15,8 @@
   "message": {
     "received": true,
     "feedbackForm": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Form",
       "url": "https://example-bpp.com/feedback/portal",
       "mime_type": "application/xml",
       "submission_id": "feedback-123e4567-e89b-12d3-a456-426614174000"
