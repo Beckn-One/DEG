@@ -90,6 +90,7 @@ modules:
         keyManager:
           id: simplekeymanager
           config:
+            # Reusing p2p-trading sandbox1 registry record for enrollment BAP
             networkParticipant: p2p-trading-sandbox1.com
             keyId: 76EU8aUqHouww7gawT6EibH4bseMCumyDv3sgyXSKENGk8NDcdVwmQ
             signingPrivateKey: Pc6dkYo5LeP0LkwvZXVRV9pcbeh8jDdtdHWymID5cjw=
