@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "9266f80b-a92e-4ab9-bece-408e02754de4",
+    "_postman_id": "9b965c9b-5a96-4a59-9bcc-704dd3874512",
     "name": "ev-charging:BAP-DEG",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "EV Charging BAP flows"
@@ -16,7 +16,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"domain\": \"{{domain}}\",\n    \"action\": \"cancel\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": [\n      {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Order\",\n        \"beckn:id\": \"order-ev-charging-001\",\n        \"beckn:orderStatus\": \"CONFIRMED\",\n        \"beckn:seller\": \"cpo1.com\",\n        \"beckn:buyer\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n          \"@type\": \"beckn:Buyer\",\n          \"beckn:id\": \"user-123\"\n        },\n        \"beckn:orderItems\": [\n          {\n            \"beckn:orderedItem\": \"IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A\",\n            \"beckn:quantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 2.5\n            }\n          }\n        ]\n      }\n    ]\n  }\n}",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"domain\": \"{{domain}}\",\n    \"action\": \"cancel\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-ev-charging-001\",\n      \"beckn:orderStatus\": \"CONFIRMED\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:orderedItem\": \"IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A\",\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 2.5\n          }\n        }\n      ]\n    }\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -389,7 +389,35 @@
     },
     {
       "name": "status",
-      "item": []
+      "item": [
+        {
+          "name": "ev-charging-connector-status",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"status\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-ev-charging-001\",\n      \"beckn:orderStatus\": \"CONFIRMED\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:telephone\": \"+91-9876543210\",\n        \"beckn:email\": \"ravi.kumar@example.com\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:orderedItem\": \"IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A\",\n          \"beckn:quantity\": {\n            \"unitText\": \"Kilowatt Hour\",\n            \"unitCode\": \"KWH\",\n            \"unitQuantity\": 2.5\n          },\n          \"beckn:price\": {\n            \"currency\": \"INR\",\n            \"value\": 45.0,\n            \"applicableQuantity\": {\n              \"unitText\": \"Kilowatt Hour\",\n              \"unitCode\": \"KWH\",\n              \"unitQuantity\": 1\n            }\n          }\n        }\n      ],\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 143.95,\n        \"components\": [\n          {\n            \"type\": \"UNIT\",\n            \"value\": 112.5,\n            \"currency\": \"INR\",\n            \"description\": \"Base charging session cost (45 INR/kWh \\u00d7 2.5 kWh)\"\n          },\n          {\n            \"type\": \"SURCHARGE\",\n            \"value\": 20.0,\n            \"currency\": \"INR\",\n            \"description\": \"Surge price (20%)\"\n          },\n          {\n            \"type\": \"DISCOUNT\",\n            \"value\": -15.0,\n            \"currency\": \"INR\",\n            \"description\": \"Offer discount (15%)\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 10.0,\n            \"currency\": \"INR\",\n            \"description\": \"Service fee\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 13.64,\n            \"currency\": \"INR\",\n            \"description\": \"Overcharge estimation\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 2.81,\n            \"currency\": \"INR\",\n            \"description\": \"Buyer finder fee (2.5%)\"\n          }\n        ]\n      },\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"connectorType\": \"CCS2\",\n          \"maxPowerKW\": 50,\n          \"sessionStatus\": \"PENDING\"\n        }\n      },\n      \"beckn:payment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-123e4567-e89b-12d3-a456-426614174000\",\n        \"beckn:amount\": {\n          \"currency\": \"INR\",\n          \"value\": 143.95\n        },\n        \"beckn:paymentURL\": \"https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount\",\n        \"beckn:txnRef\": \"TXN-123456789\",\n        \"beckn:paidAt\": \"2025-12-19T10:05:00Z\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"beckn:paymentStatus\": \"COMPLETED\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/status",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "status"
+              ]
+            },
+            "description": "Status request: ev-charging-connector-status"
+          },
+          "response": []
+        }
+      ]
     },
     {
       "name": "support",
@@ -482,6 +510,33 @@
               ]
             },
             "description": "Update request: ev-charging-01-session-start-update"
+          },
+          "response": []
+        },
+        {
+          "name": "ev-charging-session-end-update",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"update\",\n    \"domain\": \"{{domain}}\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-ev-charging-001\",\n      \"beckn:orderStatus\": \"INPROGRESS\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\",\n        \"beckn:role\": \"BUYER\",\n        \"beckn:displayName\": \"Ravi Kumar\",\n        \"beckn:telephone\": \"+91-9876543210\",\n        \"beckn:email\": \"ravi.kumar@example.com\",\n        \"beckn:taxID\": \"GSTIN29ABCDE1234F1Z5\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:orderedItem\": \"IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A\"\n        }\n      ],\n      \"beckn:orderValue\": {\n        \"currency\": \"INR\",\n        \"value\": 143.95,\n        \"components\": [\n          {\n            \"type\": \"UNIT\",\n            \"value\": 112.5,\n            \"currency\": \"INR\",\n            \"description\": \"Base charging session cost (45 INR/kWh \\u00d7 2.5 kWh)\"\n          },\n          {\n            \"type\": \"SURCHARGE\",\n            \"value\": 20.0,\n            \"currency\": \"INR\",\n            \"description\": \"Surge price (20%)\"\n          },\n          {\n            \"type\": \"DISCOUNT\",\n            \"value\": -15.0,\n            \"currency\": \"INR\",\n            \"description\": \"Offer discount (15%)\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 10.0,\n            \"currency\": \"INR\",\n            \"description\": \"Service fee\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 13.64,\n            \"currency\": \"INR\",\n            \"description\": \"Overcharge estimation\"\n          },\n          {\n            \"type\": \"FEE\",\n            \"value\": 2.81,\n            \"currency\": \"INR\",\n            \"description\": \"Buyer finder fee (2.5%)\"\n          }\n        ]\n      },\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"sessionStatus\": \"STOP\"\n        }\n      },\n      \"beckn:payment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Payment\",\n        \"beckn:id\": \"payment-123e4567-e89b-12d3-a456-426614174000\",\n        \"beckn:amount\": {\n          \"currency\": \"INR\",\n          \"value\": 143.95\n        },\n        \"beckn:paymentURL\": \"https://payments.bluechargenet-aggregator.io/pay?transaction_id=$transaction_id&amount=$amount\",\n        \"beckn:txnRef\": \"TXN-123456789\",\n        \"beckn:paidAt\": \"2025-12-19T10:05:00Z\",\n        \"beckn:beneficiary\": \"BPP\",\n        \"beckn:paymentStatus\": \"COMPLETED\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bap_adapter_url}}/update",
+              "host": [
+                "{{bap_adapter_url}}"
+              ],
+              "path": [
+                "update"
+              ]
+            },
+            "description": "Update request: ev-charging-session-end-update"
           },
           "response": []
         }

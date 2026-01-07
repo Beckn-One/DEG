@@ -14,6 +14,8 @@
   },
   "message": {
     "support": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:SupportInfo",
       "name": "BlueCharge Support Team",
       "phone": "18001080",
       "email": "support@bluechargenet-aggregator.io",
