@@ -487,7 +487,7 @@ Note: Users can discover the charging station through off-network channels (such
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
@@ -499,7 +499,7 @@ Note: Users can discover the charging station through off-network channels (such
         "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A",
             "beckn:descriptor": {
@@ -575,7 +575,7 @@ Note: Users can discover the charging station through off-network channels (such
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "IND*GoGreen-charging*cs-02*IN*ECO*BTM*01*CCS2*A*CCS2-B",
             "beckn:descriptor": {
@@ -796,7 +796,7 @@ CPO returns details of a specific charger: [Example](../../../examples/ev_chargi
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -901,7 +901,7 @@ EV user requests charge worth in KWH: [Example](../../../examples/ev_charging/v2
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -1140,7 +1140,7 @@ CPO responds with dynamically calculated quote: [Example](../../../examples/ev_c
           "@type": "PaymentSettlement",
           "settlementAccounts": [
             {
-              "beneficiaryType": "BAP",
+              "beneficiaryId": "example-bap.com",
               "accountHolderName": "Example BAP Solutions Pvt Ltd",
               "accountNumber": "9876543210123",
               "ifscCode": "HDFC0009876",
@@ -1294,7 +1294,7 @@ EV user requests for payment information: [Example](../../../examples/ev_chargin
           "@type": "PaymentSettlement",
           "settlementAccounts": [
             {
-              "beneficiaryType": "BAP",
+              "beneficiaryId": "example-bap.com",
               "accountHolderName": "Example BAP Solutions Pvt Ltd",
               "accountNumber": "9876543210123",
               "ifscCode": "HDFC0009876",
@@ -1302,7 +1302,7 @@ EV user requests for payment information: [Example](../../../examples/ev_chargin
               "vpa": "example-bap@paytm"
             },
             {
-              "beneficiaryType": "BPP",
+              "beneficiaryId": "example-bpp.com",
               "accountHolderName": "EcoPower Charging Solutions Pvt Ltd",
               "accountNumber": "1234567890123",
               "ifscCode": "HDFC0001234",
@@ -2411,10 +2411,10 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
             "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
           }
         },
-        "sessionStatus": "ACTIVE",
         "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
+          "sessionStatus": "ACTIVE",
           "chargingTelemetry": [
             {
               "eventTime": "2025-01-27T17:00:00Z",
@@ -2910,12 +2910,12 @@ EV user receives the session details upon chargign session end: [Example](../../
       {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:RatingInput",
-        "beckn:id": "fulfillment-001",
-        "beckn:ratingValue": 4,
-        "beckn:bestRating": 5,
-        "beckn:worstRating": 1,
-        "beckn:category": "FULFILLMENT",
-        "beckn:feedback": {
+        "id": "fulfillment-001",
+        "ratingValue": 4,
+        "bestRating": 5,
+        "worstRating": 1,
+        "category": "FULFILLMENT",
+        "feedback": {
           "comments": "Excellent charging experience! The station was clean, easy to find, and the charging was fast and reliable. The staff was helpful and the payment process was smooth.",
           "tags": [
             "fast-charging",
@@ -2973,6 +2973,8 @@ EV user rates charging service experience: [Example](../../../examples/ev_chargi
   "message": {
     "received": true,
     "feedbackForm": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Form",
       "url": "https://example-bpp.com/feedback/portal",
       "mime_type": "application/xml",
       "submission_id": "feedback-123e4567-e89b-12d3-a456-426614174000"
@@ -3080,6 +3082,8 @@ EV user contacts support: [Example](../../../examples/ev_charging/v2/17_support/
   },
   "message": {
     "support": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:SupportInfo",
       "name": "BlueCharge Support Team",
       "phone": "18001080",
       "email": "support@bluechargenet-aggregator.io",
@@ -3447,7 +3451,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
   "message": {
     "catalogs": [
       {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Catalog",
         "beckn:id": "catalog-ev-charging-001",
         "beckn:descriptor": {
@@ -3459,7 +3463,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
         "beckn:bppUri": "https://bpp.ev-network.example.com/bpp",
         "beckn:items": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A",
             "beckn:descriptor": {
@@ -3535,7 +3539,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "IND*greencharge-koramangala*cs-02*IN*GC*KOR*01*CCS2*A*CCS2-B",
             "beckn:descriptor": {
@@ -3612,7 +3616,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             }
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Item",
             "beckn:id": "IND*powergrid-indiranagar*cs-03*IN*PG*IND*01*TYPE2*A*TYPE2-A",
             "beckn:descriptor": {
@@ -3690,7 +3694,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
         ],
         "beckn:offers": [
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-60kw-kwh",
             "beckn:descriptor": {
@@ -3736,7 +3740,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             "beckn:provider": "ecopower-charging"
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-ccs2-120kw-kwh",
             "beckn:descriptor": {
@@ -3783,7 +3787,7 @@ Discovering chargers in a specific circular area, a specific connector type and 
             "beckn:provider": "greencharge-koramangala"
           },
           {
-            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+            "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
             "@type": "beckn:Offer",
             "beckn:id": "offer-type2-22kw-kwh",
             "beckn:descriptor": {
@@ -3978,7 +3982,7 @@ Offer schema in the catalog:
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -4095,7 +4099,7 @@ Recommendations for BPP:
       "beckn:orderStatus": "CREATED",
       "beckn:seller": "ecopower-charging",
       "beckn:buyer": {
-        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/draft/schema/core/v2/context.jsonld",
+        "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:Buyer",
         "beckn:id": "user-123",
         "beckn:role": "BUYER",
@@ -4425,7 +4429,7 @@ Recommendations for BAP:
           "@type": "PaymentSettlement",
           "settlementAccounts": [
             {
-              "beneficiaryType": "BAP",
+              "beneficiaryId": "example-bap.com",
               "accountHolderName": "Example BAP Solutions Pvt Ltd",
               "accountNumber": "9876543210123",
               "ifscCode": "HDFC0009876",
@@ -4587,7 +4591,7 @@ Recommendations for BAP:
           "@type": "PaymentSettlement",
           "settlementAccounts": [
             {
-              "beneficiaryType": "BAP",
+              "beneficiaryId": "example-bap.com",
               "accountHolderName": "Example BAP Solutions Pvt Ltd",
               "accountNumber": "9876543210123",
               "ifscCode": "HDFC0009876",
@@ -4595,7 +4599,7 @@ Recommendations for BAP:
               "vpa": "example-bap@paytm"
             },
             {
-              "beneficiaryType": "BPP",
+              "beneficiaryId": "example-bpp.com",
               "accountHolderName": "EcoPower Charging Solutions Pvt Ltd",
               "accountNumber": "1234567890123",
               "ifscCode": "HDFC0001234",
@@ -5431,10 +5435,10 @@ Once these physical steps are completed, the charging session can be initiated t
             "url": "https://track.bluechargenet-aggregator.io/session/SESSION-9876543210"
           }
         },
-        "sessionStatus": "ACTIVE",
         "beckn:deliveryAttributes": {
-          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingService/v1/context.jsonld",
+          "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld",
           "@type": "ChargingSession",
+          "sessionStatus": "ACTIVE",
           "chargingTelemetry": [
             {
               "eventTime": "2025-01-27T17:00:00Z",
@@ -6093,12 +6097,12 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
       {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
         "@type": "beckn:RatingInput",
-        "beckn:id": "fulfillment-001",
-        "beckn:ratingValue": 4,
-        "beckn:bestRating": 5,
-        "beckn:worstRating": 1,
-        "beckn:category": "FULFILLMENT",
-        "beckn:feedback": {
+        "id": "fulfillment-001",
+        "ratingValue": 4,
+        "bestRating": 5,
+        "worstRating": 1,
+        "category": "FULFILLMENT",
+        "feedback": {
           "comments": "Excellent charging experience! The station was clean, easy to find, and the charging was fast and reliable. The staff was helpful and the payment process was smooth.",
           "tags": [
             "fast-charging",
@@ -6155,6 +6159,8 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
   "message": {
     "received": true,
     "feedbackForm": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:Form",
       "url": "https://example-bpp.com/feedback/portal",
       "mime_type": "application/xml",
       "submission_id": "feedback-123e4567-e89b-12d3-a456-426614174000"
@@ -6260,6 +6266,8 @@ This API is **NOT** to be used to cancel an ongoing session. To cancel an ongoin
   },
   "message": {
     "support": {
+      "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld",
+      "@type": "beckn:SupportInfo",
       "name": "BlueCharge Support Team",
       "phone": "18001080",
       "email": "support@bluechargenet-aggregator.io",
