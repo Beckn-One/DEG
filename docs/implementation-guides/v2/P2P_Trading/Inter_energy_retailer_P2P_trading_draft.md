@@ -82,8 +82,8 @@ sequenceDiagram
 
     rect rgb(255, 245, 230)
     note over TE,RB: Phase 3: Trade Verification
-    DU_A->>TE: Add actual pushed signed meter data to ledger (P1)
-    DU_B->>TE: Add actual pulled signed meter data to ledger (P7)
+    DU_A->>TE: Add/allocate actual pushed signed meter data to ledger (P1)
+    DU_B->>TE: Add/allocate actual pulled signed meter data to ledger (P7)
     TE->>TE: Mark trade complete
     end
 
