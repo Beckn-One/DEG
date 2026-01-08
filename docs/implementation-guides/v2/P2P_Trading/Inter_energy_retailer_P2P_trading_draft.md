@@ -56,7 +56,7 @@ sequenceDiagram
     participant S as Seller (P1)
     participant B as Buyer (P7)
     participant TP as Trade Platform
-    participant TE as Trade Exchange
+    participant TE as Trade Exchange/Ledger
     participant RA as Retailer A
     participant RB as Retailer B
     participant DU_A as Distribution Utility A
@@ -68,8 +68,8 @@ sequenceDiagram
     B->>TP: Accept trade
     TP->>TE: Submit signed contract
     TE->>TE: Record on ledger
-    TE->>DU_A: Notify (visibility)
-    TE->>DU_B: Notify (visibility)
+    DU_A-.->TE: Visibility into upcoming trades
+    DU_B-.->TE: Visibility into upcoming trades
     end
 
     rect rgb(230, 255, 230)
@@ -81,11 +81,8 @@ sequenceDiagram
 
     rect rgb(255, 245, 230)
     note over TE,RB: Phase 3: Trade Verification
-    TE->>RA: Request meter data (P1)
-    TE->>RB: Request meter data (P7)
-    RA-->>TE: Signed meter data
-    RB-->>TE: Signed meter data
-    TE->>TE: Verify delivery vs contract
+    DU_A->>TE: Update ledger with signed meter data (P1)
+    DU_B->>TE: Update ledger with signed meter data (P7)
     TE->>TE: Mark trade complete
     end
 
@@ -138,7 +135,7 @@ sequenceDiagram
     participant S as Seller (P1)<br/>Retailer A
     participant B as Buyer (P7)<br/>Retailer B
     participant TP as Trade Platform
-    participant TE as Trade Exchange
+    participant TE as Trade Exchange/Ledger
     participant DU as Distribution Utility
 
     S->>TP: Login & initiate trade
@@ -160,7 +157,7 @@ sequenceDiagram
     TP-->>S: Trade confirmed
     TP-->>B: Trade confirmed
 
-    TE->>DU: Scheduled trade notification<br/>(for grid planning)
+    DU-.->TE: Visibility into scheduled trades<br/>(for grid planning)
 ```
 
 ---
@@ -218,42 +215,32 @@ sequenceDiagram
 
 ### 5. Trade Verification
 
-- Trade exchange retrieves digitally signed meter data from both energy retailers
-- Verifies delivery matches contract terms
-- Marks trade as complete on the ledger
+- Distribution utilities update the ledger with digitally signed meter data for both parties
+- Trade exchange/ledger marks trade as complete
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant TE as Trade Exchange
-    participant RA as Retailer A
-    participant RB as Retailer B
-    participant L as Ledger
+    participant TE as Trade Exchange/Ledger
+    participant DU_A as Distribution Utility A
+    participant DU_B as Distribution Utility B
 
     Note over TE: Verification cycle triggered<br/>(e.g., every X hours)
 
-    TE->>L: Retrieve pending trades<br/>for verification
-    L-->>TE: List of trades to verify
-
-    par Request meter data in parallel
-        TE->>RA: Request signed meter data<br/>(Meter M1, time window)
-        TE->>RB: Request signed meter data<br/>(Meter M7, time window)
-    end
-
-    RA-->>TE: Digitally signed meter data<br/>(P1 injection: X kWh)
-    RB-->>TE: Digitally signed meter data<br/>(P7 consumption: Y kWh)
+    DU_A->>TE: Update ledger with signed meter data<br/>(Meter M1, P1 injection: X kWh)
+    DU_B->>TE: Update ledger with signed meter data<br/>(Meter M7, P7 consumption: Y kWh)
 
     TE->>TE: Validate digital signatures
     TE->>TE: Compare actuals vs contract
 
     alt Delivery matches contract
-        TE->>L: Mark trade COMPLETE
+        TE->>TE: Mark trade COMPLETE
         Note over TE: Proceed to settlement
     else Partial delivery
-        TE->>L: Record actual delivery
+        TE->>TE: Record actual delivery
         Note over TE: Apply settlement rules<br/>(see Contract Modification)
     else No delivery
-        TE->>L: Mark trade FAILED
+        TE->>TE: Mark trade FAILED
         Note over TE: Trigger penalty/<br/>enforcement
     end
 ```
