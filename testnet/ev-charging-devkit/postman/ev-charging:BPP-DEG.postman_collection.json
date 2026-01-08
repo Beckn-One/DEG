@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "cf22e4d0-a84a-46d6-805d-8cd8d84be122",
+    "_postman_id": "ae6554d8-2ff8-4198-865e-241aea7f4404",
     "name": "ev-charging:BPP-DEG",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "EV Charging BPP flows"
@@ -283,6 +283,33 @@
           "response": []
         },
         {
+          "name": "ev-charging-session-on-track",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"on_status\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-ev-charging-001\",\n      \"beckn:orderStatus\": \"INPROGRESS\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:orderedItem\": \"IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A\"\n        }\n      ],\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"trackingAction\": {\n          \"@type\": \"beckn:TrackAction\",\n          \"target\": {\n            \"@type\": \"schema:EntryPoint\",\n            \"url\": \"https://track.bluechargenet-aggregator.io/session/SESSION-9876543210\"\n          }\n        },\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"sessionStatus\": \"ACTIVE\",\n          \"chargingTelemetry\": [\n            {\n              \"eventTime\": \"2025-01-27T17:00:00Z\",\n              \"metrics\": [\n                {\n                  \"name\": \"STATE_OF_CHARGE\",\n                  \"value\": 62.5,\n                  \"unitCode\": \"PERCENTAGE\"\n                },\n                {\n                  \"name\": \"POWER\",\n                  \"value\": 18.4,\n                  \"unitCode\": \"KWH\"\n                },\n                {\n                  \"name\": \"ENERGY\",\n                  \"value\": 10.2,\n                  \"unitCode\": \"KW\"\n                },\n                {\n                  \"name\": \"VOLTAGE\",\n                  \"value\": 392,\n                  \"unitCode\": \"VLT\"\n                },\n                {\n                  \"name\": \"CURRENT\",\n                  \"value\": 47.0,\n                  \"unitCode\": \"AMP\"\n                }\n              ]\n            },\n            {\n              \"eventTime\": \"2025-01-27T17:05:00Z\",\n              \"metrics\": [\n                {\n                  \"name\": \"STATE_OF_CHARGE\",\n                  \"value\": 65.0,\n                  \"unitCode\": \"PERCENTAGE\"\n                },\n                {\n                  \"name\": \"POWER\",\n                  \"value\": 17.1,\n                  \"unitCode\": \"KWH\"\n                },\n                {\n                  \"name\": \"ENERGY\",\n                  \"value\": 11.1,\n                  \"unitCode\": \"KW\"\n                },\n                {\n                  \"name\": \"VOLTAGE\",\n                  \"value\": 388,\n                  \"unitCode\": \"VLT\"\n                },\n                {\n                  \"name\": \"CURRENT\",\n                  \"value\": 44.2,\n                  \"unitCode\": \"AMP\"\n                }\n              ]\n            }\n          ]\n        }\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{bpp_adapter_url}}/on_status",
+              "host": [
+                "{{bpp_adapter_url}}"
+              ],
+              "path": [
+                "on_status"
+              ]
+            },
+            "description": "On_status request: ev-charging-session-on-track"
+          },
+          "response": []
+        },
+        {
           "name": "ev-charging-session-interrupt-on-status",
           "request": {
             "method": "POST",
@@ -345,35 +372,7 @@
     },
     {
       "name": "on_track",
-      "item": [
-        {
-          "name": "ev-charging-session-on-track",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"context\": {\n    \"version\": \"{{version}}\",\n    \"action\": \"on_track\",\n    \"domain\": \"{{domain}}\",\n    \"bap_id\": \"{{bap_id}}\",\n    \"bap_uri\": \"{{bap_uri}}\",\n    \"transaction_id\": \"{{transaction_id}}\",\n    \"message_id\": \"{{$guid}}\",\n    \"timestamp\": \"{{iso_date}}\",\n    \"ttl\": \"PT30S\",\n    \"bpp_id\": \"{{bpp_id}}\",\n    \"bpp_uri\": \"{{bpp_uri}}\"\n  },\n  \"message\": {\n    \"order\": {\n      \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n      \"@type\": \"beckn:Order\",\n      \"beckn:id\": \"order-ev-charging-001\",\n      \"beckn:orderStatus\": \"INPROGRESS\",\n      \"beckn:seller\": \"cpo1.com\",\n      \"beckn:buyer\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Buyer\",\n        \"beckn:id\": \"user-123\"\n      },\n      \"beckn:orderItems\": [\n        {\n          \"beckn:orderedItem\": \"IND*ecopower-charging*cs-01*IN*ECO*BTM*01*CCS2*A*CCS2-A\"\n        }\n      ],\n      \"beckn:fulfillment\": {\n        \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/core/v2/context.jsonld\",\n        \"@type\": \"beckn:Fulfillment\",\n        \"beckn:id\": \"fulfillment-001\",\n        \"beckn:mode\": \"RESERVATION\",\n        \"trackingAction\": {\n          \"@type\": \"beckn:TrackAction\",\n          \"target\": {\n            \"@type\": \"schema:EntryPoint\",\n            \"url\": \"https://track.bluechargenet-aggregator.io/session/SESSION-9876543210\"\n          }\n        },\n        \"beckn:deliveryAttributes\": {\n          \"@context\": \"https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/main/schema/EvChargingSession/v1/context.jsonld\",\n          \"@type\": \"ChargingSession\",\n          \"sessionStatus\": \"ACTIVE\",\n          \"chargingTelemetry\": [\n            {\n              \"eventTime\": \"2025-01-27T17:00:00Z\",\n              \"metrics\": [\n                {\n                  \"name\": \"STATE_OF_CHARGE\",\n                  \"value\": 62.5,\n                  \"unitCode\": \"PERCENTAGE\"\n                },\n                {\n                  \"name\": \"POWER\",\n                  \"value\": 18.4,\n                  \"unitCode\": \"KWH\"\n                },\n                {\n                  \"name\": \"ENERGY\",\n                  \"value\": 10.2,\n                  \"unitCode\": \"KW\"\n                },\n                {\n                  \"name\": \"VOLTAGE\",\n                  \"value\": 392,\n                  \"unitCode\": \"VLT\"\n                },\n                {\n                  \"name\": \"CURRENT\",\n                  \"value\": 47.0,\n                  \"unitCode\": \"AMP\"\n                }\n              ]\n            },\n            {\n              \"eventTime\": \"2025-01-27T17:05:00Z\",\n              \"metrics\": [\n                {\n                  \"name\": \"STATE_OF_CHARGE\",\n                  \"value\": 65.0,\n                  \"unitCode\": \"PERCENTAGE\"\n                },\n                {\n                  \"name\": \"POWER\",\n                  \"value\": 17.1,\n                  \"unitCode\": \"KWH\"\n                },\n                {\n                  \"name\": \"ENERGY\",\n                  \"value\": 11.1,\n                  \"unitCode\": \"KW\"\n                },\n                {\n                  \"name\": \"VOLTAGE\",\n                  \"value\": 388,\n                  \"unitCode\": \"VLT\"\n                },\n                {\n                  \"name\": \"CURRENT\",\n                  \"value\": 44.2,\n                  \"unitCode\": \"AMP\"\n                }\n              ]\n            }\n          ]\n        }\n      }\n    }\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{bpp_adapter_url}}/on_track",
-              "host": [
-                "{{bpp_adapter_url}}"
-              ],
-              "path": [
-                "on_track"
-              ]
-            },
-            "description": "On_track request: ev-charging-session-on-track"
-          },
-          "response": []
-        }
-      ]
+      "item": []
     },
     {
       "name": "on_update",

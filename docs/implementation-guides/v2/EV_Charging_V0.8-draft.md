@@ -50,8 +50,8 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
       - [13.1.2.8. `action: on_confirm`](#13128-action-on_confirm)
       - [13.1.2.9. `action: update` (start charging)](#13129-action-update-start-charging)
       - [13.1.2.10. `action: on_update` (start charging)](#131210-action-on_update-start-charging)
-      - [13.1.2.11. `action: track` (charging-session progress)](#131211-action-track-charging-session-progress)
-      - [13.1.2.12. `action: on_track`](#131212-action-on_track)
+      - [13.1.2.11. `action: status` (charging-session progress)](#131211-action-track-charging-session-progress)
+      - [13.1.2.12. `action: on_status`](#131212-action-on_status)
       - [13.1.2.13. async `action: on_status`](#131213-async-action-on_status)
       - [13.1.2.14. `action: on_update` (stop-charging)](#131214-action-on_update-stop-charging)
       - [13.1.2.15. async `action: on_update` (stop-charging)](#131215-async-action-on_update-stop-charging)
@@ -88,8 +88,8 @@ Implementation Guide \- EV Charging \- Version 0.8 (DRAFT) <!-- omit from toc --
       - [13.2.1.9. `action: on_confirm`](#13219-action-on_confirm)
       - [13.2.1.10. `action: update` (start charging)](#132110-action-update-start-charging)
       - [13.2.1.11. `action: on_update` (start charging)](#132111-action-on_update-start-charging)
-      - [13.2.1.12. `action: track`](#132112-action-track)
-      - [13.2.1.13. `action: on_track`](#132113-action-on_track)
+      - [13.2.1.12. `action: status`](#132112-action-status)
+      - [13.2.1.13. `action: on_status`](#132113-action-on_status)
       - [13.2.1.14. asynchronous `action: on_status` (temporary connection interruption)](#132114-asynchronous-action-on_status-temporary-connection-interruption)
           - [13.2.1.14.0.1. **A)Undercharge (Power Cut Mid-Session)**](#13211401-aundercharge-power-cut-mid-session)
           - [13.2.1.14.0.2. **B) Overcharge (Charger Offline to CMS; Keeps Dispensing)**](#13211402-b-overcharge-charger-offline-to-cms-keeps-dispensing)
@@ -2296,20 +2296,20 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 ```
 </details>
 
-#### 13.1.2.11. `action: track` (charging-session progress)
+#### 13.1.2.11. `action: status` (charging-session progress)
 
 - Method: POST
 - Use Cases: Raghav requests to track the live status of the charging session. state of charge(how much charging has been done).
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/11_track/ev-charging-session-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/11_status/ev-charging-session-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
   "context": {
     "version": "2.0.0",
-    "action": "track",
+    "action": "status",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
@@ -2344,7 +2344,7 @@ CPO responds with confirmed start of charging session: [Example](../../../exampl
 ```
 </details>
 
-EV User tracks a live charging session in real-time: [Example](../../../examples/ev_charging/v2/11_track/ev-charging-session-track.json)
+EV User tracks a live charging session in real-time: [Example](../../../examples/ev_charging/v2/11_status/ev-charging-session-track.json)
 - Successful Response: 
 
 <details>
@@ -2358,20 +2358,20 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 ```
 </details>
 
-#### 13.1.2.12. `action: on_track`
+#### 13.1.2.12. `action: on_status`
 
 - Method: POST
 - Use Cases: Raghav receives the state of charge(how much charging has been done) of the vehicle.
 - Request: 
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/12_on_track/ev-charging-session-on-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/12_on_status/ev-charging-session-on-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
   "context": {
     "version": "2.0.0",
-    "action": "on_track",
+    "action": "on_status",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
@@ -2485,7 +2485,7 @@ EV User tracks a live charging session in real-time: [Example](../../../examples
 ```
 </details>
 
-EV User receives a live charging session in real-time: [Example](../../../examples/ev_charging/v2/12_on_track/ev-charging-session-on-track.json)
+EV User receives a live charging session in real-time: [Example](../../../examples/ev_charging/v2/12_on_status/ev-charging-session-on-track.json)
 - Successful Response: 
 
 <details>
@@ -5296,11 +5296,11 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### 13.2.1.12. `action: track`
+#### 13.2.1.12. `action: status`
 
 - Method: POST
 - Use Cases: Adam initiates a request to track the charging progress of the active charging session.
-- Request: EV User tracks a live charging session in real-time: [Example](../../../examples/ev_charging/v2/11_track/ev-charging-session-track.json)
+- Request: EV User tracks a live charging session in real-time: [Example](../../../examples/ev_charging/v2/11_status/ev-charging-session-track.json)
 
   **beckn:orderAttributes:**  
   Holds parameters that instruct how the tracking process should operate during an ongoing session.
@@ -5309,13 +5309,13 @@ Once these physical steps are completed, the charging session can be initiated t
   2. **beckn:track-fulfillment:** Boolean flag indicating whether live fulfillment tracking is enabled (true means the BPP should send periodic state updates to the callback URL).
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/11_track/ev-charging-session-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/11_status/ev-charging-session-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
   "context": {
     "version": "2.0.0",
-    "action": "track",
+    "action": "status",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
@@ -5363,11 +5363,11 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-#### 13.2.1.13. `action: on_track`
+#### 13.2.1.13. `action: on_status`
 
 - Method: POST
 - Use Cases: Adam receives the current charging progress.
-- Request: EV User receives live charging session details in real-time: [Example](../../../examples/ev_charging/v2/12_on_track/ev-charging-session-on-track.json)
+- Request: EV User receives live charging session details in real-time: [Example](../../../examples/ev_charging/v2/12_on_status/ev-charging-session-on-track.json)
 
   **ev:charging\_periods:**  
   Represents the *current charging interval* and real-time measurements captured during that period.
@@ -5389,13 +5389,13 @@ Once these physical steps are completed, the charging session can be initiated t
   Timestamp showing when these readings were last recorded or pushed — helps synchronize live dashboards or notifications on the BAP side.
 
 <details>
-<summary><a href="../../../examples/ev-charging/v2/12_on_track/ev-charging-session-on-track.json">Example json :rocket:</a></summary>
+<summary><a href="../../../examples/ev-charging/v2/12_on_status/ev-charging-session-on-track.json">Example json :rocket:</a></summary>
 
 ```json
 {
   "context": {
     "version": "2.0.0",
-    "action": "on_track",
+    "action": "on_status",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://example-bap.com/pilot/bap/energy/v2",
@@ -5509,7 +5509,7 @@ Once these physical steps are completed, the charging session can be initiated t
 ```
 </details>
 
-EV User receives live charging session details in real-time: [Example](../../../examples/ev_charging/v2/12_on_track/ev-charging-session-on-track.json)
+EV User receives live charging session details in real-time: [Example](../../../examples/ev_charging/v2/12_on_status/ev-charging-session-on-track.json)
 
 **ev:charging\_periods:**  
 Represents the *current charging interval* and real-time measurements captured during that period.

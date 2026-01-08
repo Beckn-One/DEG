@@ -1,7 +1,7 @@
 {
   "context": {
     "version": "2.0.0",
-    "action": "track",
+    "action": "status",
     "domain": "beckn.one:deg:ev-charging:*",
     "bap_id": "example-bap.com",
     "bap_uri": "https://api.example-bap.com/pilot/bap/energy/v2",
