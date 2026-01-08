@@ -43,7 +43,8 @@
           "authMethod": "OTP",
           "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
           "message": "OTP sent to +91XXXXXX9999. Valid for 5 minutes.",
-          "expiresAt": "2024-10-15T10:35:00Z"
+          "expiresAt": "2024-10-15T10:35:00Z",
+          "utilityCustomerId": "CUST-123456"
         }
       }
     }

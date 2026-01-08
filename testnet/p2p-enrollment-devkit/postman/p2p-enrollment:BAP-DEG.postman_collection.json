@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "ae7e58fa-2e8c-4fbd-9f29-1d8e52ebac83",
+    "_postman_id": "cbf9f23c-6bf2-4a91-8758-89730b16fbbd",
     "name": "p2p-enrollment:BAP-DEG",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "description": "Postman collection for Buyer Application Platform implementing p2p-enrollment APIs based on Beckn Protocol v2"
@@ -319,7 +319,7 @@
     },
     {
       "key": "bap_id",
-      "value": "p2p-trading-sandbox1.com"
+      "value": "p2p-enrollment-sandbox1.com"
     },
     {
       "key": "bap_uri",
@@ -327,7 +327,7 @@
     },
     {
       "key": "bpp_id",
-      "value": "p2p-trading-sandbox2.com"
+      "value": "p2p-enrollment-sandbox2.com"
     },
     {
       "key": "bpp_uri",

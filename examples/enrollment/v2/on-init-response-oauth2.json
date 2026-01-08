@@ -47,7 +47,8 @@
           "issuer": "https://utility-idp.example.com",
           "scope": "openid profile email meter:read",
           "expiresAt": "2024-10-15T11:30:00Z",
-          "message": "Token verified successfully"
+          "message": "Token verified successfully",
+          "utilityCustomerId": "CUST-123456"
         },
         "meters": [
           {

@@ -46,7 +46,8 @@
           "verifiedAt": "2024-10-15T10:35:05Z",
           "subject": "user-12345",
           "issuer": "https://utility-idp.example.com",
-          "message": "Token verified successfully"
+          "message": "Token verified successfully",
+          "utilityCustomerId": "CUST-123456"
         },
         "enrollmentId": "enrollment-oauth2-001",
         "status": "ACTIVE",

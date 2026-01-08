@@ -44,7 +44,8 @@
           "authMethod": "OTP",
           "verified": true,
           "verifiedAt": "2024-10-15T10:33:05Z",
-          "message": "OTP verification successful"
+          "message": "OTP verification successful",
+          "utilityCustomerId": "CUST-123456"
         },
         "enrollmentId": "enrollment-otp-001",
         "status": "ACTIVE",
