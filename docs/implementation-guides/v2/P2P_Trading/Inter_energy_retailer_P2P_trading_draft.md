@@ -68,6 +68,7 @@ sequenceDiagram
     B->>TP: Accept trade
     TP->>TE: Submit signed contract
     TE->>TE: Record on ledger
+    Note right of TE: Ledger: Discom A, Discom B,<br/>Trade Time, Delivery Start/End,<br/>Trade Qty, Producer Qty, Consumer Qty
     DU_A-->>TE: Visibility into upcoming trades
     DU_B-->>TE: Visibility into upcoming trades
     end
@@ -216,6 +217,7 @@ sequenceDiagram
 ### 5. Trade Verification
 
 - Distribution utilities update the ledger with digitally signed meter data for both parties
+- For overlapping trades (same delivery window), actual energy is allocated FIFO by trade time; reconciled quantity = min(trade qty, actual pushed)
 - Trade exchange/ledger marks trade as complete
 
 ```mermaid
@@ -229,6 +231,8 @@ sequenceDiagram
 
     DU_A->>TE: Update ledger with signed meter data<br/>(Meter M1, P1 injection: X kWh)
     DU_B->>TE: Update ledger with signed meter data<br/>(Meter M7, P7 consumption: Y kWh)
+
+    Note over TE: Anti-double-dipping: For overlapping trades,<br/>actual kWh allocated FIFO by trade time.<br/>Recon Qty = min(Trade Qty, Actual Pushed).<br/>(See Overlapping Trade Reconciliation)
 
     TE->>TE: Validate digital signatures
     TE->>TE: Compare actuals vs contract
@@ -558,6 +562,26 @@ Regardless of contract, settlement = actual verified delivery × agreed price. D
 | **Over-delivery/consumption** | Excess settles with respective energy retailer at standard rates |
 
 **Example - Tolerance band:** Minor deviations (±10%?) settle at actuals without penalty.
+
+### Overlapping Trade Reconciliation (Anti-Double-Dipping)
+
+When a prosumer has multiple trades within the same delivery window, actual meter readings must be allocated carefully to prevent double-counting:
+
+1. **FIFO Allocation:** Actual energy is allocated to trades in order of trade placement time (earliest first)
+2. **Per-Trade Cap:** Each trade receives at most its contracted quantity
+3. **Reconciled Qty:** `Recon Qty = min(Trade Qty, Remaining Actual)`
+
+**Example:**
+
+| Trade | Trade Time | Delivery Window | Trade Qty | Actual Injected | Recon Qty |
+|-------|------------|-----------------|-----------|-----------------|-----------|
+| T1 | 9:00 AM | 2–4 PM | 5 kWh | — | 5 kWh |
+| T2 | 9:30 AM | 2–4 PM | 4 kWh | — | 3 kWh |
+| **Total** | — | — | 9 kWh | **8 kWh** | 8 kWh |
+
+*P1 contracted 9 kWh across two trades but only injected 8 kWh. T1 (earlier trade) gets full 5 kWh; T2 gets remaining 3 kWh. T2 buyer may claim shortfall penalty.*
+
+---
 
 ```mermaid
 sequenceDiagram
