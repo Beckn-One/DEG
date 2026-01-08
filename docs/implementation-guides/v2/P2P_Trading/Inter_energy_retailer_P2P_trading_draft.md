@@ -68,8 +68,8 @@ sequenceDiagram
     B->>TP: Accept trade
     TP->>TE: Submit signed contract
     TE->>TE: Record on ledger
-    DU_A-.->TE: Visibility into upcoming trades
-    DU_B-.->TE: Visibility into upcoming trades
+    DU_A-->>TE: Visibility into upcoming trades
+    DU_B-->>TE: Visibility into upcoming trades
     end
 
     rect rgb(230, 255, 230)
@@ -157,7 +157,7 @@ sequenceDiagram
     TP-->>S: Trade confirmed
     TP-->>B: Trade confirmed
 
-    DU-.->TE: Visibility into scheduled trades<br/>(for grid planning)
+    DU-->>TE: Visibility into scheduled trades<br/>(for grid planning)
 ```
 
 ---
