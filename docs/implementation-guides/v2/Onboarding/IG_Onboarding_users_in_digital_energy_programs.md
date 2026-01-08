@@ -1088,7 +1088,8 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
         "@type": "EnergyEnrollment",
         "userAuth": {
           "authMethod": "OTP",
-          "mobile": "+919999999999"
+          "mobile": "+919999999999",
+          "utilityCustomerId": "CUST-123456"
         },
         "customer": {
           "name": "Rajesh Kumar"
@@ -1407,7 +1408,8 @@ When using OTP authentication, the BPP returns an `nguid` (session token) and ex
           "authMethod": "OTP",
           "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
           "message": "OTP sent to +91XXXXXX9999. Valid for 5 minutes.",
-          "expiresAt": "2024-10-15T10:35:00Z"
+          "expiresAt": "2024-10-15T10:35:00Z",
+          "utilityCustomerId": "CUST-123456"
         }
       }
     }
@@ -1766,7 +1768,8 @@ The confirm request includes the OTP for verification along with the selected me
           "authMethod": "OTP",
           "mobile": "+919999999999",
           "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
-          "otp": "123456"
+          "otp": "123456",
+          "utilityCustomerId": "CUST-123456"
         },
         "meters": [
           {
@@ -1986,7 +1989,8 @@ The Program Owner BPP returns a signed Program Enrollment Credential as a Verifi
           "authMethod": "OTP",
           "verified": true,
           "verifiedAt": "2024-10-15T10:33:05Z",
-          "message": "OTP verification successful"
+          "message": "OTP verification successful",
+          "utilityCustomerId": "CUST-123456"
         },
         "enrollmentId": "enrollment-otp-001",
         "status": "ACTIVE",
