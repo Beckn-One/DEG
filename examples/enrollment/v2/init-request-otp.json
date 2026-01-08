@@ -41,7 +41,8 @@
         "@type": "EnergyEnrollment",
         "userAuth": {
           "authMethod": "OTP",
-          "mobile": "+919999999999"
+          "mobile": "+919999999999",
+          "utilityCustomerId": "CUST-123456"
         },
         "customer": {
           "name": "Rajesh Kumar"
