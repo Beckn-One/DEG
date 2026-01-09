@@ -56,7 +56,7 @@ sequenceDiagram
     participant S as Seller (P1)
     participant B as Buyer (P7)
     participant TP as Trade Platform
-    participant TE as Trade Exchange
+    participant TE as Trade Exchange/Ledger
     participant RA as Retailer A
     participant RB as Retailer B
     participant DU_A as Distribution Utility A
@@ -68,8 +68,9 @@ sequenceDiagram
     B->>TP: Accept trade
     TP->>TE: Submit signed contract
     TE->>TE: Record on ledger
-    TE->>DU_A: Notify (visibility)
-    TE->>DU_B: Notify (visibility)
+    Note right of TE: Ledger: Discom A, Discom B, seller, buyer, <br/>Trade Time, Delivery Start/End,<br/>Trade Qty, Actual pushed, Actual pulled Qty
+    DU_A-->>TE: Visibility into upcoming trades
+    DU_B-->>TE: Visibility into upcoming trades
     end
 
     rect rgb(230, 255, 230)
@@ -81,12 +82,8 @@ sequenceDiagram
 
     rect rgb(255, 245, 230)
     note over TE,RB: Phase 3: Trade Verification
-    TE->>RA: Request meter data (P1)
-    TE->>RB: Request meter data (P7)
-    RA-->>TE: Signed meter data
-    RB-->>TE: Signed meter data
-    TE->>TE: Verify delivery vs contract
-    TE->>TE: Mark trade complete
+    DU_A->>TE: Add/allocate actual pushed signed meter data to ledger (P1)
+    DU_B->>TE: Add/allocate actual pulled signed meter data to ledger (P7)
     end
 
     rect rgb(255, 230, 230)
@@ -96,21 +93,15 @@ sequenceDiagram
     end
 
     rect rgb(245, 230, 255)
-    note over RA,RB: Phase 5: Wheeling & Declaration
-    DU_A->>S: Wheeling charges (via bill)
-    DU_B->>B: Wheeling charges (via bill)
-    TE->>RA: Declare P2P trades
-    TE->>RB: Declare P2P trades
-    RA->>TE: Verify no duplicate billing
-    RB->>TE: Verify no duplicate billing
-    end
-
-    rect rgb(255, 240, 245)
-    note over RA,RB: Phase 6: Enforcement (if default)
-    TE->>RA: Notify of default
-    TE->>RB: Notify of default
-    RA->>S: Enforcement action
-    RB->>B: Enforcement action
+    note over RA,RB: Phase 5: Wheeling & Billing
+    RA->>TE: Look up P2P trades (P1)
+    RB->>TE: Look up P2P trades (P7)
+    RA->>S: Bill (excl. P2P + incl. wheeling)
+    RB->>B: Bill (excl. P2P + incl. wheeling)
+    S->>RA: Pay bill
+    B->>RB: Pay bill
+    RA->>DU_A: Remit wheeling charges
+    RB->>DU_B: Remit wheeling charges
     end
 ```
 
@@ -138,7 +129,7 @@ sequenceDiagram
     participant S as Seller (P1)<br/>Retailer A
     participant B as Buyer (P7)<br/>Retailer B
     participant TP as Trade Platform
-    participant TE as Trade Exchange
+    participant TE as Trade Exchange/Ledger
     participant DU as Distribution Utility
 
     S->>TP: Login & initiate trade
@@ -160,7 +151,7 @@ sequenceDiagram
     TP-->>S: Trade confirmed
     TP-->>B: Trade confirmed
 
-    TE->>DU: Scheduled trade notification<br/>(for grid planning)
+    DU-->>TE: Visibility into scheduled trades<br/>(for grid planning)
 ```
 
 ---
@@ -218,42 +209,35 @@ sequenceDiagram
 
 ### 5. Trade Verification
 
-- Trade exchange retrieves digitally signed meter data from both energy retailers
-- Verifies delivery matches contract terms
-- Marks trade as complete on the ledger
+- Distribution utilities update the ledger with digitally signed meter data for both parties
+- For overlapping trades (same delivery window), actual energy is allocated FIFO by trade time; reconciled quantity = min(trade qty, actual pushed)
+- Trade exchange/ledger marks trade as complete
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant TE as Trade Exchange
-    participant RA as Retailer A
-    participant RB as Retailer B
-    participant L as Ledger
+    participant TE as Trade Exchange/Ledger
+    participant DU_A as Distribution Utility A
+    participant DU_B as Distribution Utility B
 
     Note over TE: Verification cycle triggered<br/>(e.g., every X hours)
 
-    TE->>L: Retrieve pending trades<br/>for verification
-    L-->>TE: List of trades to verify
+    DU_A->>TE: Update ledger with signed meter data<br/>(Meter M1, P1 injection: X kWh)
+    DU_B->>TE: Update ledger with signed meter data<br/>(Meter M7, P7 consumption: Y kWh)
 
-    par Request meter data in parallel
-        TE->>RA: Request signed meter data<br/>(Meter M1, time window)
-        TE->>RB: Request signed meter data<br/>(Meter M7, time window)
-    end
-
-    RA-->>TE: Digitally signed meter data<br/>(P1 injection: X kWh)
-    RB-->>TE: Digitally signed meter data<br/>(P7 consumption: Y kWh)
+    Note over TE: Anti-double-dipping: For overlapping trades,<br/>actual kWh allocated FIFO by trade time.<br/>Recon Qty = min(Trade Qty, Actual Pushed).<br/>(See Overlapping Trade Reconciliation)
 
     TE->>TE: Validate digital signatures
     TE->>TE: Compare actuals vs contract
 
     alt Delivery matches contract
-        TE->>L: Mark trade COMPLETE
+        TE->>TE: Mark trade COMPLETE
         Note over TE: Proceed to settlement
     else Partial delivery
-        TE->>L: Record actual delivery
+        TE->>TE: Record actual delivery
         Note over TE: Apply settlement rules<br/>(see Contract Modification)
     else No delivery
-        TE->>L: Mark trade FAILED
+        TE->>TE: Mark trade FAILED
         Note over TE: Trigger penalty/<br/>enforcement
     end
 ```
@@ -462,52 +446,62 @@ sequenceDiagram
 
 ## Phase 5: Wheeling Charges and Declaration
 
-### Wheeling Charges
+This phase ensures accurate billing by preventing double-counting and collecting grid usage (wheeling) fees for P2P energy transfers.
 
-- Energy distributor utilities and Energy retailers charge wheeling fees for successful P2P trades
-- Settled separately via prosumer's regular electricity bill
+### Step-by-Step Flow
 
-### Trade Declaration (Anti-Double-Dipping)
+| Step | Action | Purpose |
+|------|--------|---------|
+| 1 | Retailers look up P2P trades from ledger | Retailers learn which energy was traded peer-to-peer |
+| 2 | Retailers prepare bills (excl. P2P energy, incl. wheeling charges) | Customers only pay retailer for non-P2P energy; wheeling fees added |
+| 3 | Customers pay Retailers | Single consolidated bill payment |
+| 4 | Retailers remit wheeling charges to Distribution Utility | Grid usage fees flow to infrastructure operator |
 
-- **Buyer P2P trades** are declared to their energy retailer using trade exchange → avoids being billed twice for energy already purchased
-- **Seller P2P trades** are declared to their energy retailer using trade exchange → prevents claiming payment from both P2P buyer and energy retailer for the same energy
-- **Energy retailer verification:** Before charging any **prosumer-to-energy retailer or energy retailer-to-consumer energy sale**, energy retailer checks the ledger to confirm no P2P trade exists for the same meter ID(s) and time slot
+### Anti-Double-Billing Rules
+
+- **Buyer (P7):** Not charged by retailer for energy already purchased via P2P
+- **Seller (P1):** Not credited by retailer for energy already sold via P2P
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant S as Seller (P1)
-    participant B as Buyer (P7)
-    participant TE as Trade Exchange
+    participant TE as Trade Exchange/Ledger
     participant RA as Retailer A
     participant RB as Retailer B
-    participant DU as Distribution<br/>Utility
-
-    Note over TE,RB: Trade Declaration
-    TE->>RA: Declare P2P trade<br/>(P1 sold X kWh, time slot T)
-    TE->>RB: Declare P2P trade<br/>(P7 bought X kWh, time slot T)
-
-    Note over RA,RB: Retailer Billing Cycle
-
-    rect rgb(255, 245, 230)
-    Note over RA: Seller's Bill Preparation
-    RA->>TE: Query: Any P2P trades<br/>for M1, billing period?
-    TE-->>RA: Yes: X kWh at time T
-    RA->>RA: Exclude P2P energy<br/>from retailer purchase
-    RA->>S: Bill (excludes P2P sold energy)
-    end
+    participant S as Seller (P1)
+    participant B as Buyer (P7)
+    participant DU as Distribution Utility
 
     rect rgb(230, 245, 255)
-    Note over RB: Buyer's Bill Preparation
-    RB->>TE: Query: Any P2P trades<br/>for M7, billing period?
-    TE-->>RB: Yes: X kWh at time T
-    RB->>RB: Exclude P2P energy<br/>from retailer charges
-    RB->>B: Bill (excludes P2P bought energy)
+    Note over TE,RB: Step 1: Ledger Lookup
+    RA->>TE: Look up P2P trades<br/>(P1, billing period)
+    TE-->>RA: P1 sold X kWh, time slot T
+    RB->>TE: Look up P2P trades<br/>(P7, billing period)
+    TE-->>RB: P7 bought X kWh, time slot T
     end
 
-    Note over DU: Wheeling Charges
-    DU->>S: Wheeling fee for P2P<br/>(via regular bill)
-    DU->>B: Wheeling fee for P2P<br/>(via regular bill)
+    rect rgb(255, 245, 230)
+    Note over RA,RB: Step 2: Retailer Billing
+    RA->>RA: Verify: Exclude P2P energy<br/>from retailer settlement
+    RA->>RA: Add wheeling charges<br/>for P2P transfers
+    RA->>S: Bill (non-P2P energy +<br/>wheeling charges)
+
+    RB->>RB: Verify: Exclude P2P energy<br/>from retailer charges
+    RB->>RB: Add wheeling charges<br/>for P2P transfers
+    RB->>B: Bill (non-P2P energy +<br/>wheeling charges)
+    end
+
+    rect rgb(230, 255, 230)
+    Note over S,B: Step 3: Customer Payment
+    S->>RA: Pay bill
+    B->>RB: Pay bill
+    end
+
+    rect rgb(245, 230, 255)
+    Note over RA,DU: Step 4: Wheeling Remittance
+    RA->>DU: Remit wheeling charges (P1)
+    RB->>DU: Remit wheeling charges (P7)
+    end
 ```
 
 ---
@@ -516,41 +510,26 @@ sequenceDiagram
 
 *(Open for Group Discussion)*
 
-When a prosumer registers for P2P trading, they sign an agreement consenting to energy retailer/distribution utility enforcement in case of payment default. Enforcement actions may include fines, suspension of P2P trading privileges or service disconnection in case of non-fulfilment.
+When a prosumer registers for P2P trading, they sign an agreement consenting to energy retailer/distribution utility enforcement in case of payment default.
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant B as Buyer (P7)<br/>[Defaulter]
-    participant TE as Trade Exchange
-    participant RB as Retailer B<br/>(Buyer's Discom)
-    participant RA as Retailer A<br/>(Seller's Discom)
-    participant S as Seller (P1)
+### Enforcement Triggers
 
-    Note over B: Payment default detected
+- **Payment default:** Buyer fails to pay within stipulated window
+- **Non-delivery:** Seller fails to inject contracted energy
+- **Repeated violations:** Pattern of defaults or contract breaches
 
-    TE->>TE: Record default on ledger
-    TE->>RB: Notify: P7 defaulted<br/>on P2P payment
-    TE->>RA: Notify: P1's payment<br/>not received
+### Escalation Levels
 
-    RB->>RB: Check enforcement<br/>agreement
+| Level | Action | When Applied |
+|-------|--------|--------------|
+| 1 | Warning notice | First-time minor default |
+| 2 | Fine added to bill | Repeated defaults or moderate amounts |
+| 3 | P2P trading privileges suspended | Persistent non-compliance |
+| 4 | Service disconnection | Severe cases only |
 
-    alt Level 1: Warning
-        RB->>B: Warning notice
-    else Level 2: Fine
-        RB->>B: Fine added to bill
-    else Level 3: Suspension
-        RB->>TE: Suspend P7's<br/>trading privileges
-        TE->>TE: Update status
-        TE-->>B: Trading suspended
-    else Level 4: Disconnection
-        RB->>B: Service disconnection<br/>notice
-        Note over B: Severe cases only
-    end
+### Seller Compensation
 
-    Note over RA,S: Seller compensation
-    RA->>S: Credit from enforcement<br/>recovery (if any)
-```
+If enforcement recovery succeeds (e.g., fine collected from defaulting buyer), the affected seller may receive credit through their retailer.
 
 ---
 
@@ -571,6 +550,28 @@ Regardless of contract, settlement = actual verified delivery × agreed price. D
 | **Over-delivery/consumption** | Excess settles with respective energy retailer at standard rates |
 
 **Example - Tolerance band:** Minor deviations (±10%?) settle at actuals without penalty.
+
+### Overlapping Trade Reconciliation (Anti-Double-Dipping)
+
+When a prosumer has multiple trades within the same delivery window, actual meter readings must be allocated carefully to prevent double-counting:
+
+1. **FIFO Allocation:** Actual energy is allocated to trades in order of trade placement time (earliest first)
+2. **Per-Trade Cap:** Each trade receives at most its contracted quantity
+3. **Reconciled Qty:** `Recon Qty = min(Trade Qty, Remaining Actual)`
+
+**Example:**
+
+| Trade | Trade Time | Delivery Window | Trade Qty | Actual Injected | Recon Qty |
+|-------|------------|-----------------|-----------|-----------------|-----------|
+| T1 | 9:00 AM | 2–4 PM | 5 kWh | — | 5 kWh |
+| T2 | 9:30 AM | 2–4 PM | 4 kWh | — | 3 kWh |
+| **Total** | — | — | 9 kWh | **8 kWh** | 8 kWh |
+
+*P1 contracted 9 kWh across two trades but only injected 8 kWh. T1 (earlier trade) gets full 5 kWh; T2 gets remaining 3 kWh.*
+
+A more detailed multi-party, multi-epoch example is worked out in a table [here](https://docs.google.com/spreadsheets/d/1ZXdvUnLshdOmiaqJJQuONigPK_KnTZ3Pq8aiLWYClaA/edit?usp=sharing).
+
+---
 
 ```mermaid
 sequenceDiagram
