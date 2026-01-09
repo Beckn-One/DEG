@@ -51,8 +51,8 @@
               "productionWindow": [
                 {
                   "@type": "beckn:TimePeriod",
-                  "schema:startTime": "10:00:00",
-                  "schema:endTime": "18:00:00"
+                  "schema:startTime": "2026-01-09T10:00:00Z",
+                  "schema:endTime": "2026-01-09T18:00:00Z"
                 }
               ],
               "sourceVerification": {
@@ -94,8 +94,8 @@
               "maximumQuantity": 100.0,
               "validityWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "00:00:00",
-                "schema:endTime": "23:59:59"
+                "schema:startTime": "2026-01-09T00:00:00Z",
+                "schema:endTime": "2026-01-09T23:59:59Z"
               },
               "beckn:price": {
                 "value": 0.15,
@@ -109,8 +109,8 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           },
@@ -141,8 +141,8 @@
               "maximumQuantity": 100.0,
               "validityWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "00:00:00",
-                "schema:endTime": "23:59:59"
+                "schema:startTime": "2026-01-09T00:00:00Z",
+                "schema:endTime": "2026-01-09T23:59:59Z"
               },
               "beckn:price": {
                 "value": 0.18,
@@ -156,8 +156,8 @@
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }

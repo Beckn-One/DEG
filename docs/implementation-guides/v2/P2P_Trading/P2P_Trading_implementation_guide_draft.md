@@ -628,8 +628,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "productionWindow": [
                 {
                   "@type": "beckn:TimePeriod",
-                  "schema:startTime": "10:00:00",
-                  "schema:endTime": "18:00:00"
+                  "schema:startTime": "2026-01-09T10:00:00Z",
+                  "schema:endTime": "2026-01-09T18:00:00Z"
                 }
               ],
               "sourceVerification": {
@@ -671,8 +671,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "maximumQuantity": 100.0,
               "validityWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "00:00:00",
-                "schema:endTime": "23:59:59"
+                "schema:startTime": "2026-01-09T00:00:00Z",
+                "schema:endTime": "2026-01-09T23:59:59Z"
               },
               "beckn:price": {
                 "value": 0.15,
@@ -686,8 +686,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           },
@@ -718,8 +718,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               "maximumQuantity": 100.0,
               "validityWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "00:00:00",
-                "schema:endTime": "23:59:59"
+                "schema:startTime": "2026-01-09T00:00:00Z",
+                "schema:endTime": "2026-01-09T23:59:59Z"
               },
               "beckn:price": {
                 "value": 0.18,
@@ -733,8 +733,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -897,8 +897,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1000,8 +1000,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1048,8 +1048,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -1151,8 +1151,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1199,8 +1199,8 @@ Beckn Protocol v2 provides a composable schema architecture that enables:
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -1317,8 +1317,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1420,8 +1420,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1519,8 +1519,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1567,8 +1567,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -1670,8 +1670,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1718,8 +1718,8 @@ This flow demonstrates the cascaded `/init` call from the P2P Trading BPP to the
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -1830,8 +1830,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -1923,8 +1923,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -2059,8 +2059,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -2107,8 +2107,8 @@ This flow demonstrates the cascaded `/confirm` call from the P2P Trading BPP to 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -2262,8 +2262,8 @@ When a trade has been curtailed (e.g., due to grid outage), the status response 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
@@ -2310,8 +2310,8 @@ When a trade has been curtailed (e.g., due to grid outage), the status response 
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "12:00:00",
-                "schema:endTime": "18:00:00"
+                "schema:startTime": "2026-01-09T12:00:00Z",
+                "schema:endTime": "2026-01-09T18:00:00Z"
               }
             }
           }
@@ -2504,8 +2504,8 @@ sequenceDiagram
               },
               "beckn:timeWindow": {
                 "@type": "beckn:TimePeriod",
-                "schema:startTime": "06:00:00",
-                "schema:endTime": "12:00:00"
+                "schema:startTime": "2026-01-09T06:00:00Z",
+                "schema:endTime": "2026-01-09T12:00:00Z"
               }
             }
           }
