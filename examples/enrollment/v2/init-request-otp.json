@@ -42,7 +42,8 @@
         "userAuth": {
           "authMethod": "OTP",
           "mobile": "+919999999999",
-          "utilityCustomerId": "CUST-123456"
+          "utilityCustomerId": "CUST-123456",
+          "userType": "CONSUMER"
         },
         "customer": {
           "name": "Rajesh Kumar"

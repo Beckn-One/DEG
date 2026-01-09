@@ -1089,7 +1089,8 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
         "userAuth": {
           "authMethod": "OTP",
           "mobile": "+919999999999",
-          "utilityCustomerId": "CUST-123456"
+          "utilityCustomerId": "CUST-123456",
+          "userType": "CONSUMER"
         },
         "customer": {
           "name": "Rajesh Kumar"
@@ -1330,6 +1331,11 @@ The Program Owner BPP verifies these credentials and checks for conflicts with e
       "beckn:orderAttributes": {
         "@context": "https://raw.githubusercontent.com/beckn/protocol-specifications-new/refs/heads/p2p-trading/schema/EnergyEnrollment/v0.2/context.jsonld",
         "@type": "EnergyEnrollment",
+        "userAuth": {
+          "authMethod": "OTP",
+          "mobile": "+919876543210",
+          "userType": "PROSUMER"
+        },
         "meterOwnershipCredential": {
           "credentialId": "vc-meter-ownership-002",
           "type": "MeterOwnershipCredential",
@@ -1769,7 +1775,8 @@ The confirm request includes the OTP for verification along with the selected me
           "mobile": "+919999999999",
           "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
           "otp": "123456",
-          "utilityCustomerId": "CUST-123456"
+          "utilityCustomerId": "CUST-123456",
+          "userType": "CONSUMER"
         },
         "meters": [
           {

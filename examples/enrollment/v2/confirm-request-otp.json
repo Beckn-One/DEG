@@ -44,7 +44,8 @@
           "mobile": "+919999999999",
           "nguid": "LQUejkRbBL9nJGQiqbComfQ242AHnbG3hnwWdHJut59jqmdJygnVHoiyDcnAUrKm",
           "otp": "123456",
-          "utilityCustomerId": "CUST-123456"
+          "utilityCustomerId": "CUST-123456",
+          "userType": "CONSUMER"
         },
         "meters": [
           {
